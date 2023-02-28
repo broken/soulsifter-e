@@ -9,4 +9,9 @@ window.addEventListener('DOMContentLoaded', () => {
   for (const dependency of ['chrome', 'node', 'electron']) {
     replaceText(`${dependency}-version`, process.versions[dependency])
   }
+
+  const { hello } = require('../../be');
+  replaceText('hello', hello());
+  window.console.log(hello());
 })
+
