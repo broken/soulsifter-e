@@ -2,12 +2,14 @@
   "name": "soulsifter",
   "version": "1.0.0",
   "description": "back end for Soulsifter app",
-  "main": "index.js",
+  "main": "src/hello.js",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "node src/hello.js"
   },
   "author": "Robert Neale",
   "license": "Apache-2.0",
+  "gypfile": true,
   "dependencies": {
     "bindings": "^1.5.0",
     "node-addon-api": "^6.0.0"

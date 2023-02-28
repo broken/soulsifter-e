@@ -1,5 +1,6 @@
 DS_Store
 *.log*
 
+be/build
 be/node_modules
 fe/node_modules
