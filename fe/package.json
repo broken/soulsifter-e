@@ -1,9 +1,11 @@
 {
   "name": "soulsifter",
   "version": "1.0.0",
+  "build": 0,
   "description": "DJ & music organization app.",
   "main": "index.js",
   "scripts": {
+    "buildnumber": "node buildnumber.mjs",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Robert Neale",
