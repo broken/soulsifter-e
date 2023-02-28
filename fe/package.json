@@ -1,16 +1,17 @@
 {
   "name": "soulsifter",
   "version": "1.0.0",
-  "build": 0,
+  "build": 4,
   "description": "DJ & music organization app.",
-  "main": "index.js",
+  "main": "src/main.js",
   "scripts": {
     "buildnumber": "node buildnumber.mjs",
+    "start": "npm run buildnumber && electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Robert Neale",
   "license": "Apache-2.0",
   "devDependencies": {
-    "electron": "^23.1.1"
+    "electron": "^21.4.2"
   }
 }
