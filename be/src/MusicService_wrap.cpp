@@ -1,51 +1,33 @@
-#include <iostream>
-#include <node.h>
-#include <nan.h>
 #include "MusicService_wrap.h"
+#include "MusicService.h"
 
-Nan::Persistent<v8::Function> MusicService::constructor;
+Napi::Object MusicService::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func =
+      DefineClass(env,
+                  "MusicService",
+                  {StaticMethod("cleanDirName", &MusicService::cleanDirName)});
 
-MusicService::MusicService() : Nan::ObjectWrap(), musicservice(NULL), ownWrappedObject(true) {};
-MusicService::MusicService(dogatech::soulsifter::MusicService* o) : Nan::ObjectWrap(), musicservice(o), ownWrappedObject(true) {};
-MusicService::~MusicService() { if (ownWrappedObject) delete musicservice; };
+  Napi::FunctionReference* constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
 
-void MusicService::setNwcpValue(dogatech::soulsifter::MusicService* v, bool own) {
-  if (ownWrappedObject)
-    delete musicservice;
-  musicservice = v;
-  ownWrappedObject = own;
+  exports.Set("MusicService", func);
+  return exports;
 }
 
-void MusicService::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  MusicService* obj = new MusicService(new dogatech::soulsifter::MusicService());
-  obj->Wrap(info.This());
-
-  info.GetReturnValue().Set(info.This());
+MusicService::MusicService(const Napi::CallbackInfo& info)
+    : Napi::ObjectWrap<MusicService>(info) {
 }
 
-v8::Local<v8::Object> MusicService::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
+Napi::Value MusicService::cleanDirName(const Napi::CallbackInfo& info) {
+  Napi::String dirName;
+  if (info.Length() <= 0 || !info[0].IsString()) {
+    dirName = Napi::String::New(info.Env(), "");
+  } else {
+    dirName = info[0].As<Napi::String>();
+  }
+
+  std::string result = dogatech::soulsifter::MusicService::cleanDirName(dirName);
+
+  return Napi::String::New(info.Env(), result);
 }
-
-void MusicService::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("MusicService").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  Nan::SetMethod(tpl, "cleanDirName", cleanDirName);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("MusicService").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
-}
-
-void MusicService::cleanDirName(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  string a0(*v8::String::Utf8Value(info[0]->ToString()));
-  string result =
-      dogatech::soulsifter::MusicService::cleanDirName(a0);
-
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
-}
-

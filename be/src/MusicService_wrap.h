@@ -1,30 +1,16 @@
 #ifndef MusicService_wrap_h
 #define MusicService_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "MusicService.h"
 
-class MusicService : public Nan::ObjectWrap {
+class MusicService : public Napi::ObjectWrap<MusicService> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::MusicService* v, bool own);
-  dogatech::soulsifter::MusicService* getNwcpValue() const { return musicservice; }
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  MusicService(const Napi::CallbackInfo& info);
+  static Napi::Value cleanDirName(const Napi::CallbackInfo& info);
 
  private:
-  MusicService();
-  explicit MusicService(dogatech::soulsifter::MusicService* musicservice);
-  ~MusicService();
-
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
-
-  static void cleanDirName(const Nan::FunctionCallbackInfo<v8::Value>& info);
-
-  static Nan::Persistent<v8::Function> constructor;
-  dogatech::soulsifter::MusicService* musicservice;
-  bool ownWrappedObject;
 };
 
 #endif

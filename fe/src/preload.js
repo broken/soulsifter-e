@@ -10,8 +10,7 @@ window.addEventListener('DOMContentLoaded', () => {
     replaceText(`${dependency}-version`, process.versions[dependency])
   }
 
-  const { hello } = require('../../be');
-  replaceText('hello', hello());
-  window.console.log(hello());
+  const ss = require('../../be');
+  replaceText('hello', ss.MusicService.cleanDirName('pathname'));
 })
 

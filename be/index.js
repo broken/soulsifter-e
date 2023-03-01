@@ -1,1 +1,1 @@
-module.exports = require('bindings')('hello');
+module.exports = require('bindings')('soulsifter');
