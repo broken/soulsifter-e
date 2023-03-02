@@ -4,7 +4,7 @@
 // <link href="song-list-item.html" rel="import">
 // <link href="ss-global-behavior.html" rel="import">
 
-import { css, html, LitElement } from "@polymer/lit-element";
+import { css, html, LitElement } from "lit";
 
 import { AlertsMixin } from "./mixin-alerts.js";
 import { BpmMixin } from "./mixin-bpm.js";

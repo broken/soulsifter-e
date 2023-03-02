@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "@polymer/lit-element";
+import { css, html, LitElement } from "lit";
 
 import "@polymer/paper-input/paper-input.js";
 
@@ -211,7 +211,7 @@ class SongSection extends SettingsMixin(SongMixin(SongTrailMixin(LitElement))) {
           display: none;
         }
 
-        
+
         .content {
           margin: 5px 15px 10px 15px;
           display: flex;

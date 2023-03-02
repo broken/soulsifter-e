@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "@polymer/lit-element";
+import { css, html, LitElement } from "lit";
 
 import "./icon-button.js";
 import "./options-menu.js";
@@ -118,7 +118,7 @@ class GenreListItem extends LitElement {
           flex: 1 1 auto;
           display: flex;
           flex-direction: row;
-          align-items: center;  
+          align-items: center;
         }
         .item[selected] {
           background-color: var(--ss-genre-list-item-select-color);

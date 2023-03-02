@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "@polymer/lit-element";
+import { css, html, LitElement } from "lit";
 
 import { SongMixin } from "./mixin-song.js";
 import { } from "./mix-list-item.js";

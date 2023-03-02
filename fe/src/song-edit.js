@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "@polymer/lit-element";
+import { css, html, LitElement } from "lit";
 
 import "@material/mwc-button";
 import "@polymer/paper-checkbox/paper-checkbox.js";

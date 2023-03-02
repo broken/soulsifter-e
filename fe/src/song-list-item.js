@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "@polymer/lit-element";
+import { css, html, LitElement } from "lit";
 
 import "./icon-button.js";
 import { BpmMixin } from "./mixin-bpm.js";

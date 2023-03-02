@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "@polymer/lit-element";
+import { css, html, LitElement } from "lit";
 
 import "@material/mwc-linear-progress";
 import "@polymer/paper-input/paper-input.js";

@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "@polymer/lit-element";
+import { css, html, LitElement } from "lit";
 
 import "@polymer/paper-radio-button/paper-radio-button.js";
 import "@polymer/paper-toggle-button/paper-toggle-button.js";
