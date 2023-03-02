@@ -4,4 +4,5 @@
 
 be/build
 be/node_modules
+fe/build
 fe/node_modules

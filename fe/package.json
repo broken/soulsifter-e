@@ -1,17 +1,22 @@
 {
   "name": "soulsifter",
   "version": "1.0.0",
-  "build": 34,
+  "build": 55,
   "description": "DJ & music organization app.",
-  "main": "src/main.js",
+  "main": "main.js",
   "scripts": {
+    "build": "vite build",
     "buildnumber": "node buildnumber.mjs",
-    "start": "npm run buildnumber && electron .",
+    "start": "npm run buildnumber && npm run build && electron .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Robert Neale",
   "license": "Apache-2.0",
   "devDependencies": {
-    "electron": "^21.4.2"
+    "electron": "^21.4.2",
+    "vite": "^4.1.4"
+  },
+  "dependencies": {
+    "lit": "^2.6.1"
   }
 }
