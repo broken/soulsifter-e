@@ -1,0 +1,11 @@
+{
+  "name": "soulsifter-dev-automation",
+  "version": "0.1.0",
+  "description": "Scripts for automating builds of the backend & fronted of SoulSifter app.",
+  "scripts": {
+    "compile": "cd be && npm i && npm run rebuild",
+    "start": "cd fe && npm start"
+  },
+  "author": "Robert Neale",
+  "license": "Apache-2.0"
+}
