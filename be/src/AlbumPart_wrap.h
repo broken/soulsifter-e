@@ -1,47 +1,41 @@
 #ifndef AlbumPart_wrap_h
 #define AlbumPart_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "AlbumPart.h"
 
-class AlbumPart : public Nan::ObjectWrap {
+class AlbumPart : public Napi::ObjectWrap<AlbumPart> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::AlbumPart* v, bool own);
-  dogatech::soulsifter::AlbumPart* getNwcpValue() const { return albumpart; }
-
- private:
-  AlbumPart();
-  explicit AlbumPart(dogatech::soulsifter::AlbumPart* albumpart);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  AlbumPart(const Napi::CallbackInfo& info);
   ~AlbumPart();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::AlbumPart* v, bool own);
+  dogatech::soulsifter::AlbumPart* getWrappedValue() const { return albumpart; }
 
-  static void clear(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findById(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByPosAndAlbumId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByPos(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByAlbumId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findAll(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void update(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void save(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void sync(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void getId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getPos(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setPos(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getName(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setName(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getAlbumId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setAlbumId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getAlbum(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void getAlbumConst(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setAlbum(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
+ private:
+  Napi::Value clear(const Napi::CallbackInfo& info);
+  static Napi::Value findById(const Napi::CallbackInfo& info);
+  static Napi::Value findByPosAndAlbumId(const Napi::CallbackInfo& info);
+  static Napi::Value findByPos(const Napi::CallbackInfo& info);
+  static Napi::Value findByAlbumId(const Napi::CallbackInfo& info);
+  static Napi::Value findAll(const Napi::CallbackInfo& info);
+  Napi::Value update(const Napi::CallbackInfo& info);
+  Napi::Value save(const Napi::CallbackInfo& info);
+  Napi::Value sync(const Napi::CallbackInfo& info);
+  Napi::Value getId(const Napi::CallbackInfo& info);
+  void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getPos(const Napi::CallbackInfo& info);
+  void setPos(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getName(const Napi::CallbackInfo& info);
+  void setName(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getAlbumId(const Napi::CallbackInfo& info);
+  void setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getAlbum(const Napi::CallbackInfo& info);
+  Napi::Value getAlbumConst(const Napi::CallbackInfo& info);
+  void setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::AlbumPart* albumpart;
   bool ownWrappedObject;
 };

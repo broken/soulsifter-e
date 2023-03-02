@@ -1,52 +1,46 @@
 #ifndef Playlist_wrap_h
 #define Playlist_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "Playlist.h"
 
-class Playlist : public Nan::ObjectWrap {
+class Playlist : public Napi::ObjectWrap<Playlist> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::Playlist* v, bool own);
-  dogatech::soulsifter::Playlist* getNwcpValue() const { return playlist; }
-
- private:
-  Playlist();
-  explicit Playlist(dogatech::soulsifter::Playlist* playlist);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  Playlist(const Napi::CallbackInfo& info);
   ~Playlist();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::Playlist* v, bool own);
+  dogatech::soulsifter::Playlist* getWrappedValue() const { return playlist; }
 
-  static void clear(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findById(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByName(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findBySpotifyId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findAll(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void update(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void save(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void sync(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void erase(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void getId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getName(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setName(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getQuery(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setQuery(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getGmusicId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setGmusicId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getYoutubeId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setYoutubeId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getSpotifyId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setSpotifyId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getStyleIds(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setStyleIds(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getStyles(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setStyles(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
+ private:
+  Napi::Value clear(const Napi::CallbackInfo& info);
+  static Napi::Value findById(const Napi::CallbackInfo& info);
+  static Napi::Value findByName(const Napi::CallbackInfo& info);
+  static Napi::Value findBySpotifyId(const Napi::CallbackInfo& info);
+  static Napi::Value findAll(const Napi::CallbackInfo& info);
+  Napi::Value update(const Napi::CallbackInfo& info);
+  Napi::Value save(const Napi::CallbackInfo& info);
+  Napi::Value sync(const Napi::CallbackInfo& info);
+  Napi::Value erase(const Napi::CallbackInfo& info);
+  Napi::Value getId(const Napi::CallbackInfo& info);
+  void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getName(const Napi::CallbackInfo& info);
+  void setName(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getQuery(const Napi::CallbackInfo& info);
+  void setQuery(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getGmusicId(const Napi::CallbackInfo& info);
+  void setGmusicId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getYoutubeId(const Napi::CallbackInfo& info);
+  void setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getSpotifyId(const Napi::CallbackInfo& info);
+  void setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getStyleIds(const Napi::CallbackInfo& info);
+  void setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getStyles(const Napi::CallbackInfo& info);
+  void setStyles(const Napi::CallbackInfo& info, const Napi::Value &value);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::Playlist* playlist;
   bool ownWrappedObject;
 };

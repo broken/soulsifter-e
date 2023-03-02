@@ -1,312 +1,296 @@
-#include <iostream>
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "Style_wrap.h"
 #include "ResultSetIterator.h"
 #include "Style.h"
 #include "Style_wrap.h"
 
-Nan::Persistent<v8::Function> Style::constructor;
-
-Style::Style() : Nan::ObjectWrap(), style(NULL), ownWrappedObject(true) {};
-Style::Style(dogatech::soulsifter::Style* o) : Nan::ObjectWrap(), style(o), ownWrappedObject(true) {};
 Style::~Style() { if (ownWrappedObject) delete style; };
 
-void Style::setNwcpValue(dogatech::soulsifter::Style* v, bool own) {
+void Style::setWrappedValue(dogatech::soulsifter::Style* v, bool own) {
   if (ownWrappedObject)
     delete style;
   style = v;
   ownWrappedObject = own;
 }
 
-void Style::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::Style* wrappedObj = NULL;
+Napi::Object Style::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func = DefineClass(env, "Style", {
+    InstanceMethod<&Style::clear>("clear"),
+    StaticMethod<&Style::findById>("findById"),
+    StaticMethod<&Style::findByREId>("findByREId"),
+    StaticMethod<&Style::findAll>("findAll"),
+    InstanceMethod<&Style::update>("update"),
+    InstanceMethod<&Style::save>("save"),
+    InstanceMethod<&Style::sync>("sync"),
+    StaticMethod<&Style::findAllParents>("findAllParents"),
+    // Unable to process findAllSortedByName
+    // Unable to process findAllSortedByREId
+    InstanceAccessor<&Style::getId, &Style::setId>("id"),
+    InstanceAccessor<&Style::getName, &Style::setName>("name"),
+    InstanceAccessor<&Style::getREId, &Style::setREId>("rEId"),
+    InstanceAccessor<&Style::getRELabel, &Style::setRELabel>("rELabel"),
+    InstanceAccessor<&Style::getChildIds, &Style::setChildIds>("childIds"),
+    InstanceAccessor<&Style::getChildren, &Style::setChildren>("children"),
+    InstanceAccessor<&Style::getParentIds, &Style::setParentIds>("parentIds"),
+    InstanceAccessor<&Style::getParents, &Style::setParents>("parents"),
+  });
+
+  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
+
+  exports.Set("Style", func);
+  return exports;
+}
+
+Napi::Object Style::NewInstance(Napi::Env env) {
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  return scope.Escape(napi_value(obj)).ToObject();
+}
+
+Style::Style(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Style>(info), style(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::Style* xtmp(Nan::ObjectWrap::Unwrap<Style>(info[0]->ToObject())->getNwcpValue());
-    dogatech::soulsifter::Style& x = *xtmp;
-    wrappedObj = new dogatech::soulsifter::Style(x);
+    dogatech::soulsifter::Style* x = Napi::ObjectWrap::Unwrap<Style>(info[0].As<Napi::Object>())->getWrappedObject();
+    style = new dogatech::soulsifter::Style(*x);
   } else {
-    wrappedObj = new dogatech::soulsifter::Style();
+    style = new dogatech::soulsifter::Style();
   }
-
-  Style* obj = new Style(wrappedObj);
-  obj->Wrap(info.This());
-
-  info.GetReturnValue().Set(info.This());
 }
 
-v8::Local<v8::Object> Style::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
-}
-
-void Style::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("Style").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  Nan::SetPrototypeMethod(tpl, "clear", clear);
-  Nan::SetMethod(tpl, "findById", findById);
-  Nan::SetMethod(tpl, "findByREId", findByREId);
-  Nan::SetMethod(tpl, "findAll", findAll);
-  Nan::SetPrototypeMethod(tpl, "update", update);
-  Nan::SetPrototypeMethod(tpl, "save", save);
-  Nan::SetPrototypeMethod(tpl, "sync", sync);
-  Nan::SetMethod(tpl, "findAllParents", findAllParents);
-  // Unable to process findAllSortedByName
-  // Unable to process findAllSortedByREId
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("id").ToLocalChecked(), getId, setId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("name").ToLocalChecked(), getName, setName);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("rEId").ToLocalChecked(), getREId, setREId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("rELabel").ToLocalChecked(), getRELabel, setRELabel);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("childIds").ToLocalChecked(), getChildIds, setChildIds);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("children").ToLocalChecked(), getChildren, setChildren);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("parentIds").ToLocalChecked(), getParentIds, setParentIds);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("parents").ToLocalChecked(), getParents, setParents);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("Style").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
-}
-
-void Style::clear(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::clear(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   obj->style->clear();
 }
 
-void Style::findById(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  int a0(info[0]->IntegerValue());
+Napi::Value Style::findById(const Napi::CallbackInfo& info) {
+  int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::Style* result =
       dogatech::soulsifter::Style::findById(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Style::NewInstance();
-    Style* r = Nan::ObjectWrap::Unwrap<Style>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Style::NewInstance(info.Env());
+    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void Style::findByREId(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  int a0(info[0]->IntegerValue());
+Napi::Value Style::findByREId(const Napi::CallbackInfo& info) {
+  int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::Style* result =
       dogatech::soulsifter::Style::findByREId(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Style::NewInstance();
-    Style* r = Nan::ObjectWrap::Unwrap<Style>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Style::NewInstance(info.Env());
+    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void Style::findAll(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+Napi::Value Style::findAll(const Napi::CallbackInfo& info) {
   dogatech::ResultSetIterator<dogatech::soulsifter::Style>* result =
       dogatech::soulsifter::Style::findAll();
 
   vector<dogatech::soulsifter::Style*>* v = result->toVector();
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) v->size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-    v8::Local<v8::Object> instance = Nan::NewInstance(cons).ToLocalChecked();
-    Style* o = Nan::ObjectWrap::Unwrap<Style>(instance);
-    o->style = (*v)[i];
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), instance);
+    Napi::Object instance = Style::NewInstance(info.Env());
+    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+    r->setWrappedValue((*v)[i]);
+    a.Set(i, instance);
   }
   delete v;
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-void Style::update(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::update(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   int result =  obj->style->update();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-void Style::save(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::save(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   int result =  obj->style->save();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-void Style::sync(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::sync(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   bool result =  obj->style->sync();
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-void Style::findAllParents(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+Napi::Value Style::findAllParents(const Napi::CallbackInfo& info) {
   dogatech::ResultSetIterator<dogatech::soulsifter::Style>* result =
       dogatech::soulsifter::Style::findAllParents();
 
   vector<dogatech::soulsifter::Style*>* v = result->toVector();
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) v->size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-    v8::Local<v8::Object> instance = Nan::NewInstance(cons).ToLocalChecked();
-    Style* o = Nan::ObjectWrap::Unwrap<Style>(instance);
-    o->style = (*v)[i];
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), instance);
+    Napi::Object instance = Style::NewInstance(info.Env());
+    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+    r->setWrappedValue((*v)[i]);
+    a.Set(i, instance);
   }
   delete v;
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-NAN_GETTER(Style::getId) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::getId(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   const int result =  obj->style->getId();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Style::setId) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
-  int a0(value->IntegerValue());
+void Style::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Style* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->style->setId(a0);
 }
 
-NAN_GETTER(Style::getName) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::getName(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   const string result =  obj->style->getName();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Style::setName) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Style::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Style* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->style->setName(a0);
 }
 
-NAN_GETTER(Style::getREId) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::getREId(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   const int result =  obj->style->getREId();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Style::setREId) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
-  int a0(value->IntegerValue());
+void Style::setREId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Style* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->style->setREId(a0);
 }
 
-NAN_GETTER(Style::getRELabel) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::getRELabel(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   const string result =  obj->style->getRELabel();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Style::setRELabel) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Style::setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Style* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->style->setRELabel(a0);
 }
 
-NAN_GETTER(Style::getChildIds) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::getChildIds(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   const std::vector<int> result =  obj->style->getChildIds();
 
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) result.size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), Nan::New<v8::Integer>(result[i]));
+    a.Set(i, Napi::Number::New(info.Env(), result[i]));
   }
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-NAN_SETTER(Style::setChildIds) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
-  v8::Local<v8::Array> a0Array = v8::Local<v8::Array>::Cast(value);
+void Style::setChildIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Style* obj = this;
+  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
   std::vector<int> a0;
   for (uint32_t i = 0; i < a0Array->Length(); ++i) {
-    v8::Local<v8::Value> tmp = a0Array->Get(Nan::GetCurrentContext(), i).ToLocalChecked();
-    int x(tmp->IntegerValue());
+    Napi::Value tmp = a0Array.Get(i);
+    int32_t x(tmp.As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
   obj->style->setChildIds(a0);
 }
 
-NAN_GETTER(Style::getChildren) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::getChildren(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   const std::vector<dogatech::soulsifter::Style*> result =  obj->style->getChildren();
 
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) result.size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    v8::Local<v8::Object> instance = Style::NewInstance();
-    Style* r = Nan::ObjectWrap::Unwrap<Style>(instance);
-    r->setNwcpValue((result)[i], false);
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), instance);
+    Napi::Object instance = Style::NewInstance(info.Env());
+    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+    r->setWrappedValue((result)[i], false);
+    a.Set(i, instance);
   }
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-NAN_SETTER(Style::setChildren) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
-  v8::Local<v8::Array> a0Array = v8::Local<v8::Array>::Cast(value);
+void Style::setChildren(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Style* obj = this;
+  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
   std::vector<dogatech::soulsifter::Style*> a0;
   for (uint32_t i = 0; i < a0Array->Length(); ++i) {
-    v8::Local<v8::Value> tmp = a0Array->Get(Nan::GetCurrentContext(), i).ToLocalChecked();
-    dogatech::soulsifter::Style* x(Nan::ObjectWrap::Unwrap<Style>(tmp->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+    Napi::Value tmp = a0Array.Get(i);
+    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
   obj->style->setChildren(a0);
 }
 
-NAN_GETTER(Style::getParentIds) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::getParentIds(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   const std::vector<int> result =  obj->style->getParentIds();
 
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) result.size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), Nan::New<v8::Integer>(result[i]));
+    a.Set(i, Napi::Number::New(info.Env(), result[i]));
   }
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-NAN_SETTER(Style::setParentIds) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
-  v8::Local<v8::Array> a0Array = v8::Local<v8::Array>::Cast(value);
+void Style::setParentIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Style* obj = this;
+  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
   std::vector<int> a0;
   for (uint32_t i = 0; i < a0Array->Length(); ++i) {
-    v8::Local<v8::Value> tmp = a0Array->Get(Nan::GetCurrentContext(), i).ToLocalChecked();
-    int x(tmp->IntegerValue());
+    Napi::Value tmp = a0Array.Get(i);
+    int32_t x(tmp.As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
   obj->style->setParentIds(a0);
 }
 
-NAN_GETTER(Style::getParents) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
+Napi::Value Style::getParents(const Napi::CallbackInfo& info) {
+  Style* obj = this;
   const std::vector<dogatech::soulsifter::Style*> result =  obj->style->getParents();
 
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) result.size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    v8::Local<v8::Object> instance = Style::NewInstance();
-    Style* r = Nan::ObjectWrap::Unwrap<Style>(instance);
-    r->setNwcpValue((result)[i], false);
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), instance);
+    Napi::Object instance = Style::NewInstance(info.Env());
+    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+    r->setWrappedValue((result)[i], false);
+    a.Set(i, instance);
   }
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-NAN_SETTER(Style::setParents) {
-  Style* obj = Nan::ObjectWrap::Unwrap<Style>(info.Holder());
-  v8::Local<v8::Array> a0Array = v8::Local<v8::Array>::Cast(value);
+void Style::setParents(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Style* obj = this;
+  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
   std::vector<dogatech::soulsifter::Style*> a0;
   for (uint32_t i = 0; i < a0Array->Length(); ++i) {
-    v8::Local<v8::Value> tmp = a0Array->Get(Nan::GetCurrentContext(), i).ToLocalChecked();
-    dogatech::soulsifter::Style* x(Nan::ObjectWrap::Unwrap<Style>(tmp->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+    Napi::Value tmp = a0Array.Get(i);
+    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
   obj->style->setParents(a0);

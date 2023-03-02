@@ -1,91 +1,83 @@
-#include <iostream>
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "NewSongManager_wrap.h"
 #include "Song.h"
 #include "Song_wrap.h"
 
-Nan::Persistent<v8::Function> NewSongManager::constructor;
-
-NewSongManager::NewSongManager() : Nan::ObjectWrap(), newsongmanager(NULL), ownWrappedObject(true) {};
-NewSongManager::NewSongManager(dogatech::soulsifter::NewSongManager* o) : Nan::ObjectWrap(), newsongmanager(o), ownWrappedObject(true) {};
 NewSongManager::~NewSongManager() { if (ownWrappedObject) delete newsongmanager; };
 
-void NewSongManager::setNwcpValue(dogatech::soulsifter::NewSongManager* v, bool own) {
+void NewSongManager::setWrappedValue(dogatech::soulsifter::NewSongManager* v, bool own) {
   if (ownWrappedObject)
     delete newsongmanager;
   newsongmanager = v;
   ownWrappedObject = own;
 }
 
-void NewSongManager::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  NewSongManager* obj = new NewSongManager(new dogatech::soulsifter::NewSongManager());
-  obj->Wrap(info.This());
+Napi::Object NewSongManager::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func = DefineClass(env, "NewSongManager", {
+    InstanceMethod<&NewSongManager::import>("import"),
+    InstanceMethod<&NewSongManager::nextSong>("nextSong"),
+    InstanceMethod<&NewSongManager::coverImagePath>("coverImagePath"),
+    InstanceMethod<&NewSongManager::processSong>("processSong"),
+    InstanceMethod<&NewSongManager::trashMusicFile>("trashMusicFile"),
+  });
 
-  info.GetReturnValue().Set(info.This());
+  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
+
+  exports.Set("NewSongManager", func);
+  return exports;
 }
 
-v8::Local<v8::Object> NewSongManager::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
+Napi::Object NewSongManager::NewInstance(Napi::Env env) {
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  return scope.Escape(napi_value(obj)).ToObject();
 }
 
-void NewSongManager::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("NewSongManager").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  Nan::SetPrototypeMethod(tpl, "import", import);
-  Nan::SetPrototypeMethod(tpl, "nextSong", nextSong);
-  Nan::SetPrototypeMethod(tpl, "coverImagePath", coverImagePath);
-  Nan::SetPrototypeMethod(tpl, "processSong", processSong);
-  Nan::SetPrototypeMethod(tpl, "trashMusicFile", trashMusicFile);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("NewSongManager").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
+NewSongManager::NewSongManager(const Napi::CallbackInfo& info) : Napi::ObjectWrap<NewSongManager>(info), newsongmanager(nullptr), ownWrappedObject(true) {
+  newsongmanager = new dogatech::soulsifter::NewSongManager();
 }
 
-void NewSongManager::import(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  NewSongManager* obj = Nan::ObjectWrap::Unwrap<NewSongManager>(info.Holder());
-  v8::Local<v8::Array> a0Array = v8::Local<v8::Array>::Cast(info[0]);
+Napi::Value NewSongManager::import(const Napi::CallbackInfo& info) {
+  NewSongManager* obj = this;
+  Napi::Array a0Array = v8::Local<v8::Array>::Cast(info[0]);
   std::vector<string> a0;
   for (uint32_t i = 0; i < a0Array->Length(); ++i) {
-    v8::Local<v8::Value> tmp = a0Array->Get(Nan::GetCurrentContext(), i).ToLocalChecked();
-    string x(*v8::String::Utf8Value(tmp->ToString()));
+    Napi::Value tmp = a0Array.Get(i);
+    std::string x(tmp.As<Napi::String>().Utf8Value());
     a0.push_back(x);
   }
   obj->newsongmanager->import(a0);
 }
 
-void NewSongManager::nextSong(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  NewSongManager* obj = Nan::ObjectWrap::Unwrap<NewSongManager>(info.Holder());
-  dogatech::soulsifter::Song* a0(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
-  dogatech::soulsifter::Song* a1(Nan::ObjectWrap::Unwrap<Song>(info[1]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+Napi::Value NewSongManager::nextSong(const Napi::CallbackInfo& info) {
+  NewSongManager* obj = this;
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
+  dogatech::soulsifter::Song* a1(Napi::ObjectWrap<Song>::Unwrap(info[1].As<Napi::Object>())->getWrappedValue());
   bool result =  obj->newsongmanager->nextSong(a0, a1);
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-void NewSongManager::coverImagePath(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  NewSongManager* obj = Nan::ObjectWrap::Unwrap<NewSongManager>(info.Holder());
+Napi::Value NewSongManager::coverImagePath(const Napi::CallbackInfo& info) {
+  NewSongManager* obj = this;
   string result =  obj->newsongmanager->coverImagePath();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-void NewSongManager::processSong(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  NewSongManager* obj = Nan::ObjectWrap::Unwrap<NewSongManager>(info.Holder());
-  dogatech::soulsifter::Song* a0(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+Napi::Value NewSongManager::processSong(const Napi::CallbackInfo& info) {
+  NewSongManager* obj = this;
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
   bool result =  obj->newsongmanager->processSong(a0);
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-void NewSongManager::trashMusicFile(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  NewSongManager* obj = Nan::ObjectWrap::Unwrap<NewSongManager>(info.Holder());
-  dogatech::soulsifter::Song* a0(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+Napi::Value NewSongManager::trashMusicFile(const Napi::CallbackInfo& info) {
+  NewSongManager* obj = this;
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
   obj->newsongmanager->trashMusicFile(a0);
 }
 

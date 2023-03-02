@@ -1,29 +1,23 @@
 #ifndef MusicVideoService_wrap_h
 #define MusicVideoService_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "MusicVideoService.h"
 
-class MusicVideoService : public Nan::ObjectWrap {
+class MusicVideoService : public Napi::ObjectWrap<MusicVideoService> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::MusicVideoService* v, bool own);
-  dogatech::soulsifter::MusicVideoService* getNwcpValue() const { return musicvideoservice; }
-
- private:
-  MusicVideoService();
-  explicit MusicVideoService(dogatech::soulsifter::MusicVideoService* musicvideoservice);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  MusicVideoService(const Napi::CallbackInfo& info);
   ~MusicVideoService();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::MusicVideoService* v, bool own);
+  dogatech::soulsifter::MusicVideoService* getWrappedValue() const { return musicvideoservice; }
 
-  static void associateYouTubeVideo(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void downloadAudio(const Nan::FunctionCallbackInfo<v8::Value>& info);
+ private:
+  static Napi::Value associateYouTubeVideo(const Napi::CallbackInfo& info);
+  static Napi::Value downloadAudio(const Napi::CallbackInfo& info);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::MusicVideoService* musicvideoservice;
   bool ownWrappedObject;
 };

@@ -1,161 +1,147 @@
-#include <iostream>
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "MusicVideo_wrap.h"
 #include "MusicVideo.h"
 #include "MusicVideo_wrap.h"
 #include "ResultSetIterator.h"
 
-Nan::Persistent<v8::Function> MusicVideo::constructor;
-
-MusicVideo::MusicVideo() : Nan::ObjectWrap(), musicvideo(NULL), ownWrappedObject(true) {};
-MusicVideo::MusicVideo(dogatech::soulsifter::MusicVideo* o) : Nan::ObjectWrap(), musicvideo(o), ownWrappedObject(true) {};
 MusicVideo::~MusicVideo() { if (ownWrappedObject) delete musicvideo; };
 
-void MusicVideo::setNwcpValue(dogatech::soulsifter::MusicVideo* v, bool own) {
+void MusicVideo::setWrappedValue(dogatech::soulsifter::MusicVideo* v, bool own) {
   if (ownWrappedObject)
     delete musicvideo;
   musicvideo = v;
   ownWrappedObject = own;
 }
 
-void MusicVideo::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::MusicVideo* wrappedObj = NULL;
+Napi::Object MusicVideo::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func = DefineClass(env, "MusicVideo", {
+    InstanceMethod<&MusicVideo::clear>("clear"),
+    StaticMethod<&MusicVideo::findById>("findById"),
+    StaticMethod<&MusicVideo::findAll>("findAll"),
+    InstanceMethod<&MusicVideo::update>("update"),
+    InstanceMethod<&MusicVideo::save>("save"),
+    InstanceMethod<&MusicVideo::sync>("sync"),
+    InstanceAccessor<&MusicVideo::getId, &MusicVideo::setId>("id"),
+    InstanceAccessor<&MusicVideo::getFilePath, &MusicVideo::setFilePath>("filePath"),
+    InstanceAccessor<&MusicVideo::getThumbnailFilePath, &MusicVideo::setThumbnailFilePath>("thumbnailFilePath"),
+  });
+
+  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
+
+  exports.Set("MusicVideo", func);
+  return exports;
+}
+
+Napi::Object MusicVideo::NewInstance(Napi::Env env) {
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  return scope.Escape(napi_value(obj)).ToObject();
+}
+
+MusicVideo::MusicVideo(const Napi::CallbackInfo& info) : Napi::ObjectWrap<MusicVideo>(info), musicvideo(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::MusicVideo* xtmp(Nan::ObjectWrap::Unwrap<MusicVideo>(info[0]->ToObject())->getNwcpValue());
-    dogatech::soulsifter::MusicVideo& x = *xtmp;
-    wrappedObj = new dogatech::soulsifter::MusicVideo(x);
+    dogatech::soulsifter::MusicVideo* x = Napi::ObjectWrap::Unwrap<MusicVideo>(info[0].As<Napi::Object>())->getWrappedObject();
+    musicvideo = new dogatech::soulsifter::MusicVideo(*x);
   } else {
-    wrappedObj = new dogatech::soulsifter::MusicVideo();
+    musicvideo = new dogatech::soulsifter::MusicVideo();
   }
-
-  MusicVideo* obj = new MusicVideo(wrappedObj);
-  obj->Wrap(info.This());
-
-  info.GetReturnValue().Set(info.This());
 }
 
-v8::Local<v8::Object> MusicVideo::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
-}
-
-void MusicVideo::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("MusicVideo").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  Nan::SetPrototypeMethod(tpl, "clear", clear);
-  Nan::SetMethod(tpl, "findById", findById);
-  Nan::SetMethod(tpl, "findAll", findAll);
-  Nan::SetPrototypeMethod(tpl, "update", update);
-  Nan::SetPrototypeMethod(tpl, "save", save);
-  Nan::SetPrototypeMethod(tpl, "sync", sync);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("id").ToLocalChecked(), getId, setId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("filePath").ToLocalChecked(), getFilePath, setFilePath);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("thumbnailFilePath").ToLocalChecked(), getThumbnailFilePath, setThumbnailFilePath);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("MusicVideo").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
-}
-
-void MusicVideo::clear(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
+Napi::Value MusicVideo::clear(const Napi::CallbackInfo& info) {
+  MusicVideo* obj = this;
   obj->musicvideo->clear();
 }
 
-void MusicVideo::findById(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  int a0(info[0]->IntegerValue());
+Napi::Value MusicVideo::findById(const Napi::CallbackInfo& info) {
+  int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::MusicVideo* result =
       dogatech::soulsifter::MusicVideo::findById(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = MusicVideo::NewInstance();
-    MusicVideo* r = Nan::ObjectWrap::Unwrap<MusicVideo>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = MusicVideo::NewInstance(info.Env());
+    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void MusicVideo::findAll(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+Napi::Value MusicVideo::findAll(const Napi::CallbackInfo& info) {
   dogatech::ResultSetIterator<dogatech::soulsifter::MusicVideo>* result =
       dogatech::soulsifter::MusicVideo::findAll();
 
   vector<dogatech::soulsifter::MusicVideo*>* v = result->toVector();
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) v->size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-    v8::Local<v8::Object> instance = Nan::NewInstance(cons).ToLocalChecked();
-    MusicVideo* o = Nan::ObjectWrap::Unwrap<MusicVideo>(instance);
-    o->musicvideo = (*v)[i];
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), instance);
+    Napi::Object instance = MusicVideo::NewInstance(info.Env());
+    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
+    r->setWrappedValue((*v)[i]);
+    a.Set(i, instance);
   }
   delete v;
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-void MusicVideo::update(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
+Napi::Value MusicVideo::update(const Napi::CallbackInfo& info) {
+  MusicVideo* obj = this;
   int result =  obj->musicvideo->update();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-void MusicVideo::save(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
+Napi::Value MusicVideo::save(const Napi::CallbackInfo& info) {
+  MusicVideo* obj = this;
   int result =  obj->musicvideo->save();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-void MusicVideo::sync(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
+Napi::Value MusicVideo::sync(const Napi::CallbackInfo& info) {
+  MusicVideo* obj = this;
   bool result =  obj->musicvideo->sync();
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-NAN_GETTER(MusicVideo::getId) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
+Napi::Value MusicVideo::getId(const Napi::CallbackInfo& info) {
+  MusicVideo* obj = this;
   const int result =  obj->musicvideo->getId();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(MusicVideo::setId) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
-  int a0(value->IntegerValue());
+void MusicVideo::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  MusicVideo* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->musicvideo->setId(a0);
 }
 
-NAN_GETTER(MusicVideo::getFilePath) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
+Napi::Value MusicVideo::getFilePath(const Napi::CallbackInfo& info) {
+  MusicVideo* obj = this;
   const string result =  obj->musicvideo->getFilePath();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(MusicVideo::setFilePath) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void MusicVideo::setFilePath(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  MusicVideo* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->musicvideo->setFilePath(a0);
 }
 
-NAN_GETTER(MusicVideo::getThumbnailFilePath) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
+Napi::Value MusicVideo::getThumbnailFilePath(const Napi::CallbackInfo& info) {
+  MusicVideo* obj = this;
   const string result =  obj->musicvideo->getThumbnailFilePath();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(MusicVideo::setThumbnailFilePath) {
-  MusicVideo* obj = Nan::ObjectWrap::Unwrap<MusicVideo>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void MusicVideo::setThumbnailFilePath(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  MusicVideo* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->musicvideo->setThumbnailFilePath(a0);
 }
 

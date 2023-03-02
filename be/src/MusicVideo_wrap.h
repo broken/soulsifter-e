@@ -1,39 +1,33 @@
 #ifndef MusicVideo_wrap_h
 #define MusicVideo_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "MusicVideo.h"
 
-class MusicVideo : public Nan::ObjectWrap {
+class MusicVideo : public Napi::ObjectWrap<MusicVideo> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::MusicVideo* v, bool own);
-  dogatech::soulsifter::MusicVideo* getNwcpValue() const { return musicvideo; }
-
- private:
-  MusicVideo();
-  explicit MusicVideo(dogatech::soulsifter::MusicVideo* musicvideo);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  MusicVideo(const Napi::CallbackInfo& info);
   ~MusicVideo();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::MusicVideo* v, bool own);
+  dogatech::soulsifter::MusicVideo* getWrappedValue() const { return musicvideo; }
 
-  static void clear(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findById(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findAll(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void update(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void save(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void sync(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void getId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getFilePath(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setFilePath(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getThumbnailFilePath(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setThumbnailFilePath(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
+ private:
+  Napi::Value clear(const Napi::CallbackInfo& info);
+  static Napi::Value findById(const Napi::CallbackInfo& info);
+  static Napi::Value findAll(const Napi::CallbackInfo& info);
+  Napi::Value update(const Napi::CallbackInfo& info);
+  Napi::Value save(const Napi::CallbackInfo& info);
+  Napi::Value sync(const Napi::CallbackInfo& info);
+  Napi::Value getId(const Napi::CallbackInfo& info);
+  void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getFilePath(const Napi::CallbackInfo& info);
+  void setFilePath(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getThumbnailFilePath(const Napi::CallbackInfo& info);
+  void setThumbnailFilePath(const Napi::CallbackInfo& info, const Napi::Value &value);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::MusicVideo* musicvideo;
   bool ownWrappedObject;
 };

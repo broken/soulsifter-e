@@ -1,30 +1,24 @@
 #ifndef TagService_wrap_h
 #define TagService_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "TagService.h"
 
-class TagService : public Nan::ObjectWrap {
+class TagService : public Napi::ObjectWrap<TagService> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::TagService* v, bool own);
-  dogatech::soulsifter::TagService* getNwcpValue() const { return tagservice; }
-
- private:
-  TagService();
-  explicit TagService(dogatech::soulsifter::TagService* tagservice);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  TagService(const Napi::CallbackInfo& info);
   ~TagService();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::TagService* v, bool own);
+  dogatech::soulsifter::TagService* getWrappedValue() const { return tagservice; }
 
-  static void readId3v2Tag(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void writeId3v2Tag(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void updateSongAttributesFromTags(const Nan::FunctionCallbackInfo<v8::Value>& info);
+ private:
+  static Napi::Value readId3v2Tag(const Napi::CallbackInfo& info);
+  static Napi::Value writeId3v2Tag(const Napi::CallbackInfo& info);
+  static Napi::Value updateSongAttributesFromTags(const Napi::CallbackInfo& info);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::TagService* tagservice;
   bool ownWrappedObject;
 };

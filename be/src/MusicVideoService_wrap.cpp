@@ -1,77 +1,68 @@
-#include <iostream>
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "MusicVideoService_wrap.h"
 #include "MusicVideo.h"
 #include "MusicVideo_wrap.h"
 #include "Song.h"
 #include "Song_wrap.h"
 
-Nan::Persistent<v8::Function> MusicVideoService::constructor;
-
-MusicVideoService::MusicVideoService() : Nan::ObjectWrap(), musicvideoservice(NULL), ownWrappedObject(true) {};
-MusicVideoService::MusicVideoService(dogatech::soulsifter::MusicVideoService* o) : Nan::ObjectWrap(), musicvideoservice(o), ownWrappedObject(true) {};
 MusicVideoService::~MusicVideoService() { if (ownWrappedObject) delete musicvideoservice; };
 
-void MusicVideoService::setNwcpValue(dogatech::soulsifter::MusicVideoService* v, bool own) {
+void MusicVideoService::setWrappedValue(dogatech::soulsifter::MusicVideoService* v, bool own) {
   if (ownWrappedObject)
     delete musicvideoservice;
   musicvideoservice = v;
   ownWrappedObject = own;
 }
 
-void MusicVideoService::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  MusicVideoService* obj = new MusicVideoService(new dogatech::soulsifter::MusicVideoService());
-  obj->Wrap(info.This());
+Napi::Object MusicVideoService::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func = DefineClass(env, "MusicVideoService", {
+    StaticMethod<&MusicVideoService::associateYouTubeVideo>("associateYouTubeVideo"),
+    StaticMethod<&MusicVideoService::downloadAudio>("downloadAudio"),
+  });
 
-  info.GetReturnValue().Set(info.This());
+  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
+
+  exports.Set("MusicVideoService", func);
+  return exports;
 }
 
-v8::Local<v8::Object> MusicVideoService::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
+Napi::Object MusicVideoService::NewInstance(Napi::Env env) {
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  return scope.Escape(napi_value(obj)).ToObject();
 }
 
-void MusicVideoService::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("MusicVideoService").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  Nan::SetMethod(tpl, "associateYouTubeVideo", associateYouTubeVideo);
-  Nan::SetMethod(tpl, "downloadAudio", downloadAudio);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("MusicVideoService").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
+MusicVideoService::MusicVideoService(const Napi::CallbackInfo& info) : Napi::ObjectWrap<MusicVideoService>(info), musicvideoservice(nullptr), ownWrappedObject(true) {
+  musicvideoservice = new dogatech::soulsifter::MusicVideoService();
 }
 
-void MusicVideoService::associateYouTubeVideo(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::Song* a0(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
-  string a1(*v8::String::Utf8Value(info[1]->ToString()));
+Napi::Value MusicVideoService::associateYouTubeVideo(const Napi::CallbackInfo& info) {
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
+  std::string a1(info[1].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::MusicVideo* result =
       dogatech::soulsifter::MusicVideoService::associateYouTubeVideo(a0, a1);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = MusicVideo::NewInstance();
-    MusicVideo* r = Nan::ObjectWrap::Unwrap<MusicVideo>(instance);
-    r->setNwcpValue(result, false);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = MusicVideo::NewInstance(info.Env());
+    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
+    r->setWrappedValue(result, false);
+    return instance;
   }
 }
 
-void MusicVideoService::downloadAudio(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  string a0(*v8::String::Utf8Value(info[0]->ToString()));
+Napi::Value MusicVideoService::downloadAudio(const Napi::CallbackInfo& info) {
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
   std::vector<string> result =
       dogatech::soulsifter::MusicVideoService::downloadAudio(a0);
 
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) result.size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), Nan::New<v8::String>(result[i]).ToLocalChecked());
+    a.Set(i, Napi::String::New(info.Env(), result[i]);
   }
-  info.GetReturnValue().Set(a);
+  return a;
 }
 

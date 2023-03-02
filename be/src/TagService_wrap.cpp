@@ -1,58 +1,50 @@
-#include <iostream>
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "TagService_wrap.h"
 #include "Song.h"
 #include "Song_wrap.h"
 
-Nan::Persistent<v8::Function> TagService::constructor;
-
-TagService::TagService() : Nan::ObjectWrap(), tagservice(NULL), ownWrappedObject(true) {};
-TagService::TagService(dogatech::soulsifter::TagService* o) : Nan::ObjectWrap(), tagservice(o), ownWrappedObject(true) {};
 TagService::~TagService() { if (ownWrappedObject) delete tagservice; };
 
-void TagService::setNwcpValue(dogatech::soulsifter::TagService* v, bool own) {
+void TagService::setWrappedValue(dogatech::soulsifter::TagService* v, bool own) {
   if (ownWrappedObject)
     delete tagservice;
   tagservice = v;
   ownWrappedObject = own;
 }
 
-void TagService::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  TagService* obj = new TagService(new dogatech::soulsifter::TagService());
-  obj->Wrap(info.This());
+Napi::Object TagService::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func = DefineClass(env, "TagService", {
+    StaticMethod<&TagService::readId3v2Tag>("readId3v2Tag"),
+    StaticMethod<&TagService::writeId3v2Tag>("writeId3v2Tag"),
+    StaticMethod<&TagService::updateSongAttributesFromTags>("updateSongAttributesFromTags"),
+  });
 
-  info.GetReturnValue().Set(info.This());
+  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
+
+  exports.Set("TagService", func);
+  return exports;
 }
 
-v8::Local<v8::Object> TagService::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
+Napi::Object TagService::NewInstance(Napi::Env env) {
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  return scope.Escape(napi_value(obj)).ToObject();
 }
 
-void TagService::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("TagService").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  Nan::SetMethod(tpl, "readId3v2Tag", readId3v2Tag);
-  Nan::SetMethod(tpl, "writeId3v2Tag", writeId3v2Tag);
-  Nan::SetMethod(tpl, "updateSongAttributesFromTags", updateSongAttributesFromTags);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("TagService").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
+TagService::TagService(const Napi::CallbackInfo& info) : Napi::ObjectWrap<TagService>(info), tagservice(nullptr), ownWrappedObject(true) {
+  tagservice = new dogatech::soulsifter::TagService();
 }
 
-void TagService::readId3v2Tag(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::Song* a0(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+Napi::Value TagService::readId3v2Tag(const Napi::CallbackInfo& info) {
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
 
       dogatech::soulsifter::TagService::readId3v2Tag(a0);
 }
 
-void TagService::writeId3v2Tag(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::Song* a0(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+Napi::Value TagService::writeId3v2Tag(const Napi::CallbackInfo& info) {
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
 
       dogatech::soulsifter::TagService::writeId3v2Tag(a0);
 }
@@ -85,7 +77,7 @@ class UpdateSongAttributesFromTagsWorker : public Nan::AsyncProgressWorkerBase<f
   Nan::Callback* progressCallback;
 };
 
-void TagService::updateSongAttributesFromTags(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+Napi::Value TagService::updateSongAttributesFromTags(const Napi::CallbackInfo& info) {
   Nan::Callback* a0 = new Nan::Callback();
   a0->Reset(info[0].As<v8::Function>());
   Nan::Callback* cb = new Nan::Callback();

@@ -1,32 +1,26 @@
 #ifndef NewSongManager_wrap_h
 #define NewSongManager_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "NewSongManager.h"
 
-class NewSongManager : public Nan::ObjectWrap {
+class NewSongManager : public Napi::ObjectWrap<NewSongManager> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::NewSongManager* v, bool own);
-  dogatech::soulsifter::NewSongManager* getNwcpValue() const { return newsongmanager; }
-
- private:
-  NewSongManager();
-  explicit NewSongManager(dogatech::soulsifter::NewSongManager* newsongmanager);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  NewSongManager(const Napi::CallbackInfo& info);
   ~NewSongManager();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::NewSongManager* v, bool own);
+  dogatech::soulsifter::NewSongManager* getWrappedValue() const { return newsongmanager; }
 
-  static void import(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void nextSong(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void coverImagePath(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void processSong(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void trashMusicFile(const Nan::FunctionCallbackInfo<v8::Value>& info);
+ private:
+  Napi::Value import(const Napi::CallbackInfo& info);
+  Napi::Value nextSong(const Napi::CallbackInfo& info);
+  Napi::Value coverImagePath(const Napi::CallbackInfo& info);
+  Napi::Value processSong(const Napi::CallbackInfo& info);
+  Napi::Value trashMusicFile(const Napi::CallbackInfo& info);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::NewSongManager* newsongmanager;
   bool ownWrappedObject;
 };

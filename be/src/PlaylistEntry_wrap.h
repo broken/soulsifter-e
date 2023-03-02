@@ -1,53 +1,47 @@
 #ifndef PlaylistEntry_wrap_h
 #define PlaylistEntry_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "PlaylistEntry.h"
 
-class PlaylistEntry : public Nan::ObjectWrap {
+class PlaylistEntry : public Napi::ObjectWrap<PlaylistEntry> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::PlaylistEntry* v, bool own);
-  dogatech::soulsifter::PlaylistEntry* getNwcpValue() const { return playlistentry; }
-
- private:
-  PlaylistEntry();
-  explicit PlaylistEntry(dogatech::soulsifter::PlaylistEntry* playlistentry);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  PlaylistEntry(const Napi::CallbackInfo& info);
   ~PlaylistEntry();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::PlaylistEntry* v, bool own);
+  dogatech::soulsifter::PlaylistEntry* getWrappedValue() const { return playlistentry; }
 
-  static void clear(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findById(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByPlaylistIdAndSongId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByPlaylistId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findBySongId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findAll(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void update(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void save(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void sync(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void erase(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void getId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getPlaylistId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setPlaylistId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getPlaylist(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void getPlaylistConst(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setPlaylist(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getSongId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setSongId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getSong(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void getSongConst(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setSong(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getPosition(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setPosition(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getTime(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setTime(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
+ private:
+  Napi::Value clear(const Napi::CallbackInfo& info);
+  static Napi::Value findById(const Napi::CallbackInfo& info);
+  static Napi::Value findByPlaylistIdAndSongId(const Napi::CallbackInfo& info);
+  static Napi::Value findByPlaylistId(const Napi::CallbackInfo& info);
+  static Napi::Value findBySongId(const Napi::CallbackInfo& info);
+  static Napi::Value findAll(const Napi::CallbackInfo& info);
+  Napi::Value update(const Napi::CallbackInfo& info);
+  Napi::Value save(const Napi::CallbackInfo& info);
+  Napi::Value sync(const Napi::CallbackInfo& info);
+  Napi::Value erase(const Napi::CallbackInfo& info);
+  Napi::Value getId(const Napi::CallbackInfo& info);
+  void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getPlaylistId(const Napi::CallbackInfo& info);
+  void setPlaylistId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getPlaylist(const Napi::CallbackInfo& info);
+  Napi::Value getPlaylistConst(const Napi::CallbackInfo& info);
+  void setPlaylist(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getSongId(const Napi::CallbackInfo& info);
+  void setSongId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getSong(const Napi::CallbackInfo& info);
+  Napi::Value getSongConst(const Napi::CallbackInfo& info);
+  void setSong(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getPosition(const Napi::CallbackInfo& info);
+  void setPosition(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getTime(const Napi::CallbackInfo& info);
+  void setTime(const Napi::CallbackInfo& info, const Napi::Value &value);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::PlaylistEntry* playlistentry;
   bool ownWrappedObject;
 };

@@ -1,6 +1,4 @@
-#include <iostream>
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "Song_wrap.h"
 #include "Album.h"
 #include "AlbumPart.h"
@@ -14,757 +12,734 @@
 #include "Style.h"
 #include "Style_wrap.h"
 
-Nan::Persistent<v8::Function> Song::constructor;
-
-Song::Song() : Nan::ObjectWrap(), song(NULL), ownWrappedObject(true) {};
-Song::Song(dogatech::soulsifter::Song* o) : Nan::ObjectWrap(), song(o), ownWrappedObject(true) {};
 Song::~Song() { if (ownWrappedObject) delete song; };
 
-void Song::setNwcpValue(dogatech::soulsifter::Song* v, bool own) {
+void Song::setWrappedValue(dogatech::soulsifter::Song* v, bool own) {
   if (ownWrappedObject)
     delete song;
   song = v;
   ownWrappedObject = own;
 }
 
-void Song::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::Song* wrappedObj = NULL;
+Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func = DefineClass(env, "Song", {
+    InstanceMethod<&Song::clear>("clear"),
+    StaticMethod<&Song::findById>("findById"),
+    StaticMethod<&Song::findByFilepath>("findByFilepath"),
+    StaticMethod<&Song::findByGoogleSongId>("findByGoogleSongId"),
+    StaticMethod<&Song::findByYoutubeId>("findByYoutubeId"),
+    StaticMethod<&Song::findBySpotifyId>("findBySpotifyId"),
+    StaticMethod<&Song::findByRESongId>("findByRESongId"),
+    StaticMethod<&Song::findAll>("findAll"),
+    InstanceMethod<&Song::update>("update"),
+    InstanceMethod<&Song::save>("save"),
+    InstanceMethod<&Song::sync>("sync"),
+    // Unable to process createRESongFromSong
+    InstanceMethod<&Song::reAlbum>("reAlbum"),
+    InstanceAccessor<&Song::getDateAddedString>("dateAddedString"),
+    InstanceMethod<&Song::setDateAddedToNow>("setDateAddedToNow"),
+    InstanceAccessor<&Song::getId, &Song::setId>("id"),
+    InstanceAccessor<&Song::getArtist, &Song::setArtist>("artist"),
+    InstanceAccessor<&Song::getTrack, &Song::setTrack>("track"),
+    InstanceAccessor<&Song::getTitle, &Song::setTitle>("title"),
+    InstanceAccessor<&Song::getRemixer, &Song::setRemixer>("remixer"),
+    InstanceAccessor<&Song::getFeaturing, &Song::setFeaturing>("featuring"),
+    InstanceAccessor<&Song::getFilepath, &Song::setFilepath>("filepath"),
+    InstanceAccessor<&Song::getRating, &Song::setRating>("rating"),
+    InstanceAccessor<&Song::getDateAdded, &Song::setDateAdded>("dateAdded"),
+    InstanceAccessor<&Song::getBpm, &Song::setBpm>("bpm"),
+    InstanceAccessor<&Song::getTonicKey, &Song::setTonicKey>("tonicKey"),
+    InstanceAccessor<&Song::getEnergy, &Song::setEnergy>("energy"),
+    InstanceAccessor<&Song::getComments, &Song::setComments>("comments"),
+    InstanceAccessor<&Song::getTrashed, &Song::setTrashed>("trashed"),
+    InstanceAccessor<&Song::getLowQuality, &Song::setLowQuality>("lowQuality"),
+    InstanceAccessor<&Song::getGoogleSongId, &Song::setGoogleSongId>("googleSongId"),
+    InstanceAccessor<&Song::getYoutubeId, &Song::setYoutubeId>("youtubeId"),
+    InstanceAccessor<&Song::getSpotifyId, &Song::setSpotifyId>("spotifyId"),
+    InstanceAccessor<&Song::getDurationInMs, &Song::setDurationInMs>("durationInMs"),
+    InstanceAccessor<&Song::getCurator, &Song::setCurator>("curator"),
+    InstanceAccessor<&Song::getRESongId, &Song::setRESongId>("rESongId"),
+    // Unable to process getRESong
+    // Unable to process getRESongConst
+    // Unable to process setRESong
+    InstanceAccessor<&Song::getAlbumId, &Song::setAlbumId>("albumId"),
+    InstanceAccessor<&Song::getAlbum, &Song::setAlbum>("album"),
+    InstanceAccessor<&Song::getAlbumConst>("albumConst"),
+    InstanceAccessor<&Song::getAlbumPartId, &Song::setAlbumPartId>("albumPartId"),
+    InstanceAccessor<&Song::getAlbumPart, &Song::setAlbumPart>("albumPart"),
+    InstanceAccessor<&Song::getAlbumPartConst>("albumPartConst"),
+    InstanceAccessor<&Song::getMusicVideoId, &Song::setMusicVideoId>("musicVideoId"),
+    InstanceAccessor<&Song::getMusicVideo, &Song::setMusicVideo>("musicVideo"),
+    InstanceAccessor<&Song::getMusicVideoConst>("musicVideoConst"),
+    InstanceAccessor<&Song::getStyleIds, &Song::setStyleIds>("styleIds"),
+    InstanceAccessor<&Song::getStyles, &Song::setStyles>("styles"),
+    InstanceAccessor<&Song::getBpmLock, &Song::setBpmLock>("bpmLock"),
+    InstanceAccessor<&Song::getTonicKeyLock, &Song::setTonicKeyLock>("tonicKeyLock"),
+  });
+
+  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
+
+  exports.Set("Song", func);
+  return exports;
+}
+
+Napi::Object Song::NewInstance(Napi::Env env) {
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  return scope.Escape(napi_value(obj)).ToObject();
+}
+
+Song::Song(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Song>(info), song(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::Song* xtmp(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject())->getNwcpValue());
-    dogatech::soulsifter::Song& x = *xtmp;
-    wrappedObj = new dogatech::soulsifter::Song(x);
+    dogatech::soulsifter::Song* x = Napi::ObjectWrap::Unwrap<Song>(info[0].As<Napi::Object>())->getWrappedObject();
+    song = new dogatech::soulsifter::Song(*x);
   } else {
-    wrappedObj = new dogatech::soulsifter::Song();
+    song = new dogatech::soulsifter::Song();
   }
-
-  Song* obj = new Song(wrappedObj);
-  obj->Wrap(info.This());
-
-  info.GetReturnValue().Set(info.This());
 }
 
-v8::Local<v8::Object> Song::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
-}
-
-void Song::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("Song").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  Nan::SetPrototypeMethod(tpl, "clear", clear);
-  Nan::SetMethod(tpl, "findById", findById);
-  Nan::SetMethod(tpl, "findByFilepath", findByFilepath);
-  Nan::SetMethod(tpl, "findByGoogleSongId", findByGoogleSongId);
-  Nan::SetMethod(tpl, "findByYoutubeId", findByYoutubeId);
-  Nan::SetMethod(tpl, "findBySpotifyId", findBySpotifyId);
-  Nan::SetMethod(tpl, "findByRESongId", findByRESongId);
-  Nan::SetMethod(tpl, "findAll", findAll);
-  Nan::SetPrototypeMethod(tpl, "update", update);
-  Nan::SetPrototypeMethod(tpl, "save", save);
-  Nan::SetPrototypeMethod(tpl, "sync", sync);
-  // Unable to process createRESongFromSong
-  Nan::SetPrototypeMethod(tpl, "reAlbum", reAlbum);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("dateAddedString").ToLocalChecked(), getDateAddedString);
-  Nan::SetPrototypeMethod(tpl, "setDateAddedToNow", setDateAddedToNow);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("id").ToLocalChecked(), getId, setId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("artist").ToLocalChecked(), getArtist, setArtist);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("track").ToLocalChecked(), getTrack, setTrack);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("title").ToLocalChecked(), getTitle, setTitle);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("remixer").ToLocalChecked(), getRemixer, setRemixer);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("featuring").ToLocalChecked(), getFeaturing, setFeaturing);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("filepath").ToLocalChecked(), getFilepath, setFilepath);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("rating").ToLocalChecked(), getRating, setRating);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("dateAdded").ToLocalChecked(), getDateAdded, setDateAdded);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("bpm").ToLocalChecked(), getBpm, setBpm);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("tonicKey").ToLocalChecked(), getTonicKey, setTonicKey);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("energy").ToLocalChecked(), getEnergy, setEnergy);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("comments").ToLocalChecked(), getComments, setComments);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("trashed").ToLocalChecked(), getTrashed, setTrashed);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("lowQuality").ToLocalChecked(), getLowQuality, setLowQuality);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("googleSongId").ToLocalChecked(), getGoogleSongId, setGoogleSongId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("youtubeId").ToLocalChecked(), getYoutubeId, setYoutubeId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("spotifyId").ToLocalChecked(), getSpotifyId, setSpotifyId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("durationInMs").ToLocalChecked(), getDurationInMs, setDurationInMs);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("curator").ToLocalChecked(), getCurator, setCurator);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("rESongId").ToLocalChecked(), getRESongId, setRESongId);
-  // Unable to process getRESong
-  // Unable to process getRESongConst
-  // Unable to process setRESong
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("albumId").ToLocalChecked(), getAlbumId, setAlbumId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("album").ToLocalChecked(), getAlbum, setAlbum);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("albumConst").ToLocalChecked(), getAlbumConst);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("albumPartId").ToLocalChecked(), getAlbumPartId, setAlbumPartId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("albumPart").ToLocalChecked(), getAlbumPart, setAlbumPart);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("albumPartConst").ToLocalChecked(), getAlbumPartConst);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("musicVideoId").ToLocalChecked(), getMusicVideoId, setMusicVideoId);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("musicVideo").ToLocalChecked(), getMusicVideo, setMusicVideo);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("musicVideoConst").ToLocalChecked(), getMusicVideoConst);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("styleIds").ToLocalChecked(), getStyleIds, setStyleIds);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("styles").ToLocalChecked(), getStyles, setStyles);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("bpmLock").ToLocalChecked(), getBpmLock, setBpmLock);
-  Nan::SetAccessor(tpl->InstanceTemplate(), Nan::New<v8::String>("tonicKeyLock").ToLocalChecked(), getTonicKeyLock, setTonicKeyLock);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("Song").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
-}
-
-void Song::clear(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::clear(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   obj->song->clear();
 }
 
-void Song::findById(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  int a0(info[0]->IntegerValue());
+Napi::Value Song::findById(const Napi::CallbackInfo& info) {
+  int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::Song* result =
       dogatech::soulsifter::Song::findById(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Song::NewInstance();
-    Song* r = Nan::ObjectWrap::Unwrap<Song>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Song::NewInstance(info.Env());
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void Song::findByFilepath(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  string a0(*v8::String::Utf8Value(info[0]->ToString()));
+Napi::Value Song::findByFilepath(const Napi::CallbackInfo& info) {
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::Song* result =
       dogatech::soulsifter::Song::findByFilepath(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Song::NewInstance();
-    Song* r = Nan::ObjectWrap::Unwrap<Song>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Song::NewInstance(info.Env());
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void Song::findByGoogleSongId(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  string a0(*v8::String::Utf8Value(info[0]->ToString()));
+Napi::Value Song::findByGoogleSongId(const Napi::CallbackInfo& info) {
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::Song* result =
       dogatech::soulsifter::Song::findByGoogleSongId(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Song::NewInstance();
-    Song* r = Nan::ObjectWrap::Unwrap<Song>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Song::NewInstance(info.Env());
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void Song::findByYoutubeId(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  string a0(*v8::String::Utf8Value(info[0]->ToString()));
+Napi::Value Song::findByYoutubeId(const Napi::CallbackInfo& info) {
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::Song* result =
       dogatech::soulsifter::Song::findByYoutubeId(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Song::NewInstance();
-    Song* r = Nan::ObjectWrap::Unwrap<Song>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Song::NewInstance(info.Env());
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void Song::findBySpotifyId(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  string a0(*v8::String::Utf8Value(info[0]->ToString()));
+Napi::Value Song::findBySpotifyId(const Napi::CallbackInfo& info) {
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::Song* result =
       dogatech::soulsifter::Song::findBySpotifyId(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Song::NewInstance();
-    Song* r = Nan::ObjectWrap::Unwrap<Song>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Song::NewInstance(info.Env());
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void Song::findByRESongId(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  int a0(info[0]->IntegerValue());
+Napi::Value Song::findByRESongId(const Napi::CallbackInfo& info) {
+  int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::Song* result =
       dogatech::soulsifter::Song::findByRESongId(a0);
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Song::NewInstance();
-    Song* r = Nan::ObjectWrap::Unwrap<Song>(instance);
-    r->setNwcpValue(result, true);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Song::NewInstance(info.Env());
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
   }
 }
 
-void Song::findAll(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+Napi::Value Song::findAll(const Napi::CallbackInfo& info) {
   dogatech::ResultSetIterator<dogatech::soulsifter::Song>* result =
       dogatech::soulsifter::Song::findAll();
 
   vector<dogatech::soulsifter::Song*>* v = result->toVector();
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) v->size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-    v8::Local<v8::Object> instance = Nan::NewInstance(cons).ToLocalChecked();
-    Song* o = Nan::ObjectWrap::Unwrap<Song>(instance);
-    o->song = (*v)[i];
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), instance);
+    Napi::Object instance = Song::NewInstance(info.Env());
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue((*v)[i]);
+    a.Set(i, instance);
   }
   delete v;
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-void Song::update(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::update(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   int result =  obj->song->update();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-void Song::save(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::save(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   int result =  obj->song->save();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-void Song::sync(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::sync(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   bool result =  obj->song->sync();
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-void Song::reAlbum(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::reAlbum(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->reAlbum();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_GETTER(Song::getDateAddedString) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getDateAddedString(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getDateAddedString();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-void Song::setDateAddedToNow(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::setDateAddedToNow(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   obj->song->setDateAddedToNow();
 }
 
-NAN_GETTER(Song::getId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getId(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const int result =  obj->song->getId();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  int a0(value->IntegerValue());
+void Song::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->song->setId(a0);
 }
 
-NAN_GETTER(Song::getArtist) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getArtist(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getArtist();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setArtist) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setArtist(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setArtist(a0);
 }
 
-NAN_GETTER(Song::getTrack) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getTrack(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getTrack();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setTrack) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setTrack(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setTrack(a0);
 }
 
-NAN_GETTER(Song::getTitle) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getTitle(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getTitle();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setTitle) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setTitle(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setTitle(a0);
 }
 
-NAN_GETTER(Song::getRemixer) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getRemixer(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getRemixer();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setRemixer) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setRemixer(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setRemixer(a0);
 }
 
-NAN_GETTER(Song::getFeaturing) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getFeaturing(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getFeaturing();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setFeaturing) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setFeaturing(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setFeaturing(a0);
 }
 
-NAN_GETTER(Song::getFilepath) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getFilepath(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getFilepath();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setFilepath) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setFilepath(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setFilepath(a0);
 }
 
-NAN_GETTER(Song::getRating) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getRating(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const int result =  obj->song->getRating();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setRating) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  int a0(value->IntegerValue());
+void Song::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->song->setRating(a0);
 }
 
-NAN_GETTER(Song::getDateAdded) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getDateAdded(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const time_t result =  obj->song->getDateAdded();
 
-  info.GetReturnValue().Set(Nan::New<v8::Number>(result * 1000));
+  return Napi::Number::New(info.Env(), result * 1000));
 }
 
-NAN_SETTER(Song::setDateAdded) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  time_t a0(value->IntegerValue() / 1000);
+void Song::setDateAdded(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  time_t a0(value.As<Napi::Number>().Int32Value() / 1000);
   obj->song->setDateAdded(a0);
 }
 
-NAN_GETTER(Song::getBpm) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getBpm(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getBpm();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setBpm) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setBpm(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setBpm(a0);
 }
 
-NAN_GETTER(Song::getTonicKey) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getTonicKey(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getTonicKey();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setTonicKey) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setTonicKey(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setTonicKey(a0);
 }
 
-NAN_GETTER(Song::getEnergy) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getEnergy(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const int result =  obj->song->getEnergy();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setEnergy) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  int a0(value->IntegerValue());
+void Song::setEnergy(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->song->setEnergy(a0);
 }
 
-NAN_GETTER(Song::getComments) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getComments(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getComments();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setComments) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setComments(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setComments(a0);
 }
 
-NAN_GETTER(Song::getTrashed) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getTrashed(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const bool result =  obj->song->getTrashed();
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setTrashed) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  bool a0(value->BooleanValue());
+void Song::setTrashed(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  bool a0(value.As<Napi::Boolean>().Value());
   obj->song->setTrashed(a0);
 }
 
-NAN_GETTER(Song::getLowQuality) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getLowQuality(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const bool result =  obj->song->getLowQuality();
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setLowQuality) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  bool a0(value->BooleanValue());
+void Song::setLowQuality(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  bool a0(value.As<Napi::Boolean>().Value());
   obj->song->setLowQuality(a0);
 }
 
-NAN_GETTER(Song::getGoogleSongId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getGoogleSongId(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getGoogleSongId();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setGoogleSongId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setGoogleSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setGoogleSongId(a0);
 }
 
-NAN_GETTER(Song::getYoutubeId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getYoutubeId(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getYoutubeId();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setYoutubeId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setYoutubeId(a0);
 }
 
-NAN_GETTER(Song::getSpotifyId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getSpotifyId(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getSpotifyId();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setSpotifyId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setSpotifyId(a0);
 }
 
-NAN_GETTER(Song::getDurationInMs) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getDurationInMs(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const int result =  obj->song->getDurationInMs();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setDurationInMs) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  int a0(value->IntegerValue());
+void Song::setDurationInMs(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->song->setDurationInMs(a0);
 }
 
-NAN_GETTER(Song::getCurator) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getCurator(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const string result =  obj->song->getCurator();
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-NAN_SETTER(Song::setCurator) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  string a0(*v8::String::Utf8Value(value->ToString()));
+void Song::setCurator(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  std::string a0(value.As<Napi::String>().Utf8Value());
   obj->song->setCurator(a0);
 }
 
-NAN_GETTER(Song::getRESongId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getRESongId(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const int result =  obj->song->getRESongId();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setRESongId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  int a0(value->IntegerValue());
+void Song::setRESongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->song->setRESongId(a0);
 }
 
-NAN_GETTER(Song::getAlbumId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getAlbumId(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const int result =  obj->song->getAlbumId();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setAlbumId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  int a0(value->IntegerValue());
+void Song::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->song->setAlbumId(a0);
 }
 
-NAN_GETTER(Song::getAlbum) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getAlbum(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   dogatech::soulsifter::Album* result =  obj->song->getAlbum();
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Album::NewInstance();
-    Album* r = Nan::ObjectWrap::Unwrap<Album>(instance);
-    r->setNwcpValue(result, false);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Album::NewInstance(info.Env());
+    Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
+    r->setWrappedValue(result, false);
+    return instance;
   }
 }
 
-NAN_GETTER(Song::getAlbumConst) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getAlbumConst(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   dogatech::soulsifter::Album* result =  obj->song->getAlbumConst();
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = Album::NewInstance();
-    Album* r = Nan::ObjectWrap::Unwrap<Album>(instance);
-    r->setNwcpValue(result, false);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = Album::NewInstance(info.Env());
+    Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
+    r->setWrappedValue(result, false);
+    return instance;
   }
 }
 
-NAN_SETTER(Song::setAlbum) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  dogatech::soulsifter::Album* a0tmp(Nan::ObjectWrap::Unwrap<Album>(value->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+void Song::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  dogatech::soulsifter::Album* a0tmp(Napi::ObjectWrap<Album>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::Album& a0 = *a0tmp;
   obj->song->setAlbum(a0);
 }
 
-NAN_GETTER(Song::getAlbumPartId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getAlbumPartId(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const int result =  obj->song->getAlbumPartId();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setAlbumPartId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  int a0(value->IntegerValue());
+void Song::setAlbumPartId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->song->setAlbumPartId(a0);
 }
 
-NAN_GETTER(Song::getAlbumPart) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getAlbumPart(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   dogatech::soulsifter::AlbumPart* result =  obj->song->getAlbumPart();
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = AlbumPart::NewInstance();
-    AlbumPart* r = Nan::ObjectWrap::Unwrap<AlbumPart>(instance);
-    r->setNwcpValue(result, false);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = AlbumPart::NewInstance(info.Env());
+    AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
+    r->setWrappedValue(result, false);
+    return instance;
   }
 }
 
-NAN_GETTER(Song::getAlbumPartConst) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getAlbumPartConst(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   dogatech::soulsifter::AlbumPart* result =  obj->song->getAlbumPartConst();
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = AlbumPart::NewInstance();
-    AlbumPart* r = Nan::ObjectWrap::Unwrap<AlbumPart>(instance);
-    r->setNwcpValue(result, false);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = AlbumPart::NewInstance(info.Env());
+    AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
+    r->setWrappedValue(result, false);
+    return instance;
   }
 }
 
-NAN_SETTER(Song::setAlbumPart) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  dogatech::soulsifter::AlbumPart* a0tmp(Nan::ObjectWrap::Unwrap<AlbumPart>(value->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+void Song::setAlbumPart(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  dogatech::soulsifter::AlbumPart* a0tmp(Napi::ObjectWrap<AlbumPart>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::AlbumPart& a0 = *a0tmp;
   obj->song->setAlbumPart(a0);
 }
 
-NAN_GETTER(Song::getMusicVideoId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getMusicVideoId(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const int result =  obj->song->getMusicVideoId();
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setMusicVideoId) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  int a0(value->IntegerValue());
+void Song::setMusicVideoId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->song->setMusicVideoId(a0);
 }
 
-NAN_GETTER(Song::getMusicVideo) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getMusicVideo(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   dogatech::soulsifter::MusicVideo* result =  obj->song->getMusicVideo();
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = MusicVideo::NewInstance();
-    MusicVideo* r = Nan::ObjectWrap::Unwrap<MusicVideo>(instance);
-    r->setNwcpValue(result, false);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = MusicVideo::NewInstance(info.Env());
+    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
+    r->setWrappedValue(result, false);
+    return instance;
   }
 }
 
-NAN_GETTER(Song::getMusicVideoConst) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getMusicVideoConst(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   dogatech::soulsifter::MusicVideo* result =  obj->song->getMusicVideoConst();
 
   if (result == NULL) {
-    info.GetReturnValue().SetNull();
+    return env.Null();
   } else {
-    v8::Local<v8::Object> instance = MusicVideo::NewInstance();
-    MusicVideo* r = Nan::ObjectWrap::Unwrap<MusicVideo>(instance);
-    r->setNwcpValue(result, false);
-
-    info.GetReturnValue().Set(instance);
+    Napi::Object instance = MusicVideo::NewInstance(info.Env());
+    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
+    r->setWrappedValue(result, false);
+    return instance;
   }
 }
 
-NAN_SETTER(Song::setMusicVideo) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  dogatech::soulsifter::MusicVideo* a0tmp(Nan::ObjectWrap::Unwrap<MusicVideo>(value->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+void Song::setMusicVideo(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  dogatech::soulsifter::MusicVideo* a0tmp(Napi::ObjectWrap<MusicVideo>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::MusicVideo& a0 = *a0tmp;
   obj->song->setMusicVideo(a0);
 }
 
-NAN_GETTER(Song::getStyleIds) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getStyleIds(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const std::vector<int> result =  obj->song->getStyleIds();
 
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) result.size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), Nan::New<v8::Integer>(result[i]));
+    a.Set(i, Napi::Number::New(info.Env(), result[i]));
   }
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-NAN_SETTER(Song::setStyleIds) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  v8::Local<v8::Array> a0Array = v8::Local<v8::Array>::Cast(value);
+void Song::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
   std::vector<int> a0;
   for (uint32_t i = 0; i < a0Array->Length(); ++i) {
-    v8::Local<v8::Value> tmp = a0Array->Get(Nan::GetCurrentContext(), i).ToLocalChecked();
-    int x(tmp->IntegerValue());
+    Napi::Value tmp = a0Array.Get(i);
+    int32_t x(tmp.As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
   obj->song->setStyleIds(a0);
 }
 
-NAN_GETTER(Song::getStyles) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getStyles(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const std::vector<dogatech::soulsifter::Style*> result =  obj->song->getStyles();
 
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) result.size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    v8::Local<v8::Object> instance = Style::NewInstance();
-    Style* r = Nan::ObjectWrap::Unwrap<Style>(instance);
-    r->setNwcpValue((result)[i], false);
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), instance);
+    Napi::Object instance = Style::NewInstance(info.Env());
+    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+    r->setWrappedValue((result)[i], false);
+    a.Set(i, instance);
   }
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-NAN_SETTER(Song::setStyles) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  v8::Local<v8::Array> a0Array = v8::Local<v8::Array>::Cast(value);
+void Song::setStyles(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
   std::vector<dogatech::soulsifter::Style*> a0;
   for (uint32_t i = 0; i < a0Array->Length(); ++i) {
-    v8::Local<v8::Value> tmp = a0Array->Get(Nan::GetCurrentContext(), i).ToLocalChecked();
-    dogatech::soulsifter::Style* x(Nan::ObjectWrap::Unwrap<Style>(tmp->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+    Napi::Value tmp = a0Array.Get(i);
+    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
   obj->song->setStyles(a0);
 }
 
-NAN_GETTER(Song::getBpmLock) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getBpmLock(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const bool result =  obj->song->getBpmLock();
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setBpmLock) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  bool a0(value->BooleanValue());
+void Song::setBpmLock(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  bool a0(value.As<Napi::Boolean>().Value());
   obj->song->setBpmLock(a0);
 }
 
-NAN_GETTER(Song::getTonicKeyLock) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
+Napi::Value Song::getTonicKeyLock(const Napi::CallbackInfo& info) {
+  Song* obj = this;
   const bool result =  obj->song->getTonicKeyLock();
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result));
 }
 
-NAN_SETTER(Song::setTonicKeyLock) {
-  Song* obj = Nan::ObjectWrap::Unwrap<Song>(info.Holder());
-  bool a0(value->BooleanValue());
+void Song::setTonicKeyLock(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Song* obj = this;
+  bool a0(value.As<Napi::Boolean>().Value());
   obj->song->setTonicKeyLock(a0);
 }
 

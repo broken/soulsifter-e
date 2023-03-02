@@ -1,28 +1,22 @@
 #ifndef SearchUtil_wrap_h
 #define SearchUtil_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "SearchUtil.h"
 
-class SearchUtil : public Nan::ObjectWrap {
+class SearchUtil : public Napi::ObjectWrap<SearchUtil> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::SearchUtil* v, bool own);
-  dogatech::soulsifter::SearchUtil* getNwcpValue() const { return searchutil; }
-
- private:
-  SearchUtil();
-  explicit SearchUtil(dogatech::soulsifter::SearchUtil* searchutil);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  SearchUtil(const Napi::CallbackInfo& info);
   ~SearchUtil();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::SearchUtil* v, bool own);
+  dogatech::soulsifter::SearchUtil* getWrappedValue() const { return searchutil; }
 
-  static void searchSongs(const Nan::FunctionCallbackInfo<v8::Value>& info);
+ private:
+  static Napi::Value searchSongs(const Napi::CallbackInfo& info);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::SearchUtil* searchutil;
   bool ownWrappedObject;
 };

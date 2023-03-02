@@ -1,78 +1,70 @@
-#include <iostream>
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "AudioAnalyzer_wrap.h"
 #include "Song.h"
 #include "Song_wrap.h"
 
-Nan::Persistent<v8::Function> AudioAnalyzer::constructor;
-
-AudioAnalyzer::AudioAnalyzer() : Nan::ObjectWrap(), audioanalyzer(NULL), ownWrappedObject(true) {};
-AudioAnalyzer::AudioAnalyzer(dogatech::soulsifter::AudioAnalyzer* o) : Nan::ObjectWrap(), audioanalyzer(o), ownWrappedObject(true) {};
 AudioAnalyzer::~AudioAnalyzer() { if (ownWrappedObject) delete audioanalyzer; };
 
-void AudioAnalyzer::setNwcpValue(dogatech::soulsifter::AudioAnalyzer* v, bool own) {
+void AudioAnalyzer::setWrappedValue(dogatech::soulsifter::AudioAnalyzer* v, bool own) {
   if (ownWrappedObject)
     delete audioanalyzer;
   audioanalyzer = v;
   ownWrappedObject = own;
 }
 
-void AudioAnalyzer::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  AudioAnalyzer* obj = new AudioAnalyzer(new dogatech::soulsifter::AudioAnalyzer());
-  obj->Wrap(info.This());
+Napi::Object AudioAnalyzer::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func = DefineClass(env, "AudioAnalyzer", {
+    // Unable to process analyzeKey
+    StaticMethod<&AudioAnalyzer::analyzeBpm>("analyzeBpm"),
+    StaticMethod<&AudioAnalyzer::analyzeBpms>("analyzeBpms"),
+    StaticMethod<&AudioAnalyzer::analyzeDuration>("analyzeDuration"),
+    StaticMethod<&AudioAnalyzer::analyzeDurations>("analyzeDurations"),
+  });
 
-  info.GetReturnValue().Set(info.This());
+  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
+
+  exports.Set("AudioAnalyzer", func);
+  return exports;
 }
 
-v8::Local<v8::Object> AudioAnalyzer::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
+Napi::Object AudioAnalyzer::NewInstance(Napi::Env env) {
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  return scope.Escape(napi_value(obj)).ToObject();
 }
 
-void AudioAnalyzer::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("AudioAnalyzer").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  // Prototype
-  // Unable to process analyzeKey
-  Nan::SetMethod(tpl, "analyzeBpm", analyzeBpm);
-  Nan::SetMethod(tpl, "analyzeBpms", analyzeBpms);
-  Nan::SetMethod(tpl, "analyzeDuration", analyzeDuration);
-  Nan::SetMethod(tpl, "analyzeDurations", analyzeDurations);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("AudioAnalyzer").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
+AudioAnalyzer::AudioAnalyzer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<AudioAnalyzer>(info), audioanalyzer(nullptr), ownWrappedObject(true) {
+  audioanalyzer = new dogatech::soulsifter::AudioAnalyzer();
 }
 
-void AudioAnalyzer::analyzeBpm(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::Song* a0(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+Napi::Value AudioAnalyzer::analyzeBpm(const Napi::CallbackInfo& info) {
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
   const std::vector<double> result =
       dogatech::soulsifter::AudioAnalyzer::analyzeBpm(a0);
 
-  v8::Local<v8::Array> a = Nan::New<v8::Array>((int) result.size());
+  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    a->Set(Nan::GetCurrentContext(), Nan::New<v8::Number>(i), Nan::New<v8::Number>(result[i]));
+    a.Set(i, Napi::Number::New(info.Env(), result[i]));
   }
-  info.GetReturnValue().Set(a);
+  return a;
 }
 
-void AudioAnalyzer::analyzeBpms(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+Napi::Value AudioAnalyzer::analyzeBpms(const Napi::CallbackInfo& info) {
 
       dogatech::soulsifter::AudioAnalyzer::analyzeBpms();
 }
 
-void AudioAnalyzer::analyzeDuration(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::Song* a0(Nan::ObjectWrap::Unwrap<Song>(info[0]->ToObject(Nan::GetCurrentContext()).ToLocalChecked())->getNwcpValue());
+Napi::Value AudioAnalyzer::analyzeDuration(const Napi::CallbackInfo& info) {
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
   int result =
       dogatech::soulsifter::AudioAnalyzer::analyzeDuration(a0);
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result));
 }
 
-void AudioAnalyzer::analyzeDurations(const Nan::FunctionCallbackInfo<v8::Value>& info) {
+Napi::Value AudioAnalyzer::analyzeDurations(const Napi::CallbackInfo& info) {
 
       dogatech::soulsifter::AudioAnalyzer::analyzeDurations();
 }

@@ -1,57 +1,51 @@
 #ifndef Mix_wrap_h
 #define Mix_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "Mix.h"
 
-class Mix : public Nan::ObjectWrap {
+class Mix : public Napi::ObjectWrap<Mix> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::Mix* v, bool own);
-  dogatech::soulsifter::Mix* getNwcpValue() const { return mix; }
-
- private:
-  Mix();
-  explicit Mix(dogatech::soulsifter::Mix* mix);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  Mix(const Napi::CallbackInfo& info);
   ~Mix();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::Mix* v, bool own);
+  dogatech::soulsifter::Mix* getWrappedValue() const { return mix; }
 
-  static void clear(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findById(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByOutSongIdAndInSongId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByOutSongId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findByInSongId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void findAll(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void update(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void save(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void sync(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void mixoutCountForRESongId(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void getId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getOutSongId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setOutSongId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getOutSong(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void getOutSongConst(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setOutSong(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getInSongId(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setInSongId(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getInSong(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void getInSongConst(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setInSong(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getBpmDiff(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setBpmDiff(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getRating(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setRating(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getComments(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setComments(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
-  static void getAddon(v8::Local<v8::String> property, const Nan::PropertyCallbackInfo<v8::Value>& info);
-  static void setAddon(v8::Local<v8::String> property, v8::Local<v8::Value> value, const Nan::PropertyCallbackInfo<void>& info);
+ private:
+  Napi::Value clear(const Napi::CallbackInfo& info);
+  static Napi::Value findById(const Napi::CallbackInfo& info);
+  static Napi::Value findByOutSongIdAndInSongId(const Napi::CallbackInfo& info);
+  static Napi::Value findByOutSongId(const Napi::CallbackInfo& info);
+  static Napi::Value findByInSongId(const Napi::CallbackInfo& info);
+  static Napi::Value findAll(const Napi::CallbackInfo& info);
+  Napi::Value update(const Napi::CallbackInfo& info);
+  Napi::Value save(const Napi::CallbackInfo& info);
+  Napi::Value sync(const Napi::CallbackInfo& info);
+  static Napi::Value mixoutCountForRESongId(const Napi::CallbackInfo& info);
+  Napi::Value getId(const Napi::CallbackInfo& info);
+  void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getOutSongId(const Napi::CallbackInfo& info);
+  void setOutSongId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getOutSong(const Napi::CallbackInfo& info);
+  Napi::Value getOutSongConst(const Napi::CallbackInfo& info);
+  void setOutSong(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getInSongId(const Napi::CallbackInfo& info);
+  void setInSongId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getInSong(const Napi::CallbackInfo& info);
+  Napi::Value getInSongConst(const Napi::CallbackInfo& info);
+  void setInSong(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getBpmDiff(const Napi::CallbackInfo& info);
+  void setBpmDiff(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getRating(const Napi::CallbackInfo& info);
+  void setRating(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getComments(const Napi::CallbackInfo& info);
+  void setComments(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getAddon(const Napi::CallbackInfo& info);
+  void setAddon(const Napi::CallbackInfo& info, const Napi::Value &value);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::Mix* mix;
   bool ownWrappedObject;
 };
