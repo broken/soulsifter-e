@@ -1,7 +1,7 @@
-import { css, html, LitElement } from 'lit';
+import { css, html, LitElement, unsafeCSS } from 'lit';
 
-// import "@material/mwc-tab";
-// import "@material/mwc-tab-bar";
+import "@material/mwc-tab";
+import "@material/mwc-tab-bar";
 
 // import "./alert-list.js";
 // import "./genre-edit.js";
@@ -17,6 +17,8 @@ import { css, html, LitElement } from 'lit';
 // import "./song-section.js";
 // // import "./spotify-client.js";
 // import "./youtube-client.js";
+
+import theme from './theme-serato.css';
 
 
 class SoulSifter extends LitElement {
@@ -79,82 +81,83 @@ class SoulSifter extends LitElement {
 //     this.tabClicked(2);
 //   }
 
-//   static get styles() {
-//     return [
-//       css`
-//         :host {
-//           display: flex;
-//           position: absolute;
-//           top: 0;
-//           right: 0;
-//           bottom: 0;
-//           left: 0;
-//           color: var(--primary-text-color);
-//           background-color: var(--primary-background-color);
-//           font-size: 13px;
-//           user-select: none;
-//         }
-//         main, aside {
-//           display: flex;
-//           flex-direction: column;
-//           height: 100%;
-//         }
-//         aside {
-//           width: 256px;
-//           flex-grow: 0;
-//           flex-shrink: 0;
-//           flex-basis: 256px;
-//         }
-//         main {
-//           flex: 1 1 auto;
-//         }
-//         #sections {
-//           flex: 1 1 auto;
-//           overflow: hidden;
-//         }
-//         mwc-tab-bar {
-//           background-color: var(--ss-drawer-tab-bg);
-//           display: flex;
-//         }
-//         mwc-tab {
-//           --mdc-theme-on-surface: var(--ss-drawer-tab-clr);
-//           --mdc-theme-primary: var(--ss-drawer-tab-clr-active);
-//         }
-//         genre-list {
-//           transition: transform 1s;
-//           transform: translate(-100%);
-//           display: none;
-//         }
-//         genre-list.active {
-//           transition: transform 1s;
-//           transform: translate(0);
-//           display: block;
-//         }
-//         song-section {
-//           transition: transform 1s;
-//           transform: translate(-100%);
-//           display: none;
-//         }
-//         song-section.active {
-//           transform: translate(0);
-//           display: block;
-//         }
-//         playlist-list {
-//           transition: transform 1s;
-//           transform: translate(-100%);
-//           display: none;
-//         }
-//         playlist-list.active {
-//           transform: translate(0);
-//           display: block;
-//         }
-//         .list-seperator {
-//           height: 2px;
-//           background-color: var(--search-toolbar-background);
-//         }
-//       `
-//     ];
-//   }
+  static get styles() {
+    return [
+      css`${unsafeCSS(theme)}`,
+      css`
+        :host {
+          display: flex;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          color: var(--primary-text-color);
+          background-color: var(--primary-background-color);
+          font-size: 13px;
+          user-select: none;
+        }
+        main, aside {
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+        }
+        aside {
+          width: 256px;
+          flex-grow: 0;
+          flex-shrink: 0;
+          flex-basis: 256px;
+        }
+        main {
+          flex: 1 1 auto;
+        }
+        #sections {
+          flex: 1 1 auto;
+          overflow: hidden;
+        }
+        mwc-tab-bar {
+          background-color: var(--ss-drawer-tab-bg);
+          display: flex;
+        }
+        mwc-tab {
+          --mdc-theme-on-surface: var(--ss-drawer-tab-clr);
+          --mdc-theme-primary: var(--ss-drawer-tab-clr-active);
+        }
+        genre-list {
+          transition: transform 1s;
+          transform: translate(-100%);
+          display: none;
+        }
+        genre-list.active {
+          transition: transform 1s;
+          transform: translate(0);
+          display: block;
+        }
+        song-section {
+          transition: transform 1s;
+          transform: translate(-100%);
+          display: none;
+        }
+        song-section.active {
+          transform: translate(0);
+          display: block;
+        }
+        playlist-list {
+          transition: transform 1s;
+          transform: translate(-100%);
+          display: none;
+        }
+        playlist-list.active {
+          transform: translate(0);
+          display: block;
+        }
+        .list-seperator {
+          height: 2px;
+          background-color: var(--search-toolbar-background);
+        }
+      `
+    ];
+  }
 }
 
 window.customElements.define('soul-sifter', SoulSifter);
