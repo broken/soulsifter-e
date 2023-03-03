@@ -61,7 +61,7 @@ Napi::Value AudioAnalyzer::analyzeDuration(const Napi::CallbackInfo& info) {
   int result =
       dogatech::soulsifter::AudioAnalyzer::analyzeDuration(a0);
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value AudioAnalyzer::analyzeDurations(const Napi::CallbackInfo& info) {

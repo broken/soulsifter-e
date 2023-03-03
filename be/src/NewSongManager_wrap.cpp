@@ -41,9 +41,9 @@ NewSongManager::NewSongManager(const Napi::CallbackInfo& info) : Napi::ObjectWra
 
 Napi::Value NewSongManager::import(const Napi::CallbackInfo& info) {
   NewSongManager* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(info[0]);
+  Napi::Array a0Array = info[0].As<Napi::Array>();
   std::vector<string> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     std::string x(tmp.As<Napi::String>().Utf8Value());
     a0.push_back(x);
@@ -57,7 +57,7 @@ Napi::Value NewSongManager::nextSong(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Song* a1(Napi::ObjectWrap<Song>::Unwrap(info[1].As<Napi::Object>())->getWrappedValue());
   bool result =  obj->newsongmanager->nextSong(a0, a1);
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value NewSongManager::coverImagePath(const Napi::CallbackInfo& info) {
@@ -72,7 +72,7 @@ Napi::Value NewSongManager::processSong(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
   bool result =  obj->newsongmanager->processSong(a0);
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value NewSongManager::trashMusicFile(const Napi::CallbackInfo& info) {

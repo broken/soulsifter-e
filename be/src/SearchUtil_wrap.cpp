@@ -41,16 +41,16 @@ Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   int32_t a1(info[1].As<Napi::Number>().Int32Value());
   std::string a2(info[2].As<Napi::String>().Utf8Value());
-  Napi::Array a3Array = v8::Local<v8::Array>::Cast(info[3]);
+  Napi::Array a3Array = info[3].As<Napi::Array>();
   std::vector<dogatech::soulsifter::Style*> a3;
-  for (uint32_t i = 0; i < a3Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a3Array.Length(); ++i) {
     Napi::Value tmp = a3Array.Get(i);
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a3.push_back(x);
   }
-  Napi::Array a4Array = v8::Local<v8::Array>::Cast(info[4]);
+  Napi::Array a4Array = info[4].As<Napi::Array>();
   std::vector<dogatech::soulsifter::Song*> a4;
-  for (uint32_t i = 0; i < a4Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a4Array.Length(); ++i) {
     Napi::Value tmp = a4Array.Get(i);
     dogatech::soulsifter::Song* x(Napi::ObjectWrap<Song>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a4.push_back(x);
@@ -59,15 +59,8 @@ Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
   int32_t a6(info[6].As<Napi::Number>().Int32Value());
   bool a7(info[7].As<Napi::Boolean>().Value());
   int32_t a8(info[8].As<Napi::Number>().Int32Value());
-  Nan::Callback a9Fn;
-  a9Fn.Reset(info[9].As<v8::Function>());
-  auto a9 = [&a9Fn](string p0) {
-    v8::Local<v8::Value> v0 = Napi::String::New(info.Env(), p0;
-    v8::Local<v8::Value> argv[] = {v0};
-    a9Fn.Call(1, argv);
-  };
   std::vector<dogatech::soulsifter::Song*>* result =
-      dogatech::soulsifter::SearchUtil::searchSongs(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
+      dogatech::soulsifter::SearchUtil::searchSongs(a0, a1, a2, a3, a4, a5, a6, a7, a8);
 
   Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result->size()));
   for (int i = 0; i < (int) result->size(); i++) {

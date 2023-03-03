@@ -51,7 +51,7 @@ Napi::Object Style::NewInstance(Napi::Env env) {
 
 Style::Style(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Style>(info), style(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::Style* x = Napi::ObjectWrap::Unwrap<Style>(info[0].As<Napi::Object>())->getWrappedObject();
+    dogatech::soulsifter::Style* x = Napi::ObjectWrap<Style>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue();
     style = new dogatech::soulsifter::Style(*x);
   } else {
     style = new dogatech::soulsifter::Style();
@@ -69,7 +69,7 @@ Napi::Value Style::findById(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Style::findById(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Style::NewInstance(info.Env());
     Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
@@ -84,7 +84,7 @@ Napi::Value Style::findByREId(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Style::findByREId(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Style::NewInstance(info.Env());
     Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
@@ -102,7 +102,7 @@ Napi::Value Style::findAll(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Style::NewInstance(info.Env());
     Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -113,21 +113,21 @@ Napi::Value Style::update(const Napi::CallbackInfo& info) {
   Style* obj = this;
   int result =  obj->style->update();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Style::save(const Napi::CallbackInfo& info) {
   Style* obj = this;
   int result =  obj->style->save();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Style::sync(const Napi::CallbackInfo& info) {
   Style* obj = this;
   bool result =  obj->style->sync();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value Style::findAllParents(const Napi::CallbackInfo& info) {
@@ -139,7 +139,7 @@ Napi::Value Style::findAllParents(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Style::NewInstance(info.Env());
     Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -150,7 +150,7 @@ Napi::Value Style::getId(const Napi::CallbackInfo& info) {
   Style* obj = this;
   const int result =  obj->style->getId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Style::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -176,7 +176,7 @@ Napi::Value Style::getREId(const Napi::CallbackInfo& info) {
   Style* obj = this;
   const int result =  obj->style->getREId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Style::setREId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -211,9 +211,9 @@ Napi::Value Style::getChildIds(const Napi::CallbackInfo& info) {
 
 void Style::setChildIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Style* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
+  Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<int> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     int32_t x(tmp.As<Napi::Number>().Int32Value());
     a0.push_back(x);
@@ -237,9 +237,9 @@ Napi::Value Style::getChildren(const Napi::CallbackInfo& info) {
 
 void Style::setChildren(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Style* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
+  Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<dogatech::soulsifter::Style*> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
@@ -260,9 +260,9 @@ Napi::Value Style::getParentIds(const Napi::CallbackInfo& info) {
 
 void Style::setParentIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Style* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
+  Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<int> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     int32_t x(tmp.As<Napi::Number>().Int32Value());
     a0.push_back(x);
@@ -286,9 +286,9 @@ Napi::Value Style::getParents(const Napi::CallbackInfo& info) {
 
 void Style::setParents(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Style* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
+  Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<dogatech::soulsifter::Style*> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);

@@ -59,7 +59,7 @@ Napi::Object Album::NewInstance(Napi::Env env) {
 
 Album::Album(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Album>(info), album(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::Album* x = Napi::ObjectWrap::Unwrap<Album>(info[0].As<Napi::Object>())->getWrappedObject();
+    dogatech::soulsifter::Album* x = Napi::ObjectWrap<Album>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue();
     album = new dogatech::soulsifter::Album(*x);
   } else {
     album = new dogatech::soulsifter::Album();
@@ -77,7 +77,7 @@ Napi::Value Album::findById(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Album::findById(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
@@ -92,7 +92,7 @@ Napi::Value Album::findByCoverFilepath(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Album::findByCoverFilepath(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
@@ -108,7 +108,7 @@ Napi::Value Album::findByNameAndArtist(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Album::findByNameAndArtist(a0, a1);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
@@ -127,7 +127,7 @@ Napi::Value Album::findByName(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -144,7 +144,7 @@ Napi::Value Album::findByArtist(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -160,7 +160,7 @@ Napi::Value Album::findAll(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -171,21 +171,21 @@ Napi::Value Album::update(const Napi::CallbackInfo& info) {
   Album* obj = this;
   int result =  obj->album->update();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Album::save(const Napi::CallbackInfo& info) {
   Album* obj = this;
   int result =  obj->album->save();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Album::sync(const Napi::CallbackInfo& info) {
   Album* obj = this;
   bool result =  obj->album->sync();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value Album::reReleaseDate(const Napi::CallbackInfo& info) {
@@ -199,7 +199,7 @@ Napi::Value Album::getId(const Napi::CallbackInfo& info) {
   Album* obj = this;
   const int result =  obj->album->getId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Album::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -251,7 +251,7 @@ Napi::Value Album::getMixed(const Napi::CallbackInfo& info) {
   Album* obj = this;
   const bool result =  obj->album->getMixed();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 void Album::setMixed(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -290,7 +290,7 @@ Napi::Value Album::getReleaseDateYear(const Napi::CallbackInfo& info) {
   Album* obj = this;
   const int result =  obj->album->getReleaseDateYear();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Album::setReleaseDateYear(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -303,7 +303,7 @@ Napi::Value Album::getReleaseDateMonth(const Napi::CallbackInfo& info) {
   Album* obj = this;
   const int result =  obj->album->getReleaseDateMonth();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Album::setReleaseDateMonth(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -316,7 +316,7 @@ Napi::Value Album::getReleaseDateDay(const Napi::CallbackInfo& info) {
   Album* obj = this;
   const int result =  obj->album->getReleaseDateDay();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Album::setReleaseDateDay(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -329,7 +329,7 @@ Napi::Value Album::getBasicGenreId(const Napi::CallbackInfo& info) {
   Album* obj = this;
   const int result =  obj->album->getBasicGenreId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Album::setBasicGenreId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -343,7 +343,7 @@ Napi::Value Album::getBasicGenre(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::BasicGenre* result =  obj->album->getBasicGenre();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = BasicGenre::NewInstance(info.Env());
     BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
@@ -357,7 +357,7 @@ Napi::Value Album::getBasicGenreConst(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::BasicGenre* result =  obj->album->getBasicGenreConst();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = BasicGenre::NewInstance(info.Env());
     BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);

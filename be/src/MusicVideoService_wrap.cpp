@@ -45,7 +45,7 @@ Napi::Value MusicVideoService::associateYouTubeVideo(const Napi::CallbackInfo& i
       dogatech::soulsifter::MusicVideoService::associateYouTubeVideo(a0, a1);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = MusicVideo::NewInstance(info.Env());
     MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
@@ -61,7 +61,7 @@ Napi::Value MusicVideoService::downloadAudio(const Napi::CallbackInfo& info) {
 
   Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
-    a.Set(i, Napi::String::New(info.Env(), result[i]);
+    a.Set(i, Napi::String::New(info.Env(), result[i]));
   }
   return a;
 }

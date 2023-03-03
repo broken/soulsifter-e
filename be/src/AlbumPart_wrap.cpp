@@ -50,7 +50,7 @@ Napi::Object AlbumPart::NewInstance(Napi::Env env) {
 
 AlbumPart::AlbumPart(const Napi::CallbackInfo& info) : Napi::ObjectWrap<AlbumPart>(info), albumpart(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::AlbumPart* x = Napi::ObjectWrap::Unwrap<AlbumPart>(info[0].As<Napi::Object>())->getWrappedObject();
+    dogatech::soulsifter::AlbumPart* x = Napi::ObjectWrap<AlbumPart>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue();
     albumpart = new dogatech::soulsifter::AlbumPart(*x);
   } else {
     albumpart = new dogatech::soulsifter::AlbumPart();
@@ -68,7 +68,7 @@ Napi::Value AlbumPart::findById(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::AlbumPart::findById(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = AlbumPart::NewInstance(info.Env());
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
@@ -84,7 +84,7 @@ Napi::Value AlbumPart::findByPosAndAlbumId(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::AlbumPart::findByPosAndAlbumId(a0, a1);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = AlbumPart::NewInstance(info.Env());
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
@@ -103,7 +103,7 @@ Napi::Value AlbumPart::findByPos(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = AlbumPart::NewInstance(info.Env());
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -120,7 +120,7 @@ Napi::Value AlbumPart::findByAlbumId(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = AlbumPart::NewInstance(info.Env());
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -136,7 +136,7 @@ Napi::Value AlbumPart::findAll(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = AlbumPart::NewInstance(info.Env());
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -147,28 +147,28 @@ Napi::Value AlbumPart::update(const Napi::CallbackInfo& info) {
   AlbumPart* obj = this;
   int result =  obj->albumpart->update();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value AlbumPart::save(const Napi::CallbackInfo& info) {
   AlbumPart* obj = this;
   int result =  obj->albumpart->save();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value AlbumPart::sync(const Napi::CallbackInfo& info) {
   AlbumPart* obj = this;
   bool result =  obj->albumpart->sync();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value AlbumPart::getId(const Napi::CallbackInfo& info) {
   AlbumPart* obj = this;
   const int result =  obj->albumpart->getId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void AlbumPart::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -207,7 +207,7 @@ Napi::Value AlbumPart::getAlbumId(const Napi::CallbackInfo& info) {
   AlbumPart* obj = this;
   const int result =  obj->albumpart->getAlbumId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void AlbumPart::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -221,7 +221,7 @@ Napi::Value AlbumPart::getAlbum(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Album* result =  obj->albumpart->getAlbum();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
@@ -235,7 +235,7 @@ Napi::Value AlbumPart::getAlbumConst(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Album* result =  obj->albumpart->getAlbumConst();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);

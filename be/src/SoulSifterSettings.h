@@ -13,17 +13,19 @@
 
 #include <boost/property_tree/ptree.hpp>
 
+using namespace std;
+
 namespace dogatech {
 namespace soulsifter {
-    
+
     class SoulSifterSettings {
     public:
-        ~SoulSifterSettings() { }
         static SoulSifterSettings& getInstance() {
             static SoulSifterSettings instance;  // guaranteed to be destroyed
             // instantiated on first use
             return instance;
         }
+        SoulSifterSettings();
 
         void save();
 
@@ -32,10 +34,15 @@ namespace soulsifter {
 
         template <typename T>
         void put(const std::string& label, const T& value);
-        
+
+        string getString(const string& label) const;
+        void setString(const string& label, const std::string& value);
+        int getInt(const string& label) const;
+        void setInt(const string& label, const int value);
+        bool getBool(const string& label) const;
+        void setBool(const string& label, const bool value);
     private:
         // singleton
-        SoulSifterSettings();
         SoulSifterSettings(SoulSifterSettings const&);
         void operator=(SoulSifterSettings const&);
 
@@ -43,7 +50,7 @@ namespace soulsifter {
 
         std::string filename;
     };
-    
+
 }
 }
 

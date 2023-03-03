@@ -52,7 +52,7 @@ Napi::Object Playlist::NewInstance(Napi::Env env) {
 
 Playlist::Playlist(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Playlist>(info), playlist(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::Playlist* x = Napi::ObjectWrap::Unwrap<Playlist>(info[0].As<Napi::Object>())->getWrappedObject();
+    dogatech::soulsifter::Playlist* x = Napi::ObjectWrap<Playlist>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue();
     playlist = new dogatech::soulsifter::Playlist(*x);
   } else {
     playlist = new dogatech::soulsifter::Playlist();
@@ -70,7 +70,7 @@ Napi::Value Playlist::findById(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Playlist::findById(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Playlist::NewInstance(info.Env());
     Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
@@ -85,7 +85,7 @@ Napi::Value Playlist::findByName(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Playlist::findByName(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Playlist::NewInstance(info.Env());
     Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
@@ -100,7 +100,7 @@ Napi::Value Playlist::findBySpotifyId(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Playlist::findBySpotifyId(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Playlist::NewInstance(info.Env());
     Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
@@ -118,7 +118,7 @@ Napi::Value Playlist::findAll(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Playlist::NewInstance(info.Env());
     Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -129,35 +129,35 @@ Napi::Value Playlist::update(const Napi::CallbackInfo& info) {
   Playlist* obj = this;
   int result =  obj->playlist->update();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Playlist::save(const Napi::CallbackInfo& info) {
   Playlist* obj = this;
   int result =  obj->playlist->save();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Playlist::sync(const Napi::CallbackInfo& info) {
   Playlist* obj = this;
   bool result =  obj->playlist->sync();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value Playlist::erase(const Napi::CallbackInfo& info) {
   Playlist* obj = this;
   int result =  obj->playlist->erase();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Playlist::getId(const Napi::CallbackInfo& info) {
   Playlist* obj = this;
   const int result =  obj->playlist->getId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Playlist::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -244,9 +244,9 @@ Napi::Value Playlist::getStyleIds(const Napi::CallbackInfo& info) {
 
 void Playlist::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Playlist* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
+  Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<int> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     int32_t x(tmp.As<Napi::Number>().Int32Value());
     a0.push_back(x);
@@ -270,9 +270,9 @@ Napi::Value Playlist::getStyles(const Napi::CallbackInfo& info) {
 
 void Playlist::setStyles(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Playlist* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
+  Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<dogatech::soulsifter::Style*> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);

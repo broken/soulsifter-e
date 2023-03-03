@@ -81,5 +81,13 @@ namespace soulsifter {
   template void SoulSifterSettings::put<string>(const string& label, const string& value);
   template void SoulSifterSettings::put<bool>(const string& label, const bool& value);
 
+
+  string SoulSifterSettings::getString(const string& label) const { return get<std::string>(label); }
+  void SoulSifterSettings::setString(const string& label, const std::string& value) { put<std::string>(label, value); }
+  int SoulSifterSettings::getInt(const string& label) const { return get<int>(label); }
+  void SoulSifterSettings::setInt(const string& label, const int value) { put<int>(label, value); }
+  bool SoulSifterSettings::getBool(const string& label) const { return get<bool>(label); }
+  void SoulSifterSettings::setBool(const string& label, const bool value) { put<bool>(label, value); }
+
 }  // namespace soulsifter
 }  // namespace dogatech

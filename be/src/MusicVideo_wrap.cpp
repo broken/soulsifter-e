@@ -42,7 +42,7 @@ Napi::Object MusicVideo::NewInstance(Napi::Env env) {
 
 MusicVideo::MusicVideo(const Napi::CallbackInfo& info) : Napi::ObjectWrap<MusicVideo>(info), musicvideo(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::MusicVideo* x = Napi::ObjectWrap::Unwrap<MusicVideo>(info[0].As<Napi::Object>())->getWrappedObject();
+    dogatech::soulsifter::MusicVideo* x = Napi::ObjectWrap<MusicVideo>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue();
     musicvideo = new dogatech::soulsifter::MusicVideo(*x);
   } else {
     musicvideo = new dogatech::soulsifter::MusicVideo();
@@ -60,7 +60,7 @@ Napi::Value MusicVideo::findById(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::MusicVideo::findById(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = MusicVideo::NewInstance(info.Env());
     MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
@@ -78,7 +78,7 @@ Napi::Value MusicVideo::findAll(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = MusicVideo::NewInstance(info.Env());
     MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -89,28 +89,28 @@ Napi::Value MusicVideo::update(const Napi::CallbackInfo& info) {
   MusicVideo* obj = this;
   int result =  obj->musicvideo->update();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value MusicVideo::save(const Napi::CallbackInfo& info) {
   MusicVideo* obj = this;
   int result =  obj->musicvideo->save();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value MusicVideo::sync(const Napi::CallbackInfo& info) {
   MusicVideo* obj = this;
   bool result =  obj->musicvideo->sync();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value MusicVideo::getId(const Napi::CallbackInfo& info) {
   MusicVideo* obj = this;
   const int result =  obj->musicvideo->getId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void MusicVideo::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {

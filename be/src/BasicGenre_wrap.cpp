@@ -44,7 +44,7 @@ Napi::Object BasicGenre::NewInstance(Napi::Env env) {
 
 BasicGenre::BasicGenre(const Napi::CallbackInfo& info) : Napi::ObjectWrap<BasicGenre>(info), basicgenre(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::BasicGenre* x = Napi::ObjectWrap::Unwrap<BasicGenre>(info[0].As<Napi::Object>())->getWrappedObject();
+    dogatech::soulsifter::BasicGenre* x = Napi::ObjectWrap<BasicGenre>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue();
     basicgenre = new dogatech::soulsifter::BasicGenre(*x);
   } else {
     basicgenre = new dogatech::soulsifter::BasicGenre();
@@ -62,7 +62,7 @@ Napi::Value BasicGenre::findById(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::BasicGenre::findById(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = BasicGenre::NewInstance(info.Env());
     BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
@@ -77,7 +77,7 @@ Napi::Value BasicGenre::findByName(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::BasicGenre::findByName(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = BasicGenre::NewInstance(info.Env());
     BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
@@ -95,7 +95,7 @@ Napi::Value BasicGenre::findAll(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = BasicGenre::NewInstance(info.Env());
     BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -106,21 +106,21 @@ Napi::Value BasicGenre::update(const Napi::CallbackInfo& info) {
   BasicGenre* obj = this;
   int result =  obj->basicgenre->update();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value BasicGenre::save(const Napi::CallbackInfo& info) {
   BasicGenre* obj = this;
   int result =  obj->basicgenre->save();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value BasicGenre::sync(const Napi::CallbackInfo& info) {
   BasicGenre* obj = this;
   bool result =  obj->basicgenre->sync();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value BasicGenre::findByFilepath(const Napi::CallbackInfo& info) {
@@ -129,7 +129,7 @@ Napi::Value BasicGenre::findByFilepath(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::BasicGenre::findByFilepath(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = BasicGenre::NewInstance(info.Env());
     BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
@@ -144,7 +144,7 @@ Napi::Value BasicGenre::findByArtist(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::BasicGenre::findByArtist(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = BasicGenre::NewInstance(info.Env());
     BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
@@ -157,7 +157,7 @@ Napi::Value BasicGenre::getId(const Napi::CallbackInfo& info) {
   BasicGenre* obj = this;
   const int result =  obj->basicgenre->getId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void BasicGenre::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {

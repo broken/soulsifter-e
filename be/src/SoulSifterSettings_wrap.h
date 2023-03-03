@@ -1,37 +1,28 @@
-//
-// This was not auto-generated unlike the others.
-
 #ifndef SoulSifterSettings_wrap_h
 #define SoulSifterSettings_wrap_h
 
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "SoulSifterSettings.h"
 
-class SoulSifterSettings : public Nan::ObjectWrap {
+class SoulSifterSettings : public Napi::ObjectWrap<SoulSifterSettings> {
  public:
-  static void Init(v8::Local<v8::Object> exports);
-  static v8::Local<v8::Object> NewInstance();
-
-  void setNwcpValue(dogatech::soulsifter::SoulSifterSettings* v, bool own);
-  dogatech::soulsifter::SoulSifterSettings* getNwcpValue() const { return soulsiftersettings; }
-
- private:
-  SoulSifterSettings();
-  explicit SoulSifterSettings(dogatech::soulsifter::SoulSifterSettings* soulsiftersettings);
+  static Napi::Object Init(Napi::Env env, Napi::Object exports);
+  static Napi::Object NewInstance(Napi::Env env);
+  SoulSifterSettings(const Napi::CallbackInfo& info);
   ~SoulSifterSettings();
 
-  static void New(const Nan::FunctionCallbackInfo<v8::Value>& info);
+  void setWrappedValue(dogatech::soulsifter::SoulSifterSettings* v, bool own);
+  dogatech::soulsifter::SoulSifterSettings* getWrappedValue() const { return soulsiftersettings; }
 
-  static void save(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void getString(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void putString(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void getInt(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void putInt(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void getBool(const Nan::FunctionCallbackInfo<v8::Value>& info);
-  static void putBool(const Nan::FunctionCallbackInfo<v8::Value>& info);
+ private:
+  Napi::Value save(const Napi::CallbackInfo& info);
+  Napi::Value getString(const Napi::CallbackInfo& info);
+  Napi::Value setString(const Napi::CallbackInfo& info);
+  Napi::Value getInt(const Napi::CallbackInfo& info);
+  Napi::Value setInt(const Napi::CallbackInfo& info);
+  Napi::Value getBool(const Napi::CallbackInfo& info);
+  Napi::Value setBool(const Napi::CallbackInfo& info);
 
-  static Nan::Persistent<v8::Function> constructor;
   dogatech::soulsifter::SoulSifterSettings* soulsiftersettings;
   bool ownWrappedObject;
 };

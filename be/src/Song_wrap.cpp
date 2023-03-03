@@ -93,7 +93,7 @@ Napi::Object Song::NewInstance(Napi::Env env) {
 
 Song::Song(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Song>(info), song(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::Song* x = Napi::ObjectWrap::Unwrap<Song>(info[0].As<Napi::Object>())->getWrappedObject();
+    dogatech::soulsifter::Song* x = Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue();
     song = new dogatech::soulsifter::Song(*x);
   } else {
     song = new dogatech::soulsifter::Song();
@@ -111,7 +111,7 @@ Napi::Value Song::findById(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Song::findById(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -126,7 +126,7 @@ Napi::Value Song::findByFilepath(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Song::findByFilepath(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -141,7 +141,7 @@ Napi::Value Song::findByGoogleSongId(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Song::findByGoogleSongId(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -156,7 +156,7 @@ Napi::Value Song::findByYoutubeId(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Song::findByYoutubeId(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -171,7 +171,7 @@ Napi::Value Song::findBySpotifyId(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Song::findBySpotifyId(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -186,7 +186,7 @@ Napi::Value Song::findByRESongId(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Song::findByRESongId(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -204,7 +204,7 @@ Napi::Value Song::findAll(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -215,21 +215,21 @@ Napi::Value Song::update(const Napi::CallbackInfo& info) {
   Song* obj = this;
   int result =  obj->song->update();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Song::save(const Napi::CallbackInfo& info) {
   Song* obj = this;
   int result =  obj->song->save();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Song::sync(const Napi::CallbackInfo& info) {
   Song* obj = this;
   bool result =  obj->song->sync();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value Song::reAlbum(const Napi::CallbackInfo& info) {
@@ -255,7 +255,7 @@ Napi::Value Song::getId(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const int result =  obj->song->getId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Song::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -346,7 +346,7 @@ Napi::Value Song::getRating(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const int result =  obj->song->getRating();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Song::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -359,7 +359,7 @@ Napi::Value Song::getDateAdded(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const time_t result =  obj->song->getDateAdded();
 
-  return Napi::Number::New(info.Env(), result * 1000));
+  return Napi::Number::New(info.Env(), result * 1000);
 }
 
 void Song::setDateAdded(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -398,7 +398,7 @@ Napi::Value Song::getEnergy(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const int result =  obj->song->getEnergy();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Song::setEnergy(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -424,7 +424,7 @@ Napi::Value Song::getTrashed(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const bool result =  obj->song->getTrashed();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 void Song::setTrashed(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -437,7 +437,7 @@ Napi::Value Song::getLowQuality(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const bool result =  obj->song->getLowQuality();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 void Song::setLowQuality(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -489,7 +489,7 @@ Napi::Value Song::getDurationInMs(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const int result =  obj->song->getDurationInMs();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Song::setDurationInMs(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -515,7 +515,7 @@ Napi::Value Song::getRESongId(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const int result =  obj->song->getRESongId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Song::setRESongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -528,7 +528,7 @@ Napi::Value Song::getAlbumId(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const int result =  obj->song->getAlbumId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Song::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -542,7 +542,7 @@ Napi::Value Song::getAlbum(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Album* result =  obj->song->getAlbum();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
@@ -556,7 +556,7 @@ Napi::Value Song::getAlbumConst(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Album* result =  obj->song->getAlbumConst();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Album::NewInstance(info.Env());
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
@@ -576,7 +576,7 @@ Napi::Value Song::getAlbumPartId(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const int result =  obj->song->getAlbumPartId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Song::setAlbumPartId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -590,7 +590,7 @@ Napi::Value Song::getAlbumPart(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::AlbumPart* result =  obj->song->getAlbumPart();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = AlbumPart::NewInstance(info.Env());
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
@@ -604,7 +604,7 @@ Napi::Value Song::getAlbumPartConst(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::AlbumPart* result =  obj->song->getAlbumPartConst();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = AlbumPart::NewInstance(info.Env());
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
@@ -624,7 +624,7 @@ Napi::Value Song::getMusicVideoId(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const int result =  obj->song->getMusicVideoId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Song::setMusicVideoId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -638,7 +638,7 @@ Napi::Value Song::getMusicVideo(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::MusicVideo* result =  obj->song->getMusicVideo();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = MusicVideo::NewInstance(info.Env());
     MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
@@ -652,7 +652,7 @@ Napi::Value Song::getMusicVideoConst(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::MusicVideo* result =  obj->song->getMusicVideoConst();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = MusicVideo::NewInstance(info.Env());
     MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
@@ -681,9 +681,9 @@ Napi::Value Song::getStyleIds(const Napi::CallbackInfo& info) {
 
 void Song::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Song* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
+  Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<int> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     int32_t x(tmp.As<Napi::Number>().Int32Value());
     a0.push_back(x);
@@ -707,9 +707,9 @@ Napi::Value Song::getStyles(const Napi::CallbackInfo& info) {
 
 void Song::setStyles(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Song* obj = this;
-  Napi::Array a0Array = v8::Local<v8::Array>::Cast(value);
+  Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<dogatech::soulsifter::Style*> a0;
-  for (uint32_t i = 0; i < a0Array->Length(); ++i) {
+  for (uint32_t i = 0; i < a0Array.Length(); ++i) {
     Napi::Value tmp = a0Array.Get(i);
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
@@ -721,7 +721,7 @@ Napi::Value Song::getBpmLock(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const bool result =  obj->song->getBpmLock();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 void Song::setBpmLock(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -734,7 +734,7 @@ Napi::Value Song::getTonicKeyLock(const Napi::CallbackInfo& info) {
   Song* obj = this;
   const bool result =  obj->song->getTonicKeyLock();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 void Song::setTonicKeyLock(const Napi::CallbackInfo& info, const Napi::Value &value) {

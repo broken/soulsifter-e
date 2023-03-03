@@ -1,102 +1,91 @@
-//
-// Handcrafted
-//
-
-#include <iostream>
-#include <node.h>
-#include <nan.h>
+#include <napi.h>
 #include "SoulSifterSettings_wrap.h"
 
-Nan::Persistent<v8::Function> SoulSifterSettings::constructor;
+SoulSifterSettings::~SoulSifterSettings() { if (ownWrappedObject) delete soulsiftersettings; };
 
-SoulSifterSettings::SoulSifterSettings() : Nan::ObjectWrap(), soulsiftersettings(NULL), ownWrappedObject(true) {};
-SoulSifterSettings::SoulSifterSettings(dogatech::soulsifter::SoulSifterSettings* o) : Nan::ObjectWrap(), soulsiftersettings(o), ownWrappedObject(true) {};
-SoulSifterSettings::~SoulSifterSettings() { };
-
-void SoulSifterSettings::setNwcpValue(dogatech::soulsifter::SoulSifterSettings* v, bool own) {
+void SoulSifterSettings::setWrappedValue(dogatech::soulsifter::SoulSifterSettings* v, bool own) {
   if (ownWrappedObject)
     delete soulsiftersettings;
   soulsiftersettings = v;
   ownWrappedObject = own;
 }
 
-void SoulSifterSettings::New(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  dogatech::soulsifter::SoulSifterSettings& ss = dogatech::soulsifter::SoulSifterSettings::getInstance();
-  SoulSifterSettings* obj = new SoulSifterSettings(&ss);
-  obj->Wrap(info.This());
+Napi::Object SoulSifterSettings::Init(Napi::Env env, Napi::Object exports) {
+  Napi::Function func = DefineClass(env, "SoulSifterSettings", {
+    InstanceMethod<&SoulSifterSettings::save>("save"),
+    InstanceMethod<&SoulSifterSettings::getString>("getString"),
+    InstanceMethod<&SoulSifterSettings::setString>("setString"),
+    InstanceMethod<&SoulSifterSettings::getInt>("getInt"),
+    InstanceMethod<&SoulSifterSettings::setInt>("setInt"),
+    InstanceMethod<&SoulSifterSettings::getBool>("getBool"),
+    InstanceMethod<&SoulSifterSettings::setBool>("setBool"),
+  });
 
-  info.GetReturnValue().Set(info.This());
+  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  *constructor = Napi::Persistent(func);
+  env.SetInstanceData(constructor);
+
+  exports.Set("SoulSifterSettings", func);
+  return exports;
 }
 
-v8::Local<v8::Object> SoulSifterSettings::NewInstance() {
-  v8::Local<v8::Function> cons = Nan::New<v8::Function>(constructor);
-  return Nan::NewInstance(cons).ToLocalChecked();
+Napi::Object SoulSifterSettings::NewInstance(Napi::Env env) {
+  Napi::EscapableHandleScope scope(env);
+  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  return scope.Escape(napi_value(obj)).ToObject();
 }
 
-void SoulSifterSettings::Init(v8::Local<v8::Object> exports) {
-  // Prepare constructor template
-  v8::Local<v8::FunctionTemplate> tpl = Nan::New<v8::FunctionTemplate>(New);
-  tpl->SetClassName(Nan::New("SoulSifterSettings").ToLocalChecked());
-  tpl->InstanceTemplate()->SetInternalFieldCount(1);
-
-  Nan::SetPrototypeMethod(tpl, "save", save);
-  Nan::SetPrototypeMethod(tpl, "getString", getString);
-  Nan::SetPrototypeMethod(tpl, "putString", putString);
-  Nan::SetPrototypeMethod(tpl, "getInt", getInt);
-  Nan::SetPrototypeMethod(tpl, "putInt", putInt);
-  Nan::SetPrototypeMethod(tpl, "getBool", getBool);
-  Nan::SetPrototypeMethod(tpl, "putBool", putBool);
-
-  constructor.Reset(Nan::GetFunction(tpl).ToLocalChecked());
-  exports->Set(Nan::GetCurrentContext(), Nan::New<v8::String>("SoulSifterSettings").ToLocalChecked(), Nan::GetFunction(tpl).ToLocalChecked());
+SoulSifterSettings::SoulSifterSettings(const Napi::CallbackInfo& info) : Napi::ObjectWrap<SoulSifterSettings>(info), soulsiftersettings(nullptr), ownWrappedObject(true) {
+  soulsiftersettings = new dogatech::soulsifter::SoulSifterSettings();
 }
 
-void SoulSifterSettings::save(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  SoulSifterSettings* obj = Nan::ObjectWrap::Unwrap<SoulSifterSettings>(info.Holder());
+Napi::Value SoulSifterSettings::save(const Napi::CallbackInfo& info) {
+  SoulSifterSettings* obj = this;
   obj->soulsiftersettings->save();
 }
 
-void SoulSifterSettings::getString(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  SoulSifterSettings* obj = Nan::ObjectWrap::Unwrap<SoulSifterSettings>(info.Holder());
-  const std::string a0(*v8::String::Utf8Value(info[0]->ToString()));
-  const std::string result = obj->soulsiftersettings->get<std::string>(a0);
+Napi::Value SoulSifterSettings::getString(const Napi::CallbackInfo& info) {
+  SoulSifterSettings* obj = this;
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  string result =  obj->soulsiftersettings->getString(a0);
 
-  info.GetReturnValue().Set(Nan::New<v8::String>(result).ToLocalChecked());
+  return Napi::String::New(info.Env(), result);
 }
 
-void SoulSifterSettings::putString(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  SoulSifterSettings* obj = Nan::ObjectWrap::Unwrap<SoulSifterSettings>(info.Holder());
-  const std::string a0(*v8::String::Utf8Value(info[0]->ToString()));
-  const std::string a1(*v8::String::Utf8Value(info[1]->ToString()));
-  obj->soulsiftersettings->put<std::string>(a0, a1);
+Napi::Value SoulSifterSettings::setString(const Napi::CallbackInfo& info) {
+  SoulSifterSettings* obj = this;
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  std::string a1(info[1].As<Napi::String>().Utf8Value());
+  obj->soulsiftersettings->setString(a0, a1);
 }
 
-void SoulSifterSettings::getInt(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  SoulSifterSettings* obj = Nan::ObjectWrap::Unwrap<SoulSifterSettings>(info.Holder());
-  const std::string a0(*v8::String::Utf8Value(info[0]->ToString()));
-  const int result = obj->soulsiftersettings->get<int>(a0);
+Napi::Value SoulSifterSettings::getInt(const Napi::CallbackInfo& info) {
+  SoulSifterSettings* obj = this;
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  int result =  obj->soulsiftersettings->getInt(a0);
 
-  info.GetReturnValue().Set(Nan::New<v8::Integer>(result));
+  return Napi::Number::New(info.Env(), result);
 }
 
-void SoulSifterSettings::putInt(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  SoulSifterSettings* obj = Nan::ObjectWrap::Unwrap<SoulSifterSettings>(info.Holder());
-  const std::string a0(*v8::String::Utf8Value(info[0]->ToString()));
-  const int a1(info[1]->IntegerValue());
-  obj->soulsiftersettings->put<int>(a0, a1);
+Napi::Value SoulSifterSettings::setInt(const Napi::CallbackInfo& info) {
+  SoulSifterSettings* obj = this;
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  int32_t a1(info[1].As<Napi::Number>().Int32Value());
+  obj->soulsiftersettings->setInt(a0, a1);
 }
 
-void SoulSifterSettings::getBool(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  SoulSifterSettings* obj = Nan::ObjectWrap::Unwrap<SoulSifterSettings>(info.Holder());
-  const std::string a0(*v8::String::Utf8Value(info[0]->ToString()));
-  const bool result = obj->soulsiftersettings->get<bool>(a0);
+Napi::Value SoulSifterSettings::getBool(const Napi::CallbackInfo& info) {
+  SoulSifterSettings* obj = this;
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  bool result =  obj->soulsiftersettings->getBool(a0);
 
-  info.GetReturnValue().Set(Nan::New<v8::Boolean>(result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
-void SoulSifterSettings::putBool(const Nan::FunctionCallbackInfo<v8::Value>& info) {
-  SoulSifterSettings* obj = Nan::ObjectWrap::Unwrap<SoulSifterSettings>(info.Holder());
-  const std::string a0(*v8::String::Utf8Value(info[0]->ToString()));
-  const bool a1(info[1]->BooleanValue());
-  obj->soulsiftersettings->put<bool>(a0, a1);
+Napi::Value SoulSifterSettings::setBool(const Napi::CallbackInfo& info) {
+  SoulSifterSettings* obj = this;
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  bool a1(info[1].As<Napi::Boolean>().Value());
+  obj->soulsiftersettings->setBool(a0, a1);
 }
+

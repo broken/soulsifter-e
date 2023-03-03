@@ -56,7 +56,7 @@ Napi::Object Mix::NewInstance(Napi::Env env) {
 
 Mix::Mix(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mix>(info), mix(nullptr), ownWrappedObject(true) {
   if (info.Length()) {
-    dogatech::soulsifter::Mix* x = Napi::ObjectWrap::Unwrap<Mix>(info[0].As<Napi::Object>())->getWrappedObject();
+    dogatech::soulsifter::Mix* x = Napi::ObjectWrap<Mix>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue();
     mix = new dogatech::soulsifter::Mix(*x);
   } else {
     mix = new dogatech::soulsifter::Mix();
@@ -74,7 +74,7 @@ Napi::Value Mix::findById(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Mix::findById(a0);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Mix::NewInstance(info.Env());
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
@@ -90,7 +90,7 @@ Napi::Value Mix::findByOutSongIdAndInSongId(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::Mix::findByOutSongIdAndInSongId(a0, a1);
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Mix::NewInstance(info.Env());
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
@@ -109,7 +109,7 @@ Napi::Value Mix::findByOutSongId(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Mix::NewInstance(info.Env());
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -126,7 +126,7 @@ Napi::Value Mix::findByInSongId(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Mix::NewInstance(info.Env());
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -142,7 +142,7 @@ Napi::Value Mix::findAll(const Napi::CallbackInfo& info) {
   for (int i = 0; i < (int) v->size(); i++) {
     Napi::Object instance = Mix::NewInstance(info.Env());
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
-    r->setWrappedValue((*v)[i]);
+    r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
   }
   delete v;
@@ -153,21 +153,21 @@ Napi::Value Mix::update(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   int result =  obj->mix->update();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Mix::save(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   int result =  obj->mix->save();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Mix::sync(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   bool result =  obj->mix->sync();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 Napi::Value Mix::mixoutCountForRESongId(const Napi::CallbackInfo& info) {
@@ -175,14 +175,14 @@ Napi::Value Mix::mixoutCountForRESongId(const Napi::CallbackInfo& info) {
   int result =
       dogatech::soulsifter::Mix::mixoutCountForRESongId(a0);
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 Napi::Value Mix::getId(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   const int result =  obj->mix->getId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Mix::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -195,7 +195,7 @@ Napi::Value Mix::getOutSongId(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   const int result =  obj->mix->getOutSongId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Mix::setOutSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -209,7 +209,7 @@ Napi::Value Mix::getOutSong(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Song* result =  obj->mix->getOutSong();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -223,7 +223,7 @@ Napi::Value Mix::getOutSongConst(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Song* result =  obj->mix->getOutSongConst();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -243,7 +243,7 @@ Napi::Value Mix::getInSongId(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   const int result =  obj->mix->getInSongId();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Mix::setInSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -257,7 +257,7 @@ Napi::Value Mix::getInSong(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Song* result =  obj->mix->getInSong();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -271,7 +271,7 @@ Napi::Value Mix::getInSongConst(const Napi::CallbackInfo& info) {
   dogatech::soulsifter::Song* result =  obj->mix->getInSongConst();
 
   if (result == NULL) {
-    return env.Null();
+    return info.Env().Null();
   } else {
     Napi::Object instance = Song::NewInstance(info.Env());
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
@@ -304,7 +304,7 @@ Napi::Value Mix::getRating(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   const int result =  obj->mix->getRating();
 
-  return Napi::Number::New(info.Env(), result));
+  return Napi::Number::New(info.Env(), result);
 }
 
 void Mix::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -330,7 +330,7 @@ Napi::Value Mix::getAddon(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   const bool result =  obj->mix->getAddon();
 
-  return Napi::Boolean::New(info.Env(), result));
+  return Napi::Boolean::New(info.Env(), result);
 }
 
 void Mix::setAddon(const Napi::CallbackInfo& info, const Napi::Value &value) {
