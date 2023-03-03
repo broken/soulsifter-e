@@ -4,6 +4,4 @@ TODO: wrappers need to work with:
 
 fix fonts - use Roboto
 
-lowercase p in song.filePath in mysql
-
 drag & drop

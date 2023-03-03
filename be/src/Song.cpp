@@ -230,7 +230,7 @@ namespace soulsifter {
         song->setTitle(rs->getString("title"));
         song->setRemixer(rs->getString("remixer"));
         song->setFeaturing(rs->getString("featuring"));
-        song->setFilepath(rs->getString("filePath"));
+        song->setFilepath(rs->getString("filepath"));
         song->setRating(rs->getInt("rating"));
         song->setDateAdded(timeFromString(rs->getString("dateAdded")));
         song->setBpm(rs->getString("bpm"));
