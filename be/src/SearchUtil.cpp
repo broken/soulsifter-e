@@ -454,6 +454,18 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
 }  // anon namespace
 
 vector<Song*>* SearchUtil::searchSongs(const string& query,
+                                  const int bpm,
+                                  const string& key,
+                                  const vector<Style*>& styles,
+                                  const vector<Song*>& songsToOmit,
+                                  int limit,
+                                  int energy,
+                                  const bool musicVideoMode,
+                                  int orderBy) {
+  return searchSongsOld(query, bpm, key, styles, songsToOmit, limit, energy, musicVideoMode, orderBy);
+}
+
+vector<Song*>* SearchUtil::searchSongsOld(const string& query,
                                        const int bpm,
                                        const string& key,
                                        const vector<Style*>& styles,
