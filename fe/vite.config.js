@@ -6,6 +6,7 @@ export default defineConfig({
   build: {
     minify: false,
     outDir: 'build',
+    sourcemap: true
   },
   esbuild: {
     keepNames: true,

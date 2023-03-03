@@ -3,83 +3,84 @@ import { css, html, LitElement, unsafeCSS } from 'lit';
 import "@material/mwc-tab";
 import "@material/mwc-tab-bar";
 
-// import "./alert-list.js";
-// import "./genre-edit.js";
-// import "./genre-list.js";
-// import "./playlist-edit.js";
-// import "./playlist-list.js";
-// import "./mix-edit.js";
-// import "./mix-list.js";
-// import "./search-toolbar.js";
-// import "./settings-edit.js";
-// import "./song-edit.js";
-// import "./song-list.js";
-// import "./song-section.js";
+import "./alert-list.js";
+import "./genre-edit.js";
+import "./genre-list.js";
+import "./playlist-edit.js";
+import "./playlist-list.js";
+import "./mix-edit.js";
+import "./mix-list.js";
+import "./search-toolbar.js";
+import "./settings-edit.js";
+import "./song-edit.js";
+import "./song-list.js";
+import "./song-section.js";
 // // import "./spotify-client.js";
 // import "./youtube-client.js";
 
+import 'material-design-icons/iconfont/material-icons.css';
+import 'typeface-roboto/index.css';
 import theme from './theme-serato.css';
 
 
 class SoulSifter extends LitElement {
-//   render() {
-//     return html`
-//       <link id="theme" href="./theme-serato.css" rel="stylesheet">
-//       <alert-list></alert-list>
-//       <aside>
-//         <mwc-tab-bar activeIndex="1" dense="true">
-//           <mwc-tab @click="${this.songTabClicked}" label="Song" isFadingIndicator></mwc-tab>
-//           <mwc-tab @click="${this.genresTabClicked}" label="Genres" isFadingIndicator></mwc-tab>
-//           <mwc-tab @click="${this.playlistsTabClicked}" label="Playlists" isFadingIndicator></mwc-tab>
-//         </mwc-tab-bar>
-//         <div id="sections">
-//           <song-section></song-section>
-//           <genre-list main class="active"></genre-list>
-//           <playlist-list></playlist-list>
-//         </div>
-//       </aside>
-//       <main>
-//         <search-toolbar></search-toolbar>
-//         <mix-list></mix-list>
-//         <div class="list-seperator"></div>
-//         <song-list></song-list>
-//       </main>
-//       <genre-edit></genre-edit>
-//       <mix-edit></mix-edit>
-//       <playlist-edit></playlist-edit>
-//       <settings-edit></settings-edit>
-//       <song-edit></song-edit>
-//     `;
-//   }
+  render() {
+    return html`
+      <alert-list></alert-list>
+      <aside>
+        <mwc-tab-bar activeIndex="1" dense="true">
+          <mwc-tab @click="${this.songTabClicked}" label="Song" isFadingIndicator></mwc-tab>
+          <mwc-tab @click="${this.genresTabClicked}" label="Genres" isFadingIndicator></mwc-tab>
+          <mwc-tab @click="${this.playlistsTabClicked}" label="Playlists" isFadingIndicator></mwc-tab>
+        </mwc-tab-bar>
+        <div id="sections">
+          <song-section></song-section>
+          <genre-list main class="active"></genre-list>
+          <playlist-list></playlist-list>
+        </div>
+      </aside>
+      <main>
+        <search-toolbar></search-toolbar>
+        <mix-list></mix-list>
+        <div class="list-seperator"></div>
+        <song-list></song-list>
+      </main>
+      <genre-edit></genre-edit>
+      <mix-edit></mix-edit>
+      <playlist-edit></playlist-edit>
+      <settings-edit></settings-edit>
+      <song-edit></song-edit>
+    `;
+  }
 
-//   static get properties() {
-//     return {
-//       selectedTab: { type: Number },
-//     };
-//   }
+  static get properties() {
+    return {
+      selectedTab: { type: Number },
+    };
+  }
 
-//   constructor() {
-//     super();
-//     this.selectedTab = 1;
-//   }
+  constructor() {
+    super();
+    this.selectedTab = 1;
+  }
 
-//   tabClicked(tab) {
-//     if (this.selectedTab != tab) {
-//       let drawer = this.shadowRoot.getElementById('sections');
-//       drawer.children.item(tab).classList.toggle('active');
-//       drawer.children.item(this.selectedTab).classList.toggle('active');
-//       this.selectedTab = tab;
-//     }
-//   }
-//   songTabClicked() {
-//     this.tabClicked(0);
-//   }
-//   genresTabClicked() {
-//     this.tabClicked(1);
-//   }
-//   playlistsTabClicked() {
-//     this.tabClicked(2);
-//   }
+  tabClicked(tab) {
+    if (this.selectedTab != tab) {
+      let drawer = this.shadowRoot.getElementById('sections');
+      drawer.children.item(tab).classList.toggle('active');
+      drawer.children.item(this.selectedTab).classList.toggle('active');
+      this.selectedTab = tab;
+    }
+  }
+  songTabClicked() {
+    this.tabClicked(0);
+  }
+  genresTabClicked() {
+    this.tabClicked(1);
+  }
+  playlistsTabClicked() {
+    this.tabClicked(2);
+  }
 
   static get styles() {
     return [

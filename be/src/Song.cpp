@@ -230,7 +230,7 @@ namespace soulsifter {
         song->setTitle(rs->getString("title"));
         song->setRemixer(rs->getString("remixer"));
         song->setFeaturing(rs->getString("featuring"));
-        song->setFilepath(rs->getString("filepath"));
+        song->setFilepath(rs->getString("filePath"));
         song->setRating(rs->getInt("rating"));
         song->setDateAdded(timeFromString(rs->getString("dateAdded")));
         song->setBpm(rs->getString("bpm"));
@@ -998,7 +998,7 @@ namespace soulsifter {
     const string& Song::getCurator() const { return curator; }
     void Song::setCurator(const string& curator) { this->curator = curator; }
 
-    const int Song::getRESongId() const { 
+    const int Song::getRESongId() const {
         return (!reSongId && reSong) ? reSong->getId() : reSongId;
     }
     void Song::setRESongId(const int reSongId) {
@@ -1027,7 +1027,7 @@ namespace soulsifter {
         this->reSong = reSong;
     }
 
-    const int Song::getAlbumId() const { 
+    const int Song::getAlbumId() const {
         return (!albumId && album) ? album->getId() : albumId;
     }
     void Song::setAlbumId(const int albumId) {
@@ -1056,7 +1056,7 @@ namespace soulsifter {
         this->album = album;
     }
 
-    const int Song::getAlbumPartId() const { 
+    const int Song::getAlbumPartId() const {
         return (!albumPartId && albumPart) ? albumPart->getId() : albumPartId;
     }
     void Song::setAlbumPartId(const int albumPartId) {
@@ -1085,7 +1085,7 @@ namespace soulsifter {
         this->albumPart = albumPart;
     }
 
-    const int Song::getMusicVideoId() const { 
+    const int Song::getMusicVideoId() const {
         return (!musicVideoId && musicVideo) ? musicVideo->getId() : musicVideoId;
     }
     void Song::setMusicVideoId(const int musicVideoId) {
