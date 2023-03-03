@@ -5,6 +5,8 @@
 #include "Style.h"
 #include "Style_wrap.h"
 
+Napi::FunctionReference* SearchUtil::constructor = nullptr;
+
 SearchUtil::~SearchUtil() { if (ownWrappedObject) delete searchutil; };
 
 void SearchUtil::setWrappedValue(dogatech::soulsifter::SearchUtil* v, bool own) {
@@ -19,9 +21,8 @@ Napi::Object SearchUtil::Init(Napi::Env env, Napi::Object exports) {
     StaticMethod<&SearchUtil::searchSongs>("searchSongs"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("SearchUtil", func);
   return exports;
@@ -29,7 +30,7 @@ Napi::Object SearchUtil::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object SearchUtil::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = SearchUtil::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

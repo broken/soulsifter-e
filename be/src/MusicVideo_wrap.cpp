@@ -4,6 +4,8 @@
 #include "MusicVideo_wrap.h"
 #include "ResultSetIterator.h"
 
+Napi::FunctionReference* MusicVideo::constructor = nullptr;
+
 MusicVideo::~MusicVideo() { if (ownWrappedObject) delete musicvideo; };
 
 void MusicVideo::setWrappedValue(dogatech::soulsifter::MusicVideo* v, bool own) {
@@ -26,9 +28,8 @@ Napi::Object MusicVideo::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&MusicVideo::getThumbnailFilePath, &MusicVideo::setThumbnailFilePath>("thumbnailFilePath"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("MusicVideo", func);
   return exports;
@@ -36,7 +37,7 @@ Napi::Object MusicVideo::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object MusicVideo::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = MusicVideo::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

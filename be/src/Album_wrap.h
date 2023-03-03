@@ -52,6 +52,7 @@ class Album : public Napi::ObjectWrap<Album> {
   Napi::Value getBasicGenreConst(const Napi::CallbackInfo& info);
   void setBasicGenre(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::Album* album;
   bool ownWrappedObject;
 };

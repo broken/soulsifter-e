@@ -34,18 +34,7 @@ public:
                                     int energy = 0,
                                     const bool musicVideoMode = false,
                                     int orderBy = DATE_ADDED);
-
-private:
-  static vector<Song*>* searchSongsOld(const string& query,
-                                    const int bpm,
-                                    const string& key,
-                                    const vector<Style*>& styles,
-                                    const vector<Song*>& songsToOmit,
-                                    int limit,
-                                    int energy = 0,
-                                    const bool musicVideoMode = false,
-                                    int orderBy = DATE_ADDED,
-                                    std::function<void(string)> errorCallback = {});
+                                    // std::function<void(string)> errorCallback = {});
 };
 
 }  // namespace soulsifter

@@ -3,7 +3,8 @@
   "version": "0.1.0",
   "description": "Scripts for automating builds of the backend & fronted of SoulSifter app.",
   "scripts": {
-    "compile": "cd be && npm i && npm run rebuild",
+    "all": "npm run compile && npm start",
+    "compile": "cd be && npm run build && npm run rebuild",
     "start": "cd fe && npm start"
   },
   "author": "Robert Neale",

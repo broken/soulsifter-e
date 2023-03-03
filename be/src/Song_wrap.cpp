@@ -12,6 +12,8 @@
 #include "Style.h"
 #include "Style_wrap.h"
 
+Napi::FunctionReference* Song::constructor = nullptr;
+
 Song::~Song() { if (ownWrappedObject) delete song; };
 
 void Song::setWrappedValue(dogatech::soulsifter::Song* v, bool own) {
@@ -77,9 +79,8 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Song::getTonicKeyLock, &Song::setTonicKeyLock>("tonicKeyLock"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("Song", func);
   return exports;
@@ -87,7 +88,7 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object Song::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = Song::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

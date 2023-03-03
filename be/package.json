@@ -5,8 +5,9 @@
   "main": "index.js",
   "private": true,
   "scripts": {
+    "build": "npm i",
     "rebuild": "HOME=~/.electron-gyp npx node-gyp rebuild --target=21.4.2 --arch=x64 --dist-url=https://atom.io/download/electron",
-    "test": "node test.js"
+    "test": "npm run build && node test.js"
   },
   "author": "Robert Neale",
   "license": "Apache-2.0",

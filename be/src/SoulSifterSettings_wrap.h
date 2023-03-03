@@ -23,6 +23,7 @@ class SoulSifterSettings : public Napi::ObjectWrap<SoulSifterSettings> {
   Napi::Value getBool(const Napi::CallbackInfo& info);
   Napi::Value setBool(const Napi::CallbackInfo& info);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::SoulSifterSettings* soulsiftersettings;
   bool ownWrappedObject;
 };

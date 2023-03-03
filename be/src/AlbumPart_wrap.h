@@ -36,6 +36,7 @@ class AlbumPart : public Napi::ObjectWrap<AlbumPart> {
   Napi::Value getAlbumConst(const Napi::CallbackInfo& info);
   void setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::AlbumPart* albumpart;
   bool ownWrappedObject;
 };

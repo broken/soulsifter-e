@@ -6,6 +6,8 @@
 #include "BasicGenre_wrap.h"
 #include "ResultSetIterator.h"
 
+Napi::FunctionReference* Album::constructor = nullptr;
+
 Album::~Album() { if (ownWrappedObject) delete album; };
 
 void Album::setWrappedValue(dogatech::soulsifter::Album* v, bool own) {
@@ -43,9 +45,8 @@ Napi::Object Album::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Album::getBasicGenreConst>("basicGenreConst"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("Album", func);
   return exports;
@@ -53,7 +54,7 @@ Napi::Object Album::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object Album::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = Album::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

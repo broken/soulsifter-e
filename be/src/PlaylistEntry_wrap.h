@@ -42,6 +42,7 @@ class PlaylistEntry : public Napi::ObjectWrap<PlaylistEntry> {
   Napi::Value getTime(const Napi::CallbackInfo& info);
   void setTime(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::PlaylistEntry* playlistentry;
   bool ownWrappedObject;
 };

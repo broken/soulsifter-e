@@ -3,6 +3,8 @@
 #include "Song.h"
 #include "Song_wrap.h"
 
+Napi::FunctionReference* NewSongManager::constructor = nullptr;
+
 NewSongManager::~NewSongManager() { if (ownWrappedObject) delete newsongmanager; };
 
 void NewSongManager::setWrappedValue(dogatech::soulsifter::NewSongManager* v, bool own) {
@@ -21,9 +23,8 @@ Napi::Object NewSongManager::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod<&NewSongManager::trashMusicFile>("trashMusicFile"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("NewSongManager", func);
   return exports;
@@ -31,7 +32,7 @@ Napi::Object NewSongManager::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object NewSongManager::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = NewSongManager::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

@@ -120,7 +120,7 @@ int canonicalizeBpm(const int bpm) {
 int canonicalizeBpm(const string& bpm) {
   return canonicalizeBpm((int)(strToFloat(bpm) + 0.5));
 }
-    
+
 const string getId3v2Text(TagLib::ID3v2::Tag* id3v2, const char* name) {
   TagLib::ID3v2::FrameList frameList = id3v2->frameListMap()[name];
   return frameList.isEmpty() ? "" : trim_copy(frameList.front()->toString().to8Bit());
@@ -254,7 +254,7 @@ void setId3v2Picture(TagLib::ID3v2::Tag* id3v2, string path, bool replace) {
 }
 
 }  // namespace
-  
+
 void TagService::readId3v2Tag(Song* song) {
   string songFilepath = song->getFilepath();
   if (!boost::filesystem::exists(songFilepath)) {
@@ -280,13 +280,13 @@ void TagService::readId3v2Tag(Song* song) {
     if (id3v2->year() != 0) song->getAlbum()->setReleaseDateYear(id3v2->year());
     //TODO if (id3v2->genre() != TagLib::String::null) song->setGenre(id3v2->genre().to8Bit());
     if (id3v2->comment() != TagLib::String::null) song->setComments(trim_copy(id3v2->comment().to8Bit()));
-    
+
     TagLib::ID3v2::FrameList frameList = id3v2->frameListMap()["POPM"];
     if (!frameList.isEmpty()) {
       TagLib::ID3v2::PopularimeterFrame *popm = static_cast<TagLib::ID3v2::PopularimeterFrame*>(frameList.front());
       song->setRating(popm->rating());
     }
-    
+
     // part of set
     const string pos = getId3v2Text(id3v2, "TPOS");
     if (pos.length() > 0) {
@@ -297,7 +297,7 @@ void TagService::readId3v2Tag(Song* song) {
       song->getAlbumPart()->setAlbum(*song->getAlbum());
       song->getAlbumPart()->setPos(pos);
     }
-    
+
     // string in the DDMM format
     const string date = getId3v2Text(id3v2, "TDAT");
     char *tmp = new char[3];
@@ -455,6 +455,6 @@ void TagService::updateSongAttributesFromTags(std::function<void(float)> progres
   }
   progressCallback(1);
 }
-    
+
 }  // namespace soulsifter
 }  // namespace dogatech

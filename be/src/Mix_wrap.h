@@ -46,6 +46,7 @@ class Mix : public Napi::ObjectWrap<Mix> {
   Napi::Value getAddon(const Napi::CallbackInfo& info);
   void setAddon(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::Mix* mix;
   bool ownWrappedObject;
 };

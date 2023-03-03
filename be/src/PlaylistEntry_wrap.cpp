@@ -8,6 +8,8 @@
 #include "Song.h"
 #include "Song_wrap.h"
 
+Napi::FunctionReference* PlaylistEntry::constructor = nullptr;
+
 PlaylistEntry::~PlaylistEntry() { if (ownWrappedObject) delete playlistentry; };
 
 void PlaylistEntry::setWrappedValue(dogatech::soulsifter::PlaylistEntry* v, bool own) {
@@ -40,9 +42,8 @@ Napi::Object PlaylistEntry::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&PlaylistEntry::getTime, &PlaylistEntry::setTime>("time"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("PlaylistEntry", func);
   return exports;
@@ -50,7 +51,7 @@ Napi::Object PlaylistEntry::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object PlaylistEntry::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = PlaylistEntry::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

@@ -17,6 +17,7 @@ class SearchUtil : public Napi::ObjectWrap<SearchUtil> {
  private:
   static Napi::Value searchSongs(const Napi::CallbackInfo& info);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::SearchUtil* searchutil;
   bool ownWrappedObject;
 };

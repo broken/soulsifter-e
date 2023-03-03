@@ -454,18 +454,6 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
 }  // anon namespace
 
 vector<Song*>* SearchUtil::searchSongs(const string& query,
-                                  const int bpm,
-                                  const string& key,
-                                  const vector<Style*>& styles,
-                                  const vector<Song*>& songsToOmit,
-                                  int limit,
-                                  int energy,
-                                  const bool musicVideoMode,
-                                  int orderBy) {
-  return searchSongsOld(query, bpm, key, styles, songsToOmit, limit, energy, musicVideoMode, orderBy);
-}
-
-vector<Song*>* SearchUtil::searchSongsOld(const string& query,
                                        const int bpm,
                                        const string& key,
                                        const vector<Style*>& styles,
@@ -473,8 +461,7 @@ vector<Song*>* SearchUtil::searchSongsOld(const string& query,
                                        int limit,
                                        int energy,
                                        const bool musicVideoMode,
-                                       int orderBy,
-                                       std::function<void(string)> errorCallback) {
+                                       int orderBy) {
   LOG(INFO) << "q:" << query << ", bpm:" << bpm << ", key:" << key << ", styles:" << ", limit:" << limit;
 
   stringstream ss;
@@ -528,8 +515,9 @@ vector<Song*>* SearchUtil::searchSongsOld(const string& query,
         bool reconnected = MysqlAccess::getInstance().reconnect();
         LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
       } else {
-        if (errorCallback) errorCallback(e.what());
-        else LOG(WARNING) << "Undefined callback. Unable to send error.";
+        LOG(WARNING) << e.what();
+        // if (errorCallback) errorCallback(e.what());
+        // else LOG(WARNING) << "Undefined callback. Unable to send error.";
       }
     }
   }

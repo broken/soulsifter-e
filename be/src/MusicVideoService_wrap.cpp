@@ -5,6 +5,8 @@
 #include "Song.h"
 #include "Song_wrap.h"
 
+Napi::FunctionReference* MusicVideoService::constructor = nullptr;
+
 MusicVideoService::~MusicVideoService() { if (ownWrappedObject) delete musicvideoservice; };
 
 void MusicVideoService::setWrappedValue(dogatech::soulsifter::MusicVideoService* v, bool own) {
@@ -20,9 +22,8 @@ Napi::Object MusicVideoService::Init(Napi::Env env, Napi::Object exports) {
     StaticMethod<&MusicVideoService::downloadAudio>("downloadAudio"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("MusicVideoService", func);
   return exports;
@@ -30,7 +31,7 @@ Napi::Object MusicVideoService::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object MusicVideoService::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = MusicVideoService::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

@@ -4,6 +4,8 @@
 #include "BasicGenre_wrap.h"
 #include "ResultSetIterator.h"
 
+Napi::FunctionReference* BasicGenre::constructor = nullptr;
+
 BasicGenre::~BasicGenre() { if (ownWrappedObject) delete basicgenre; };
 
 void BasicGenre::setWrappedValue(dogatech::soulsifter::BasicGenre* v, bool own) {
@@ -28,9 +30,8 @@ Napi::Object BasicGenre::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&BasicGenre::getName, &BasicGenre::setName>("name"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("BasicGenre", func);
   return exports;
@@ -38,7 +39,7 @@ Napi::Object BasicGenre::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object BasicGenre::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = BasicGenre::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

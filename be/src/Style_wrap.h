@@ -42,6 +42,7 @@ class Style : public Napi::ObjectWrap<Style> {
   Napi::Value getParents(const Napi::CallbackInfo& info);
   void setParents(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::Style* style;
   bool ownWrappedObject;
 };

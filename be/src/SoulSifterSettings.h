@@ -20,12 +20,12 @@ namespace soulsifter {
 
     class SoulSifterSettings {
     public:
+        SoulSifterSettings();
         static SoulSifterSettings& getInstance() {
             static SoulSifterSettings instance;  // guaranteed to be destroyed
             // instantiated on first use
             return instance;
         }
-        SoulSifterSettings();
 
         void save();
 

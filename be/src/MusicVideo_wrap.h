@@ -28,6 +28,7 @@ class MusicVideo : public Napi::ObjectWrap<MusicVideo> {
   Napi::Value getThumbnailFilePath(const Napi::CallbackInfo& info);
   void setThumbnailFilePath(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::MusicVideo* musicvideo;
   bool ownWrappedObject;
 };

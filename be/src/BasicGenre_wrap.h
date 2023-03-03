@@ -29,6 +29,7 @@ class BasicGenre : public Napi::ObjectWrap<BasicGenre> {
   Napi::Value getName(const Napi::CallbackInfo& info);
   void setName(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::BasicGenre* basicgenre;
   bool ownWrappedObject;
 };

@@ -21,6 +21,7 @@ class NewSongManager : public Napi::ObjectWrap<NewSongManager> {
   Napi::Value processSong(const Napi::CallbackInfo& info);
   Napi::Value trashMusicFile(const Napi::CallbackInfo& info);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::NewSongManager* newsongmanager;
   bool ownWrappedObject;
 };

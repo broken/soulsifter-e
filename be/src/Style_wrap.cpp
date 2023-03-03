@@ -4,6 +4,8 @@
 #include "Style.h"
 #include "Style_wrap.h"
 
+Napi::FunctionReference* Style::constructor = nullptr;
+
 Style::~Style() { if (ownWrappedObject) delete style; };
 
 void Style::setWrappedValue(dogatech::soulsifter::Style* v, bool own) {
@@ -35,9 +37,8 @@ Napi::Object Style::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Style::getParents, &Style::setParents>("parents"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("Style", func);
   return exports;
@@ -45,7 +46,7 @@ Napi::Object Style::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object Style::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = Style::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

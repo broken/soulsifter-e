@@ -99,6 +99,7 @@ class Song : public Napi::ObjectWrap<Song> {
   Napi::Value getTonicKeyLock(const Napi::CallbackInfo& info);
   void setTonicKeyLock(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::Song* song;
   bool ownWrappedObject;
 };

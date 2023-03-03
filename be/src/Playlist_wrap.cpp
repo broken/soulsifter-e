@@ -6,6 +6,8 @@
 #include "Style.h"
 #include "Style_wrap.h"
 
+Napi::FunctionReference* Playlist::constructor = nullptr;
+
 Playlist::~Playlist() { if (ownWrappedObject) delete playlist; };
 
 void Playlist::setWrappedValue(dogatech::soulsifter::Playlist* v, bool own) {
@@ -36,9 +38,8 @@ Napi::Object Playlist::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Playlist::getStyles, &Playlist::setStyles>("styles"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("Playlist", func);
   return exports;
@@ -46,7 +47,7 @@ Napi::Object Playlist::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object Playlist::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = Playlist::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

@@ -41,6 +41,7 @@ class Playlist : public Napi::ObjectWrap<Playlist> {
   Napi::Value getStyles(const Napi::CallbackInfo& info);
   void setStyles(const Napi::CallbackInfo& info, const Napi::Value &value);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::Playlist* playlist;
   bool ownWrappedObject;
 };

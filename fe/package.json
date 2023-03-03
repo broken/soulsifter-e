@@ -1,7 +1,7 @@
 {
   "name": "soulsifter",
   "version": "1.0.0",
-  "build": 79,
+  "build": 89,
   "description": "DJ & music organization app.",
   "main": "main.js",
   "scripts": {
@@ -17,6 +17,12 @@
     "vite": "^4.1.4"
   },
   "dependencies": {
+    "@material/mwc-circular-progress": "^0.27.0",
+    "@material/mwc-fab": "^0.27.0",
+    "@material/mwc-icon": "^0.27.0",
+    "@material/mwc-tab": "^0.27.0",
+    "@material/mwc-tab-bar": "^0.27.0",
+    "@polymer/paper-toast": "^3.0.1",
     "lit": "^2.6.1"
   }
 }

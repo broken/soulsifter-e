@@ -5,7 +5,7 @@
 
 namespace dogatech {
 namespace soulsifter {
-    
+
 class Song;
 
 class TagService {
@@ -14,7 +14,7 @@ public:
   static void writeId3v2Tag(Song* song);
   static void updateSongAttributesFromTags(std::function<void(float)> progressCallback = {});
 };
-    
+
 }  // namespace soulsifter
 }  // namespace dogatech
 

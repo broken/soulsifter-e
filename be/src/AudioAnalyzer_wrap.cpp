@@ -3,6 +3,8 @@
 #include "Song.h"
 #include "Song_wrap.h"
 
+Napi::FunctionReference* AudioAnalyzer::constructor = nullptr;
+
 AudioAnalyzer::~AudioAnalyzer() { if (ownWrappedObject) delete audioanalyzer; };
 
 void AudioAnalyzer::setWrappedValue(dogatech::soulsifter::AudioAnalyzer* v, bool own) {
@@ -21,9 +23,8 @@ Napi::Object AudioAnalyzer::Init(Napi::Env env, Napi::Object exports) {
     StaticMethod<&AudioAnalyzer::analyzeDurations>("analyzeDurations"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("AudioAnalyzer", func);
   return exports;
@@ -31,7 +32,7 @@ Napi::Object AudioAnalyzer::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object AudioAnalyzer::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = AudioAnalyzer::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

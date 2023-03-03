@@ -1,3 +1,3 @@
-var addon = require('bindings')('soulsifter');
+var ss = require('bindings')('soulsifter');
 
-console.log(addon.MusicService.cleanDirName('this')); // 'world'
+console.log(ss.Style.findAllParents());

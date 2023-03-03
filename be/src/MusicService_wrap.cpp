@@ -1,6 +1,8 @@
 #include <napi.h>
 #include "MusicService_wrap.h"
 
+Napi::FunctionReference* MusicService::constructor = nullptr;
+
 MusicService::~MusicService() { if (ownWrappedObject) delete musicservice; };
 
 void MusicService::setWrappedValue(dogatech::soulsifter::MusicService* v, bool own) {
@@ -15,9 +17,8 @@ Napi::Object MusicService::Init(Napi::Env env, Napi::Object exports) {
     StaticMethod<&MusicService::cleanDirName>("cleanDirName"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("MusicService", func);
   return exports;
@@ -25,7 +26,7 @@ Napi::Object MusicService::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object MusicService::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = MusicService::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

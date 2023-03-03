@@ -21,6 +21,7 @@ class AudioAnalyzer : public Napi::ObjectWrap<AudioAnalyzer> {
   static Napi::Value analyzeDuration(const Napi::CallbackInfo& info);
   static Napi::Value analyzeDurations(const Napi::CallbackInfo& info);
 
+  static Napi::FunctionReference* constructor;
   dogatech::soulsifter::AudioAnalyzer* audioanalyzer;
   bool ownWrappedObject;
 };

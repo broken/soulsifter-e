@@ -6,6 +6,8 @@
 #include "Song.h"
 #include "Song_wrap.h"
 
+Napi::FunctionReference* Mix::constructor = nullptr;
+
 Mix::~Mix() { if (ownWrappedObject) delete mix; };
 
 void Mix::setWrappedValue(dogatech::soulsifter::Mix* v, bool own) {
@@ -40,9 +42,8 @@ Napi::Object Mix::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Mix::getAddon, &Mix::setAddon>("addon"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("Mix", func);
   return exports;
@@ -50,7 +51,7 @@ Napi::Object Mix::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object Mix::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = Mix::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 

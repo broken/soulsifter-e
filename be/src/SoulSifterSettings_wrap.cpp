@@ -1,6 +1,8 @@
 #include <napi.h>
 #include "SoulSifterSettings_wrap.h"
 
+Napi::FunctionReference* SoulSifterSettings::constructor = nullptr;
+
 SoulSifterSettings::~SoulSifterSettings() { if (ownWrappedObject) delete soulsiftersettings; };
 
 void SoulSifterSettings::setWrappedValue(dogatech::soulsifter::SoulSifterSettings* v, bool own) {
@@ -21,9 +23,8 @@ Napi::Object SoulSifterSettings::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod<&SoulSifterSettings::setBool>("setBool"),
   });
 
-  Napi::FunctionReference *constructor = new Napi::FunctionReference();
+  constructor = new Napi::FunctionReference();
   *constructor = Napi::Persistent(func);
-  env.SetInstanceData(constructor);
 
   exports.Set("SoulSifterSettings", func);
   return exports;
@@ -31,7 +32,7 @@ Napi::Object SoulSifterSettings::Init(Napi::Env env, Napi::Object exports) {
 
 Napi::Object SoulSifterSettings::NewInstance(Napi::Env env) {
   Napi::EscapableHandleScope scope(env);
-  Napi::Object obj = env.GetInstanceData<Napi::FunctionReference>()->New({});
+  Napi::Object obj = SoulSifterSettings::constructor->New({});
   return scope.Escape(napi_value(obj)).ToObject();
 }
 
