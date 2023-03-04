@@ -123,6 +123,7 @@ class SoulSifter extends LitElement {
         mwc-tab {
           --mdc-theme-on-surface: var(--ss-drawer-tab-clr);
           --mdc-theme-primary: var(--ss-drawer-tab-clr-active);
+          --mdc-tab-horizontal-padding: 0;
         }
         genre-list {
           transition: transform 1s;
