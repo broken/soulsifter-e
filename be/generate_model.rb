@@ -966,81 +966,81 @@ reAlbumCoverCustomHeaders = ""
 
 ######################### write files
 
-output = File.open("src/soulsifter/Album.h", "w")
+output = File.open("src/Album.h", "w")
 output << writeHeader("album", albumFields, 0, albumCustomMethods, "")
 output.close
-output = File.open("src/soulsifter/Album.cpp", "w")
+output = File.open("src/Album.cpp", "w")
 output << writeCode("album", albumFields, 0)
 output.close
-output = File.open("src/soulsifter/AlbumPart.h", "w")
+output = File.open("src/AlbumPart.h", "w")
 output << writeHeader("albumPart", albumPartFields, 0, "", "")
 output.close
-output = File.open("src/soulsifter/AlbumPart.cpp", "w")
+output = File.open("src/AlbumPart.cpp", "w")
 output << writeCode("albumPart", albumPartFields, 0)
 output.close
-output = File.open("src/soulsifter/BasicGenre.h", "w")
+output = File.open("src/BasicGenre.h", "w")
 output << writeHeader("basicGenre", basicGenreFields, basicGenreAttribs, basicGenreCustomMethods, "")
 output.close
-output = File.open("src/soulsifter/BasicGenre.cpp", "w")
+output = File.open("src/BasicGenre.cpp", "w")
 output << writeCode("basicGenre", basicGenreFields, basicGenreAttribs)
 output.close
-output = File.open("src/soulsifter/Mix.h", "w")
+output = File.open("src/Mix.h", "w")
 output << writeHeader("mix", mixFields, mixAttribs, mixCustomMethods, "")
 output.close
-output = File.open("src/soulsifter/Mix.cpp", "w")
+output = File.open("src/Mix.cpp", "w")
 output << writeCode("mix", mixFields, mixAttribs)
 output.close
-output = File.open("src/soulsifter/MusicVideo.h", "w")
+output = File.open("src/MusicVideo.h", "w")
 output << writeHeader("musicVideo", musicVideoFields, musicVideoAttribs, musicVideoCustomMethods, "")
 output.close
-output = File.open("src/soulsifter/MusicVideo.cpp", "w")
+output = File.open("src/MusicVideo.cpp", "w")
 output << writeCode("musicVideo", musicVideoFields, musicVideoAttribs)
 output.close
-output = File.open("src/soulsifter/Playlist.h", "w")
+output = File.open("src/Playlist.h", "w")
 output << writeHeader("playlist", playlistFields, playlistAttribs, "", playlistCustomHeaders)
 output.close
-output = File.open("src/soulsifter/Playlist.cpp", "w")
+output = File.open("src/Playlist.cpp", "w")
 output << writeCode("playlist", playlistFields, playlistAttribs)
 output.close
-output = File.open("src/soulsifter/PlaylistEntry.h", "w")
+output = File.open("src/PlaylistEntry.h", "w")
 output << writeHeader("playlistEntry", playlistEntryFields, playlistEntryAttribs, "", "")
 output.close
-output = File.open("src/soulsifter/PlaylistEntry.cpp", "w")
+output = File.open("src/PlaylistEntry.cpp", "w")
 output << writeCode("playlistEntry", playlistEntryFields, playlistEntryAttribs)
 output.close
-output = File.open("src/soulsifter/RESong.h", "w")
+output = File.open("src/RESong.h", "w")
 output << writeHeader("reSong", reSongFields, reSongAttribs, reSongCustomMethods, reSongCustomHeaders)
 output.close
-output = File.open("src/soulsifter/RESong.cpp", "w")
+output = File.open("src/RESong.cpp", "w")
 output << writeCode("reSong", reSongFields, reSongAttribs)
 output.close
-output = File.open("src/soulsifter/Song.h", "w")
+output = File.open("src/Song.h", "w")
 output << writeHeader("song", songFields, songAttribs, songCustomMethods, songCustomHeaders)
 output.close
-output = File.open("src/soulsifter/Song.cpp", "w")
+output = File.open("src/Song.cpp", "w")
 output << writeCode("song", songFields, songAttribs)
 output.close
-output = File.open("src/soulsifter/Style.h", "w")
+output = File.open("src/Style.h", "w")
 output << writeHeader("style", styleFields, styleAttribs, styleCustomMethods, styleCustomHeaders)
 output.close
-output = File.open("src/soulsifter/Style.cpp", "w")
+output = File.open("src/Style.cpp", "w")
 output << writeCode("style", styleFields, styleAttribs)
 output.close
-output = File.open("src/soulsifter/RESetting.h", "w")
+output = File.open("src/RESetting.h", "w")
 output << writeHeader("reSetting", reSettingFields, reSettingAttribs, reSettingCustomMethods, reSettingCustomHeaders)
 output.close
-output = File.open("src/soulsifter/RESetting.cpp", "w")
+output = File.open("src/RESetting.cpp", "w")
 output << writeCode("reSetting", reSettingFields, reSettingAttribs)
 output.close
-output = File.open("src/soulsifter/REXML.h", "w")
+output = File.open("src/REXML.h", "w")
 output << writeHeader("reXml", reXmlFields, reXmlAttribs, reXmlCustomMethods, reXmlCustomHeaders)
 output.close
-output = File.open("src/soulsifter/REXML.cpp", "w")
+output = File.open("src/REXML.cpp", "w")
 output << writeCode("reXml", reXmlFields, reXmlAttribs)
 output.close
-output = File.open("src/soulsifter/REAlbumCover.h", "w")
+output = File.open("src/REAlbumCover.h", "w")
 output << writeHeader("reAlbumCover", reAlbumCoverFields, reAlbumCoverAttribs, reAlbumCoverCustomMethods, reAlbumCoverCustomHeaders)
 output.close
-output = File.open("src/soulsifter/REAlbumCover.cpp", "w")
+output = File.open("src/REAlbumCover.cpp", "w")
 output << writeCode("reAlbumCover", reAlbumCoverFields, reAlbumCoverAttribs)
 output.close
