@@ -1,6 +1,6 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow } = require('electron')
-const path = require('path')
+const { app, BrowserWindow, ipcMain, nativeImage } = require('electron')
+const path = require('path');
 
 const isDev = process.env.IS_DEV === 'true';
 
@@ -34,6 +34,19 @@ app.whenReady().then(() => {
     // dock icon is clicked and there are no other windows open.
     if (BrowserWindow.getAllWindows().length === 0) createWindow()
   })
+})
+
+ipcMain.on('ondragstart', (event, filepath, icon) => {
+  nativeImage.createThumbnailFromPath(icon, {width: 50, height: 50})
+  .then((img) => {
+    event.sender.startDrag({
+      file: filepath,
+      icon: img,
+    });
+  })
+  .catch((err) => {
+    console.log(err);
+  });
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

@@ -103,6 +103,17 @@ class SongSection extends SettingsMixin(SongMixin(SongTrailMixin(LitElement))) {
 
   dragSong(e) {
     e.dataTransfer.setData('text/plain', 'extensis-filenames-type:' + this.settings.getString('music.dir') + this.song.filepath);
+    e.preventDefault();
+    let filepath = '';
+    let iconpath = '';
+    if (this.searchOptions.mvRestrict) {
+      filepath = this.settings.getString('mv.dir') + this.song.musicVideo.filePath;
+      iconpath = this.settings.getString('mv.dir') + this.song.musicVideo.coverFilepath;
+    } else {
+      filepath = this.settings.getString('music.dir') + this.song.filepath;
+      iconpath = this.settings.getString('music.dir') + this.song.album.coverFilepath;
+    }
+    ipcRenderer.send('ondragstart', filepath, iconpath);
   }
 
   backAction(e) {

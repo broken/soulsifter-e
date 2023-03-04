@@ -3,5 +3,3 @@ TODO: wrappers need to work with:
 * callbacks (tagservice & searchutil)
 
 fix fonts - use Roboto
-
-drag & drop

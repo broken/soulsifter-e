@@ -80,11 +80,18 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongMixin(L
   }
 
   dragSong(e) {
+    e.preventDefault();
+    let filepath = '';
+    let iconpath = '';
     if (this.searchOptions.mvRestrict) {
-      e.dataTransfer.setData('text/plain', 'extensis-filenames-type:' + this.settings.getString('mv.dir') + this.song.musicVideo.filePath);
+      filepath = this.settings.getString('mv.dir') + this.song.musicVideo.filePath;
+      iconpath = this.settings.getString('mv.dir') + this.song.album.coverFilepath;
     } else {
-      e.dataTransfer.setData('text/plain', 'extensis-filenames-type:' + this.settings.getString('music.dir') + this.song.filepath);
+      filepath = this.settings.getString('music.dir') + this.song.filepath;
+      iconpath = this.settings.getString('music.dir') + this.song.album.coverFilepath;
     }
+
+    ipcRenderer.send('ondragstart', filepath, iconpath);
     window.ssDraggedObj = this.song;
   }
 
