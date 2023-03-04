@@ -501,7 +501,7 @@ namespace soulsifter {
     const int Album::getReleaseDateDay() const { return releaseDateDay; }
     void Album::setReleaseDateDay(const int releaseDateDay) { this->releaseDateDay = releaseDateDay; }
 
-    const int Album::getBasicGenreId() const { 
+    const int Album::getBasicGenreId() const {
         return (!basicGenreId && basicGenre) ? basicGenre->getId() : basicGenreId;
     }
     void Album::setBasicGenreId(const int basicGenreId) {

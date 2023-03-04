@@ -338,7 +338,7 @@ namespace soulsifter {
     const string& AlbumPart::getName() const { return name; }
     void AlbumPart::setName(const string& name) { this->name = name; }
 
-    const int AlbumPart::getAlbumId() const { 
+    const int AlbumPart::getAlbumId() const {
         return (!albumId && album) ? album->getId() : albumId;
     }
     void AlbumPart::setAlbumId(const int albumId) {

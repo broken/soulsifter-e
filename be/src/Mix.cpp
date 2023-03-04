@@ -420,7 +420,7 @@ namespace soulsifter {
     const int Mix::getId() const { return id; }
     void Mix::setId(const int id) { this->id = id; }
 
-    const int Mix::getOutSongId() const { 
+    const int Mix::getOutSongId() const {
         return (!outSongId && outSong) ? outSong->getId() : outSongId;
     }
     void Mix::setOutSongId(const int outSongId) {
@@ -449,7 +449,7 @@ namespace soulsifter {
         this->outSong = outSong;
     }
 
-    const int Mix::getInSongId() const { 
+    const int Mix::getInSongId() const {
         return (!inSongId && inSong) ? inSong->getId() : inSongId;
     }
     void Mix::setInSongId(const int inSongId) {

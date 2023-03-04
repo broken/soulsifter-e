@@ -407,7 +407,7 @@ namespace soulsifter {
     const int PlaylistEntry::getId() const { return id; }
     void PlaylistEntry::setId(const int id) { this->id = id; }
 
-    const int PlaylistEntry::getPlaylistId() const { 
+    const int PlaylistEntry::getPlaylistId() const {
         return (!playlistId && playlist) ? playlist->getId() : playlistId;
     }
     void PlaylistEntry::setPlaylistId(const int playlistId) {
@@ -436,7 +436,7 @@ namespace soulsifter {
         this->playlist = playlist;
     }
 
-    const int PlaylistEntry::getSongId() const { 
+    const int PlaylistEntry::getSongId() const {
         return (!songId && song) ? song->getId() : songId;
     }
     void PlaylistEntry::setSongId(const int songId) {
