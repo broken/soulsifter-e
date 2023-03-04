@@ -20,7 +20,6 @@ namespace soulsifter {
 
     class SoulSifterSettings {
     public:
-        SoulSifterSettings();
         static SoulSifterSettings& getInstance() {
             static SoulSifterSettings instance;  // guaranteed to be destroyed
             // instantiated on first use
@@ -43,6 +42,7 @@ namespace soulsifter {
         void setBool(const string& label, const bool value);
     private:
         // singleton
+        SoulSifterSettings();
         SoulSifterSettings(SoulSifterSettings const&);
         void operator=(SoulSifterSettings const&);
 

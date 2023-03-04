@@ -14,6 +14,7 @@ void SoulSifterSettings::setWrappedValue(dogatech::soulsifter::SoulSifterSetting
 
 Napi::Object SoulSifterSettings::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "SoulSifterSettings", {
+    // Unable to process getInstance
     InstanceMethod<&SoulSifterSettings::save>("save"),
     InstanceMethod<&SoulSifterSettings::getString>("getString"),
     InstanceMethod<&SoulSifterSettings::setString>("setString"),
@@ -36,8 +37,8 @@ Napi::Object SoulSifterSettings::NewInstance(Napi::Env env) {
   return scope.Escape(napi_value(obj)).ToObject();
 }
 
-SoulSifterSettings::SoulSifterSettings(const Napi::CallbackInfo& info) : Napi::ObjectWrap<SoulSifterSettings>(info), soulsiftersettings(nullptr), ownWrappedObject(true) {
-  soulsiftersettings = new dogatech::soulsifter::SoulSifterSettings();
+SoulSifterSettings::SoulSifterSettings(const Napi::CallbackInfo& info) : Napi::ObjectWrap<SoulSifterSettings>(info), soulsiftersettings(nullptr), ownWrappedObject(false) {
+  soulsiftersettings = &dogatech::soulsifter::SoulSifterSettings::getInstance();
 }
 
 Napi::Value SoulSifterSettings::save(const Napi::CallbackInfo& info) {

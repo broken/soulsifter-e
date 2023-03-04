@@ -15,6 +15,7 @@ class SoulSifterSettings : public Napi::ObjectWrap<SoulSifterSettings> {
   dogatech::soulsifter::SoulSifterSettings* getWrappedValue() const { return soulsiftersettings; }
 
  private:
+  // Unable to process getInstance
   Napi::Value save(const Napi::CallbackInfo& info);
   Napi::Value getString(const Napi::CallbackInfo& info);
   Napi::Value setString(const Napi::CallbackInfo& info);
