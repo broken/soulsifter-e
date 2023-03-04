@@ -32,7 +32,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       <icon-button @click=${this.toggleSearchOptionsDialog} icon="build"></icon-button>
       <paper-input label="bpm" value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></paper-input>
       <icon-button @click=${this.openCreateSongPage} icon="add_circle" id="createSongButton" @drop="${this.dropCreateSongButton}" @dragover="${this.dragOverCreateSongButton}" @dragleave="${this.dragLeaveCreateSongButton}"></icon-button>
-      <icon-button @click=${this.addSongFromUrl} icon="add_link"></icon-button>
+      <icon-button @click=${this.addSongFromUrl} icon="link"></icon-button>
       <icon-button @click=${this.openSettingsPage} icon="settings"></icon-button>
       <options-menu>
         <options-menu-item @click="${this.addSongFromUrl}">Add Song From URL</options-menu-item>
