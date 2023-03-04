@@ -29,11 +29,11 @@ Music Database
 --------------
 The music database is stored in mysql. I chose this because of simplicity. Writing scripts & functions against mysql in multiple languages is well documented and straight forward. I can easily install it on any OS and manipulate the data. I also like the visualization provided by the mysql workbench and being able to generate the schemas from it.
 
-Model Generation
-----------------
+Model Code Generation
+---------------------
 When I first started, I found myself doing much of the same work for the model objects. Rather than creating a hard to follow template, I created a ruby script to generate the model objects for me. This has proved to make model edits easy and safe.
 
-On the same token, the wrappers for node-addon-api are also generated. However, this code utilizes antlr and is created in a separate project [](). I did just enough to get what I needed, but again it makes edits quick, safe, and painless.
+On the same token, the wrappers for node-addon-api are also generated. However, this code utilizes antlr and is created in a separate project [napi-wrapper-gen](https://github.com/broken/napi-wrapper-gen). I did just enough to get what I needed, but again it makes edits quick, safe, and painless.
 
 
 A brief history
@@ -49,3 +49,11 @@ When I found out about Node-Webkit (later NW.js) and discovered you could write 
 
 In Feb of 2023, at v0.18, I upgraded my laptop and libraries got out of wack to the point I was no longer able to build a working copy of SoulSifter. I was fed up with NW.js, and the promise of native file drag & drop Electron delivered inticed me to switch. In parallel, it seemed converting over to the new Electron framework would be faster then getting the current version working. It had been something I had wanted to do for some time, which had me limiting any new feature development anyways, and this was the forcing function. Now the third incarnation, [SoulSifter v1.0]() was born Feb 27, 2023. I've been working on SoulSifter in one form or another for over a decade, and I plan to work on it for decades to come.
 
+TODO
+Things left to verify are working before v1.0 release:
+* drag&drop onto playlists
+* wrappers need to work with:
+  * singletons (soulsiftersettings)
+  * callbacks (tagservice & searchutil)
+* music playback
+* youtube integration
