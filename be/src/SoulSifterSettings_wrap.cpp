@@ -16,6 +16,8 @@ Napi::Object SoulSifterSettings::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "SoulSifterSettings", {
     // Unable to process getInstance
     InstanceMethod<&SoulSifterSettings::save>("save"),
+    // Unable to process get
+    // Unable to process put
     InstanceMethod<&SoulSifterSettings::getString>("getString"),
     InstanceMethod<&SoulSifterSettings::setString>("setString"),
     InstanceMethod<&SoulSifterSettings::getInt>("getInt"),

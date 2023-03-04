@@ -17,6 +17,8 @@ class SoulSifterSettings : public Napi::ObjectWrap<SoulSifterSettings> {
  private:
   // Unable to process getInstance
   Napi::Value save(const Napi::CallbackInfo& info);
+  // Unable to process get
+  // Unable to process put
   Napi::Value getString(const Napi::CallbackInfo& info);
   Napi::Value setString(const Napi::CallbackInfo& info);
   Napi::Value getInt(const Napi::CallbackInfo& info);

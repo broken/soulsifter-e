@@ -53,7 +53,6 @@ TODO
 Things left to verify are working before v1.0 release:
 * drag&drop onto playlists
 * wrappers need to work with:
-  * singletons (soulsiftersettings)
   * callbacks (tagservice & searchutil)
 * music playback
 * youtube integration
