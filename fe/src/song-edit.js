@@ -494,7 +494,7 @@ class SongEdit extends AlertsMixin(LitElement) {
     song.comments = this.shadowRoot.getElementById('comments').value;
     song.curator = this.shadowRoot.getElementById('curator').value;
     song.youtubeId = this.shadowRoot.getElementById('youtube_id').value;
-    song.rating = this.shadowRoot.getElementById('rating').value;
+    song.rating = Number(this.shadowRoot.getElementById('rating').value);
     song.bpm = this.shadowRoot.getElementById('bpm').value;
     song.tonicKey = this.shadowRoot.getElementById('tonicKey').value;
     song.lowQuality = this.shadowRoot.getElementById('lowQuality').checked;
@@ -507,9 +507,9 @@ class SongEdit extends AlertsMixin(LitElement) {
     song.albumPart.name = this.shadowRoot.getElementById('albumpart_name').value;
     song.album.label = this.shadowRoot.getElementById('album_label').value;
     song.album.catalogId = this.shadowRoot.getElementById('album_catalogId').value;
-    song.album.releaseDateYear = this.shadowRoot.getElementById('album_releaseDateYear').value;
-    song.album.releaseDateMonth = this.shadowRoot.getElementById('album_releaseDateMonth').value;
-    song.album.releaseDateDay = this.shadowRoot.getElementById('album_releaseDateDay').value;
+    song.album.releaseDateYear = Number(this.shadowRoot.getElementById('album_releaseDateYear').value);
+    song.album.releaseDateMonth = Number(this.shadowRoot.getElementById('album_releaseDateMonth').value);
+    song.album.releaseDateDay = Number(this.shadowRoot.getElementById('album_releaseDateDay').value);
     // I think the reason you can use the genres is it's an array of items that maps back
     let styleIds = this.genres.map(function(g) { return g.id; });
     this.editedSong.styleIds = styleIds;
