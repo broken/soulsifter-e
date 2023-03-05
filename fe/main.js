@@ -11,6 +11,7 @@ const createWindow = () => {
     height: 498,
     x: 0,
     y: 0,
+    icon: path.join(__dirname, 'DVDRipper.icns'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
