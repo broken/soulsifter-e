@@ -94,7 +94,6 @@ class SongEdit extends AlertsMixin(LitElement) {
           <audio-player id="audio" .song="${this.song}"></audio-player>
           <div>${this.editedSong.id}</div>
           <div @click="${this.changeSongFile}">${this.editedSong.filepath}</div>
-          <input style="display:none;" id="songFileDialog" type="file" nwworkingdir="editedSongFilepath" @change="${this.changeSongFileAction}"/>
         </div>
       </div>
     `;
@@ -397,13 +396,14 @@ class SongEdit extends AlertsMixin(LitElement) {
   }
 
   changeSongFile() {
-    this.shadowRoot.getElementById('songFileDialog').click();
-  }
-
-  changeSongFileAction(e) {
-    let val = e.currentTarget.value;
-    this.editedSong.filepath = val;
-    this.changedSongFile = true;
+    let editedSongFilepath = this.soulSifterSettings.getString('music.dir') + this.path.dirname(this.editedSong.filepath);
+    ipcRenderer.invoke('opendialog', 'Song Path', editedSongFilepath, ['openFile'])
+    .then((file) => {
+      if (!file.canceled) {
+        this.editedSong.filepath = file.filePaths[0].toString();
+        this.changedSongFile = true;
+      }
+    });
   }
 
   lockBpm() {
