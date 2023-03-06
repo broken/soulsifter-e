@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, ipcMain, nativeImage } = require('electron')
+const { app, dialog, BrowserWindow, ipcMain, nativeImage } = require('electron')
 const path = require('path');
 
 const isDev = process.env.IS_DEV === 'true';
@@ -23,7 +23,7 @@ const createWindow = () => {
   mainWindow.loadFile('build/index.html')
 
   // Open the DevTools.
-  // mainWindow.webContents.openDevTools()
+  mainWindow.webContents.openDevTools()
 }
 
 // This method will be called when Electron has finished
@@ -50,6 +50,15 @@ ipcMain.on('ondragstart', (event, filepath, icon) => {
   .catch((err) => {
     console.log(err);
   });
+})
+
+ipcMain.handle('opendialog', async (event, title, defaultPath, props) => {
+  const result = await dialog.showOpenDialog({
+    title: title,
+    defaultPath: defaultPath,
+    properties: props
+  });
+  return result;
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common

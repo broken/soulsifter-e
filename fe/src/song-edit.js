@@ -16,7 +16,6 @@ import "./options-menu-paper-input.js";
 class SongEdit extends AlertsMixin(LitElement) {
   render() {
     let basicGenreItems = this.basicGenreList.map(g => html`<options-menu-item>${g.name}</options-menu-item>`);
-    let editedSongFilepath = this.soulSifterSettings.getString('music.dir') + this.path.dirname(this.editedSong.filepath);
     return html`
       <div class="mainContainer">
         <abstract-action-page id="abstractActionPage" @cancel="${this.skip}" @accept="${this.save}">
@@ -86,7 +85,6 @@ class SongEdit extends AlertsMixin(LitElement) {
             <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateDay}</span></div>
             <paper-input label="Release Day" value="${this.editedSong.album.releaseDateDay}" type="number" min="0" max="31" floatingLabel id="album_releaseDateDay"></paper-input>
             <div id="cover" @click="${this.changeCoverFile}"></div>
-            <input style="display:none;" id="coverFileDialog" type="file" nwworkingdir="${editedSongFilepath}" @change="${this.changeCoverFileAction}"/>
           </div>
           <div class="genres">
             <genre-list id="genreList" .genres="${this.genres}" singleselect></genre-list>
@@ -96,7 +94,7 @@ class SongEdit extends AlertsMixin(LitElement) {
           <audio-player id="audio" .song="${this.song}"></audio-player>
           <div>${this.editedSong.id}</div>
           <div @click="${this.changeSongFile}">${this.editedSong.filepath}</div>
-          <input style="display:none;" id="songFileDialog" type="file" nwworkingdir="${editedSongFilepath}" @change="${this.changeSongFileAction}"/>
+          <input style="display:none;" id="songFileDialog" type="file" nwworkingdir="editedSongFilepath" @change="${this.changeSongFileAction}"/>
         </div>
       </div>
     `;
@@ -386,14 +384,16 @@ class SongEdit extends AlertsMixin(LitElement) {
   }
 
   changeCoverFile() {
-    this.shadowRoot.getElementById('coverFileDialog').click();
-  }
-
-  changeCoverFileAction(e) {
-    let val = e.currentTarget.value;
-    this.shadowRoot.getElementById('cover').style.backgroundImage = 'url("file://' + val + '")';
-    this.editedSong.album.coverFilepath = val;
-    this.changedAlbumCover = true;
+    let editedSongFilepath = this.soulSifterSettings.getString('music.dir') + this.path.dirname(this.editedSong.filepath);
+    ipcRenderer.invoke('opendialog', 'Album Cover', editedSongFilepath, ['openFile'])
+    .then((file) => {
+      if (!file.canceled) {
+        let filepath = file.filePaths[0].toString();
+        this.shadowRoot.getElementById('cover').style.backgroundImage = 'url("file://' + filepath + '")';
+        this.editedSong.album.coverFilepath = filepath;
+        this.changedAlbumCover = true;
+      }
+    });
   }
 
   changeSongFile() {
