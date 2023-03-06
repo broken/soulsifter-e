@@ -54,3 +54,4 @@ Things left to verify are working before v1.0 release:
 * drag&drop onto playlists
 * drag&drop into songs
 * youtube integration
+*  search for 'nw' (unkown corner cases)

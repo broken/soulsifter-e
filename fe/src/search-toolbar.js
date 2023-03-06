@@ -144,16 +144,17 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   }
 
   addSongFromUrl(e) {
-    var url = nw.Clipboard.get().get('text');
-    window.console.log('Audio url = ' + url);
-
-    var filepaths = ss.MusicVideoService.downloadAudio(url);
-    if (filepaths.length > 0) {
-      let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths } });
-      window.dispatchEvent(event);
-    } else {
-      window.console.log('Failed to download audio from url ' + url);
-    }
+    ipcRenderer.invoke('getclipboard')
+    .then((url) => {
+      window.console.log('Audio url = ' + url);
+      var filepaths = ss.MusicVideoService.downloadAudio(url);
+      if (filepaths.length > 0) {
+        let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths } });
+        window.dispatchEvent(event);
+      } else {
+        window.console.log('Failed to download audio from url ' + url);
+      }
+    });
   }
 
   addSongAndVideoFromUrl(e) {

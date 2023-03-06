@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, dialog, BrowserWindow, ipcMain, nativeImage } = require('electron')
+const { app, clipboard, dialog, BrowserWindow, ipcMain, nativeImage } = require('electron')
 const path = require('path');
 
 const isDev = process.env.IS_DEV === 'true';
@@ -59,6 +59,10 @@ ipcMain.handle('opendialog', async (event, title, defaultPath, props) => {
     properties: props
   });
   return result;
+})
+
+ipcMain.handle('getclipboard', (event) => {
+  return clipboard.readText();
 })
 
 // Quit when all windows are closed, except on macOS. There, it's common
