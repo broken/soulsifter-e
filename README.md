@@ -52,7 +52,5 @@ In Feb of 2023, at v0.18, I upgraded my laptop and libraries got out of wack to 
 TODO
 Things left to verify are working before v1.0 release:
 * drag&drop onto playlists
-* wrappers need to work with:
-  * callbacks (searchutil)
-* music playback
+* drag&drop into songs
 * youtube integration

@@ -461,7 +461,8 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
                                        int limit,
                                        int energy,
                                        const bool musicVideoMode,
-                                       int orderBy) {
+                                       int orderBy,
+                                       std::function<void(string)> errorCallback) {
   LOG(INFO) << "q:" << query << ", bpm:" << bpm << ", key:" << key << ", styles:" << ", limit:" << limit;
 
   stringstream ss;
@@ -516,8 +517,8 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
         LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
       } else {
         LOG(WARNING) << e.what();
-        // if (errorCallback) errorCallback(e.what());
-        // else LOG(WARNING) << "Undefined callback. Unable to send error.";
+        if (errorCallback) errorCallback(e.what());
+        else LOG(WARNING) << "Undefined callback. Unable to send error.";
       }
     }
   }

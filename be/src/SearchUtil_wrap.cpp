@@ -60,8 +60,12 @@ Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
   int32_t a6(info[6].As<Napi::Number>().Int32Value());
   bool a7(info[7].As<Napi::Boolean>().Value());
   int32_t a8(info[8].As<Napi::Number>().Int32Value());
+  Napi::Function a9Fn = info[9].As<Napi::Function>();
+  auto a9 = [&info, &a9Fn](string p0) {
+    a9Fn.Call(info.Env().Global(), {Napi::String::New(info.Env(), p0)});
+  };
   std::vector<dogatech::soulsifter::Song*>* result =
-      dogatech::soulsifter::SearchUtil::searchSongs(a0, a1, a2, a3, a4, a5, a6, a7, a8);
+      dogatech::soulsifter::SearchUtil::searchSongs(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9);
 
   Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(result->size()));
   for (int i = 0; i < (int) result->size(); i++) {
