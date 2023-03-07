@@ -70,6 +70,14 @@ Napi::Value PlaylistEntry::clear(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value PlaylistEntry::findById(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::PlaylistEntry* result =
       dogatech::soulsifter::PlaylistEntry::findById(a0);
@@ -85,7 +93,19 @@ Napi::Value PlaylistEntry::findById(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value PlaylistEntry::findByPlaylistIdAndSongId(const Napi::CallbackInfo& info) {
+  if (info.Length() < 2) {
+    Napi::TypeError::New(info.Env(), "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
+  if (!info[1].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[1])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a1(info[1].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::PlaylistEntry* result =
       dogatech::soulsifter::PlaylistEntry::findByPlaylistIdAndSongId(a0, a1);
@@ -101,6 +121,14 @@ Napi::Value PlaylistEntry::findByPlaylistIdAndSongId(const Napi::CallbackInfo& i
 }
 
 Napi::Value PlaylistEntry::findByPlaylistId(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::ResultSetIterator<dogatech::soulsifter::PlaylistEntry>* result =
       dogatech::soulsifter::PlaylistEntry::findByPlaylistId(a0);
@@ -118,6 +146,14 @@ Napi::Value PlaylistEntry::findByPlaylistId(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value PlaylistEntry::findBySongId(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::ResultSetIterator<dogatech::soulsifter::PlaylistEntry>* result =
       dogatech::soulsifter::PlaylistEntry::findBySongId(a0);
@@ -186,7 +222,15 @@ Napi::Value PlaylistEntry::getId(const Napi::CallbackInfo& info) {
 }
 
 void PlaylistEntry::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   PlaylistEntry* obj = this;
+  if (!value.IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->playlistentry->setId(a0);
 }
@@ -199,7 +243,15 @@ Napi::Value PlaylistEntry::getPlaylistId(const Napi::CallbackInfo& info) {
 }
 
 void PlaylistEntry::setPlaylistId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   PlaylistEntry* obj = this;
+  if (!value.IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->playlistentry->setPlaylistId(a0);
 }
@@ -233,7 +285,15 @@ Napi::Value PlaylistEntry::getPlaylistConst(const Napi::CallbackInfo& info) {
 }
 
 void PlaylistEntry::setPlaylist(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   PlaylistEntry* obj = this;
+  if (!value.IsObject()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Playlist* a0tmp(Napi::ObjectWrap<Playlist>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::Playlist& a0 = *a0tmp;
   obj->playlistentry->setPlaylist(a0);
@@ -247,7 +307,15 @@ Napi::Value PlaylistEntry::getSongId(const Napi::CallbackInfo& info) {
 }
 
 void PlaylistEntry::setSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   PlaylistEntry* obj = this;
+  if (!value.IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->playlistentry->setSongId(a0);
 }
@@ -281,7 +349,15 @@ Napi::Value PlaylistEntry::getSongConst(const Napi::CallbackInfo& info) {
 }
 
 void PlaylistEntry::setSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   PlaylistEntry* obj = this;
+  if (!value.IsObject()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::Song& a0 = *a0tmp;
   obj->playlistentry->setSong(a0);
@@ -295,7 +371,15 @@ Napi::Value PlaylistEntry::getPosition(const Napi::CallbackInfo& info) {
 }
 
 void PlaylistEntry::setPosition(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   PlaylistEntry* obj = this;
+  if (!value.IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->playlistentry->setPosition(a0);
 }
@@ -308,7 +392,15 @@ Napi::Value PlaylistEntry::getTime(const Napi::CallbackInfo& info) {
 }
 
 void PlaylistEntry::setTime(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   PlaylistEntry* obj = this;
+  if (!value.IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   std::string a0(value.As<Napi::String>().Utf8Value());
   obj->playlistentry->setTime(a0);
 }

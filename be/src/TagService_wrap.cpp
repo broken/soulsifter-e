@@ -39,12 +39,28 @@ TagService::TagService(const Napi::CallbackInfo& info) : Napi::ObjectWrap<TagSer
 }
 
 Napi::Value TagService::readId3v2Tag(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsObject()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
 
       dogatech::soulsifter::TagService::readId3v2Tag(a0);
 }
 
 Napi::Value TagService::writeId3v2Tag(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsObject()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
 
       dogatech::soulsifter::TagService::writeId3v2Tag(a0);
@@ -74,6 +90,14 @@ class UpdateSongAttributesFromTagsWorker : public Napi::AsyncProgressWorker<floa
 };
 
 Napi::Value TagService::updateSongAttributesFromTags(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 0 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsFunction()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Function expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   Napi::Function a0 = info[0].As<Napi::Function>();
   UpdateSongAttributesFromTagsWorker* w = new UpdateSongAttributesFromTagsWorker(a0);
   w->Queue();

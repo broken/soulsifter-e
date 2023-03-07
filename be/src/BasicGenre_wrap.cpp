@@ -58,6 +58,14 @@ Napi::Value BasicGenre::clear(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value BasicGenre::findById(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::BasicGenre* result =
       dogatech::soulsifter::BasicGenre::findById(a0);
@@ -73,6 +81,14 @@ Napi::Value BasicGenre::findById(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value BasicGenre::findByName(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::BasicGenre* result =
       dogatech::soulsifter::BasicGenre::findByName(a0);
@@ -125,6 +141,14 @@ Napi::Value BasicGenre::sync(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value BasicGenre::findByFilepath(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::BasicGenre* result =
       dogatech::soulsifter::BasicGenre::findByFilepath(a0);
@@ -140,6 +164,14 @@ Napi::Value BasicGenre::findByFilepath(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value BasicGenre::findByArtist(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::BasicGenre* result =
       dogatech::soulsifter::BasicGenre::findByArtist(a0);
@@ -162,7 +194,15 @@ Napi::Value BasicGenre::getId(const Napi::CallbackInfo& info) {
 }
 
 void BasicGenre::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   BasicGenre* obj = this;
+  if (!value.IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->basicgenre->setId(a0);
 }
@@ -175,7 +215,15 @@ Napi::Value BasicGenre::getName(const Napi::CallbackInfo& info) {
 }
 
 void BasicGenre::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   BasicGenre* obj = this;
+  if (!value.IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   std::string a0(value.As<Napi::String>().Utf8Value());
   obj->basicgenre->setName(a0);
 }

@@ -39,27 +39,77 @@ SearchUtil::SearchUtil(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Search
 }
 
 Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
+  if (info.Length() < 10) {
+    Napi::TypeError::New(info.Env(), "Expected at least 6 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
+  if (!info[1].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[1])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a1(info[1].As<Napi::Number>().Int32Value());
+  if (!info[2].IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[2])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   std::string a2(info[2].As<Napi::String>().Utf8Value());
+  if (!info[3].IsArray()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Array expected (for info[3])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   Napi::Array a3Array = info[3].As<Napi::Array>();
   std::vector<dogatech::soulsifter::Style*> a3;
   for (uint32_t i = 0; i < a3Array.Length(); ++i) {
-    Napi::Value tmp = a3Array.Get(i);
-    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
+    if (!a3Array.Get(i).IsObject()) {
+      Napi::TypeError::New(info.Env(), "TypeError: Object expected (for a3Array.Get(i))").ThrowAsJavaScriptException();
+      return info.Env().Null();
+    }
+    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(a3Array.Get(i).As<Napi::Object>())->getWrappedValue());
     a3.push_back(x);
+  }
+  if (!info[4].IsArray()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Array expected (for info[4])").ThrowAsJavaScriptException();
+    return info.Env().Null();
   }
   Napi::Array a4Array = info[4].As<Napi::Array>();
   std::vector<dogatech::soulsifter::Song*> a4;
   for (uint32_t i = 0; i < a4Array.Length(); ++i) {
-    Napi::Value tmp = a4Array.Get(i);
-    dogatech::soulsifter::Song* x(Napi::ObjectWrap<Song>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
+    if (!a4Array.Get(i).IsObject()) {
+      Napi::TypeError::New(info.Env(), "TypeError: Object expected (for a4Array.Get(i))").ThrowAsJavaScriptException();
+      return info.Env().Null();
+    }
+    dogatech::soulsifter::Song* x(Napi::ObjectWrap<Song>::Unwrap(a4Array.Get(i).As<Napi::Object>())->getWrappedValue());
     a4.push_back(x);
   }
+  if (!info[5].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[5])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a5(info[5].As<Napi::Number>().Int32Value());
+  if (!info[6].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[6])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a6(info[6].As<Napi::Number>().Int32Value());
+  if (!info[7].IsBoolean()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Boolean expected (for info[7])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   bool a7(info[7].As<Napi::Boolean>().Value());
+  if (!info[8].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[8])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a8(info[8].As<Napi::Number>().Int32Value());
+  if (!info[9].IsFunction()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Function expected (for info[9])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   Napi::Function a9Fn = info[9].As<Napi::Function>();
   auto a9 = [&info, &a9Fn](string p0) {
     a9Fn.Call(info.Env().Global(), {Napi::String::New(info.Env(), p0)});

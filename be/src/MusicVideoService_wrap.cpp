@@ -40,7 +40,19 @@ MusicVideoService::MusicVideoService(const Napi::CallbackInfo& info) : Napi::Obj
 }
 
 Napi::Value MusicVideoService::associateYouTubeVideo(const Napi::CallbackInfo& info) {
+  if (info.Length() < 2) {
+    Napi::TypeError::New(info.Env(), "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsObject()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
+  if (!info[1].IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[1])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   std::string a1(info[1].As<Napi::String>().Utf8Value());
   dogatech::soulsifter::MusicVideo* result =
       dogatech::soulsifter::MusicVideoService::associateYouTubeVideo(a0, a1);
@@ -56,6 +68,14 @@ Napi::Value MusicVideoService::associateYouTubeVideo(const Napi::CallbackInfo& i
 }
 
 Napi::Value MusicVideoService::downloadAudio(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   std::vector<string> result =
       dogatech::soulsifter::MusicVideoService::downloadAudio(a0);

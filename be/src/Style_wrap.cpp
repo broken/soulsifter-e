@@ -65,6 +65,14 @@ Napi::Value Style::clear(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Style::findById(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::Style* result =
       dogatech::soulsifter::Style::findById(a0);
@@ -80,6 +88,14 @@ Napi::Value Style::findById(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Style::findByREId(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::Style* result =
       dogatech::soulsifter::Style::findByREId(a0);
@@ -155,7 +171,15 @@ Napi::Value Style::getId(const Napi::CallbackInfo& info) {
 }
 
 void Style::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   Style* obj = this;
+  if (!value.IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->style->setId(a0);
 }
@@ -168,7 +192,15 @@ Napi::Value Style::getName(const Napi::CallbackInfo& info) {
 }
 
 void Style::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   Style* obj = this;
+  if (!value.IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   std::string a0(value.As<Napi::String>().Utf8Value());
   obj->style->setName(a0);
 }
@@ -181,7 +213,15 @@ Napi::Value Style::getREId(const Napi::CallbackInfo& info) {
 }
 
 void Style::setREId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   Style* obj = this;
+  if (!value.IsNumber()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->style->setREId(a0);
 }
@@ -194,7 +234,15 @@ Napi::Value Style::getRELabel(const Napi::CallbackInfo& info) {
 }
 
 void Style::setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   Style* obj = this;
+  if (!value.IsString()) {
+    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   std::string a0(value.As<Napi::String>().Utf8Value());
   obj->style->setRELabel(a0);
 }
@@ -211,12 +259,23 @@ Napi::Value Style::getChildIds(const Napi::CallbackInfo& info) {
 }
 
 void Style::setChildIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   Style* obj = this;
+  if (!value.IsArray()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Array expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<int> a0;
   for (uint32_t i = 0; i < a0Array.Length(); ++i) {
-    Napi::Value tmp = a0Array.Get(i);
-    int32_t x(tmp.As<Napi::Number>().Int32Value());
+    if (!a0Array.Get(i).IsNumber()) {
+      Napi::TypeError::New(info.Env(), "TypeError: Number expected (for a0Array.Get(i))").ThrowAsJavaScriptException();
+      return;
+    }
+    int32_t x(a0Array.Get(i).As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
   obj->style->setChildIds(a0);
@@ -237,12 +296,23 @@ Napi::Value Style::getChildren(const Napi::CallbackInfo& info) {
 }
 
 void Style::setChildren(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   Style* obj = this;
+  if (!value.IsArray()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Array expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<dogatech::soulsifter::Style*> a0;
   for (uint32_t i = 0; i < a0Array.Length(); ++i) {
-    Napi::Value tmp = a0Array.Get(i);
-    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
+    if (!a0Array.Get(i).IsObject()) {
+      Napi::TypeError::New(info.Env(), "TypeError: Object expected (for a0Array.Get(i))").ThrowAsJavaScriptException();
+      return;
+    }
+    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(a0Array.Get(i).As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
   obj->style->setChildren(a0);
@@ -260,12 +330,23 @@ Napi::Value Style::getParentIds(const Napi::CallbackInfo& info) {
 }
 
 void Style::setParentIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   Style* obj = this;
+  if (!value.IsArray()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Array expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<int> a0;
   for (uint32_t i = 0; i < a0Array.Length(); ++i) {
-    Napi::Value tmp = a0Array.Get(i);
-    int32_t x(tmp.As<Napi::Number>().Int32Value());
+    if (!a0Array.Get(i).IsNumber()) {
+      Napi::TypeError::New(info.Env(), "TypeError: Number expected (for a0Array.Get(i))").ThrowAsJavaScriptException();
+      return;
+    }
+    int32_t x(a0Array.Get(i).As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
   obj->style->setParentIds(a0);
@@ -286,12 +367,23 @@ Napi::Value Style::getParents(const Napi::CallbackInfo& info) {
 }
 
 void Style::setParents(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return;
+  }
   Style* obj = this;
+  if (!value.IsArray()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Array expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
   Napi::Array a0Array = value.As<Napi::Array>();
   std::vector<dogatech::soulsifter::Style*> a0;
   for (uint32_t i = 0; i < a0Array.Length(); ++i) {
-    Napi::Value tmp = a0Array.Get(i);
-    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(tmp.As<Napi::Object>())->getWrappedValue());
+    if (!a0Array.Get(i).IsObject()) {
+      Napi::TypeError::New(info.Env(), "TypeError: Object expected (for a0Array.Get(i))").ThrowAsJavaScriptException();
+      return;
+    }
+    dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(a0Array.Get(i).As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
   obj->style->setParents(a0);

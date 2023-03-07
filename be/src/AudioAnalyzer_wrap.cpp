@@ -41,6 +41,14 @@ AudioAnalyzer::AudioAnalyzer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<
 }
 
 Napi::Value AudioAnalyzer::analyzeBpm(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsObject()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
   const std::vector<double> result =
       dogatech::soulsifter::AudioAnalyzer::analyzeBpm(a0);
@@ -58,6 +66,14 @@ Napi::Value AudioAnalyzer::analyzeBpms(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value AudioAnalyzer::analyzeDuration(const Napi::CallbackInfo& info) {
+  if (info.Length() < 1) {
+    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
+  if (!info[0].IsObject()) {
+    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
+    return info.Env().Null();
+  }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
   int result =
       dogatech::soulsifter::AudioAnalyzer::analyzeDuration(a0);
