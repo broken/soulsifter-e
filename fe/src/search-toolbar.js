@@ -84,11 +84,13 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   }
 
   dragOverCreateSongButton(e) {
+    e.preventDefault();
     this.shadowRoot.getElementById('createSongButton').icon = 'add_circle_outline';
     return false;
   }
 
   dragLeaveCreateSongButton(e) {
+    e.preventDefault();
     this.shadowRoot.getElementById('createSongButton').icon = 'add_circle';
     return false;
   }
