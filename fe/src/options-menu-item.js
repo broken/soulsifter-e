@@ -27,7 +27,7 @@ class OptionsMenuItem extends LitElement {
           color: var(--secondary-text-color);
           cursor: pointer;
         }
-        :host(.hidden) {
+        :host([hidden]) {
           display: none;
         }
       `

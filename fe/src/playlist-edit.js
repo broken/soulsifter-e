@@ -90,7 +90,7 @@ class PlaylistEdit extends LitElement {
     if (this.spotifySync && !this.playlist.spotifyId) {
       window.spotify.createPlaylist(this.playlist.id);
     }
-    if (this.youtubeSync) {
+    if (this.youtubeSync && !this.playlist.youtubeId) {
       window.yt.createPlaylist(this.playlist.id);
     }
     let event = new CustomEvent('update-playlists', { });

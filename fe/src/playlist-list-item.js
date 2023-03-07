@@ -22,6 +22,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
             <options-menu-item @click="${this.editAction}">Edit playlist</options-menu-item>
             <options-menu-item @click="${this.copyAction}">Copy to clipboard</options-menu-item>
             <options-menu-item @click="${this.deleteAction}">Delete playlist</options-menu-item>
+            <options-menu-item @click="${this.youtubeSyncAction}" ?hidden="${!this.playlist.youtubeId}">Sync to YoutTube</options-menu-item>
           </options-menu>
         </div>
       </div>
@@ -73,6 +74,10 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
     window.dispatchEvent(event);
     e.stopPropagation();
     if (!!ytPlaylistId) window.yt.deletePlaylist(ytPlaylistId);
+  }
+
+  youtubeSyncAction(e) {
+    window.yt.updatePlaylistEntries(this.playlist.youtubeId);
   }
 
   handleDrop(e) {
