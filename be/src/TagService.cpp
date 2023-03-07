@@ -204,6 +204,10 @@ bool readId3v2TagAttributes(Song* song, TagLib::ID3v2::Tag* id3v2) {
 }
 
 bool readId3v2TagAttributes(Song* song) {
+  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
+      !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
+    return false;
+  }
   TagLib::MPEG::File f((SoulSifterSettings::getInstance().get<string>("music.dir") + song->getFilepath()).c_str());
   TagLib::ID3v2::Tag* id3v2 = f.ID3v2Tag();  // still owned by file
   return readId3v2TagAttributes(song, id3v2);
@@ -256,11 +260,17 @@ void setId3v2Picture(TagLib::ID3v2::Tag* id3v2, string path, bool replace) {
 }  // namespace
 
 void TagService::readId3v2Tag(Song* song) {
+  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
+      !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
+    LOG(WARNING) << "can only write id3v2 tags to mpeg files: " << song->getFilepath();
+    return;
+  }
   string songFilepath = song->getFilepath();
   if (!boost::filesystem::exists(songFilepath)) {
     songFilepath = SoulSifterSettings::getInstance().get<string>("music.dir") + song->getFilepath();
     if (!boost::filesystem::exists(songFilepath)) {
       LOG(WARNING) << "unable to find song: " << song->getFilepath();
+      return;
     }
   }
   TagLib::MPEG::File f(songFilepath.c_str());
@@ -322,11 +332,13 @@ void TagService::readId3v2Tag(Song* song) {
 }
 
 void TagService::writeId3v2Tag(Song* song) {
+  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
+      !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
+    LOG(WARNING) << "can only write id3v2 tags to mpeg files: " << song->getFilepath();
+    return;
+  }
   if (boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
-      boost::algorithm::iends_with(song->getFilepath(), ".m4a") ||
-      boost::algorithm::iends_with(song->getFilepath(), ".mp4") ||
-      boost::algorithm::iends_with(song->getFilepath(), ".aac") ||
-      boost::algorithm::iends_with(song->getFilepath(), ".alac")) {
+      boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
     string songFilepath = SoulSifterSettings::getInstance().get<string>("music.dir") + song->getFilepath();
     if (!boost::filesystem::exists(songFilepath)) {
       songFilepath = song->getFilepath();
