@@ -52,6 +52,5 @@ In Feb of 2023, at v0.18, I upgraded my laptop and libraries got out of wack to 
 TODO
 Things left to verify are working before v1.0 release:
 * drag&drop onto playlists
-* drag&drop into songs
 * youtube integration
-*  search for 'nw' (unkown corner cases)
+* search for 'nw' (unkown corner cases)

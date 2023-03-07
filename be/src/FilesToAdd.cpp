@@ -21,18 +21,18 @@
 
 namespace dogatech {
   namespace soulsifter {
-  
+
     FilesToAdd::FilesToAdd()
     : coverIndex(0),
     cover(NULL) {
     }
-  
+
     FilesToAdd::~FilesToAdd() {
       deleteQueuePointers(&songs);
       deleteVectorPointers(&images);
       deleteQueuePointers(&misc);
     }
-    
+
     void FilesToAdd::clear() {
       coverIndex = 0;
       cover = NULL;
@@ -40,18 +40,19 @@ namespace dogatech {
       deleteVectorPointers(&images);
       deleteQueuePointers(&misc);
     }
-  
+
     // TODO test if it's a directory and loop over it and process zips & rars
     void FilesToAdd::addFile(const string& path) {
-    
+
       // music files
       // TODO support more than just mp3
-      if (boost::algorithm::iends_with(path, ".mp3")) {
+      if (boost::algorithm::iends_with(path, ".mp3") ||
+          boost::algorithm::iends_with(path, ".m4a")) {
         string* song = new string(path);
         songs.push(song);
         return;
       }
-    
+
       // images
       if (boost::algorithm::iends_with(path, ".jpg") ||
           boost::algorithm::iends_with(path, ".jpeg") ||
@@ -64,7 +65,7 @@ namespace dogatech {
         cover = images.at(coverIndex);
         return;
       }
-    
+
       // misc files
       if (!boost::algorithm::iends_with(path, ".nfo") &&
           !boost::algorithm::iends_with(path, ".txt") &&
@@ -75,14 +76,14 @@ namespace dogatech {
       string* file = new string(path);
       misc.push(file);
     }
-    
+
     bool FilesToAdd::pullSong(string** song) {
       if (songs.empty()) return false;
       *song = songs.front();
       songs.pop();
       return true;
     }
-    
+
     bool FilesToAdd::pullFile(string** path) {
       if (images.empty() && misc.empty()) return false;
       if (!images.empty()) {
@@ -94,11 +95,11 @@ namespace dogatech {
       }
       return true;
     }
-  
+
     const string* FilesToAdd::coverPath() const {
         return cover != NULL ? cover : images.empty() ? NULL : images.at(coverIndex);
     }
-    
+
     void FilesToAdd::switchCover() {
       ++coverIndex;
       if (images.empty() || coverIndex >= images.size()) {
@@ -106,6 +107,6 @@ namespace dogatech {
       }
       cover = images.at(coverIndex);
     }
-    
+
   }  // namespace soulsifter
 }  // namespace dogatech
