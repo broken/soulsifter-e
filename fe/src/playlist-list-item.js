@@ -77,7 +77,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
   }
 
   youtubeSyncAction(e) {
-    window.yt.updatePlaylistEntries(this.playlist.youtubeId);
+    window.yt.updatePlaylistEntries(this.playlist.id);
   }
 
   handleDrop(e) {

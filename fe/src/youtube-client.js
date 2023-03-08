@@ -2,93 +2,6 @@ import { AlertsMixin } from "./mixin-alerts.js";
 
 class YoutubeClient extends AlertsMixin(Object) {  // TODO show errors
 
-  async _oauth() {
-    const fs = require('fs');
-    const path = require('path');
-    const http = require('http');
-    const url = require('url');
-    const opn = require('open');
-    const destroyer = require('server-destroy');
-
-    const {google} = require('googleapis');
-
-    const settings = new ss.SoulSifterSettings();
-
-    const oauth2Client = new google.auth.OAuth2(
-      settings.getString('google.clientId'),
-      settings.getString('google.clientSecret'),
-      'http://localhost:3000/oauth2callback'
-    );
-    google.options({auth: oauth2Client});
-    this.service = google.youtube('v3');
-
-    const refreshToken = settings.getString('google.oauthRefreshToken');
-    if (!!refreshToken) {
-      oauth2Client.setCredentials({ refresh_token: refreshToken });
-      return new Promise((resolve, reject) => {
-        resolve(oauth2Client);
-      });
-    }
-
-    /**
-     * Open an http server to accept the oauth callback. In this simple example, the only request to our webserver is to /callback?code=<code>
-     */
-    async function authenticate() {
-      return new Promise((resolve, reject) => {
-        // grab the url that will be used for authorization
-        const authorizeUrl = oauth2Client.generateAuthUrl({
-          // 'online' (default) or 'offline' (gets refresh_token)
-          access_type: 'offline',
-          prompt: 'consent',  // force consent to get refresh token
-          scope: 'https://www.googleapis.com/auth/youtube',
-        });
-        const server = http.createServer(async (req, res) => {
-          try {
-            if (req.url.indexOf('/oauth2callback') > -1) {
-              const qs = new url.URL(req.url, 'http://localhost:3000').searchParams;
-              res.end('Authentication successful! Please return to the console.');
-              server.destroy();
-              const {tokens} = await oauth2Client.getToken(qs.get('code'));
-              oauth2Client.credentials = tokens;
-              if (!!tokens.refresh_token) {
-                // store the refresh_token
-                settings.putString('google.oauthRefreshToken', tokens.refresh_token);
-                settings.save();
-              }
-              resolve(oauth2Client);
-            }
-          } catch (e) {
-            reject(e);
-          }
-        }).listen(3000, () => {
-          // open the browser to the authorize url to start the workflow
-          opn(authorizeUrl, {wait: false}).then(cp => cp.unref());
-        });
-        destroyer(server);
-      });
-    }
-
-    // Authorize a client with the loaded credentials, then call the YouTube API.
-    return authenticate();
-  }
-
-  async _auth() {
-    if (!this.service) {
-      try {
-        await this._oauth();
-      } catch(err) {
-        this.addAlert('Unable authenticate');
-        console.error(err);
-        return false;
-      }
-    }
-    return true;
-  }
-
-  sleep(ms=500) {
-    return new Promise(resolve => setTimeout(resolve, ms));
-  }
-
   /**
    * Add a new playlist, save the playlist id, and add the songs.
    */
@@ -205,16 +118,8 @@ class YoutubeClient extends AlertsMixin(Object) {  // TODO show errors
     }
   }
 
-  async updatePlaylistEntries(playlistId) {
-    if (!this._auth()) return;
-    try {
-      // get playlist songs
-      let playlist = ss.Playlist.findById(playlistId);
-      await this._updatePlaylistEntries(playlist);
-    } catch (err) {
-      this.addAlert('Unable to update playlist entries for playlist ' + playlistId);
-      console.error(err);
-    }
+  updatePlaylistEntries(playlistId) {
+    ipcRenderer.send('yt-updatePlaylistEntries', playlistId);
   }
 
   async _updatePlaylistEntries(playlist) {
