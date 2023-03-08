@@ -41,7 +41,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         <options-menu-item @click="${this.updateSongAttributesFromTags}">Update Song Attributes From Tags</options-menu-item>
         <options-menu-item @click="${this.analyzeBpms}">Analyze BPMs</options-menu-item>
         <options-menu-item @click="${this.analyzeDurations}">Analyze Durations</options-menu-item>
-        <options-menu-item @click="${this.syncGoogleMusic}">Sync Google Music</options-menu-item>
         <options-menu-item @click="${this.syncSpotifyPlaylists}"><span style="text-decoration: line-through">Sync Spotify Playlists</span></options-menu-item>
         <options-menu-item @click="${this.syncYouTubePlaylists}">Sync YouTube Playlists</options-menu-item>
         <options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>
@@ -129,12 +128,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   showDevTools(e) {
     let nwGui = require('nw.gui');
     nwGui.Window.get().showDevTools();
-  }
-
-  syncGoogleMusic(e) {
-    var child_process = require('child_process');
-    var path = require('path');
-    var downloadProcess = child_process.fork(path.join(nw.__dirname, 'workers', 'syncgooglemusic.js'), [], {cwd: nw.__dirname});
   }
 
   syncSpotifyPlaylists(e) {
