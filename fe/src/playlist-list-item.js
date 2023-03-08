@@ -12,7 +12,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
   render() {
     let icon = !!this.playlist.query ? html`<mwc-icon class="mdc-ripple-surface mdc-ripple-surface--primary">find_replace</mwc-icon>` : html``;
     return html`
-      <div class="itemContainer" @drop="${this.handleDrop}">
+      <div class="itemContainer" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         <div class="item" ?selected="${this.selected}" @click="${this.toggleSelect}">
           <div class="group">
             <span>${this.playlist.name}</span>
@@ -80,7 +80,16 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
     window.yt.updatePlaylistEntries(this.playlist.id);
   }
 
+  handleDragLeave(e) {
+    e.preventDefault();
+  }
+
+  handleDragOver(e) {
+    e.preventDefault();
+  }
+
   handleDrop(e) {
+    e.preventDefault();
     // only makes sense to drag & drop songs for non-smart playlists
     if (!!this.playlist.query) {
       this.addAlert('Cannot manually add songs to smart playlists.', 4);

@@ -51,6 +51,5 @@ In Feb of 2023, at v0.18, I upgraded my laptop and libraries got out of wack to 
 
 TODO
 Things left to verify are working before v1.0 release:
-* drag&drop onto playlists
 * add alert callbacks from main process
 * save youtube tokens
