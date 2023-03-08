@@ -126,8 +126,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   }
 
   showDevTools(e) {
-    let nwGui = require('nw.gui');
-    nwGui.Window.get().showDevTools();
+    ipcRenderer.send('opendevtools');
   }
 
   syncSpotifyPlaylists(e) {
@@ -153,16 +152,18 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   }
 
   addSongAndVideoFromUrl(e) {
-    var url = nw.Clipboard.get().get('text');
-    window.console.log('Audio url = ' + url);
+    ipcRenderer.invoke('getclipboard')
+    .then((url) => {
+      window.console.log('Audio url = ' + url);
 
-    var filepaths = ss.MusicVideoService.downloadAudio(url);
-    if (filepaths.length > 0) {
-      let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths, videoUrl: url } });
-      window.dispatchEvent(event);
-    } else {
-      window.console.log('Failed to download audio from url ' + url);
-    }
+      var filepaths = ss.MusicVideoService.downloadAudio(url);
+      if (filepaths.length > 0) {
+        let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths, videoUrl: url } });
+        window.dispatchEvent(event);
+      } else {
+        window.console.log('Failed to download audio from url ' + url);
+      }
+    });
   }
 
   addSongsFromFeedly(e) {

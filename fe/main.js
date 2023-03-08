@@ -26,6 +26,9 @@ const createWindow = () => {
 
   // Open the DevTools.
   mainWindow.webContents.openDevTools()
+  ipcMain.on('opendevtools', (event) => {
+    mainWindow.webContents.openDevTools();
+  });
 }
 
 // This method will be called when Electron has finished
@@ -65,6 +68,10 @@ ipcMain.handle('opendialog', async (event, title, defaultPath, props) => {
 
 ipcMain.handle('getclipboard', (event) => {
   return clipboard.readText();
+})
+
+ipcMain.on('copytoclipboard', (event, str) => {
+  clipboard.writeText(str);
 })
 
 class YoutubeClientMain {
