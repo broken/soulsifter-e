@@ -143,86 +143,6 @@ class YoutubeClientMain {
     });
   }
 
-  /**
-   * This method opens a new window to let users log-in the OAuth provider service,
-   * grant permissions to OAuth client service (this application),
-   * and returns OAuth code which can be exchanged for the real API access keys.
-   *
-   * @param {*} interactionWindow a window in which the user will have interaction with OAuth provider service.
-   * @param {*} authPageURL an URL of OAuth provider service, which will ask the user grants permission to us.
-   * @returns {Promise<string>}
-   */
-  // const getOAuthCodeByInteraction = (interactionWindow, authPageURL) => {
-  //   interactionWindow.loadURL(authPageURL);
-  //   return new Promise((resolve, reject) => {
-  //       const onclosed = () => {
-  //           reject('Interaction ended intentionally ;(');
-  //       };
-  //       interactionWindow.on('closed', onclosed);
-  //       interactionWindow.on('page-title-updated', (ev) => {
-  //           const url = new URL(ev.sender.getURL());
-  //           if (url.searchParams.get('approvalCode')) {
-  //               interactionWindow.removeListener('closed', onclosed);
-  //               interactionWindow.close();
-  //               return resolve(url.searchParams.get('approvalCode'));
-  //           }
-  //           if ((url.searchParams.get('response') || '').startsWith('error=')) {
-  //               interactionWindow.removeListener('closed', onclosed);
-  //               interactionWindow.close();
-  //               return reject(url.searchParams.get('response'));
-  //           }
-  //       });
-  //   });
-  // };
-  // /**
-  //  * Add a new playlist, save the playlist id, and add the songs.
-  //  */
-  // async createPlaylist(playlistId) {
-  //   if (!this._auth()) return;
-  //   let playlist = ss.Playlist.findById(playlistId);
-  //   if (!playlist.youtubeId) {
-  //     try {
-  //       let response = await this._createPlaylist(playlist);
-  //       console.info('Successfully created YouTube playlist ' + playlist.name);
-  //       playlist.youtubeId = response.data.id;
-  //       playlist.update();
-  //     } catch (err) {
-  //       this.addAlert('Unable to create YouTube playlist ' + playlist.name);
-  //       console.error(err);
-  //       if (err.message == 'invalid_grant') {
-  //         this.service = undefined;
-  //         const settings = new ss.SoulSifterSettings();
-  //         settings.putString('google.oauthRefreshToken', '');
-  //         settings.save();
-  //       }
-  //       return;
-  //     }
-  //   }
-  //   try {
-  //     await this._updatePlaylistEntries(playlist);
-  //     // if (!!playlist.query) {
-  //     //   let songs = ss.SearchUtil.searchSongs(playlist.query,
-  //     //                                         /* bpm */ 0,
-  //     //                                         /* key */ '',
-  //     //                                         playlist.styles,
-  //     //                                         /* songsToOmit */ [],
-  //     //                                         /* limit */ 200,
-  //     //                                         /* energy */ 0,
-  //     //                                         /* musicVideoMode */ false,
-  //     //                                         /* orderBy */ 0,
-  //     //                                         /* errorCallack */ (msg) => { this.addAlert(msg, 5); });
-  //     //   for (let i = 0; i < songs.length; ++i) {
-  //     //     await this._addSongToPlaylist(songs[i], playlist);
-  //     //     await this.sleep();
-  //     //   }
-  //     // }
-  //   } catch (err) {
-  //     this.addAlert('Unable to add song to YouTube playlist ' + playlist.name);
-  //     console.error(err);
-  //     return;
-  //   }
-  // }
-
   async _addSongToPlaylist(song, playlist) {
     if (!song.youtubeId) {
       let response = await this._findSong(song);
@@ -236,59 +156,16 @@ class YoutubeClientMain {
     await this._addPlaylistItem(playlist.youtubeId, song.youtubeId);
   }
 
-  // async addPlaylistEntry(entryId) {
-  //   if (!this._auth()) return;
-  //   let entry = ss.PlaylistEntry.findById(entryId);
-  //   try {
-  //     if (!entry.song.youtubeId) await this.syncSong(entry.song);
-  //     await this._addPlaylistEntry(entry);
-  //   } catch (err) {
-  //     this.addAlert('Unable to add playlist entry ' + entryId);
-  //     console.error(err);
-  //   }
-  // }
-
-  // async syncSong(song) {
-  //   if (!this._auth()) return;
-  //   let response = await this._findSong(song);
-  //   if (!response.data.items.length) {
-  //     console.warn('Unable to find song ' + song.id + ' : ' + song.artist + ' - ' + song.title);
-  //     return Promise.resolve();
-  //   }
-  //   song.youtubeId = response.data.items[0].id.videoId;
-  //   song.update();
-  //   return Promise.resolve();
-  // }
-
-  // async deletePlaylist(ytPlaylistId) {
-  //   if (!this._auth()) return;
-  //   try {
-  //     await this._deletePlaylist(ytPlaylistId);
-  //   } catch (err) {
-  //     this.addAlert('Unable to delete YouTube playlist ' + ytPlaylistId);
-  //     console.error(err);
-  //   }
-  // }
-
-  // async syncPlaylists() {
-  //   if (!this._auth()) return;
-  //   let alertId = this.addAlert('Syncing playlists.', 0, -1);
-  //   let progress = 0;
-  //   try {
-  //     // TODO add an alert for time.
-  //     let playlists = ss.Playlist.findAll();
-  //     for (let i = 0; i < playlists.length; ++i) {
-  //       if (!playlists[i].youtubeId) continue;
-  //       progress = i / playlists.length || 0.01;
-  //       this.updateAlert(alertId, progress, 'Syncing playlist ' + playlists[i].name);
-  //       await this._updatePlaylistEntries(playlists[i]);
-  //     }
-  //     this.updateAlert(alertId, 1, 'Completed syncing playlists.', 20);
-  //   } catch (err) {
-  //     this.updateAlert(alertId, progress, 'Failed to sync playlists. ' + err);
-  //     console.error(err);
-  //   }
-  // }
+  async syncSong(song) {
+    let response = await this._findSong(song);
+    if (!response.data.items.length) {
+      console.warn('Unable to find song ' + song.id + ' : ' + song.artist + ' - ' + song.title);
+      return Promise.reject();
+    }
+    song.youtubeId = response.data.items[0].id.videoId;
+    song.update();
+    return Promise.resolve();
+  }
 
   async _updatePlaylistEntries(playlist) {
     let entries, songs;
@@ -343,27 +220,27 @@ class YoutubeClientMain {
     }
   }
 
-  // _createPlaylist(playlist) {
-  //   return new Promise((resolve, reject) => {
-  //     console.info('Creating playlist ' + playlist.name);
-  //     this.service.playlists.insert({
-  //       auth: this.oauth2Client,
-  //       part: 'snippet,status',
-  //       resource: {
-  //         snippet: {
-  //           title: playlist.name,
-  //           description: 'managed by SoulSifter'
-  //         },
-  //         status: {
-  //           privacyStatus: 'private'
-  //         }
-  //       }
-  //     }, (err, response) => {
-  //       if (err) reject(err);
-  //       else resolve(response);
-  //     });
-  //   });
-  // }
+  _createPlaylist(playlist) {
+    return new Promise((resolve, reject) => {
+      console.info('Creating playlist ' + playlist.name);
+      this.service.playlists.insert({
+        auth: this.oauth2Client,
+        part: 'snippet,status',
+        resource: {
+          snippet: {
+            title: playlist.name,
+            description: 'managed by SoulSifter'
+          },
+          status: {
+            privacyStatus: 'private'
+          }
+        }
+      }, (err, response) => {
+        if (err) reject(err);
+        else resolve(response);
+      });
+    });
+  }
 
   _getPlaylistItems(playlist, nextPageToken=undefined) {
     let request = {
@@ -422,9 +299,9 @@ class YoutubeClientMain {
     });
   }
 
-  // _addPlaylistEntry(entry) {
-  //   return _addPlaylistItem(entry.playlist.youtubeId, entry.song.youtubeId, entry.position);
-  // }
+  _addPlaylistEntry(entry) {
+    return _addPlaylistItem(entry.playlist.youtubeId, entry.song.youtubeId, entry.position);
+  }
 
   _removePlaylistEntry(itemId) {
     return new Promise((resolve, reject) => {
@@ -439,18 +316,18 @@ class YoutubeClientMain {
     });
   }
 
-  // _deletePlaylist(playlistId) {
-  //   return new Promise((resolve, reject) => {
-  //     console.info('Deleting playlist ' + playlistId);
-  //     this.service.playlists.delete({
-  //       auth: this.oauth2Client,
-  //       id: playlistId
-  //     }, (err, response) => {
-  //       if (err) reject(err);
-  //       else resolve(response);
-  //     });
-  //   });
-  // }
+  _deletePlaylist(playlistId) {
+    return new Promise((resolve, reject) => {
+      console.info('Deleting playlist ' + playlistId);
+      this.service.playlists.delete({
+        auth: this.oauth2Client,
+        id: playlistId
+      }, (err, response) => {
+        if (err) reject(err);
+        else resolve(response);
+      });
+    });
+  }
 };
 let yt = new YoutubeClientMain();
 
@@ -460,6 +337,70 @@ ipcMain.on('yt-updatePlaylistEntries', async (event, playlistId) => {
     await yt._updatePlaylistEntries(playlist);
   }).catch(err => {
     console.error('Unable to update playlist entries for playlist ' + playlistId);
+    console.error(err);
+  });
+});
+
+ipcMain.on('yt-syncPlaylists', async (event) => {
+  yt.auth().then(async () => {
+    // let alertId = this.addAlert('Syncing playlists.', 0, -1); TODO
+    let progress = 0;
+    // TODO add an alert for time.
+    let playlists = ss.Playlist.findAll();
+    for (let i = 0; i < playlists.length; ++i) {
+      if (!playlists[i].youtubeId) continue;
+      progress = i / playlists.length || 0.01;
+      // this.updateAlert(alertId, progress, 'Syncing playlist ' + playlists[i].name);
+      await yt._updatePlaylistEntries(playlists[i]);
+    }
+    // this.updateAlert(alertId, 1, 'Completed syncing playlists.', 20);
+  }).catch(err => {
+    console.error('Failed to sync playlists.');
+    // this.updateAlert(alertId, progress, 'Failed to sync playlists. ' + err);
+    console.error(err);
+  });
+});
+
+ipcMain.on('yt-createPlaylist', async (event, playlistId) => {
+  yt.auth().then(async () => {
+    let playlist = ss.Playlist.findById(playlistId);
+    if (!playlist.youtubeId) {
+      let response = await yt._createPlaylist(playlist);
+      console.info('Successfully created YouTube playlist ' + playlist.name);
+      playlist.youtubeId = response.data.id;
+      playlist.update();
+    }
+    await yt._updatePlaylistEntries(playlist);
+  }).catch(err => {
+    // this.addAlert('Unable to create YouTube playlist ' + playlist.name);
+    // if (err.message == 'invalid_grant') {
+    //   this.service = undefined;
+    //   const settings = new ss.SoulSifterSettings();
+    //   settings.putString('google.oauthRefreshToken', '');
+    //   settings.save();
+    // }
+    // return;
+    console.error('Unable to create YouTube playlist ' + playlist.name);
+    console.error(err);
+  });
+});
+
+ipcMain.on('yt-deletePlaylist', async (event, ytPlaylistId) => {
+  yt.auth().then(async () => {
+    await yt._deletePlaylist(ytPlaylistId);
+  }).catch(err => {
+    console.error('Unable to delete YouTube playlist ' + ytPlaylistId);
+    console.error(err);
+  });
+});
+
+ipcMain.on('yt-addPlaylistEntry', async (event, entryId) => {
+  yt.auth().then(async () => {
+    let entry = ss.PlaylistEntry.findById(entryId);
+    if (!entry.song.youtubeId) await yt.syncSong(entry.song);
+    await yt._addPlaylistEntry(entry);
+  }).catch(err => {
+    console.error('Unable to add playlist entry ' + entryId);
     console.error(err);
   });
 });
