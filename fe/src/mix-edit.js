@@ -56,7 +56,7 @@ class MixEdit extends LitElement {
 
   save(e) {
     this.mix.comments = this.shadowRoot.getElementById('comments').value;
-    this.mix.rating = this.shadowRoot.getElementById('rating').value;
+    this.mix.rating = Number(this.shadowRoot.getElementById('rating').value);
     this.mix.addon = this.shadowRoot.getElementById('addon').checked;
     if (this.mix.id) {
       this.mix.update();

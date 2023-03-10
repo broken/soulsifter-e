@@ -83,9 +83,9 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     let genreIds = this.genres.map(g => g.id);
     let p = {q: this.query, genres: genreIds.join(',')};
     let omitSongs = [];
-    p.bpm = this.searchOptions.bpmRestrict && !!this.bpm ? this.bpm : 0;
+    p.bpm = this.searchOptions.bpmRestrict && !!this.bpm ? Number(this.bpm) : 0;
     p.keys = this.searchOptions.keyRestrict && !!this.song ? this.song.tonicKey : '';
-    p.energy = this.searchOptions.energyRestrict && !!this.song ? this.song.energy : 0;
+    p.energy = this.searchOptions.energyRestrict && !!this.song ? Number(this.song.energy) : 0;
     p.q += !this.searchOptions.trashedRestrict ? '' : (p.q.length ? ' ' : '') + 'trashed:0';
     omitSongs = !this.searchOptions.repeatRestrict ? [] : this.songTrail.map(e => e.song);
     this.songs = ss.SearchUtil.searchSongs(p.q, p.bpm, p.keys, this.genres, omitSongs, this.settings.getInt('songList.limit'), p.energy, this.searchOptions.mvRestrict, this.searchOptions.orderBy, (msg) => { this.addAlert(msg, 5); });
