@@ -232,7 +232,7 @@ MusicManager::~MusicManager() {
 # pragma mark tagging
 
 void MusicManager::readTagsFromSong(Song* song) {
-    if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
+    if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") &&
         !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
       LOG(WARNING) << "can only read id3v2 tags from mpeg files: " << song->getFilepath();
       return;

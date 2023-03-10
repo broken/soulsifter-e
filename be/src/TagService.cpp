@@ -204,7 +204,7 @@ bool readId3v2TagAttributes(Song* song, TagLib::ID3v2::Tag* id3v2) {
 }
 
 bool readId3v2TagAttributes(Song* song) {
-  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
+  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") &&
       !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
     return false;
   }
@@ -260,7 +260,7 @@ void setId3v2Picture(TagLib::ID3v2::Tag* id3v2, string path, bool replace) {
 }  // namespace
 
 void TagService::readId3v2Tag(Song* song) {
-  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
+  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") &&
       !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
     LOG(WARNING) << "can only write id3v2 tags to mpeg files: " << song->getFilepath();
     return;
@@ -332,7 +332,7 @@ void TagService::readId3v2Tag(Song* song) {
 }
 
 void TagService::writeId3v2Tag(Song* song) {
-  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
+  if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") &&
       !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
     LOG(WARNING) << "can only write id3v2 tags to mpeg files: " << song->getFilepath();
     return;
