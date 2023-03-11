@@ -20,6 +20,12 @@ class AlertList extends AlertsMixin(LitElement) {
 
   constructor() {
     super();
+    ipcRenderer.on('addalert', (e, data) => {
+      this.addAlert(data.a, data.timeoutInSeconds, data.progress);
+    });
+    ipcRenderer.on('updatealert', (e, data) => {
+      this.updateAlert(data.id, data.progress, data.a, data.timeoutInSeconds);
+    });
   }
 
   alertsChanged(x) {

@@ -29,6 +29,52 @@ const createWindow = () => {
   ipcMain.on('opendevtools', (event) => {
     mainWindow.webContents.openDevTools();
   });
+
+  ipcMain.on('yt-syncPlaylists', async (event) => {
+    yt.auth().then(async () => {
+      // let alertId = this.addAlert('Syncing playlists.', 0, -1); TODO
+      let progress = 0;
+      // TODO add an alert for time.
+      let playlists = ss.Playlist.findAll();
+      for (let i = 0; i < playlists.length; ++i) {
+        if (!playlists[i].youtubeId) continue;
+        progress = i / playlists.length || 0.01;
+        // this.updateAlert(alertId, progress, 'Syncing playlist ' + playlists[i].name);
+        await yt._updatePlaylistEntries(playlists[i]);
+      }
+      // this.updateAlert(alertId, 1, 'Completed syncing playlists.', 20);
+    }).catch(err => {
+      console.error('Failed to sync playlists.');
+      mainWindow.webContents.send('addalert', {'progress': progress, 'a': 'Failed to sync playlists. ' + err});
+      // this.updateAlert(alertId, progress, 'Failed to sync playlists. ' + err);
+      console.error(err);
+    });
+  });
+
+  ipcMain.on('yt-createPlaylist', async (event, playlistId) => {
+    yt.auth().then(async () => {
+      let playlist = ss.Playlist.findById(playlistId);
+      if (!playlist.youtubeId) {
+        let response = await yt._createPlaylist(playlist);
+        console.info('Successfully created YouTube playlist ' + playlist.name);
+        playlist.youtubeId = response.data.id;
+        playlist.update();
+      }
+      await yt._updatePlaylistEntries(playlist);
+    }).catch(err => {
+      mainWindow.webContents.send('addalert', {'a': 'Unable to create YouTube playlist ' + playlist.name});
+      // this.addAlert('Unable to create YouTube playlist ' + playlist.name);
+      // if (err.message == 'invalid_grant') {
+      //   this.service = undefined;
+      //   const settings = new ss.SoulSifterSettings();
+      //   settings.putString('google.oauthRefreshToken', '');
+      //   settings.save();
+      // }
+      // return;
+      console.error('Unable to create YouTube playlist ' + playlist.name);
+      console.error(err);
+    });
+  });
 }
 
 // This method will be called when Electron has finished
@@ -344,50 +390,6 @@ ipcMain.on('yt-updatePlaylistEntries', async (event, playlistId) => {
     await yt._updatePlaylistEntries(playlist);
   }).catch(err => {
     console.error('Unable to update playlist entries for playlist ' + playlistId);
-    console.error(err);
-  });
-});
-
-ipcMain.on('yt-syncPlaylists', async (event) => {
-  yt.auth().then(async () => {
-    // let alertId = this.addAlert('Syncing playlists.', 0, -1); TODO
-    let progress = 0;
-    // TODO add an alert for time.
-    let playlists = ss.Playlist.findAll();
-    for (let i = 0; i < playlists.length; ++i) {
-      if (!playlists[i].youtubeId) continue;
-      progress = i / playlists.length || 0.01;
-      // this.updateAlert(alertId, progress, 'Syncing playlist ' + playlists[i].name);
-      await yt._updatePlaylistEntries(playlists[i]);
-    }
-    // this.updateAlert(alertId, 1, 'Completed syncing playlists.', 20);
-  }).catch(err => {
-    console.error('Failed to sync playlists.');
-    // this.updateAlert(alertId, progress, 'Failed to sync playlists. ' + err);
-    console.error(err);
-  });
-});
-
-ipcMain.on('yt-createPlaylist', async (event, playlistId) => {
-  yt.auth().then(async () => {
-    let playlist = ss.Playlist.findById(playlistId);
-    if (!playlist.youtubeId) {
-      let response = await yt._createPlaylist(playlist);
-      console.info('Successfully created YouTube playlist ' + playlist.name);
-      playlist.youtubeId = response.data.id;
-      playlist.update();
-    }
-    await yt._updatePlaylistEntries(playlist);
-  }).catch(err => {
-    // this.addAlert('Unable to create YouTube playlist ' + playlist.name);
-    // if (err.message == 'invalid_grant') {
-    //   this.service = undefined;
-    //   const settings = new ss.SoulSifterSettings();
-    //   settings.putString('google.oauthRefreshToken', '');
-    //   settings.save();
-    // }
-    // return;
-    console.error('Unable to create YouTube playlist ' + playlist.name);
     console.error(err);
   });
 });
