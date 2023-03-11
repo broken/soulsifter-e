@@ -21,11 +21,11 @@ class SongEdit extends AlertsMixin(LitElement) {
         <abstract-action-page id="abstractActionPage" @cancel="${this.skip}" @accept="${this.save}">
           <div class="fields">
             <div class="prev">&nbsp;<span>${this.taggedSong.artist}</span></div>
-            <paper-input label="Artist" value="${this.editedSong.artist}" @change="${this.artistChanged}" required="true" floatingLabel id="artist"></paper-input>
+            <paper-input label="Artist" value="${this.editedSong.artist}" @change="${this.artistChanged}" required floatingLabel id="artist"></paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.track}</span></div>
             <paper-input label="Track Num" value="${this.editedSong.track}" floatingLabel id="track"></paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.title}</span></div>
-            <paper-input label="Title" value="${this.editedSong.title}" @change="${this.titleChanged}" required="true" floatingLabel id="title"></paper-input>
+            <paper-input label="Title" value="${this.editedSong.title}" @change="${this.titleChanged}" required floatingLabel id="title"></paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.remixer}</span></div>
             <paper-input label="Remixer" value="${this.editedSong.remixer}" floatingLabel id="remixer"></paper-input>
             <paper-input label="Comments" value="${this.editedSong.comments}" floatingLabel id="comments"></paper-input>
@@ -63,7 +63,7 @@ class SongEdit extends AlertsMixin(LitElement) {
             <div class="prev">&nbsp;<span>${this.taggedSong.album.artist}</span></div>
             <paper-input label="Album Artist" value="${this.editedSong.album.artist}" @value-changed="${this.albumArtistValChanged}" floatingLabel id="album_artist"></paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.album.name}</span></div>
-            <paper-input label="Album Name" value="${this.editedSong.album.name}" required="true" floatingLabel id="album_name"></paper-input>
+            <paper-input label="Album Name" value="${this.editedSong.album.name}" required floatingLabel id="album_name"></paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.albumPart.pos}</span></div>
             <paper-input label="POS" value="${this.editedSong.albumPart.pos}" floatingLabel id="albumpart_pos"></paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.albumPart.name}</span></div>
@@ -79,7 +79,7 @@ class SongEdit extends AlertsMixin(LitElement) {
               ${basicGenreItems}
             </options-menu-paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateYear}</span></div>
-            <paper-input label="Release Year" value="${this.editedSong.album.releaseDateYear}" required="true" type="number" min="1600" max="2099" floatingLabel id="album_releaseDateYear"></paper-input>
+            <paper-input label="Release Year" value="${this.editedSong.album.releaseDateYear}" required type="number" min="1600" max="2099" floatingLabel id="album_releaseDateYear"></paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateMonth}</span></div>
             <paper-input label="Release Month" value="${this.editedSong.album.releaseDateMonth}" type="number" min="0" max="12" floatingLabel id="album_releaseDateMonth"></paper-input>
             <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateDay}</span></div>
