@@ -10,10 +10,10 @@ const createWindow = () => {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     width: 1680,
-    height: 498,
+    height: 530,
     x: 0,
     y: 0,
-    icon: path.join(__dirname, 'DVDRipper.icns'),
+    icon: path.join(__dirname, 'soulsifter.icns'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
