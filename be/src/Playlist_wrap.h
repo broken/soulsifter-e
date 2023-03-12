@@ -15,7 +15,7 @@ class Playlist : public Napi::ObjectWrap<Playlist> {
   dogatech::soulsifter::Playlist* getWrappedValue() const { return playlist; }
 
  private:
-  Napi::Value clear(const Napi::CallbackInfo& info);
+  void clear(const Napi::CallbackInfo& info);
   static Napi::Value findById(const Napi::CallbackInfo& info);
   static Napi::Value findByName(const Napi::CallbackInfo& info);
   static Napi::Value findBySpotifyId(const Napi::CallbackInfo& info);

@@ -22,6 +22,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
                                                         : html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note"></icon-button>`;
     let keyRestrictBtn = this.searchOptions.keyRestrict ? html`<icon-button @click=${this.toggleKeyRestrict} icon="vpn_key" class="active"></icon-button>`
                                                         : html`<icon-button @click=${this.toggleKeyRestrict} icon="vpn_key"></icon-button>`;
+    let debugMode = this.settings.getBool('app.debug');
     return html`
       <icon-button @click=${this.requestSearch} icon="search"></icon-button>
       <paper-input label="search" value="${this.query}" class="flex" no-label-float @input=${this.queryInputChanged} id="queryInput"></paper-input>
@@ -32,18 +33,18 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       <icon-button @click=${this.toggleSearchOptionsDialog} icon="build"></icon-button>
       <paper-input label="bpm" value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></paper-input>
       <icon-button @click=${this.openCreateSongPage} icon="add_circle" id="createSongButton" @drop="${this.dropCreateSongButton}" @dragover="${this.dragOverCreateSongButton}" @dragleave="${this.dragLeaveCreateSongButton}"></icon-button>
-      <icon-button @click=${this.addSongFromUrl} icon="link"></icon-button>
+      ${debugMode ? html`<icon-button @click=${this.addSongFromUrl} icon="link"></icon-button>` : ''}
       <icon-button @click=${this.openSettingsPage} icon="settings"></icon-button>
       <options-menu>
-        <options-menu-item @click="${this.addSongFromUrl}">Add Song From URL</options-menu-item>
-        <options-menu-item @click="${this.addSongAndVideoFromUrl}">Add Song & Video From URL</options-menu-item>
-        <options-menu-item @click="${this.addSongsFromFeedly}">Add Songs From Feedly</options-menu-item>
+        ${debugMode ? html`<options-menu-item @click="${this.addSongFromUrl}">Add Song From URL</options-menu-item>` : ''}
+        ${debugMode ? html`<options-menu-item @click="${this.addSongAndVideoFromUrl}">Add Song & Video From URL</options-menu-item>` : ''}
+        ${debugMode ? html`<options-menu-item @click="${this.addSongsFromFeedly}">Add Songs From Feedly</options-menu-item>` : ''}
         <options-menu-item @click="${this.updateSongAttributesFromTags}">Update Song Attributes From Tags</options-menu-item>
         <options-menu-item @click="${this.analyzeBpms}">Analyze BPMs</options-menu-item>
         <options-menu-item @click="${this.analyzeDurations}">Analyze Durations</options-menu-item>
         <options-menu-item @click="${this.syncSpotifyPlaylists}"><span style="text-decoration: line-through">Sync Spotify Playlists</span></options-menu-item>
         <options-menu-item @click="${this.syncYouTubePlaylists}">Sync YouTube Playlists</options-menu-item>
-        <options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>
+        ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
       </options-menu>
       <paper-dialog id="searchInfoDialog">
         <search-info></search-info>

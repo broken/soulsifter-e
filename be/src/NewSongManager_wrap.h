@@ -15,11 +15,11 @@ class NewSongManager : public Napi::ObjectWrap<NewSongManager> {
   dogatech::soulsifter::NewSongManager* getWrappedValue() const { return newsongmanager; }
 
  private:
-  Napi::Value import(const Napi::CallbackInfo& info);
+  void import(const Napi::CallbackInfo& info);
   Napi::Value nextSong(const Napi::CallbackInfo& info);
   Napi::Value coverImagePath(const Napi::CallbackInfo& info);
   Napi::Value processSong(const Napi::CallbackInfo& info);
-  Napi::Value trashMusicFile(const Napi::CallbackInfo& info);
+  void trashMusicFile(const Napi::CallbackInfo& info);
 
   static Napi::FunctionReference* constructor;
   dogatech::soulsifter::NewSongManager* newsongmanager;

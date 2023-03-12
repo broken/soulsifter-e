@@ -15,7 +15,7 @@ class Mix : public Napi::ObjectWrap<Mix> {
   dogatech::soulsifter::Mix* getWrappedValue() const { return mix; }
 
  private:
-  Napi::Value clear(const Napi::CallbackInfo& info);
+  void clear(const Napi::CallbackInfo& info);
   static Napi::Value findById(const Napi::CallbackInfo& info);
   static Napi::Value findByOutSongIdAndInSongId(const Napi::CallbackInfo& info);
   static Napi::Value findByOutSongId(const Napi::CallbackInfo& info);

@@ -15,9 +15,9 @@ class TagService : public Napi::ObjectWrap<TagService> {
   dogatech::soulsifter::TagService* getWrappedValue() const { return tagservice; }
 
  private:
-  static Napi::Value readId3v2Tag(const Napi::CallbackInfo& info);
-  static Napi::Value writeId3v2Tag(const Napi::CallbackInfo& info);
-  static Napi::Value updateSongAttributesFromTags(const Napi::CallbackInfo& info);
+  static void readId3v2Tag(const Napi::CallbackInfo& info);
+  static void writeId3v2Tag(const Napi::CallbackInfo& info);
+  static void updateSongAttributesFromTags(const Napi::CallbackInfo& info);
 
   static Napi::FunctionReference* constructor;
   dogatech::soulsifter::TagService* tagservice;

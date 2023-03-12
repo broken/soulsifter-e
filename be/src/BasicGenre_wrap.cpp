@@ -52,7 +52,7 @@ BasicGenre::BasicGenre(const Napi::CallbackInfo& info) : Napi::ObjectWrap<BasicG
   }
 }
 
-Napi::Value BasicGenre::clear(const Napi::CallbackInfo& info) {
+void BasicGenre::clear(const Napi::CallbackInfo& info) {
   BasicGenre* obj = this;
   obj->basicgenre->clear();
 }

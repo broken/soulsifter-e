@@ -59,7 +59,7 @@ Style::Style(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Style>(info), st
   }
 }
 
-Napi::Value Style::clear(const Napi::CallbackInfo& info) {
+void Style::clear(const Napi::CallbackInfo& info) {
   Style* obj = this;
   obj->style->clear();
 }

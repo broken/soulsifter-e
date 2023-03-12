@@ -35,11 +35,11 @@ namespace soulsifter {
         void put(const std::string& label, const T& value);
 
         string getString(const string& label) const;
-        void setString(const string& label, const std::string& value);
+        void putString(const string& label, const std::string& value);
         int getInt(const string& label) const;
-        void setInt(const string& label, const int value);
+        void putInt(const string& label, const int value);
         bool getBool(const string& label) const;
-        void setBool(const string& label, const bool value);
+        void putBool(const string& label, const bool value);
     private:
         // singleton
         SoulSifterSettings();

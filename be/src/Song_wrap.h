@@ -15,7 +15,7 @@ class Song : public Napi::ObjectWrap<Song> {
   dogatech::soulsifter::Song* getWrappedValue() const { return song; }
 
  private:
-  Napi::Value clear(const Napi::CallbackInfo& info);
+  void clear(const Napi::CallbackInfo& info);
   static Napi::Value findById(const Napi::CallbackInfo& info);
   static Napi::Value findByFilepath(const Napi::CallbackInfo& info);
   static Napi::Value findByGoogleSongId(const Napi::CallbackInfo& info);
@@ -29,7 +29,7 @@ class Song : public Napi::ObjectWrap<Song> {
   // Unable to process createRESongFromSong
   Napi::Value reAlbum(const Napi::CallbackInfo& info);
   Napi::Value getDateAddedString(const Napi::CallbackInfo& info);
-  Napi::Value setDateAddedToNow(const Napi::CallbackInfo& info);
+  void setDateAddedToNow(const Napi::CallbackInfo& info);
   Napi::Value getId(const Napi::CallbackInfo& info);
   void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getArtist(const Napi::CallbackInfo& info);

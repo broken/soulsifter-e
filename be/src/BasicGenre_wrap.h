@@ -15,7 +15,7 @@ class BasicGenre : public Napi::ObjectWrap<BasicGenre> {
   dogatech::soulsifter::BasicGenre* getWrappedValue() const { return basicgenre; }
 
  private:
-  Napi::Value clear(const Napi::CallbackInfo& info);
+  void clear(const Napi::CallbackInfo& info);
   static Napi::Value findById(const Napi::CallbackInfo& info);
   static Napi::Value findByName(const Napi::CallbackInfo& info);
   static Napi::Value findAll(const Napi::CallbackInfo& info);

@@ -19,11 +19,11 @@ Napi::Object SoulSifterSettings::Init(Napi::Env env, Napi::Object exports) {
     // Unable to process get
     // Unable to process put
     InstanceMethod<&SoulSifterSettings::getString>("getString"),
-    InstanceMethod<&SoulSifterSettings::setString>("setString"),
+    InstanceMethod<&SoulSifterSettings::putString>("putString"),
     InstanceMethod<&SoulSifterSettings::getInt>("getInt"),
-    InstanceMethod<&SoulSifterSettings::setInt>("setInt"),
+    InstanceMethod<&SoulSifterSettings::putInt>("putInt"),
     InstanceMethod<&SoulSifterSettings::getBool>("getBool"),
-    InstanceMethod<&SoulSifterSettings::setBool>("setBool"),
+    InstanceMethod<&SoulSifterSettings::putBool>("putBool"),
   });
 
   constructor = new Napi::FunctionReference();
@@ -43,7 +43,7 @@ SoulSifterSettings::SoulSifterSettings(const Napi::CallbackInfo& info) : Napi::O
   soulsiftersettings = &dogatech::soulsifter::SoulSifterSettings::getInstance();
 }
 
-Napi::Value SoulSifterSettings::save(const Napi::CallbackInfo& info) {
+void SoulSifterSettings::save(const Napi::CallbackInfo& info) {
   SoulSifterSettings* obj = this;
   obj->soulsiftersettings->save();
 }
@@ -64,23 +64,23 @@ Napi::Value SoulSifterSettings::getString(const Napi::CallbackInfo& info) {
   return Napi::String::New(info.Env(), result);
 }
 
-Napi::Value SoulSifterSettings::setString(const Napi::CallbackInfo& info) {
+void SoulSifterSettings::putString(const Napi::CallbackInfo& info) {
   if (info.Length() < 2) {
     Napi::TypeError::New(info.Env(), "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   SoulSifterSettings* obj = this;
   if (!info[0].IsString()) {
     Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   if (!info[1].IsString()) {
     Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[1])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   std::string a1(info[1].As<Napi::String>().Utf8Value());
-  obj->soulsiftersettings->setString(a0, a1);
+  obj->soulsiftersettings->putString(a0, a1);
 }
 
 Napi::Value SoulSifterSettings::getInt(const Napi::CallbackInfo& info) {
@@ -99,23 +99,23 @@ Napi::Value SoulSifterSettings::getInt(const Napi::CallbackInfo& info) {
   return Napi::Number::New(info.Env(), result);
 }
 
-Napi::Value SoulSifterSettings::setInt(const Napi::CallbackInfo& info) {
+void SoulSifterSettings::putInt(const Napi::CallbackInfo& info) {
   if (info.Length() < 2) {
     Napi::TypeError::New(info.Env(), "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   SoulSifterSettings* obj = this;
   if (!info[0].IsString()) {
     Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   if (!info[1].IsNumber()) {
     Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[1])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   int32_t a1(info[1].As<Napi::Number>().Int32Value());
-  obj->soulsiftersettings->setInt(a0, a1);
+  obj->soulsiftersettings->putInt(a0, a1);
 }
 
 Napi::Value SoulSifterSettings::getBool(const Napi::CallbackInfo& info) {
@@ -134,22 +134,22 @@ Napi::Value SoulSifterSettings::getBool(const Napi::CallbackInfo& info) {
   return Napi::Boolean::New(info.Env(), result);
 }
 
-Napi::Value SoulSifterSettings::setBool(const Napi::CallbackInfo& info) {
+void SoulSifterSettings::putBool(const Napi::CallbackInfo& info) {
   if (info.Length() < 2) {
     Napi::TypeError::New(info.Env(), "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   SoulSifterSettings* obj = this;
   if (!info[0].IsString()) {
     Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   if (!info[1].IsBoolean()) {
     Napi::TypeError::New(info.Env(), "TypeError: Boolean expected (for info[1])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    return;
   }
   bool a1(info[1].As<Napi::Boolean>().Value());
-  obj->soulsiftersettings->setBool(a0, a1);
+  obj->soulsiftersettings->putBool(a0, a1);
 }
 

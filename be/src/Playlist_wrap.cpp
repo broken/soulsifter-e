@@ -60,7 +60,7 @@ Playlist::Playlist(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Playlist>(
   }
 }
 
-Napi::Value Playlist::clear(const Napi::CallbackInfo& info) {
+void Playlist::clear(const Napi::CallbackInfo& info) {
   Playlist* obj = this;
   obj->playlist->clear();
 }

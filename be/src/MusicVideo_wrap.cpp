@@ -50,7 +50,7 @@ MusicVideo::MusicVideo(const Napi::CallbackInfo& info) : Napi::ObjectWrap<MusicV
   }
 }
 
-Napi::Value MusicVideo::clear(const Napi::CallbackInfo& info) {
+void MusicVideo::clear(const Napi::CallbackInfo& info) {
   MusicVideo* obj = this;
   obj->musicvideo->clear();
 }

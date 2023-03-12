@@ -21,6 +21,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-checkbox ?checked="${this.songListShowComments}" id="songListShowComments">Show comments in song list</paper-checkbox>
           <paper-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys">Include unknown keys in key searches</paper-checkbox>
           <paper-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag">Overwrite values when reading ID3 tags</paper-checkbox>
+          <paper-checkbox ?checked="${this.appDebugMode}" id="appDebugMode">Debug mode (requires restart)</paper-checkbox>
         </div>
         <div class="fields">
           <paper-input label="Database Name" value="${this.dbName}" id="dbName"></paper-input>
@@ -48,6 +49,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     super();
     this.musicDir = this.settings.getString('music.dir');
     this.musicVideoDir = this.settings.getString('mv.dir');
+    this.appDebugMode = this.settings.getBool('app.debug');
     this.googleAndroidId = this.settings.getString('google.androidId');
     this.googleAppKey = this.settings.getString('google.appKey');
     this.googleEmail = this.settings.getString('google.email');
@@ -86,6 +88,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   save(e, detail, sender) {
     this.puts('music.dir', this.shadowRoot.getElementById('musicDir').value);
     this.puts('mv.dir', this.shadowRoot.getElementById('musicVideoDir').value);
+    this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
     this.puts('google.androidId', this.shadowRoot.getElementById('googleAndroidId').value);
     this.puts('google.appKey', this.shadowRoot.getElementById('googleAppKey').value);
     this.puts('google.email', this.shadowRoot.getElementById('googleEmail').value);
@@ -98,10 +101,10 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('db.url', this.shadowRoot.getElementById('dbUrl').value);
     this.puts('feedly.devToken', this.shadowRoot.getElementById('feedlyDevToken').value);
     this.puts('feedly.userId', this.shadowRoot.getElementById('feedlyUserId').value);
-    this.puti('songList.limit', this.shadowRoot.getElementById('songListLimit').value);
+    this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
     this.putb('songList.searchOnSelect', this.shadowRoot.getElementById('songListSearchOnSelect').checked);
     this.putb('songList.showComments', this.shadowRoot.getElementById('songListShowComments').checked);
-    this.puti('search.energyGap', this.shadowRoot.getElementById('energyGap').value);
+    this.puti('search.energyGap', Number(this.shadowRoot.getElementById('energyGap').value));
     this.putb('search.includeUnknownKeys', this.shadowRoot.getElementById('includeUnknownKeys').checked);
     this.putb('tag.readOverwrite', this.shadowRoot.getElementById('overwriteSongFromTag').checked);
     this.settings.save();

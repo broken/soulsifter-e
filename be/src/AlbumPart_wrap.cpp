@@ -58,7 +58,7 @@ AlbumPart::AlbumPart(const Napi::CallbackInfo& info) : Napi::ObjectWrap<AlbumPar
   }
 }
 
-Napi::Value AlbumPart::clear(const Napi::CallbackInfo& info) {
+void AlbumPart::clear(const Napi::CallbackInfo& info) {
   AlbumPart* obj = this;
   obj->albumpart->clear();
 }

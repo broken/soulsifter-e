@@ -15,7 +15,7 @@ class MusicVideo : public Napi::ObjectWrap<MusicVideo> {
   dogatech::soulsifter::MusicVideo* getWrappedValue() const { return musicvideo; }
 
  private:
-  Napi::Value clear(const Napi::CallbackInfo& info);
+  void clear(const Napi::CallbackInfo& info);
   static Napi::Value findById(const Napi::CallbackInfo& info);
   static Napi::Value findAll(const Napi::CallbackInfo& info);
   Napi::Value update(const Napi::CallbackInfo& info);

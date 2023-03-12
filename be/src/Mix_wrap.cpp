@@ -64,7 +64,7 @@ Mix::Mix(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mix>(info), mix(null
   }
 }
 
-Napi::Value Mix::clear(const Napi::CallbackInfo& info) {
+void Mix::clear(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   obj->mix->clear();
 }

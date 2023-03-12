@@ -60,7 +60,7 @@ Napi::Value AudioAnalyzer::analyzeBpm(const Napi::CallbackInfo& info) {
   return a;
 }
 
-Napi::Value AudioAnalyzer::analyzeBpms(const Napi::CallbackInfo& info) {
+void AudioAnalyzer::analyzeBpms(const Napi::CallbackInfo& info) {
 
       dogatech::soulsifter::AudioAnalyzer::analyzeBpms();
 }
@@ -81,7 +81,7 @@ Napi::Value AudioAnalyzer::analyzeDuration(const Napi::CallbackInfo& info) {
   return Napi::Number::New(info.Env(), result);
 }
 
-Napi::Value AudioAnalyzer::analyzeDurations(const Napi::CallbackInfo& info) {
+void AudioAnalyzer::analyzeDurations(const Napi::CallbackInfo& info) {
 
       dogatech::soulsifter::AudioAnalyzer::analyzeDurations();
 }

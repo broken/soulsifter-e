@@ -15,7 +15,7 @@ class Album : public Napi::ObjectWrap<Album> {
   dogatech::soulsifter::Album* getWrappedValue() const { return album; }
 
  private:
-  Napi::Value clear(const Napi::CallbackInfo& info);
+  void clear(const Napi::CallbackInfo& info);
   static Napi::Value findById(const Napi::CallbackInfo& info);
   static Napi::Value findByCoverFilepath(const Napi::CallbackInfo& info);
   static Napi::Value findByNameAndArtist(const Napi::CallbackInfo& info);

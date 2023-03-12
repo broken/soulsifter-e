@@ -15,7 +15,7 @@ class Style : public Napi::ObjectWrap<Style> {
   dogatech::soulsifter::Style* getWrappedValue() const { return style; }
 
  private:
-  Napi::Value clear(const Napi::CallbackInfo& info);
+  void clear(const Napi::CallbackInfo& info);
   static Napi::Value findById(const Napi::CallbackInfo& info);
   static Napi::Value findByREId(const Napi::CallbackInfo& info);
   static Napi::Value findAll(const Napi::CallbackInfo& info);

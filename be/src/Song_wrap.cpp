@@ -101,7 +101,7 @@ Song::Song(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Song>(info), song(
   }
 }
 
-Napi::Value Song::clear(const Napi::CallbackInfo& info) {
+void Song::clear(const Napi::CallbackInfo& info) {
   Song* obj = this;
   obj->song->clear();
 }
@@ -295,7 +295,7 @@ Napi::Value Song::getDateAddedString(const Napi::CallbackInfo& info) {
   return Napi::String::New(info.Env(), result);
 }
 
-Napi::Value Song::setDateAddedToNow(const Napi::CallbackInfo& info) {
+void Song::setDateAddedToNow(const Napi::CallbackInfo& info) {
   Song* obj = this;
   obj->song->setDateAddedToNow();
 }
