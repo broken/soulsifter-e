@@ -25,7 +25,10 @@ const createWindow = () => {
   mainWindow.loadFile('build/index.html')
 
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  if (!app.isPackaged) {
+    mainWindow.webContents.openDevTools();
+  }
+
   ipcMain.on('opendevtools', (event) => {
     mainWindow.webContents.openDevTools();
   });

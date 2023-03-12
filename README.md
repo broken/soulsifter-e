@@ -52,7 +52,6 @@ In Feb of 2023, at v0.18, I upgraded my laptop and libraries got out of wack to 
 TODO
 Things left to fix before v1.0 release:
 * debug mode
-* don't show tools from package
 * color of tabs
 * db install scripts
 * config file location
