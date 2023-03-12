@@ -2,7 +2,7 @@
 const { app, clipboard, dialog, BrowserWindow, ipcMain, nativeImage } = require('electron')
 const path = require('path');
 const { google } = require('googleapis');
-const ss = require('../be');
+const ss = require('soulsifter');
 
 const isDev = process.env.IS_DEV === 'true';
 

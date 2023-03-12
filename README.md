@@ -50,5 +50,13 @@ When I found out about Node-Webkit (later NW.js) and discovered you could write 
 In Feb of 2023, at v0.18, I upgraded my laptop and libraries got out of wack to the point I was no longer able to build a working copy of SoulSifter. I was fed up with NW.js, and the promise of native file drag & drop Electron delivered inticed me to switch. In parallel, it seemed converting over to the new Electron framework would be faster then getting the current version working. It had been something I had wanted to do for some time, which had me limiting any new feature development anyways, and this was the forcing function. Now the third incarnation, [SoulSifter v1.0]() was born Feb 27, 2023. I've been working on SoulSifter in one form or another for over a decade, and I plan to work on it for decades to come.
 
 TODO
-Things left to verify are working before v1.0 release:
-* package
+Things left to fix before v1.0 release:
+* debug mode
+* don't show tools from package
+* color of tabs
+* db install scripts
+* config file location
+* new icon
+
+v1.0.1
+* centralize version
