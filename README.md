@@ -56,7 +56,6 @@ Things left to fix before v1.0 release:
 * color of tabs
 * db install scripts
 * config file location
-* new icon
 
 v1.0.1
 * centralize version

@@ -5,7 +5,7 @@ const appPath = __dirname;
 
 module.exports = {
   packagerConfig: {
-    icon: 'DVDRipper',
+    icon: 'soulsifter',
   },
   rebuildConfig: {},
   makers: [
