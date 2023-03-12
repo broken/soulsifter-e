@@ -17,7 +17,7 @@ namespace soulsifter {
   SoulSifterSettings::SoulSifterSettings() {
     // TODO settings file stored in other OS place
     filename.append(getenv("HOME"));
-    filename.append("/Library/Application Support/Soul Sifter");
+    filename.append("/Library/Application Support/SoulSifter");
     if (!boost::filesystem::exists(filename)) {
       if (!boost::filesystem::create_directory(filename)) {
         LOG(WARNING) << "Unable to create settings directory " << filename;
