@@ -1,5 +1,7 @@
 #include <napi.h>
 
+#include <filesystem>
+#include <iostream>
 #include <string>
 #include <napi.h>
 #include <g3log/g3log.hpp>
@@ -25,9 +27,15 @@
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   // first init the logging
   static std::unique_ptr<g3::LogWorker> logworker = g3::LogWorker::createLogWorker();
-  std::string home = getenv("HOME");
+  const std::string home = getenv("HOME");
+  const std::string logDir = home + "/Library/Logs/SoulSifter";
+  if (!std::filesystem::exists(logDir)) {
+    if (!std::filesystem::create_directories(logDir)) {
+      std::cerr << "Failed to create log directory: " << logDir << std::endl;
+    }
+  }
   logworker->addSink(
-      std::make_unique<dogatech::soulsifter::StdoutFileSink>("ss", home + "/Library/Application Support/Soul Sifter"),
+      std::make_unique<dogatech::soulsifter::StdoutFileSink>("ss", logDir),
       &dogatech::soulsifter::StdoutFileSink::log);
   g3::initializeLogging(logworker.get());
 
