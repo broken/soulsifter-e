@@ -68,12 +68,12 @@ class OptionsMenuPaperInput extends LitElement {
       for (let i = 0; i < options.length; ++i) {
         if (options[i].nodeName == 'OPTIONS-MENU-ITEM') {
           if (!val) {
-            options[i].classList.remove('hidden');
+            options[i].removeAttribute('hidden');
           } else {
             if (options[i].innerText.indexOf(val) == -1) {
-              options[i].classList.add('hidden');
+              options[i].setAttribute('hidden', true);
             } else {
-              options[i].classList.remove('hidden');
+              options[i].removeAttribute('hidden');
             }
           }
         }
