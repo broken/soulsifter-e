@@ -1,6 +1,6 @@
 {
-  "name": "soulsifter-dev-automation",
-  "version": "0.1.0",
+  "name": "soulsifter",
+  "version": "1.1.0",
   "description": "Scripts for automating builds of the backend & fronted of SoulSifter app.",
   "scripts": {
     "all": "npm run compile && npm start",
