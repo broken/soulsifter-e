@@ -47,7 +47,7 @@ class StarRating extends LitElement {
 
   select(star) {
     if (!this.readOnly)
-      return (e) => this.value = star + 1;
+      return (e) => this.value = this.value == star + 1 ? 0 : star + 1;
     else
       return () => {};
   }
