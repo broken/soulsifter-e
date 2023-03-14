@@ -92,8 +92,8 @@ class SongEdit extends AlertsMixin(LitElement) {
         </abstract-action-page>
         <div class="metadata">
           <audio-player id="audio" .song="${this.song}"></audio-player>
-          <div>${this.editedSong.id}</div>
-          <div @click="${this.changeSongFile}">${this.editedSong.filepath}</div>
+          <div style="user-select:text">${this.editedSong.id}</div>
+          <div @click="${this.changeSongFile}" style="user-select:text">${this.editedSong.filepath}</div>
         </div>
       </div>
     `;
