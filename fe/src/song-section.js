@@ -203,7 +203,7 @@ class SongSection extends SettingsMixin(SongMixin(SongTrailMixin(LitElement))) {
           overflow-y: scroll;
         }
         #nav {
-          height: 256px;
+          height: calc(var(--sidebar-width) - var(--scrollbar-width));
           display: flex;
           flex-direction: row;
           justify-content: space-between;

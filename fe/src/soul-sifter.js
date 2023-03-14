@@ -103,10 +103,10 @@ class SoulSifter extends LitElement {
           height: 100%;
         }
         aside {
-          width: 256px;
+          width: var(--sidebar-width);
           flex-grow: 0;
           flex-shrink: 0;
-          flex-basis: 256px;
+          flex-basis: var(--sidebar-width);
         }
         main {
           flex: 1 1 auto;
