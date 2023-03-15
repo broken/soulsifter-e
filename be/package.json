@@ -1,6 +1,6 @@
 {
   "name": "soulsifter",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "back end for Soulsifter app",
   "main": "index.js",
   "private": true,
