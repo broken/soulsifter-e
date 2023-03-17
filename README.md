@@ -22,8 +22,8 @@ Presteps:
 * (to build) install npm modules
   * global: node-gyp
   * locally with npm install
-* required libs (brew install): mysql-connector-c++ (-DWITH_JDBC=ON), libtag, mad, boost, youtube-dl (for music videos), ffmpeg, g3log
-
+* required libs (brew install): mysql-connector-c++ (-DWITH_JDBC=ON), libtag, mad, boost, youtube-dl (for music videos), ffmpeg, g3log (1.3.4 (<=c++14))
+  * sudo launchctl config user path /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 ```
 npm run all
 ```
