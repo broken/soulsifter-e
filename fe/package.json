@@ -1,7 +1,7 @@
 {
   "name": "SoulSifter",
   "version": "1.1.0",
-  "build": 2616,
+  "build": 2626,
   "description": "DJ & music organization app.",
   "main": "main.js",
   "scripts": {
