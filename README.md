@@ -24,6 +24,11 @@ Presteps:
   * locally with npm install
 * required libs (brew install): mysql-connector-c++ (-DWITH_JDBC=ON), libtag, mad, boost, youtube-dl (for music videos), ffmpeg, g3log (1.3.4 (<=c++14))
   * sudo launchctl config user path /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+* It can read MixedInKey values from id3 tags. Settings:
+  * Update custom "initial key" tag
+  * Write energy tag in front of the grouping
+  * Key notation: flats (do others work?)
+
 ```
 npm run all
 ```
