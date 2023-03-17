@@ -1,6 +1,6 @@
 {
   "name": "soulsifter",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Scripts for automating builds of the backend & fronted of SoulSifter app.",
   "scripts": {
     "all": "npm run compile && npm start",
