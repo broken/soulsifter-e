@@ -41,7 +41,7 @@ TagService::TagService(const Napi::CallbackInfo& info) : Napi::ObjectWrap<TagSer
 void TagService::readId3v2Tag(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   if (!info[0].IsObject()) {
@@ -56,7 +56,7 @@ void TagService::readId3v2Tag(const Napi::CallbackInfo& info) {
 void TagService::writeId3v2Tag(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   if (!info[0].IsObject()) {
@@ -94,7 +94,7 @@ class UpdateSongAttributesFromTagsWorker : public Napi::AsyncProgressWorker<floa
 void TagService::updateSongAttributesFromTags(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 0 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 0 argument.").ThrowAsJavaScriptException();
     return;
   }
   if (!info[0].IsFunction()) {

@@ -42,7 +42,7 @@ MusicVideoService::MusicVideoService(const Napi::CallbackInfo& info) : Napi::Obj
 Napi::Value MusicVideoService::associateYouTubeVideo(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::TypeError::New(env, "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 2 arguments.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsObject()) {
@@ -71,7 +71,7 @@ Napi::Value MusicVideoService::associateYouTubeVideo(const Napi::CallbackInfo& i
 Napi::Value MusicVideoService::downloadAudio(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {

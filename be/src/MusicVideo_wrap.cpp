@@ -59,7 +59,7 @@ void MusicVideo::clear(const Napi::CallbackInfo& info) {
 Napi::Value MusicVideo::findById(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsNumber()) {
@@ -132,7 +132,7 @@ Napi::Value MusicVideo::getId(const Napi::CallbackInfo& info) {
 void MusicVideo::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   MusicVideo* obj = this;
@@ -155,7 +155,7 @@ Napi::Value MusicVideo::getFilePath(const Napi::CallbackInfo& info) {
 void MusicVideo::setFilePath(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   MusicVideo* obj = this;
@@ -178,7 +178,7 @@ Napi::Value MusicVideo::getThumbnailFilePath(const Napi::CallbackInfo& info) {
 void MusicVideo::setThumbnailFilePath(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   MusicVideo* obj = this;

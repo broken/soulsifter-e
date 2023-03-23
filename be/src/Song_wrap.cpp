@@ -110,7 +110,7 @@ void Song::clear(const Napi::CallbackInfo& info) {
 Napi::Value Song::findById(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsNumber()) {
@@ -134,7 +134,7 @@ Napi::Value Song::findById(const Napi::CallbackInfo& info) {
 Napi::Value Song::findByFilepath(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {
@@ -158,7 +158,7 @@ Napi::Value Song::findByFilepath(const Napi::CallbackInfo& info) {
 Napi::Value Song::findByGoogleSongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {
@@ -182,7 +182,7 @@ Napi::Value Song::findByGoogleSongId(const Napi::CallbackInfo& info) {
 Napi::Value Song::findByYoutubeId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {
@@ -206,7 +206,7 @@ Napi::Value Song::findByYoutubeId(const Napi::CallbackInfo& info) {
 Napi::Value Song::findBySpotifyId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {
@@ -230,7 +230,7 @@ Napi::Value Song::findBySpotifyId(const Napi::CallbackInfo& info) {
 Napi::Value Song::findByRESongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsNumber()) {
@@ -325,7 +325,7 @@ Napi::Value Song::getId(const Napi::CallbackInfo& info) {
 void Song::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -348,7 +348,7 @@ Napi::Value Song::getArtist(const Napi::CallbackInfo& info) {
 void Song::setArtist(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -371,7 +371,7 @@ Napi::Value Song::getTrack(const Napi::CallbackInfo& info) {
 void Song::setTrack(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -394,7 +394,7 @@ Napi::Value Song::getTitle(const Napi::CallbackInfo& info) {
 void Song::setTitle(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -417,7 +417,7 @@ Napi::Value Song::getRemixer(const Napi::CallbackInfo& info) {
 void Song::setRemixer(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -440,7 +440,7 @@ Napi::Value Song::getFeaturing(const Napi::CallbackInfo& info) {
 void Song::setFeaturing(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -463,7 +463,7 @@ Napi::Value Song::getFilepath(const Napi::CallbackInfo& info) {
 void Song::setFilepath(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -486,7 +486,7 @@ Napi::Value Song::getRating(const Napi::CallbackInfo& info) {
 void Song::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -509,7 +509,7 @@ Napi::Value Song::getDateAdded(const Napi::CallbackInfo& info) {
 void Song::setDateAdded(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -532,7 +532,7 @@ Napi::Value Song::getBpm(const Napi::CallbackInfo& info) {
 void Song::setBpm(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -555,7 +555,7 @@ Napi::Value Song::getTonicKey(const Napi::CallbackInfo& info) {
 void Song::setTonicKey(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -578,7 +578,7 @@ Napi::Value Song::getEnergy(const Napi::CallbackInfo& info) {
 void Song::setEnergy(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -601,7 +601,7 @@ Napi::Value Song::getComments(const Napi::CallbackInfo& info) {
 void Song::setComments(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -624,7 +624,7 @@ Napi::Value Song::getTrashed(const Napi::CallbackInfo& info) {
 void Song::setTrashed(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -647,7 +647,7 @@ Napi::Value Song::getLowQuality(const Napi::CallbackInfo& info) {
 void Song::setLowQuality(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -670,7 +670,7 @@ Napi::Value Song::getGoogleSongId(const Napi::CallbackInfo& info) {
 void Song::setGoogleSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -693,7 +693,7 @@ Napi::Value Song::getYoutubeId(const Napi::CallbackInfo& info) {
 void Song::setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -716,7 +716,7 @@ Napi::Value Song::getSpotifyId(const Napi::CallbackInfo& info) {
 void Song::setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -739,7 +739,7 @@ Napi::Value Song::getDurationInMs(const Napi::CallbackInfo& info) {
 void Song::setDurationInMs(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -762,7 +762,7 @@ Napi::Value Song::getCurator(const Napi::CallbackInfo& info) {
 void Song::setCurator(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -785,7 +785,7 @@ Napi::Value Song::getRESongId(const Napi::CallbackInfo& info) {
 void Song::setRESongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -808,7 +808,7 @@ Napi::Value Song::getAlbumId(const Napi::CallbackInfo& info) {
 void Song::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -853,7 +853,7 @@ Napi::Value Song::getAlbumConst(const Napi::CallbackInfo& info) {
 void Song::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -877,7 +877,7 @@ Napi::Value Song::getAlbumPartId(const Napi::CallbackInfo& info) {
 void Song::setAlbumPartId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -922,7 +922,7 @@ Napi::Value Song::getAlbumPartConst(const Napi::CallbackInfo& info) {
 void Song::setAlbumPart(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -946,7 +946,7 @@ Napi::Value Song::getMusicVideoId(const Napi::CallbackInfo& info) {
 void Song::setMusicVideoId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -991,7 +991,7 @@ Napi::Value Song::getMusicVideoConst(const Napi::CallbackInfo& info) {
 void Song::setMusicVideo(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -1019,7 +1019,7 @@ Napi::Value Song::getStyleIds(const Napi::CallbackInfo& info) {
 void Song::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -1058,7 +1058,7 @@ Napi::Value Song::getStyles(const Napi::CallbackInfo& info) {
 void Song::setStyles(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -1090,7 +1090,7 @@ Napi::Value Song::getBpmLock(const Napi::CallbackInfo& info) {
 void Song::setBpmLock(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;
@@ -1113,7 +1113,7 @@ Napi::Value Song::getTonicKeyLock(const Napi::CallbackInfo& info) {
 void Song::setTonicKeyLock(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Song* obj = this;

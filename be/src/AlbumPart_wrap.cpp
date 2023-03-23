@@ -67,7 +67,7 @@ void AlbumPart::clear(const Napi::CallbackInfo& info) {
 Napi::Value AlbumPart::findById(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsNumber()) {
@@ -91,7 +91,7 @@ Napi::Value AlbumPart::findById(const Napi::CallbackInfo& info) {
 Napi::Value AlbumPart::findByPosAndAlbumId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::TypeError::New(env, "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 2 arguments.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {
@@ -120,7 +120,7 @@ Napi::Value AlbumPart::findByPosAndAlbumId(const Napi::CallbackInfo& info) {
 Napi::Value AlbumPart::findByPos(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {
@@ -146,7 +146,7 @@ Napi::Value AlbumPart::findByPos(const Napi::CallbackInfo& info) {
 Napi::Value AlbumPart::findByAlbumId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsNumber()) {
@@ -221,7 +221,7 @@ Napi::Value AlbumPart::getId(const Napi::CallbackInfo& info) {
 void AlbumPart::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
@@ -244,7 +244,7 @@ Napi::Value AlbumPart::getPos(const Napi::CallbackInfo& info) {
 void AlbumPart::setPos(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
@@ -267,7 +267,7 @@ Napi::Value AlbumPart::getName(const Napi::CallbackInfo& info) {
 void AlbumPart::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
@@ -290,7 +290,7 @@ Napi::Value AlbumPart::getAlbumId(const Napi::CallbackInfo& info) {
 void AlbumPart::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
@@ -335,7 +335,7 @@ Napi::Value AlbumPart::getAlbumConst(const Napi::CallbackInfo& info) {
 void AlbumPart::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;

@@ -68,7 +68,7 @@ void Style::clear(const Napi::CallbackInfo& info) {
 Napi::Value Style::findById(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsNumber()) {
@@ -92,7 +92,7 @@ Napi::Value Style::findById(const Napi::CallbackInfo& info) {
 Napi::Value Style::findByREId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsNumber()) {
@@ -182,7 +182,7 @@ Napi::Value Style::getId(const Napi::CallbackInfo& info) {
 void Style::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Style* obj = this;
@@ -205,7 +205,7 @@ Napi::Value Style::getName(const Napi::CallbackInfo& info) {
 void Style::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Style* obj = this;
@@ -228,7 +228,7 @@ Napi::Value Style::getREId(const Napi::CallbackInfo& info) {
 void Style::setREId(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Style* obj = this;
@@ -251,7 +251,7 @@ Napi::Value Style::getRELabel(const Napi::CallbackInfo& info) {
 void Style::setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Style* obj = this;
@@ -278,7 +278,7 @@ Napi::Value Style::getChildIds(const Napi::CallbackInfo& info) {
 void Style::setChildIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Style* obj = this;
@@ -317,7 +317,7 @@ Napi::Value Style::getChildren(const Napi::CallbackInfo& info) {
 void Style::setChildren(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Style* obj = this;
@@ -353,7 +353,7 @@ Napi::Value Style::getParentIds(const Napi::CallbackInfo& info) {
 void Style::setParentIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Style* obj = this;
@@ -392,7 +392,7 @@ Napi::Value Style::getParents(const Napi::CallbackInfo& info) {
 void Style::setParents(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   Style* obj = this;

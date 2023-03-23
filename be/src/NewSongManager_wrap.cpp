@@ -43,7 +43,7 @@ NewSongManager::NewSongManager(const Napi::CallbackInfo& info) : Napi::ObjectWra
 void NewSongManager::import(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   NewSongManager* obj = this;
@@ -67,7 +67,7 @@ void NewSongManager::import(const Napi::CallbackInfo& info) {
 Napi::Value NewSongManager::nextSong(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::TypeError::New(env, "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 2 arguments.").ThrowAsJavaScriptException();
     return env.Null();
   }
   NewSongManager* obj = this;
@@ -97,7 +97,7 @@ Napi::Value NewSongManager::coverImagePath(const Napi::CallbackInfo& info) {
 Napi::Value NewSongManager::processSong(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   NewSongManager* obj = this;
@@ -114,7 +114,7 @@ Napi::Value NewSongManager::processSong(const Napi::CallbackInfo& info) {
 void NewSongManager::trashMusicFile(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return;
   }
   NewSongManager* obj = this;

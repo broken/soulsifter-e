@@ -52,7 +52,7 @@ void SoulSifterSettings::save(const Napi::CallbackInfo& info) {
 Napi::Value SoulSifterSettings::getString(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   SoulSifterSettings* obj = this;
@@ -69,7 +69,7 @@ Napi::Value SoulSifterSettings::getString(const Napi::CallbackInfo& info) {
 void SoulSifterSettings::putString(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::TypeError::New(env, "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 2 arguments.").ThrowAsJavaScriptException();
     return;
   }
   SoulSifterSettings* obj = this;
@@ -89,7 +89,7 @@ void SoulSifterSettings::putString(const Napi::CallbackInfo& info) {
 Napi::Value SoulSifterSettings::getInt(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   SoulSifterSettings* obj = this;
@@ -106,7 +106,7 @@ Napi::Value SoulSifterSettings::getInt(const Napi::CallbackInfo& info) {
 void SoulSifterSettings::putInt(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::TypeError::New(env, "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 2 arguments.").ThrowAsJavaScriptException();
     return;
   }
   SoulSifterSettings* obj = this;
@@ -126,7 +126,7 @@ void SoulSifterSettings::putInt(const Napi::CallbackInfo& info) {
 Napi::Value SoulSifterSettings::getBool(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   SoulSifterSettings* obj = this;
@@ -143,7 +143,7 @@ Napi::Value SoulSifterSettings::getBool(const Napi::CallbackInfo& info) {
 void SoulSifterSettings::putBool(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::TypeError::New(env, "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 2 arguments.").ThrowAsJavaScriptException();
     return;
   }
   SoulSifterSettings* obj = this;

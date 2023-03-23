@@ -43,7 +43,7 @@ AudioAnalyzer::AudioAnalyzer(const Napi::CallbackInfo& info) : Napi::ObjectWrap<
 Napi::Value AudioAnalyzer::analyzeBpm(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsObject()) {
@@ -70,7 +70,7 @@ void AudioAnalyzer::analyzeBpms(const Napi::CallbackInfo& info) {
 Napi::Value AudioAnalyzer::analyzeDuration(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsObject()) {

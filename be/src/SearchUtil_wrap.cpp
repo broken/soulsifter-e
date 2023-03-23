@@ -41,7 +41,7 @@ SearchUtil::SearchUtil(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Search
 Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 10) {
-    Napi::TypeError::New(env, "Expected at least 6 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 6 arguments.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {

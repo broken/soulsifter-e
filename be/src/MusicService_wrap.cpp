@@ -37,7 +37,7 @@ MusicService::MusicService(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mu
 Napi::Value MusicService::cleanDirName(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
   if (!info[0].IsString()) {
