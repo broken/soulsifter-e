@@ -5,14 +5,14 @@
   "description": "DJ & music organization app.",
   "main": "main.js",
   "scripts": {
-    "build": "vite build",
-    "buildnumber": "node buildnumber.mjs",
-    "start": "npm run buildnumber && npm run build && electron .",
-    "startforge": "electron-forge start",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "package": "electron-forge package",
-    "packagedebug": "DEBUG=electron-forge:* electron-forge package",
-    "make": "electron-forge make"
+    "fe:build": "vite build",
+    "fe:buildnumber": "node buildnumber.mjs",
+    "fe:make": "electron-forge make",
+    "fe:package": "electron-forge package",
+    "fe:packagedebug": "DEBUG=electron-forge:* electron-forge package",
+    "fe:start": "npm run fe:build && electron .",
+    "fe:startforge": "electron-forge start",
+    "fe:test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Robert Neale",
   "license": "Apache-2.0",

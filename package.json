@@ -3,9 +3,15 @@
   "version": "1.1.0",
   "description": "Scripts for automating builds of the backend & fronted of SoulSifter app.",
   "scripts": {
-    "all": "npm run compile && npm start",
-    "compile": "cd be && npm run build && npm run rebuild",
-    "start": "cd fe && npm start"
+    "all": "npm run buildnumber && cd be && npm run be:compile && cd ../fe && npm run fe:start",
+    "buildnumber": "cd fe && npm run fe:buildnumber",
+    "generatemodel": "cd be && npm run generatemodel",
+    "make": "npm run buildnumber && cd fe && npm run fe:make",
+    "package": "npm run buildnumber && cd fe && npm run fe:package",
+    "packagedebug": "npm run buildnumber && cd fe && npm run fe:packagedebug",
+    "start": "npm run buildnumber && cd fe && npm run fe:start",
+    "startforge": "npm run buildnumber && cd fe && npm run fe:startforge",
+    "test": "npm run buildnumber && cd be && npm run be:test"
   },
   "author": "Robert Neale",
   "license": "Apache-2.0"
