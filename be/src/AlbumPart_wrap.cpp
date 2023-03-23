@@ -59,27 +59,29 @@ AlbumPart::AlbumPart(const Napi::CallbackInfo& info) : Napi::ObjectWrap<AlbumPar
 }
 
 void AlbumPart::clear(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   obj->albumpart->clear();
 }
 
 Napi::Value AlbumPart::findById(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::AlbumPart* result =
       dogatech::soulsifter::AlbumPart::findById(a0);
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = AlbumPart::NewInstance(info.Env());
+    Napi::Object instance = AlbumPart::NewInstance(env);
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
     r->setWrappedValue(result, true);
     return instance;
@@ -87,27 +89,28 @@ Napi::Value AlbumPart::findById(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value AlbumPart::findByPosAndAlbumId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::TypeError::New(info.Env(), "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   if (!info[1].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[1])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[1])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a1(info[1].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::AlbumPart* result =
       dogatech::soulsifter::AlbumPart::findByPosAndAlbumId(a0, a1);
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = AlbumPart::NewInstance(info.Env());
+    Napi::Object instance = AlbumPart::NewInstance(env);
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
     r->setWrappedValue(result, true);
     return instance;
@@ -115,22 +118,23 @@ Napi::Value AlbumPart::findByPosAndAlbumId(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value AlbumPart::findByPos(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   dogatech::ResultSetIterator<dogatech::soulsifter::AlbumPart>* result =
       dogatech::soulsifter::AlbumPart::findByPos(a0);
 
   vector<dogatech::soulsifter::AlbumPart*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
+  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = AlbumPart::NewInstance(info.Env());
+    Napi::Object instance = AlbumPart::NewInstance(env);
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
     r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
@@ -140,22 +144,23 @@ Napi::Value AlbumPart::findByPos(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value AlbumPart::findByAlbumId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::ResultSetIterator<dogatech::soulsifter::AlbumPart>* result =
       dogatech::soulsifter::AlbumPart::findByAlbumId(a0);
 
   vector<dogatech::soulsifter::AlbumPart*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
+  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = AlbumPart::NewInstance(info.Env());
+    Napi::Object instance = AlbumPart::NewInstance(env);
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
     r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
@@ -165,13 +170,14 @@ Napi::Value AlbumPart::findByAlbumId(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value AlbumPart::findAll(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   dogatech::ResultSetIterator<dogatech::soulsifter::AlbumPart>* result =
       dogatech::soulsifter::AlbumPart::findAll();
 
   vector<dogatech::soulsifter::AlbumPart*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
+  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = AlbumPart::NewInstance(info.Env());
+    Napi::Object instance = AlbumPart::NewInstance(env);
     AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
     r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
@@ -181,41 +187,46 @@ Napi::Value AlbumPart::findAll(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value AlbumPart::update(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   int result =  obj->albumpart->update();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 Napi::Value AlbumPart::save(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   int result =  obj->albumpart->save();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 Napi::Value AlbumPart::sync(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   bool result =  obj->albumpart->sync();
 
-  return Napi::Boolean::New(info.Env(), result);
+  return Napi::Boolean::New(env, result);
 }
 
 Napi::Value AlbumPart::getId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   const int result =  obj->albumpart->getId();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 void AlbumPart::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
   if (!value.IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
@@ -223,20 +234,22 @@ void AlbumPart::setId(const Napi::CallbackInfo& info, const Napi::Value &value) 
 }
 
 Napi::Value AlbumPart::getPos(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   const string result =  obj->albumpart->getPos();
 
-  return Napi::String::New(info.Env(), result);
+  return Napi::String::New(env, result);
 }
 
 void AlbumPart::setPos(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
   if (!value.IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
@@ -244,20 +257,22 @@ void AlbumPart::setPos(const Napi::CallbackInfo& info, const Napi::Value &value)
 }
 
 Napi::Value AlbumPart::getName(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   const string result =  obj->albumpart->getName();
 
-  return Napi::String::New(info.Env(), result);
+  return Napi::String::New(env, result);
 }
 
 void AlbumPart::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
   if (!value.IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
@@ -265,20 +280,22 @@ void AlbumPart::setName(const Napi::CallbackInfo& info, const Napi::Value &value
 }
 
 Napi::Value AlbumPart::getAlbumId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   const int result =  obj->albumpart->getAlbumId();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 void AlbumPart::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
   if (!value.IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
@@ -286,13 +303,14 @@ void AlbumPart::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &va
 }
 
 Napi::Value AlbumPart::getAlbum(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   dogatech::soulsifter::Album* result =  obj->albumpart->getAlbum();
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = Album::NewInstance(info.Env());
+    Napi::Object instance = Album::NewInstance(env);
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
     r->setWrappedValue(result, false);
     return instance;
@@ -300,13 +318,14 @@ Napi::Value AlbumPart::getAlbum(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value AlbumPart::getAlbumConst(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   AlbumPart* obj = this;
   dogatech::soulsifter::Album* result =  obj->albumpart->getAlbumConst();
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = Album::NewInstance(info.Env());
+    Napi::Object instance = Album::NewInstance(env);
     Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
     r->setWrappedValue(result, false);
     return instance;
@@ -314,13 +333,14 @@ Napi::Value AlbumPart::getAlbumConst(const Napi::CallbackInfo& info) {
 }
 
 void AlbumPart::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   AlbumPart* obj = this;
   if (!value.IsObject()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   dogatech::soulsifter::Album* a0tmp(Napi::ObjectWrap<Album>::Unwrap(value.As<Napi::Object>())->getWrappedValue());

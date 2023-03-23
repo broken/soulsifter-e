@@ -51,27 +51,29 @@ MusicVideo::MusicVideo(const Napi::CallbackInfo& info) : Napi::ObjectWrap<MusicV
 }
 
 void MusicVideo::clear(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   MusicVideo* obj = this;
   obj->musicvideo->clear();
 }
 
 Napi::Value MusicVideo::findById(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::MusicVideo* result =
       dogatech::soulsifter::MusicVideo::findById(a0);
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = MusicVideo::NewInstance(info.Env());
+    Napi::Object instance = MusicVideo::NewInstance(env);
     MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
     r->setWrappedValue(result, true);
     return instance;
@@ -79,13 +81,14 @@ Napi::Value MusicVideo::findById(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value MusicVideo::findAll(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   dogatech::ResultSetIterator<dogatech::soulsifter::MusicVideo>* result =
       dogatech::soulsifter::MusicVideo::findAll();
 
   vector<dogatech::soulsifter::MusicVideo*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
+  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = MusicVideo::NewInstance(info.Env());
+    Napi::Object instance = MusicVideo::NewInstance(env);
     MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
     r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
@@ -95,41 +98,46 @@ Napi::Value MusicVideo::findAll(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value MusicVideo::update(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   MusicVideo* obj = this;
   int result =  obj->musicvideo->update();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 Napi::Value MusicVideo::save(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   MusicVideo* obj = this;
   int result =  obj->musicvideo->save();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 Napi::Value MusicVideo::sync(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   MusicVideo* obj = this;
   bool result =  obj->musicvideo->sync();
 
-  return Napi::Boolean::New(info.Env(), result);
+  return Napi::Boolean::New(env, result);
 }
 
 Napi::Value MusicVideo::getId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   MusicVideo* obj = this;
   const int result =  obj->musicvideo->getId();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 void MusicVideo::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   MusicVideo* obj = this;
   if (!value.IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
@@ -137,20 +145,22 @@ void MusicVideo::setId(const Napi::CallbackInfo& info, const Napi::Value &value)
 }
 
 Napi::Value MusicVideo::getFilePath(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   MusicVideo* obj = this;
   const string result =  obj->musicvideo->getFilePath();
 
-  return Napi::String::New(info.Env(), result);
+  return Napi::String::New(env, result);
 }
 
 void MusicVideo::setFilePath(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   MusicVideo* obj = this;
   if (!value.IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
@@ -158,20 +168,22 @@ void MusicVideo::setFilePath(const Napi::CallbackInfo& info, const Napi::Value &
 }
 
 Napi::Value MusicVideo::getThumbnailFilePath(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   MusicVideo* obj = this;
   const string result =  obj->musicvideo->getThumbnailFilePath();
 
-  return Napi::String::New(info.Env(), result);
+  return Napi::String::New(env, result);
 }
 
 void MusicVideo::setThumbnailFilePath(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   MusicVideo* obj = this;
   if (!value.IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());

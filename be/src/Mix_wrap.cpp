@@ -65,27 +65,29 @@ Mix::Mix(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mix>(info), mix(null
 }
 
 void Mix::clear(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   obj->mix->clear();
 }
 
 Napi::Value Mix::findById(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::Mix* result =
       dogatech::soulsifter::Mix::findById(a0);
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = Mix::NewInstance(info.Env());
+    Napi::Object instance = Mix::NewInstance(env);
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
     r->setWrappedValue(result, true);
     return instance;
@@ -93,27 +95,28 @@ Napi::Value Mix::findById(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Mix::findByOutSongIdAndInSongId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 2) {
-    Napi::TypeError::New(info.Env(), "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 2 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   if (!info[1].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[1])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[1])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a1(info[1].As<Napi::Number>().Int32Value());
   dogatech::soulsifter::Mix* result =
       dogatech::soulsifter::Mix::findByOutSongIdAndInSongId(a0, a1);
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = Mix::NewInstance(info.Env());
+    Napi::Object instance = Mix::NewInstance(env);
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
     r->setWrappedValue(result, true);
     return instance;
@@ -121,22 +124,23 @@ Napi::Value Mix::findByOutSongIdAndInSongId(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Mix::findByOutSongId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
       dogatech::soulsifter::Mix::findByOutSongId(a0);
 
   vector<dogatech::soulsifter::Mix*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
+  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Mix::NewInstance(info.Env());
+    Napi::Object instance = Mix::NewInstance(env);
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
     r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
@@ -146,22 +150,23 @@ Napi::Value Mix::findByOutSongId(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Mix::findByInSongId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
       dogatech::soulsifter::Mix::findByInSongId(a0);
 
   vector<dogatech::soulsifter::Mix*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
+  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Mix::NewInstance(info.Env());
+    Napi::Object instance = Mix::NewInstance(env);
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
     r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
@@ -171,13 +176,14 @@ Napi::Value Mix::findByInSongId(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Mix::findAll(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
       dogatech::soulsifter::Mix::findAll();
 
   vector<dogatech::soulsifter::Mix*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(info.Env(), static_cast<int>(v->size()));
+  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
   for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Mix::NewInstance(info.Env());
+    Napi::Object instance = Mix::NewInstance(env);
     Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
     r->setWrappedValue((*v)[i], true);
     a.Set(i, instance);
@@ -187,57 +193,63 @@ Napi::Value Mix::findAll(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Mix::update(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   int result =  obj->mix->update();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 Napi::Value Mix::save(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   int result =  obj->mix->save();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 Napi::Value Mix::sync(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   bool result =  obj->mix->sync();
 
-  return Napi::Boolean::New(info.Env(), result);
+  return Napi::Boolean::New(env, result);
 }
 
 Napi::Value Mix::mixoutCountForRESongId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
   int result =
       dogatech::soulsifter::Mix::mixoutCountForRESongId(a0);
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 Napi::Value Mix::getId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   const int result =  obj->mix->getId();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 void Mix::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
@@ -245,20 +257,22 @@ void Mix::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
 }
 
 Napi::Value Mix::getOutSongId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   const int result =  obj->mix->getOutSongId();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 void Mix::setOutSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
@@ -266,13 +280,14 @@ void Mix::setOutSongId(const Napi::CallbackInfo& info, const Napi::Value &value)
 }
 
 Napi::Value Mix::getOutSong(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   dogatech::soulsifter::Song* result =  obj->mix->getOutSong();
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = Song::NewInstance(info.Env());
+    Napi::Object instance = Song::NewInstance(env);
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
     r->setWrappedValue(result, false);
     return instance;
@@ -280,13 +295,14 @@ Napi::Value Mix::getOutSong(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Mix::getOutSongConst(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   dogatech::soulsifter::Song* result =  obj->mix->getOutSongConst();
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = Song::NewInstance(info.Env());
+    Napi::Object instance = Song::NewInstance(env);
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
     r->setWrappedValue(result, false);
     return instance;
@@ -294,13 +310,14 @@ Napi::Value Mix::getOutSongConst(const Napi::CallbackInfo& info) {
 }
 
 void Mix::setOutSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsObject()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
@@ -309,20 +326,22 @@ void Mix::setOutSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
 }
 
 Napi::Value Mix::getInSongId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   const int result =  obj->mix->getInSongId();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 void Mix::setInSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
@@ -330,13 +349,14 @@ void Mix::setInSongId(const Napi::CallbackInfo& info, const Napi::Value &value) 
 }
 
 Napi::Value Mix::getInSong(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   dogatech::soulsifter::Song* result =  obj->mix->getInSong();
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = Song::NewInstance(info.Env());
+    Napi::Object instance = Song::NewInstance(env);
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
     r->setWrappedValue(result, false);
     return instance;
@@ -344,13 +364,14 @@ Napi::Value Mix::getInSong(const Napi::CallbackInfo& info) {
 }
 
 Napi::Value Mix::getInSongConst(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   dogatech::soulsifter::Song* result =  obj->mix->getInSongConst();
 
   if (result == NULL) {
-    return info.Env().Null();
+    return env.Null();
   } else {
-    Napi::Object instance = Song::NewInstance(info.Env());
+    Napi::Object instance = Song::NewInstance(env);
     Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
     r->setWrappedValue(result, false);
     return instance;
@@ -358,13 +379,14 @@ Napi::Value Mix::getInSongConst(const Napi::CallbackInfo& info) {
 }
 
 void Mix::setInSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsObject()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
@@ -373,20 +395,22 @@ void Mix::setInSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
 }
 
 Napi::Value Mix::getBpmDiff(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   const string result =  obj->mix->getBpmDiff();
 
-  return Napi::String::New(info.Env(), result);
+  return Napi::String::New(env, result);
 }
 
 void Mix::setBpmDiff(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
@@ -394,20 +418,22 @@ void Mix::setBpmDiff(const Napi::CallbackInfo& info, const Napi::Value &value) {
 }
 
 Napi::Value Mix::getRating(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   const int result =  obj->mix->getRating();
 
-  return Napi::Number::New(info.Env(), result);
+  return Napi::Number::New(env, result);
 }
 
 void Mix::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsNumber()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
@@ -415,20 +441,22 @@ void Mix::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
 }
 
 Napi::Value Mix::getComments(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   const string result =  obj->mix->getComments();
 
-  return Napi::String::New(info.Env(), result);
+  return Napi::String::New(env, result);
 }
 
 void Mix::setComments(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
@@ -436,20 +464,22 @@ void Mix::setComments(const Napi::CallbackInfo& info, const Napi::Value &value) 
 }
 
 Napi::Value Mix::getAddon(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
   const bool result =  obj->mix->getAddon();
 
-  return Napi::Boolean::New(info.Env(), result);
+  return Napi::Boolean::New(env, result);
 }
 
 void Mix::setAddon(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   Mix* obj = this;
   if (!value.IsBoolean()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Boolean expected (for value)").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Boolean expected (for value)").ThrowAsJavaScriptException();
     return;
   }
   bool a0(value.As<Napi::Boolean>().Value());

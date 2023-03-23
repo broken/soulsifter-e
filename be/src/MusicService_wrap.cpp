@@ -35,18 +35,19 @@ MusicService::MusicService(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mu
 }
 
 Napi::Value MusicService::cleanDirName(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    return env.Null();
   }
   if (!info[0].IsString()) {
-    Napi::TypeError::New(info.Env(), "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
-    return info.Env().Null();
+    Napi::TypeError::New(env, "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
   string result =
       dogatech::soulsifter::MusicService::cleanDirName(a0);
 
-  return Napi::String::New(info.Env(), result);
+  return Napi::String::New(env, result);
 }
 

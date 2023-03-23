@@ -39,12 +39,13 @@ TagService::TagService(const Napi::CallbackInfo& info) : Napi::ObjectWrap<TagSer
 }
 
 void TagService::readId3v2Tag(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   if (!info[0].IsObject()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
     return;
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
@@ -53,12 +54,13 @@ void TagService::readId3v2Tag(const Napi::CallbackInfo& info) {
 }
 
 void TagService::writeId3v2Tag(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 1 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   if (!info[0].IsObject()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
     return;
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
@@ -90,12 +92,13 @@ class UpdateSongAttributesFromTagsWorker : public Napi::AsyncProgressWorker<floa
 };
 
 void TagService::updateSongAttributesFromTags(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   if (info.Length() < 1) {
-    Napi::TypeError::New(info.Env(), "Expected at least 0 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "Expected at least 0 arguments - received "  + info.Length()).ThrowAsJavaScriptException();
     return;
   }
   if (!info[0].IsFunction()) {
-    Napi::TypeError::New(info.Env(), "TypeError: Function expected (for info[0])").ThrowAsJavaScriptException();
+    Napi::TypeError::New(env, "TypeError: Function expected (for info[0])").ThrowAsJavaScriptException();
     return;
   }
   Napi::Function a0 = info[0].As<Napi::Function>();
