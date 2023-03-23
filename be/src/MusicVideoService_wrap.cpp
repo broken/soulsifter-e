@@ -20,6 +20,7 @@ Napi::Object MusicVideoService::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "MusicVideoService", {
     StaticMethod<&MusicVideoService::associateYouTubeVideo>("associateYouTubeVideo"),
     StaticMethod<&MusicVideoService::downloadAudio>("downloadAudio"),
+    StaticMethod<&MusicVideoService::downloadAudioAsync>("downloadAudioAsync"),
   });
 
   constructor = new Napi::FunctionReference();
@@ -87,5 +88,58 @@ Napi::Value MusicVideoService::downloadAudio(const Napi::CallbackInfo& info) {
     a.Set(i, Napi::String::New(env, result[i]));
   }
   return a;
+}
+
+class DownloadAudioAsyncWorker : public Napi::AsyncWorker {
+ public:
+  DownloadAudioAsyncWorker(Napi::Env env, std::shared_ptr<Napi::Promise::Deferred> d, std::string a0)
+      : Napi::AsyncWorker(env), deferred(d), a0(a0) {
+  }
+
+  ~DownloadAudioAsyncWorker() { }
+
+  void Execute() {
+    std::future<std::vector<std::string>> result =
+        dogatech::soulsifter::MusicVideoService::downloadAudioAsync(a0);
+    res = result.get();
+  }
+
+  void OnOK() {
+    Napi::Env env = Env();
+    Napi::HandleScope scope(env);
+    Napi::Array wrapped_result = Napi::Array::New(env, static_cast<int>(res.size()));
+    for (int i = 0; i < (int) res.size(); i++) {
+      wrapped_result.Set(i, Napi::String::New(env, res[i]));
+    }
+    deferred->Resolve(wrapped_result);
+  }
+
+  void OnError() {
+    Napi::Env env = Env();
+    Napi::HandleScope scope(env);
+    deferred->Reject(Napi::TypeError::New(env, "Failed to process async function downloadAudioAsync").Value());
+  }
+
+ private:
+  std::shared_ptr<Napi::Promise::Deferred> deferred;
+  std::vector<std::string> res;
+  std::string a0;
+};
+
+Napi::Value MusicVideoService::downloadAudioAsync(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  std::shared_ptr<Napi::Promise::Deferred> deferred = std::make_shared<Napi::Promise::Deferred>(Napi::Promise::Deferred::New(env));
+  if (info.Length() < 1) {
+    deferred->Reject(Napi::String::New(env, "Expected at least 1 argument."));
+    return deferred->Promise();
+  }
+  if (!info[0].IsString()) {
+    deferred->Reject(Napi::String::New(env, "TypeError: String expected (for info[0])"));
+    return deferred->Promise();
+  }
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  DownloadAudioAsyncWorker* w = new DownloadAudioAsyncWorker(env, deferred, a0);
+  w->Queue();
+  return deferred->Promise();
 }
 

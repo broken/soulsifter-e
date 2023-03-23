@@ -1,5 +1,6 @@
 #include "MusicVideoService.h"
 
+#include <future>
 #include <sstream>
 #include <stdio.h>
 #include <string>
@@ -17,6 +18,7 @@
 
 #include "Album.h"
 #include "BasicGenre.h"
+#include "JobQueue.h"
 #include "Song.h"
 #include "MusicVideo.h"
 #include "MusicManager.h"
@@ -27,6 +29,8 @@ using namespace std;
 
 namespace dogatech {
 namespace soulsifter {
+
+JobQueue<std::vector<std::string>> MusicVideoService::job_queue;
 
 namespace {
 
@@ -47,6 +51,10 @@ string removeSpecialCharsFromPath(string filepath) {
 }
 
 }  // namespace
+
+future<vector<string>> MusicVideoService::downloadAudioAsync(const string& url) {
+  return job_queue.push([url]() { return MusicVideoService::downloadAudio(url); });
+}
 
 vector<string> MusicVideoService::downloadAudio(const string& url) {
   LOG(INFO) << "downloadYouTubeAudio with url " << url;

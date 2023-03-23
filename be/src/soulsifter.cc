@@ -61,7 +61,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   // not auto-generated
   SoulSifterSettings::Init(env, exports);
 
-  return  exports;
+  return exports;
 }
 
 NODE_API_MODULE(soulsifter, InitAll)
