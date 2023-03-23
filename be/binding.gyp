@@ -61,6 +61,7 @@
         # util
         "src/DTVectorUtil.h",
         "src/DTQueueUtil.h",
+        "src/JobQueue.h",
         "src/StdoutFileSink.h",
       ],
       "cflags!": [
