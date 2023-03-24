@@ -1,5 +1,6 @@
 import { css, html, LitElement } from "lit";
 
+import "@material/mwc-button";
 import "@material/mwc-circular-progress";
 import "@polymer/paper-toast";
 
@@ -11,9 +12,10 @@ class AlertListItem extends AlertsMixin(LitElement) {
   render() {
     return html`
       <div class="msg">
-        <mwc-circular-progress progress="${this.alert[2]}" ?indeterminate="${this.alert[2] < 0 || this.alert[2] > 1}" density="-6"></mwc-circular-progress>
-        <span>${this.alert[1]}</span>
+        <mwc-circular-progress progress="${this.alert.progress}" ?indeterminate="${this.alert.progress < 0 || this.alert.progress > 1}" density="-6"></mwc-circular-progress>
+        <span>${this.alert.msg}</span>
       </div>
+      ${!!this.alert.callback ? html`<mwc-button @click="${this.resolve}" outlined>Resolve</mwc-button>` : ''}
       <icon-button @click=${this.delAlert} icon="clear" id="clear"></icon-button>
     `;
   }
@@ -29,12 +31,16 @@ class AlertListItem extends AlertsMixin(LitElement) {
   }
 
   delAlert(e) {
-    this.rmAlert(this.alert[0]);
+    this.rmAlert(this.alert.id);
   }
 
   alertsChanged(x) {
     this.alerts = x;
     this.requestUpdate();
+  }
+
+  resolve(e) {
+    this.alert.callback();
   }
 
   static get styles() {
@@ -45,6 +51,11 @@ class AlertListItem extends AlertsMixin(LitElement) {
           flex-direction: row;
           justify-content: space-between;
           align-items: center;
+        }
+        mwc-button {
+          --mdc-button-outline-color: white;
+          --mdc-theme-on-primary: white;
+          --mdc-theme-primary: white;
         }
         mwc-circular-progress {
           --mdc-theme-primary: white;

@@ -142,16 +142,18 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     ipcRenderer.invoke('getclipboard')
     .then((url) => {
       window.console.log('Audio url = ' + url);
-      let alertId = this.addAlert('Processing ' + url);
+      let alertId = this.addAlert('Processing ' + url, undefined, -1);
       let p = ss.MusicVideoService.downloadAudioAsync(url);
       p.then((filepaths) => {
-        this.rmAlert(alertId);
-        if (filepaths.length > 0) {
-          let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths } });
-          window.dispatchEvent(event);
-        } else {
-          window.console.log('Failed to download audio from url ' + url);
-        }
+        this.updateAlert(alertId, 1, 'Completed ' + url, undefined, () => {
+          this.rmAlert(alertId);
+          if (filepaths.length > 0) {
+            let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths } });
+            window.dispatchEvent(event);
+          } else {
+            window.console.log('Failed to download audio from url ' + url);
+          }
+        });
       }).catch((err) => {
         this.updateAlert(alertId, undefined, "Failed processing " + url + "\n" + err);
       });

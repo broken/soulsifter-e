@@ -1,11 +1,12 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
 
+import { Alert } from "./alert.js";
+
 let alertsMixin = (superClass) => class extends superClass {
 
   static get properties() {
     return {
-      // An alert is : [id, msg, progress]
-      alerts: { type: Array }
+      alerts: { type: Object }
     };
   }
 
@@ -40,7 +41,7 @@ let alertsMixin = (superClass) => class extends superClass {
   }
 
   addAlert(a, timeoutInSeconds = 0, progress = 0) {
-    this.alerts.push([++this._alertIdPool, a, progress]);
+    this.alerts.push(new Alert(++this._alertIdPool, a, progress));
     this.changeAlerts(this.alerts);
     let id = this._alertIdPool;
     if (timeoutInSeconds) setTimeout(() => this.rmAlert(id), timeoutInSeconds * 1000);
@@ -49,7 +50,7 @@ let alertsMixin = (superClass) => class extends superClass {
 
   rmAlert(id = undefined) {
     if (!!id) {
-      let idx = this.alerts.findIndex(a => a[0] == id);
+      let idx = this.alerts.findIndex(a => a.id == id);
       this.alerts.splice(idx, 1);
     } else {
       this.alerts.shift();
@@ -57,10 +58,11 @@ let alertsMixin = (superClass) => class extends superClass {
     this.changeAlerts(this.alerts);
   }
 
-  updateAlert(id, progress = undefined, a = undefined, timeoutInSeconds = 0) {
-    let idx = this.alerts.findIndex(a => a[0] == id);
-    if (!!a) this.alerts[idx][1] = a;
-    if (!!progress) this.alerts[idx][2] = progress;
+  updateAlert(id, progress = undefined, a = undefined, timeoutInSeconds = 0, callback = undefined) {
+    let idx = this.alerts.findIndex(a => a.id == id);
+    if (!!a) this.alerts[idx].msg = a;
+    if (!!progress) this.alerts[idx].progress = progress;
+    if (!!callback) this.alerts[idx].callback = callback;
     if (timeoutInSeconds) setTimeout(() => this.rmAlert(id), timeoutInSeconds * 1000);
     this.changeAlerts(this.alerts);
   }
