@@ -92,7 +92,7 @@ Napi::Value MusicVideoService::downloadAudio(const Napi::CallbackInfo& info) {
 
 class DownloadAudioAsyncWorker : public Napi::AsyncWorker {
  public:
-  DownloadAudioAsyncWorker(Napi::Env env, std::shared_ptr<Napi::Promise::Deferred> d, std::string a0)
+  DownloadAudioAsyncWorker(Napi::Env env, std::shared_ptr<Napi::Promise::Deferred> d, std::string& a0)
       : Napi::AsyncWorker(env), deferred(d), a0(a0) {
   }
 
