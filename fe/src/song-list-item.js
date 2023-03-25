@@ -4,11 +4,12 @@ import "./icon-button.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
+import { SongEditMixin } from "./mixin-song-edit.js";
 import { SongMixin } from "./mixin-song.js";
 import { } from "./star-rating.js";
 
 
-class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongMixin(LitElement)))) {
+class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(LitElement))))) {
   render() {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
@@ -99,6 +100,10 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongMixin(L
     let event = new CustomEvent('song-edit', { detail: {song: this.song } });
     window.dispatchEvent(event);
     e.stopPropagation();
+  }
+
+  updateEditedSong(s) {
+    if (this.song.id == s.id) this.song = s;
   }
 
   static get styles() {

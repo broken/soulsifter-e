@@ -5,6 +5,7 @@ import "@polymer/paper-checkbox/paper-checkbox.js";
 import "@polymer/paper-input/paper-input.js";
 
 import { AlertsMixin } from "./mixin-alerts.js";
+import { SongEditMixin } from "./mixin-song-edit.js";
 import "./abstract-action-page.js";
 import "./audio-player.js";
 import "./genre-list.js";
@@ -13,7 +14,7 @@ import "./options-menu-item.js";
 import "./options-menu-paper-input.js";
 
 
-class SongEdit extends AlertsMixin(LitElement) {
+class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
   render() {
     let basicGenreItems = this.basicGenreList.map(g => html`<options-menu-item>${g.name}</options-menu-item>`);
     return html`
@@ -216,6 +217,7 @@ class SongEdit extends AlertsMixin(LitElement) {
     }
 
     if (this.editedSong.id) {
+      this.notifySongEdited(this.editedSong);
       this.editedSong.update();
     } else {
       this.newSongManager.processSong(this.editedSong);

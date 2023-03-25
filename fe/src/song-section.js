@@ -7,11 +7,12 @@ import "./icon-button.js";
 import "./pitch-slider.js";
 import "./star-rating.js";
 import { SettingsMixin } from "./mixin-settings.js";
+import { SongEditMixin } from "./mixin-song-edit.js";
 import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 
 
-class SongSection extends SettingsMixin(SongMixin(SongTrailMixin(LitElement))) {
+class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement)))) {
   render() {
     let localeDateTime = !!this.song ? new Date(this.song.dateAdded).toLocaleString() : '';
     return html`
@@ -191,6 +192,10 @@ class SongSection extends SettingsMixin(SongMixin(SongTrailMixin(LitElement))) {
     let event = new CustomEvent('mix-edit', { detail: mix });
     window.dispatchEvent(event);
     e.stopPropagation();
+  }
+
+  updateEditedSong(s) {
+    if (this.song.id == s.id) this.song = s;
   }
 
   static get styles() {
