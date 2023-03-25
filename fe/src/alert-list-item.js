@@ -56,6 +56,7 @@ class AlertListItem extends AlertsMixin(LitElement) {
           --mdc-button-outline-color: white;
           --mdc-theme-on-primary: white;
           --mdc-theme-primary: white;
+          margin: -6px 0;
         }
         mwc-circular-progress {
           --mdc-theme-primary: white;
