@@ -14,10 +14,10 @@ public:
   void log(g3::LogMessageMover msg) {
     if (msg.get().wasFatal()) {
       std::cerr << msg.get().toString() << std::endl;
+      fileWrite(msg);
     } else {
       std::cout << msg.get().toString() << std::endl;
     }
-    fileWrite(msg);
   }
 };
 
