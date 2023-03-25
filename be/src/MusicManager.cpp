@@ -61,7 +61,7 @@ namespace soulsifter {
 namespace {
 
   const string FEATURING_REGEX = " [(]?[Ff](eaturing|t[.]?|eat[.]?) ([^()]+)[)]?";
-  const string REMIX_REGEX = "[(]([^()]+) ([Rr]emix|[Rr]mx|[Mm]ix|[Rr]efix|[Dd]ub|[Ff]lip)[)]";
+  const string REMIX_REGEX = "[(]([^()]+) ([Rr]emix|[Rr]mx|[Mm]ix|[Rr]efix|[Dd]ub|[Ff]lip|[Bb]ootleg)[)]";
 
   // trim from start (in place)
   static inline void ltrim(std::string &s) {
