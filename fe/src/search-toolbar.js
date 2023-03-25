@@ -9,6 +9,7 @@ import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
+import "./about-page.js";
 import "./icon-button.js";
 import "./options-menu.js";
 import "./options-menu-item.js";
@@ -44,6 +45,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         <options-menu-item @click="${this.analyzeDurations}">Analyze Durations</options-menu-item>
         <options-menu-item @click="${this.syncSpotifyPlaylists}"><span style="text-decoration: line-through">Sync Spotify Playlists</span></options-menu-item>
         <options-menu-item @click="${this.syncYouTubePlaylists}">Sync YouTube Playlists</options-menu-item>
+        <options-menu-item @click="${this.toggleAboutPageDialog}">About</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
       </options-menu>
       <paper-dialog id="searchInfoDialog">
@@ -51,6 +53,9 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       </paper-dialog>
       <paper-dialog id="searchOptionsDialog">
         <search-options></search-options>
+      </paper-dialog>
+      <paper-dialog id="aboutPageDialog">
+        <about-page></about-page>
       </paper-dialog>
     `;
   }
@@ -222,6 +227,10 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   toggleSearchOptionsDialog(e) {
     this.shadowRoot.getElementById('searchOptionsDialog').toggle();
+  }
+
+  toggleAboutPageDialog(e) {
+    this.shadowRoot.getElementById('aboutPageDialog').toggle();
   }
 
   toggleBpmRestrict(e) {
