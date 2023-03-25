@@ -4,6 +4,7 @@ import "@material/mwc-fab/mwc-fab.js";
 
 import "./genre-list-item.js";
 import { GenresMixin } from "./mixin-genres.js";
+import "./icon-button.js";
 
 
 class GenreList extends GenresMixin(LitElement) {
@@ -12,7 +13,10 @@ class GenreList extends GenresMixin(LitElement) {
     let genreListItems = this.genreParents.map(g => html`<genre-list-item .genre="${g}" @toggle-select="${this.toggleSelection}" ?optionsmenu="${this.main}" ?singleselect="${this.singleSelect}"></genre-list-item>`);
     let fab = this.main ? html`<mwc-fab mini icon="add" @click="${this.createGenre}"></mwc-fab>` : html``;
     return html`
-      <div class="gnames">${genreNames}</div>
+      <div class="gnames">
+        ${genreNames}
+        <icon-button @click=${this.clearGenres} icon="clear" id="clear"></icon-button>
+      </div>
       <div class="glist">
         ${genreListItems}
       </div>
@@ -73,9 +77,9 @@ class GenreList extends GenresMixin(LitElement) {
       }
       this.genres.push(e.detail.genre);
     } finally {
-      this.requestUpdate();
       if (this.main) this.changeGenres(this.genres);
       else this.genresChanged(this.genres);
+      this.requestUpdate();
     }
   }
 
@@ -83,6 +87,12 @@ class GenreList extends GenresMixin(LitElement) {
     let genre = new ss.Style();
     let event = new CustomEvent('genre-edit', { detail: genre });
     window.dispatchEvent(event);
+  }
+
+  clearGenres(e) {
+    this.genres = [];
+    if (this.main) this.changeGenres(this.genres);
+    else this.genresChanged(this.genres);
   }
 
   static get styles() {
@@ -105,11 +115,18 @@ class GenreList extends GenresMixin(LitElement) {
           text-overflow: ellipsis;
           border-bottom-style: solid;
           border-bottom-width: thin;
+          position: relative;
         }
         .glist {
           /* 19px for gnames + 1px for border */
           height: calc(100% - 20px);
           overflow-y: scroll;
+        }
+        #clear {
+          position: absolute;
+          right: 2px;
+          z-index: 10;
+          --mdc-icon-size: 16px;
         }
       `
     ];
