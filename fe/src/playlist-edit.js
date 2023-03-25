@@ -5,6 +5,8 @@ import "@polymer/paper-input/paper-input.js";
 
 import "./abstract-action-page.js";
 import "./genre-list.js";
+import "./icon-button.js";
+import "./search-info.js";
 
 
 class PlaylistEdit extends LitElement {
@@ -16,7 +18,10 @@ class PlaylistEdit extends LitElement {
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
         <div class="fields">
           <paper-input floatingLabel label="Name" value="${this.playlist.name}" id="name"></paper-input>
-          <paper-input floatingLabel label="Query" value="${this.playlist.query}" id="query"></paper-input>
+          <div class="query-container">
+            <paper-input floatingLabel label="Query" value="${this.playlist.query}" id="query"></paper-input>
+            <icon-button @click=${this.toggleSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
+          </div>
           <br>
           <paper-checkbox ?checked="${this.fromSongTrail}" id="trail">from Song Trail</paper-checkbox>
           <paper-checkbox ?checked="${this.spotifySync}" id="spotifySync" disabled>sync with Spotify</paper-checkbox>
@@ -25,6 +30,9 @@ class PlaylistEdit extends LitElement {
         <div class="genres">
           <genre-list id="genreList" .genres="${this.genres}"></genre-list>
         </div>
+        <paper-dialog id="searchInfoDialog">
+          <search-info></search-info>
+        </paper-dialog>
       </abstract-action-page>
     `;
   }
@@ -102,6 +110,10 @@ class PlaylistEdit extends LitElement {
     this.classList.remove('show');
   }
 
+  toggleSearchInfoDialog(e) {
+    this.shadowRoot.getElementById('searchInfoDialog').toggle();
+  }
+
   static get styles() {
     return [
       css`
@@ -120,6 +132,17 @@ class PlaylistEdit extends LitElement {
         .genres {
           width: 240px;
           height: 360px;
+        }
+        .query-container {
+          position: relative;
+        }
+        #info-btn {
+          position: absolute;
+          top: 0;
+          right: 0;
+        }
+        #searchInfoDialog {
+          max-width: none !important;
         }
       `,
     ];
