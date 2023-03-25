@@ -71,11 +71,11 @@ class GenreList extends GenresMixin(LitElement) {
           return;
         }
       }
-      // TODO do I really need this?  var g = new ss.Style(detail.genre);
       this.genres.push(e.detail.genre);
     } finally {
       this.requestUpdate();
       if (this.main) this.changeGenres(this.genres);
+      else this.genresChanged(this.genres);
     }
   }
 
