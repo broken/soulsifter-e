@@ -23,7 +23,7 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMix
           <span class="title">${this.song.title}</span>
           <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${comments}</span>
         </div>
-        ${!!this.playlist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
+        ${!!this.playlistEntry ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
         <div>${this.computeBpmShift(this.song, this.bpm)}</div>
         <div class="energy-${this.song.energy}">${this.song.energy}</div>
@@ -36,7 +36,7 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMix
 
   static get properties() {
     return {
-      playlist: { type: Object },
+      playlistEntry: { type: Object },
     };
   }
 
@@ -99,8 +99,7 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMix
   }
 
   removeSongFromPlaylist(e) {
-    let entry = ss.PlaylistEntry.findByPlaylistIdAndSongId(this.playlist.id, this.song.id);
-    entry.erase();
+    this.playlistEntry.erase();
     this.shadowRoot.host.remove();
   }
 

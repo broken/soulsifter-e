@@ -20,7 +20,9 @@ import { } from "./song-list-item.js";
 
 class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongMixin(SongTrailMixin(LitElement)))))))))) {
   render() {
-    let songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlist="${this.playlist}"></song-list-item>`);
+    let songListItems = html``;
+    if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}"></song-list-item>`);
+    else songListItems = this.songs.map(s => html`<song-list-item .song="${s}"></song-list-item>`);
     return html`
       ${songListItems}
     `;
@@ -71,15 +73,15 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     if (!!this.playlist) {
       if (!this.playlist.query) {
         this.entries = ss.PlaylistEntry.findByPlaylistId(this.playlist.id);
-        this.songs = this.entries.sort(function(a, b) { return a.position - b.position; })
-                                 .map(function(x) { return x.song; });
+        this.entries = this.entries.sort(function(a, b) { return a.position - b.position; });
+        this.songs = this.entries.map(function(x) { return x.song; });
         return;
       } else {
-        this.entries = [];
         this.query = this.playlist.query;
         this.genres = this.playlist.styles;
       }
     }
+    this.entries = [];
     let genreIds = this.genres.map(g => g.id);
     let p = {q: this.query, genres: genreIds.join(',')};
     let omitSongs = [];
