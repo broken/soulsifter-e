@@ -1007,7 +1007,7 @@ void Song::setMusicVideo(const Napi::CallbackInfo& info, const Napi::Value &valu
 Napi::Value Song::getStyleIds(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const std::vector<int> result =  obj->song->getStyleIds();
+  const std::vector<int>& result =  obj->song->getStyleIds();
 
   Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
@@ -1043,7 +1043,7 @@ void Song::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value)
 Napi::Value Song::getStyles(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const std::vector<dogatech::soulsifter::Style*> result =  obj->song->getStyles();
+  const std::vector<dogatech::soulsifter::Style*>& result =  obj->song->getStyles();
 
   Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {

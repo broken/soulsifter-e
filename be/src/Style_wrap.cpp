@@ -266,7 +266,7 @@ void Style::setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value)
 Napi::Value Style::getChildIds(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const std::vector<int> result =  obj->style->getChildIds();
+  const std::vector<int>& result =  obj->style->getChildIds();
 
   Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
@@ -302,7 +302,7 @@ void Style::setChildIds(const Napi::CallbackInfo& info, const Napi::Value &value
 Napi::Value Style::getChildren(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const std::vector<dogatech::soulsifter::Style*> result =  obj->style->getChildren();
+  const std::vector<dogatech::soulsifter::Style*>& result =  obj->style->getChildren();
 
   Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
@@ -341,7 +341,7 @@ void Style::setChildren(const Napi::CallbackInfo& info, const Napi::Value &value
 Napi::Value Style::getParentIds(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const std::vector<int> result =  obj->style->getParentIds();
+  const std::vector<int>& result =  obj->style->getParentIds();
 
   Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
@@ -377,7 +377,7 @@ void Style::setParentIds(const Napi::CallbackInfo& info, const Napi::Value &valu
 Napi::Value Style::getParents(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const std::vector<dogatech::soulsifter::Style*> result =  obj->style->getParents();
+  const std::vector<dogatech::soulsifter::Style*>& result =  obj->style->getParents();
 
   Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {

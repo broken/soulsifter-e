@@ -328,7 +328,7 @@ void Playlist::setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &v
 Napi::Value Playlist::getStyleIds(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const std::vector<int> result =  obj->playlist->getStyleIds();
+  const std::vector<int>& result =  obj->playlist->getStyleIds();
 
   Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
@@ -364,7 +364,7 @@ void Playlist::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &va
 Napi::Value Playlist::getStyles(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const std::vector<dogatech::soulsifter::Style*> result =  obj->playlist->getStyles();
+  const std::vector<dogatech::soulsifter::Style*>& result =  obj->playlist->getStyles();
 
   Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
   for (int i = 0; i < (int) result.size(); i++) {
