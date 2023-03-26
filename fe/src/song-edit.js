@@ -129,13 +129,14 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
         this.sterilizeSong(this.taggedSong);
         this.filepaths = [];
         this.songChanged();
+        this.classList.add('show');
       } else if (e.detail.filepaths) {
         this.song = null;
         this.filepaths = e.detail.filepaths;
         this.videoUrl = e.detail.videoUrl;
         this.filepathsChanged();
+        if (!this.soulSifterSettings.getBool('music.autoAdd')) this.classList.add('show');
       }
-      this.classList.add('show');
       if (e.detail.autoplay) setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
     };
     // Defaults
@@ -274,6 +275,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
     // this does not seem to play well when working straight on the array object
     this.genres = this.editedSong.styles;
     this.forceEdits();
+    if (this.soulSifterSettings.getBool('music.autoAdd')) this.save();
   }
 
   filepathsChanged() {
@@ -321,7 +323,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
       this.songChanged();
       if (!this.song.bpm) {
         var songId = this.song.id;
-        ss.AudioAnalyzer.analyzeBpmAsync(this.song)
+        if (!this.soulSifterSettings.getBool('music.autoAdd')) ss.AudioAnalyzer.analyzeBpmAsync(this.song)
         .then((candidates) => {
           if (songId == this.song.id) {
             let bpmList = "";

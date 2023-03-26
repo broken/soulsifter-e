@@ -22,6 +22,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys">Include unknown keys in key searches</paper-checkbox>
           <paper-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag">Overwrite values when reading ID3 tags</paper-checkbox>
           <paper-checkbox ?checked="${this.appDebugMode}" id="appDebugMode">Debug mode (requires restart)</paper-checkbox>
+          <paper-checkbox ?checked="${this.musicAutoAdd}" id="musicAutoAdd">Auto add music (skip edit dialog)</paper-checkbox>
         </div>
         <div class="fields">
           <paper-input label="Database Name" value="${this.dbName}" id="dbName"></paper-input>
@@ -48,6 +49,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   constructor() {
     super();
     this.musicDir = this.settings.getString('music.dir');
+    this.musicAutoAdd = this.settings.getBool('music.autoAdd');
     this.musicVideoDir = this.settings.getString('mv.dir');
     this.appDebugMode = this.settings.getBool('app.debug');
     this.googleAndroidId = this.settings.getString('google.androidId');
@@ -87,6 +89,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   save(e, detail, sender) {
     this.puts('music.dir', this.shadowRoot.getElementById('musicDir').value);
+    this.putb('music.autoAdd', this.shadowRoot.getElementById('musicAutoAdd').checked);
     this.puts('mv.dir', this.shadowRoot.getElementById('musicVideoDir').value);
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
     this.puts('google.androidId', this.shadowRoot.getElementById('googleAndroidId').value);
