@@ -20,7 +20,7 @@ import { } from "./song-list-item.js";
 
 class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongMixin(SongTrailMixin(LitElement)))))))))) {
   render() {
-    let songListItems = this.songs.map(s => html`<song-list-item .song="${s}"></song-list-item>`);
+    let songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlist="${this.playlist}"></song-list-item>`);
     return html`
       ${songListItems}
     `;

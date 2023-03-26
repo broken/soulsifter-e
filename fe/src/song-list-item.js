@@ -23,6 +23,7 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMix
           <span class="title">${this.song.title}</span>
           <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${comments}</span>
         </div>
+        ${!!this.playlist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
         <div>${this.computeBpmShift(this.song, this.bpm)}</div>
         <div class="energy-${this.song.energy}">${this.song.energy}</div>
@@ -35,6 +36,7 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMix
 
   static get properties() {
     return {
+      playlist: { type: Object },
     };
   }
 
@@ -96,6 +98,12 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMix
     window.ssDraggedObj = this.song;
   }
 
+  removeSongFromPlaylist(e) {
+    let entry = ss.PlaylistEntry.findByPlaylistIdAndSongId(this.playlist.id, this.song.id);
+    entry.erase();
+    this.shadowRoot.host.remove();
+  }
+
   openEditSongPage(e) {
     let event = new CustomEvent('song-edit', { detail: {song: this.song } });
     window.dispatchEvent(event);
@@ -132,6 +140,7 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMix
           display: none;
           --mdc-icon-size: 16px;
           color: var(--primary-text-color);
+          padding: 0 3px;
         }
         .song-item:hover > icon-button {
           display: block;
