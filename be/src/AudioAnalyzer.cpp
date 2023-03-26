@@ -8,6 +8,7 @@
 
 #include "AudioAnalyzer.h"
 
+#include <future>
 #include <map>
 #include <sstream>
 #include <stdio.h>
@@ -25,6 +26,7 @@
 #include <taglib/mpegfile.h>
 
 #include "DTVectorUtil.h"
+#include "JobQueue.h"
 #include "madlld.h"
 #include "MiniBpm.h"
 #include "SearchUtil.h"
@@ -33,14 +35,20 @@
 
 namespace dogatech {
   namespace soulsifter {
-    
+
     namespace {
       bool keyPairCompare(std::pair<string, float> first, std::pair<string, float> second) {
         return first.second > second.second;
       }
     }
-    
-    const vector<double> AudioAnalyzer::analyzeBpm(Song *song) {
+
+    JobQueue<std::vector<double>> AudioAnalyzer::job_queue;
+
+    std::future<std::vector<double>> AudioAnalyzer::analyzeBpmAsync(Song* song) {
+      return job_queue.push([song]() mutable { return AudioAnalyzer::analyzeBpm(song); });
+    }
+
+    vector<double> AudioAnalyzer::analyzeBpm(Song *song) {
       LOG(INFO) << "analyze bpm";
 
       struct stat statBuffer;
@@ -54,14 +62,14 @@ namespace dogatech {
         vector<double> bpms;
         return bpms;
       }
-      
+
       TagLib::MPEG::File f(songFilepath.c_str());
       int sampleRate = f.audioProperties()->sampleRate();
       if (sampleRate != 44100) {
         LOG(INFO) << "Sample rate discovered to be " << sampleRate << " instead of 44100.";
       }
       breakfastquay::MiniBPM miniBpm(sampleRate);
-      
+
       if (boost::algorithm::iends_with(songFilepath, ".mp3")) {
         detectBpm(songFilepath.c_str(), boost::bind(&breakfastquay::MiniBPM::process, boost::ref(miniBpm), _1, _2));
       } else {
@@ -69,11 +77,11 @@ namespace dogatech {
         vector<double> bpms;
         return bpms;
       }
-    
+
       char buffer[8];
       sprintf(buffer, "%.2f", miniBpm.estimateTempo());
       song->setBpm(buffer);
-      
+
       return miniBpm.getTempoCandidates();
     }
 
@@ -108,7 +116,7 @@ namespace dogatech {
         deleteVectorPointers(songs);
       }
     }
-    
+
     int AudioAnalyzer::analyzeDuration(Song* song) {
       LOG(INFO) << "analyze duration";
 
@@ -161,26 +169,26 @@ namespace dogatech {
 
     const Keys* AudioAnalyzer::analyzeKey(Song *song) {
       LOG(INFO) << "analyze key";
-      
+
       FILE *fpipe;
       stringstream command;
       command << "/Users/rneale/sonic-annotator -d vamp:qm-vamp-plugins:qm-keydetector:key -w csv --csv-stdout ";
       command << "\"" << SoulSifterSettings::getInstance().get<string>("music.dir") << song->getFilepath() << "\"";
       char buffer[1024];
-      
+
       if (!(fpipe = (FILE*)popen(command.str().c_str(), "r")) ) {
         // If fpipe is NULL
         LOG(WARNING) << "Problems with sonic annotator pipe.";
         return new Keys();
       }
-      
+
       stringstream ss;
       while (fgets(buffer, sizeof buffer, fpipe)) {
         ss << buffer;
       }
-      
+
       pclose(fpipe);
-      
+
       float lastTime(0);
       map<string, float> keys;
       string output(ss.str());
@@ -203,12 +211,12 @@ namespace dogatech {
           lastTime = time;
         }
       }
-      
+
       Keys* results = new Keys(keys.begin(), keys.end());
       sort(results->candidate.begin(), results->candidate.end(), &keyPairCompare);
 
       return results;
     }
-    
+
   }
 }

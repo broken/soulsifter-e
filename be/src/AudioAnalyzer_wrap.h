@@ -17,6 +17,7 @@ class AudioAnalyzer : public Napi::ObjectWrap<AudioAnalyzer> {
  private:
   // Unable to process analyzeKey
   static Napi::Value analyzeBpm(const Napi::CallbackInfo& info);
+  static Napi::Value analyzeBpmAsync(const Napi::CallbackInfo& info);
   static void analyzeBpms(const Napi::CallbackInfo& info);
   static Napi::Value analyzeDuration(const Napi::CallbackInfo& info);
   static void analyzeDurations(const Napi::CallbackInfo& info);

@@ -102,19 +102,6 @@ bool NewSongManager::nextSong(Song* updatedSong, Song* originalSong) {
     // values, we may sync to an improper album, at which point things will be
     // fucked when we save.
 
-    // TODO do this in a different thread and have it update the UI when finished
-    if (originalSong->getBpm().empty()) {
-      const vector<double> candidates = AudioAnalyzer::analyzeBpm(updatedSong);
-      stringstream ss;
-      int i = 0;
-      char buffer[8];
-      for (vector<double>::const_iterator it = candidates.begin(); it != candidates.end() && i < 4; ++it, ++i) {
-        sprintf(buffer, "%.2f", *it);
-        ss << buffer << ",";
-      }
-      originalSong->setBpm(ss.str());
-    }
-
     // TODO thread this as well?
     if (!originalSong->getDurationInMs()) {
       int duration = AudioAnalyzer::analyzeDuration(updatedSong);

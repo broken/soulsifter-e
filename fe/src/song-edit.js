@@ -319,6 +319,22 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
       this.song = this.titleCaseSong(tmpSong);
       this.sterilizeSong(this.song);
       this.songChanged();
+      if (!this.song.bpm) {
+        var songId = this.song.id;
+        ss.AudioAnalyzer.analyzeBpmAsync(this.song)
+        .then((candidates) => {
+          if (songId == this.song.id) {
+            let bpmList = "";
+            for (let i = 0; i < 4 && i < candidates.length; ++i) {
+              if (i == 0) this.editedSong.bpm = candidates[i].toFixed(2);
+              bpmList += candidates[i].toFixed(2) + ", ";
+            }
+            this.taggedSong.bpm = bpmList;
+            this.requestUpdate();
+          }
+        })
+        .catch((err) => this.addAlert("Failed processing BPM: " + err));
+      }
       return true;
     }
     this.sterilizeSong(this.taggedSong);
