@@ -14,11 +14,12 @@ import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
+import { SongEditMixin } from "./mixin-song-edit.js";
 import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 import { } from "./song-list-item.js";
 
-class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongMixin(SongTrailMixin(LitElement)))))))))) {
+class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))))))))) {
   render() {
     let songListItems = html``;
     if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}" bpm="${this.bpm}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
@@ -74,6 +75,12 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
       this.mvRestrict = this.searchOptions.mvRestrict;
       this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.mvRestrict = this.mvRestrict);
     }
+  }
+
+  updateEditedSong(s) {
+    this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
+      if (el.song.id == s.id) el.song = s;
+    });
   }
 
   search() {
