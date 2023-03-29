@@ -61,7 +61,7 @@ namespace soulsifter {
 namespace {
 
   const string FEATURING_REGEX = " [(]?[Ff](eaturing|t[.]?|eat[.]?) ([^()]+)[)]?";
-  const string REMIX_REGEX = "[(]([^()]+) ([Rr]emix|[Rr]mx|[Mm]ix|[Rr]efix|[Dd]ub|[Ff]lip|[Bb]ootleg)[)]";
+  const string REMIX_REGEX = "[(]([^()]+) ([Rr]emix|[Rr]mx|[Mm]ix|[Rr]efix|[Dd]ub|[Ff]lip|[Bb]ootleg|[Ee]dit)[)]";
 
   // trim from start (in place)
   static inline void ltrim(std::string &s) {
@@ -120,7 +120,8 @@ void copyRemixer(Song* updatedSong) {
   if (boost::regex_search(updatedSong->getTitle(), rmxrMatch, rmxrRegex, boost::match_extra) &&
       updatedSong->getRemixer().length() == 0) {
     string remixer(rmxrMatch[1]);
-    if (!!remixer.compare("original") && !!remixer.compare("Original")) {
+    if (!!remixer.compare("original") && !!remixer.compare("Original") &&
+        !!remixer.compare("radio") && !!remixer.compare("Radio")) {
       updatedSong->setRemixer(trim_copy(remixer));
     }
   }
