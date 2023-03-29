@@ -1,26 +1,43 @@
 #include "MusicService.h"
 
+#include <stdlib.h>
 #include <string>
 
 #include "MusicManager.h"
 
 namespace dogatech {
 namespace soulsifter {
+namespace {
 
-std::string MusicService::cleanDirName(const std::string& s) {
-  std::string name(s);
-  std::replace(name.begin(), name.end(), '/', '-');
-  std::replace(name.begin(), name.end(), ':', ' ');
-  std::replace(name.begin(), name.end(), '\\', ' ');
-  // boost::regex charsToRemoveRegex("[!@#$%^&*?'\";]");
-  // boost::regex prefixSpacesRegex("^[ ]*");
-  // boost::regex suffixSpacesRegex("[ ]*$");
-  // name = boost::regex_replace(name, charsToRemoveRegex, "");
-  // name = boost::regex_replace(name, prefixSpacesRegex, "");
-  // name = boost::regex_replace(name, suffixSpacesRegex, "");
-  // remove nonascii characters
-  // name.erase(remove_if(name.begin(), name.end(), [](auto c) { return !isascii(c); }), name.end());
-  return name;
+std::string gen_random(const int len) {
+  static const char alphanum[] = "abcdefghijklmnopqrstuvwxyz";
+  std::string tmp_s;
+  tmp_s.reserve(len);
+  for (int i = 0; i < len; ++i) {
+    tmp_s += alphanum[rand() % (sizeof(alphanum) - 1)];
+  }
+  return tmp_s;
+}
+
+}  // anon namespace
+
+std::string MusicService::cleanDirName(const std::string& name) {
+  std::string s(name);
+  for (int i = 0; i < s.size(); i++) {
+    if (s[i] < 'A' || s[i] > 'Z' &&
+        s[i] < 'a' || s[i] > 'z' &&
+        s[i] < '0' || s[i] > '9' &&
+        s[i] != '.' && s[i] != '-' && s[i] != ' ' && s[i] != '_' &&
+        s[i] != '(' && s[i] != ')' && s[i] != '[' && s[i] != ']' &&
+        s[i] != ',' && s[i] != '+' && s[i] != '&') {
+      s.erase(i, 1);
+      i--;
+    }
+  }
+  if (s.size() < 5) {
+    s = gen_random(5) + s;
+  }
+  return s;
 }
 
 }  // namespace soulsifter
