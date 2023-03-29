@@ -1,8 +1,8 @@
-#include <napi.h>
-
 #include <filesystem>
 #include <iostream>
 #include <string>
+#include <stdlib.h>
+#include <time.h>
 #include <napi.h>
 #include <g3log/g3log.hpp>
 #include <g3log/logworker.hpp>
@@ -38,6 +38,9 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
       std::make_unique<dogatech::soulsifter::StdoutFileSink>("ss", logDir),
       &dogatech::soulsifter::StdoutFileSink::log);
   g3::initializeLogging(logworker.get());
+
+  // initialize random
+  srand (time(NULL));
 
   // model
   Album::Init(env, exports);
