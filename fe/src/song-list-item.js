@@ -1,14 +1,13 @@
 import { css, html, LitElement } from "lit";
 
 import "./icon-button.js";
-import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { SongEditMixin } from "./mixin-song-edit.js";
 import { SongMixin } from "./mixin-song.js";
 import { } from "./star-rating.js";
 
 
-class SongListItem extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(LitElement)))) {
+class SongListItem extends SettingsMixin(SongEditMixin(SongMixin(LitElement))) {
   render() {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
@@ -36,6 +35,7 @@ class SongListItem extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMi
   static get properties() {
     return {
       bpm: { type: Number },
+      mvRestrict: { type: Boolean },
       playlistEntry: { type: Object },
     };
   }
@@ -86,7 +86,7 @@ class SongListItem extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMi
     e.preventDefault();
     let filepath = '';
     let iconpath = '';
-    if (this.searchOptions.mvRestrict) {
+    if (this.mvRestrict) {
       filepath = this.settings.getString('mv.dir') + this.song.musicVideo.filePath;
       iconpath = this.settings.getString('mv.dir') + this.song.album.coverFilepath;
     } else {

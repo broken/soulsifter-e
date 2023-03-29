@@ -21,8 +21,8 @@ import { } from "./song-list-item.js";
 class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongMixin(SongTrailMixin(LitElement)))))))))) {
   render() {
     let songListItems = html``;
-    if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}" bpm="${this.bpm}"></song-list-item>`);
-    else songListItems = this.songs.map(s => html`<song-list-item .song="${s}" bpm="${this.bpm}"></song-list-item>`);
+    if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}" bpm="${this.bpm}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
+    else songListItems = this.songs.map(s => html`<song-list-item .song="${s}" bpm="${this.bpm}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
     return html`
       ${songListItems}
     `;
@@ -33,10 +33,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
       entries: { type: Array },  // saved to prevent from being garbage collected
       song: { type: Object },
       genres: { type: Array },
-      searchOptionBpmRestrict: { type: Boolean },
-      searchOptionKeyRestrict: { type: Boolean },
-      searchOptionTrashedRestrict: { type: Boolean },
-      searchOptionRepeatRestrict: { type: Boolean },
+      mvRestrict: { type: Boolean },
     }
   }
 
@@ -46,6 +43,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     this.entries = [];
     this.songTrail = [];
     this.search();
+    this.mvRestrict = false;
   }
 
   bpmChanged(bpm) {
@@ -68,6 +66,14 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     this.song = song;
     if (this.searchOptions.dynamicGenres) this.changeGenres(this.song.styles);
     if (this.settings.getBool('songList.searchOnSelect')) this.search();
+  }
+
+  searchOptionsChanged(opts) {
+    this.searchOptions = opts;
+    if (this.searchOptions.mvRestrict != this.mvRestrict) {
+      this.mvRestrict = this.searchOptions.mvRestrict;
+      this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.mvRestrict = this.mvRestrict);
+    }
   }
 
   search() {
