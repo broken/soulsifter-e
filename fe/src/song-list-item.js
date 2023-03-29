@@ -101,6 +101,7 @@ class SongListItem extends BpmMixin(SearchOptionsMixin(SettingsMixin(SongEditMix
   removeSongFromPlaylist(e) {
     this.playlistEntry.erase();
     this.shadowRoot.host.remove();
+    e.stopPropagation();
   }
 
   openEditSongPage(e) {
