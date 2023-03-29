@@ -2,11 +2,10 @@ import { css, html, LitElement } from "lit";
 
 import "./icon-button.js";
 import { SettingsMixin } from "./mixin-settings.js";
-import { SongMixin } from "./mixin-song.js";
 import { } from "./star-rating.js";
 
 
-class SongListItem extends SettingsMixin(SongMixin(LitElement)) {
+class SongListItem extends SettingsMixin(LitElement) {
   render() {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
@@ -36,6 +35,7 @@ class SongListItem extends SettingsMixin(SongMixin(LitElement)) {
       bpm: { type: Number },
       mvRestrict: { type: Boolean },
       playlistEntry: { type: Object },
+      song: { type: Object },
     };
   }
 
@@ -44,11 +44,11 @@ class SongListItem extends SettingsMixin(SongMixin(LitElement)) {
   }
 
   selectSong(e) {
-    this.changeSong(this.song);
-  }
-
-  songChanged(song) {
-    /* do nothing */
+    let event = new CustomEvent('select-song', {
+        detail: { song: this.song },
+        bubbles: true,
+        composed: true });
+    this.dispatchEvent(event);
   }
 
   computeBpmShift(song, bpm) {

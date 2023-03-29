@@ -22,8 +22,8 @@ import { } from "./song-list-item.js";
 class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))))))))) {
   render() {
     let songListItems = html``;
-    if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}" bpm="${this.bpm}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
-    else songListItems = this.songs.map(s => html`<song-list-item .song="${s}" bpm="${this.bpm}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
+    if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}" bpm="${this.bpm}" @select-song="${this.selectSong}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
+    else songListItems = this.songs.map(s => html`<song-list-item .song="${s}" bpm="${this.bpm}" @select-song="${this.selectSong}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
     return html`
       ${songListItems}
     `;
@@ -67,6 +67,10 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     this.song = song;
     if (this.searchOptions.dynamicGenres) this.changeGenres(this.song.styles);
     if (this.settings.getBool('songList.searchOnSelect')) this.search();
+  }
+
+  selectSong(e) {
+    this.changeSong(e.detail.song);
   }
 
   searchOptionsChanged(opts) {
