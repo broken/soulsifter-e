@@ -87,7 +87,7 @@ class SongListItem extends SettingsMixin(LitElement) {
     let iconpath = '';
     if (this.mvRestrict) {
       filepath = this.settings.getString('mv.dir') + this.song.musicVideo.filePath;
-      iconpath = this.settings.getString('mv.dir') + this.song.album.coverFilepath;
+      iconpath = this.settings.getString('mv.dir') + this.song.musicVideo.thumbnailFilePath;
     } else {
       filepath = this.settings.getString('music.dir') + this.song.filepath;
       iconpath = this.settings.getString('music.dir') + this.song.album.coverFilepath;
