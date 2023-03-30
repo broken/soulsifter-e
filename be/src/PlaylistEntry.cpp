@@ -40,8 +40,7 @@ namespace soulsifter {
     playlist(NULL),
     songId(0),
     song(NULL),
-    position(0),
-    time() {
+    position(0) {
     }
 
     PlaylistEntry::PlaylistEntry(const PlaylistEntry& playlistEntry) :
@@ -50,8 +49,7 @@ namespace soulsifter {
     playlist(NULL),
     songId(playlistEntry.getSongId()),
     song(NULL),
-    position(playlistEntry.getPosition()),
-    time(playlistEntry.getTime()) {
+    position(playlistEntry.getPosition()) {
         if (playlistEntry.playlist) setPlaylist(*playlistEntry.playlist);
         if (playlistEntry.song) setSong(*playlistEntry.song);
     }
@@ -75,7 +73,6 @@ namespace soulsifter {
             song = NULL;
         }
         position = playlistEntry.getPosition();
-        time = playlistEntry.getTime();
     }
 
     PlaylistEntry::~PlaylistEntry() {
@@ -94,7 +91,6 @@ namespace soulsifter {
         delete song;
         song = NULL;
         position = 0;
-        time.clear();
     }
 
 # pragma mark static methods
@@ -104,7 +100,6 @@ namespace soulsifter {
         playlistEntry->setPlaylistId(rs->getInt("playlistId"));
         playlistEntry->setSongId(rs->getInt("songId"));
         playlistEntry->setPosition(rs->getInt("position"));
-        playlistEntry->setTime(rs->getString("time"));
     }
 
     PlaylistEntry* PlaylistEntry::findById(int id) {
@@ -241,15 +236,13 @@ namespace soulsifter {
                     songId = song->getId();
                 }
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update PlaylistEntries set playlistId=?, songId=?, position=?, time=? where id=?");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update PlaylistEntries set playlistId=?, songId=?, position=? where id=?");
                 if (playlistId > 0) ps->setInt(1, playlistId);
                 else ps->setNull(1, sql::DataType::INTEGER);
                 if (songId > 0) ps->setInt(2, songId);
                 else ps->setNull(2, sql::DataType::INTEGER);
                 ps->setInt(3, position);
-                if (!time.empty()) ps->setString(4, time);
-                else ps->setNull(4, sql::DataType::VARCHAR);
-                ps->setInt(5, id);
+                ps->setInt(4, id);
                 int result = ps->executeUpdate();
                 return result;
             } catch (sql::SQLException &e) {
@@ -286,14 +279,12 @@ namespace soulsifter {
                     songId = song->getId();
                 }
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into PlaylistEntries (playlistId, songId, position, time) values (?, ?, ?, ?)");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into PlaylistEntries (playlistId, songId, position) values (?, ?, ?)");
                 if (playlistId > 0) ps->setInt(1, playlistId);
                 else ps->setNull(1, sql::DataType::INTEGER);
                 if (songId > 0) ps->setInt(2, songId);
                 else ps->setNull(2, sql::DataType::INTEGER);
                 ps->setInt(3, position);
-                if (!time.empty()) ps->setString(4, time);
-                else ps->setNull(4, sql::DataType::VARCHAR);
                 int saved = ps->executeUpdate();
                 if (!saved) {
                     LOG(WARNING) << "Not able to save playlistEntry";
@@ -368,14 +359,6 @@ namespace soulsifter {
                 needsUpdate = true;
             } else {
                 position = playlistEntry->getPosition();
-            }
-        }
-        if (time.compare(playlistEntry->getTime())  && (!boost::regex_match(time, match1, decimal) || !boost::regex_match(playlistEntry->getTime(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!time.empty()) {
-                LOG(INFO) << "updating playlistEntry " << id << " time from " << playlistEntry->getTime() << " to " << time;
-                needsUpdate = true;
-            } else {
-                time = playlistEntry->getTime();
             }
         }
         return needsUpdate;
@@ -467,9 +450,6 @@ namespace soulsifter {
 
     const int PlaylistEntry::getPosition() const { return position; }
     void PlaylistEntry::setPosition(const int position) { this->position = position; }
-
-    const string& PlaylistEntry::getTime() const { return time; }
-    void PlaylistEntry::setTime(const string& time) { this->time = time; }
 
 }
 }

@@ -848,7 +848,6 @@ playlistEntryFields = [
   [:int, "songId", Attrib::ID | Attrib::KEY2],
   ["Song", "song", Attrib::PTR],
   [:int, "position", Attrib::NON_NULLABLE],
-  [:string, "time", 0],
 ]
 playlistEntryAttribs = Attrib::DELETABLE
 reSongFields = [

@@ -63,8 +63,6 @@ namespace soulsifter {
         void setSong(Song* song);  // takes ownership
         const int getPosition() const;
         void setPosition(int position);
-        const string& getTime() const;
-        void setTime(const string& time);
 
         friend ResultSetIterator<PlaylistEntry>;
         friend class SearchUtil;
@@ -76,7 +74,6 @@ namespace soulsifter {
         int songId;
         Song* song;
         int position;
-        string time;
 
         static void populateFields(const sql::ResultSet* rs, PlaylistEntry* playlistEntry);
     };

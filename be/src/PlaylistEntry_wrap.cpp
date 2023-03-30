@@ -39,7 +39,6 @@ Napi::Object PlaylistEntry::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&PlaylistEntry::getSong, &PlaylistEntry::setSong>("song"),
     InstanceAccessor<&PlaylistEntry::getSongConst>("songConst"),
     InstanceAccessor<&PlaylistEntry::getPosition, &PlaylistEntry::setPosition>("position"),
-    InstanceAccessor<&PlaylistEntry::getTime, &PlaylistEntry::setTime>("time"),
   });
 
   constructor = new Napi::FunctionReference();
@@ -406,28 +405,5 @@ void PlaylistEntry::setPosition(const Napi::CallbackInfo& info, const Napi::Valu
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
   obj->playlistentry->setPosition(a0);
-}
-
-Napi::Value PlaylistEntry::getTime(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  PlaylistEntry* obj = this;
-  const string result =  obj->playlistentry->getTime();
-
-  return Napi::String::New(env, result);
-}
-
-void PlaylistEntry::setTime(const Napi::CallbackInfo& info, const Napi::Value &value) {
-  Napi::Env env = info.Env();
-  if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
-    return;
-  }
-  PlaylistEntry* obj = this;
-  if (!value.IsString()) {
-    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
-    return;
-  }
-  std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->playlistentry->setTime(a0);
 }
 
