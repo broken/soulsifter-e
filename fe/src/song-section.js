@@ -163,7 +163,10 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
   }
 
   dragMusicVideo(e) {
-    e.dataTransfer.setData('text/plain', 'extensis-filenames-type:' + this.settings.getString('mv.dir') + this.musicVideo.filePath);
+    e.preventDefault();
+    let filepath = this.settings.getString('mv.dir') + this.song.musicVideo.filePath;
+    let iconpath = this.settings.getString('mv.dir') + this.song.musicVideo.thumbnailFilePath;
+    ipcRenderer.send('ondragstart', filepath, iconpath);
   }
 
   openEditSongPage(e) {
