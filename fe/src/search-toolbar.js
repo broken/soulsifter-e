@@ -33,6 +33,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       ${keyRestrictBtn}
       <icon-button @click=${this.toggleSearchOptionsDialog} icon="build"></icon-button>
       <paper-input label="bpm" value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></paper-input>
+      <icon-button @click=${this.tapBpm} icon="hearing"></icon-button>
       <icon-button @click=${this.openCreateSongPage} icon="add_circle" id="createSongButton" @drop="${this.dropCreateSongButton}" @dragover="${this.dragOverCreateSongButton}" @dragleave="${this.dragLeaveCreateSongButton}"></icon-button>
       ${debugMode ? html`<icon-button @click=${this.addSongFromUrl} icon="link"></icon-button>` : ''}
       <icon-button @click=${this.openSettingsPage} icon="settings"></icon-button>
@@ -68,6 +69,8 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   constructor() {
     super();
     this.bpm = '';
+    this.taps = [];
+    this.lastTap = Date.now();
   }
 
   requestSearch(e) {
@@ -258,6 +261,26 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     this.query = '';
     this.shadowRoot.getElementById('queryInput').value = this.query;
     this.changeQuery(this.query);
+  }
+
+  tapBpm(e) {
+    const now = Date.now();
+    const diff = now - this.lastTap;
+    this.lastTap = now;
+    console.log(diff);
+
+    if (diff > 1300) {  // 1300 would be 46 bpm
+      this.taps = [];
+      return;
+    }
+
+    this.taps.push(diff);
+    if (this.taps.length > 32) {
+      this.taps.shift();
+    }
+
+    const avg = this.taps.reduce((a, b) => a + b) / this.taps.length;
+    this.changeBpm((60000 / avg).toFixed(1));
   }
 
   static get styles() {
