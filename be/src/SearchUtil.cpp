@@ -322,6 +322,8 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
         *orderBy = RELEASE_DATE;
       } else if (!atom.value.compare("added_date") || !atom.value.compare("adate") || !atom.value.compare("date_added") || !atom.value.compare("added")) {
         *orderBy = DATE_ADDED;
+      } else if (!atom.value.compare("bpm")) {
+        *orderBy = BPM;
       }
       ss << "true";
     }
@@ -444,6 +446,8 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
     ss << "a.releaseDateYear desc, a.releaseDateMonth desc, a.releaseDateDay desc";
   } else if (orderBy == RANDOM) {
     ss << "rand()";
+  } else if (orderBy == BPM) {
+    ss << "s.bpm asc";
   } else {
     ss << "s.id desc";
   }

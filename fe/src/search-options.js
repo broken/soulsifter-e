@@ -47,6 +47,8 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
           <span>Release Date</span>
           <paper-radio-button id="orderByRandom" @change="${this.orderByRandomChanged}"></paper-radio-button>
           <span>Random</span>
+          <paper-radio-button id="orderByBpm" @change="${this.orderByBpmChanged}"></paper-radio-button>
+          <span>Bpm</span>
         </div>
       <section>
     `;
@@ -76,6 +78,7 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
     if (o != 0) this.shadowRoot.getElementById('orderByDateAdded').checked = false;
     if (o != 1) this.shadowRoot.getElementById('orderByReleaseDate').checked = false;
     if (o != 2) this.shadowRoot.getElementById('orderByRandom').checked = false;
+    if (o != 3) this.shadowRoot.getElementById('orderByBpm').checked = false;
   }
   orderByDateAddedChanged(e) {
     this.orderByChanged(0);
@@ -87,6 +90,10 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
   }
   orderByRandomChanged(e) {
     this.orderByChanged(2);
+    this.checkedChanged();
+  }
+  orderByBpmChanged(e) {
+    this.orderByChanged(3);
     this.checkedChanged();
   }
 

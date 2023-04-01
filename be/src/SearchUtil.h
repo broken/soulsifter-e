@@ -21,7 +21,7 @@ namespace soulsifter {
 class Song;
 class Style;
 
-enum OrderBy { DATE_ADDED, RELEASE_DATE, RANDOM };
+enum OrderBy { DATE_ADDED, RELEASE_DATE, RANDOM, BPM };
 
 class SearchUtil {
 public:
