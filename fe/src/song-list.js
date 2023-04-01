@@ -6,6 +6,9 @@
 
 import { css, html, LitElement } from "lit";
 
+import "@polymer/paper-dialog/paper-dialog.js";
+
+import "./icon-button.js";
 import { AlertsMixin } from "./mixin-alerts.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { GenresMixin } from "./mixin-genres.js";
@@ -26,6 +29,9 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     else songListItems = this.songs.map(s => html`<song-list-item .song="${s}" bpm="${this.bpm}" @select-song="${this.selectSong}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
     return html`
       ${songListItems}
+      <paper-dialog id="multiOptionsDialog" noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8">
+        <icon-button @click=${this.updateSongField} icon="edit"></icon-button>
+      </paper-dialog>
     `;
   }
   static get properties() {
@@ -70,7 +76,31 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
   }
 
   selectSong(e) {
-    this.changeSong(e.detail.song);
+    if (e.detail.multi) {
+      e.srcElement.toggleAttribute('selected');
+      if (!this.shadowRoot.getElementById('multiOptionsDialog').opened) {
+        this.shadowRoot.getElementById('multiOptionsDialog').open();
+        // I have no idea why I have to explicitly set this.
+        this.shadowRoot.getElementById('multiOptionsDialog').noCancelOnOutsideClick = true;
+      }
+    } else {
+      this.changeSong(e.detail.song);
+      this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.removeAttribute('selected'));
+      if (this.shadowRoot.getElementById('multiOptionsDialog').opened) {
+        this.shadowRoot.getElementById('multiOptionsDialog').cancel();
+      }
+    }
+  }
+
+  updateSongField(e) {
+    this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
+      if (el.hasAttribute('selected')) {
+        el.song.comments = '';
+        el.song.update();
+        el.requestUpdate();
+        console.log('songs to update: ' + el.song.title);
+      }
+    });
   }
 
   searchOptionsChanged(opts) {
@@ -117,6 +147,19 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
         :host {
           overflow-x: hidden;
           overflow-y: scroll;
+        }
+        padding-dialog {
+          background-color: var(--search-toolbar-background);
+          display: flex;
+          flex-direction: row;
+          height: 42px;
+          padding: 10px;
+          margin: 0px;
+          bottom: 10px;
+        }
+        icon-button {
+          --mdc-icon-size: 24px;
+          color: var(--primary-text-color);
         }
       `
     ];

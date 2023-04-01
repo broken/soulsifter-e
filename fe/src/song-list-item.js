@@ -44,8 +44,9 @@ class SongListItem extends SettingsMixin(LitElement) {
   }
 
   selectSong(e) {
+    let grp = e.metaKey || e.shiftKey || e.ctrlKey;
     let event = new CustomEvent('select-song', {
-        detail: { song: this.song },
+        detail: { song: this.song, multi: grp },
         bubbles: true,
         composed: true });
     this.dispatchEvent(event);
@@ -112,6 +113,9 @@ class SongListItem extends SettingsMixin(LitElement) {
   static get styles() {
     return [
       css`
+        :host([selected]) .song-item {
+          background-color: var(--ss-song-list-item-hover-background-color);
+        }
         star-rating {
           margin: 0 6px;
         }
