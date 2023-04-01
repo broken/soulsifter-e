@@ -8,7 +8,7 @@
     "generatemodel": "cd be && npm run be:generatemodel",
     "package": "npm run buildnumber && cd fe && npm run fe:package",
     "packagedebug": "npm run buildnumber && cd fe && npm run fe:packagedebug",
-    "release": "npm run buildnumber && cd be && npm run be:compile && cd ../fe && npm run fe:build && npm run fe:make",
+    "release": "cd be && npm run be:compile && cd ../fe && npm run fe:build && npm run fe:make",
     "run": "cd fe && npm run fe:start",
     "start": "npm run buildnumber && cd fe && npm run fe:start",
     "startforge": "npm run buildnumber && cd fe && npm run fe:startforge",
