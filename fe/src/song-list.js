@@ -148,7 +148,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
           overflow-x: hidden;
           overflow-y: scroll;
         }
-        padding-dialog {
+        paper-dialog {
           background-color: var(--search-toolbar-background);
           display: flex;
           flex-direction: row;
