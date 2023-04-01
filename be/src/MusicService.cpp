@@ -24,9 +24,9 @@ std::string gen_random(const int len) {
 std::string MusicService::cleanDirName(const std::string& name) {
   std::string s(name);
   for (int i = 0; i < s.size(); i++) {
-    if (s[i] < 'A' || s[i] > 'Z' &&
-        s[i] < 'a' || s[i] > 'z' &&
-        s[i] < '0' || s[i] > '9' &&
+    if ((s[i] < 'A' || s[i] > 'Z') &&
+        (s[i] < 'a' || s[i] > 'z') &&
+        (s[i] < '0' || s[i] > '9') &&
         s[i] != '.' && s[i] != '-' && s[i] != ' ' && s[i] != '_' &&
         s[i] != '(' && s[i] != ')' && s[i] != '[' && s[i] != ']' &&
         s[i] != ',' && s[i] != '+' && s[i] != '&') {
