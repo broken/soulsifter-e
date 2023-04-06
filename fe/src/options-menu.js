@@ -6,11 +6,22 @@ import "./icon-button.js";
 class OptionsMenu extends LitElement {
   render() {
     return html`
-      <icon-button icon="more_vert"></icon-button>
+      <icon-button icon="${this.icon}"></icon-button>
       <div id="menu" elevation="3">
         <slot></slot>
       </div>
     `;
+  }
+
+  static get properties() {
+    return {
+      icon: { type: String },
+    }
+  }
+
+  constructor() {
+    super();
+    this.icon = "more_vert";
   }
 
   static get styles() {
@@ -18,6 +29,13 @@ class OptionsMenu extends LitElement {
       css`
         :host {
           position: relative;
+        }
+        :host([topright]) #menu {
+          bottom: 22px;
+          top: unset;
+          left: 0;
+          right: unset;
+          display: none;
         }
         #menu {
           background-color: var(--ss-options-button-menu-background-color);
