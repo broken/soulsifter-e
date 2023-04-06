@@ -27,13 +27,47 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     let songListItems = html``;
     if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}" bpm="${this.bpm}" @select-song="${this.selectSong}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
     else songListItems = this.songs.map(s => html`<song-list-item .song="${s}" bpm="${this.bpm}" @select-song="${this.selectSong}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
+    const fields = ['artist', 'comments', 'curator']
+    let dialogs = fields.map(f => html`
+        <paper-dialog id="${f}">
+            <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}"></paper-input>
+            <div class="editActions">
+              <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
+              <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
+            </div>
+          </paper-dialog>`);
+    dialogs.push(['is_mixed'].map(f => html`
+        <paper-dialog id="${f}">
+            <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}"></paper-input>
+            <div class="editActions">
+              <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
+              <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
+            </div>
+          </paper-dialog>`));
+    dialogs.push(['add_genres', 'replace_genres'].map(f => html`
+        <paper-dialog id="${f}">
+            <genre-list id="${f + '_input'}" singleselect></genre-list>
+            <div class="editActions">
+              <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
+              <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
+            </div>
+          </paper-dialog>`));
     return html`
       ${songListItems}
       <paper-dialog id="multiOptionsDialog" noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8">
-        <icon-button @click=${this.updateSongField} icon="edit"></icon-button>
+        <options-menu icon="edit" topright>
+          <options-menu-item @click="${this.openEdit('artist')}">artist</options-menu-item>
+          <options-menu-item @click="${this.openEdit('comments')}">comments</options-menu-item>
+          <options-menu-item @click="${this.openEdit('is_mixed')}">is mixed</options-menu-item>
+          <options-menu-item @click="${this.openEdit('curator')}">curator</options-menu-item>
+          <options-menu-item @click="${this.openEdit('add_genres')}">add genres</options-menu-item>
+          <options-menu-item @click="${this.openEdit('replace_genres')}">replace genres</options-menu-item>
+        </options-menu>
       </paper-dialog>
+      ${dialogs}
     `;
   }
+
   static get properties() {
     return {
       songs: { type: Array },
@@ -92,17 +126,6 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     }
   }
 
-  updateSongField(e) {
-    this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
-      if (el.hasAttribute('selected')) {
-        el.song.comments = '';
-        el.song.update();
-        el.requestUpdate();
-        console.log('songs to update: ' + el.song.title);
-      }
-    });
-  }
-
   searchOptionsChanged(opts) {
     this.searchOptions = opts;
     if (this.searchOptions.mvRestrict != this.mvRestrict) {
@@ -141,6 +164,65 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     this.songs = ss.SearchUtil.searchSongs(p.q, p.bpm, p.keys, this.genres, omitSongs, this.settings.getInt('songList.limit'), p.energy, this.searchOptions.mvRestrict, this.searchOptions.orderBy, (msg) => { this.addAlert(msg, 5); });
   }
 
+  updateSongField(cb) {
+    this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
+      if (el.hasAttribute('selected')) {
+        cb(el.song);
+        el.song.update();
+        el.requestUpdate();
+        console.log('songs to update: ' + el.song.title);
+      }
+    });
+  }
+
+  openEdit(d) {
+    return e => this.shadowRoot.getElementById(d).toggle();
+  }
+
+  cancelEdit(d) {
+    return e => this.shadowRoot.getElementById(d).toggle();
+  }
+
+  saveEdit(f) {
+    if (f == 'artist') {
+      return e => {
+        const val = this.shadowRoot.getElementById(f + '_input').value;
+        this.updateSongField(s => s.artist = val);
+        e => this.shadowRoot.getElementById(f).toggle();
+      };
+    } else if (f == 'comments') {
+      return e => {
+        const val = this.shadowRoot.getElementById(f + '_input').value;
+        this.updateSongField(s => s.comments = val);
+        e => this.shadowRoot.getElementById(f).toggle();
+      };
+    } else if (f == 'curator') {
+      return e => {
+        const val = this.shadowRoot.getElementById(f + '_input').value;
+        this.updateSongField(s => s.curator = val);
+        e => this.shadowRoot.getElementById(f).toggle();
+      };
+    } else if (f == 'is_mixed') {
+      return e => {
+        const val = this.shadowRoot.getElementById(f + '_input').checked;
+        this.updateSongField(s => s.mixed = val);
+        e => this.shadowRoot.getElementById(f).toggle();
+      };
+    } else if (f == 'add_genres') {
+      return e => {
+        const val = this.shadowRoot.getElementById(f + '_input').genres;
+        this.updateSongField(s => s.genres.push(val));
+        e => this.shadowRoot.getElementById(f).toggle();
+      };
+    } else if (f == 'replace_genres') {
+      return e => {
+        const val = this.shadowRoot.getElementById(f + '_input').genres;
+        this.updateSongField(s => s.genres = val);
+        e => this.shadowRoot.getElementById(f).toggle();
+      };
+    }
+  }
+
   static get styles() {
     return [
       css`
@@ -148,7 +230,11 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
           overflow-x: hidden;
           overflow-y: scroll;
         }
-        paper-dialog {
+        icon-button {
+          --mdc-icon-size: 24px;
+          color: var(--primary-text-color);
+        }
+        #multiOptionsDialog {
           background-color: var(--search-toolbar-background);
           display: flex;
           flex-direction: row;
@@ -157,9 +243,9 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
           margin: 0px;
           bottom: 10px;
         }
-        icon-button {
-          --mdc-icon-size: 24px;
-          color: var(--primary-text-color);
+        options-menu {
+          margin: 0;
+          padding: 0;
         }
       `
     ];
