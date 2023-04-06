@@ -204,37 +204,37 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').value;
         this.updateSongField(s => s.artist = val);
-        e => this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).toggle();
       };
     } else if (f == 'comments') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').value;
         this.updateSongField(s => s.comments = val);
-        e => this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).toggle();
       };
     } else if (f == 'curator') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').value;
         this.updateSongField(s => s.curator = val);
-        e => this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).toggle();
       };
     } else if (f == 'is_mixed') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').checked;
         this.updateSongField(s => s.mixed = val);
-        e => this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).toggle();
       };
     } else if (f == 'add_genres') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').genres;
-        this.updateSongField(s => s.genres.push(val));
-        e => this.shadowRoot.getElementById(f).toggle();
+        this.updateSongField(s => s.styles = s.styles.concat(val));
+        this.shadowRoot.getElementById(f).toggle();
       };
     } else if (f == 'replace_genres') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').genres;
-        this.updateSongField(s => s.genres = val);
-        e => this.shadowRoot.getElementById(f).toggle();
+        this.updateSongField(s => s.styles = val);
+        this.shadowRoot.getElementById(f).toggle();
       };
     }
   }
@@ -262,6 +262,13 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
         options-menu {
           margin: 0;
           padding: 0;
+        }
+        genre-list {
+          padding: 0;
+          margin: 0;
+          height: 64vh;
+          display: block;
+          overflow: hidden;
         }
       `
     ];
