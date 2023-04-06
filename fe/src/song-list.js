@@ -87,6 +87,22 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     this.mvRestrict = false;
   }
 
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('keydown', this.keydownHandler.bind(this));
+  }
+
+  disconnectedCallback() {
+    super.disconnectedCallback();
+    window.removeEventListener('keydown', this.keydownHandler.bind(this));
+  }
+
+  keydownHandler(e) {
+    if (e.code === 'Escape') {
+      this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.removeAttribute('selected'));
+    }
+  }
+
   bpmChanged(bpm) {
     this.bpm = bpm;
     if (this.searchOptions.bpmRestrict) this.search();
