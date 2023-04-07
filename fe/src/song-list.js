@@ -136,6 +136,14 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
         this.selectedListItems.delete(e.srcElement);
         if (this.lastSelectedListItem == e.srcElement) this.lastSelectedListItem = undefined;
       } else {
+        if (this.selectedListItems.size == 0) {
+          this.shadowRoot.getElementById('artist_input').value = e.srcElement.song.artist;
+          this.shadowRoot.getElementById('comments_input').value = e.srcElement.song.comments;
+          this.shadowRoot.getElementById('curator_input').value = e.srcElement.song.curator;
+          this.shadowRoot.getElementById('is_mixed_input').checked = e.srcElement.song.mixed;
+          this.shadowRoot.getElementById('add_genres_input').genres = [];
+          this.shadowRoot.getElementById('replace_genres_input').genres = e.srcElement.song.styles;
+        }
         this.selectedListItems.add(e.srcElement);
         this.lastSelectedListItem = e.srcElement;
       }
