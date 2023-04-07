@@ -143,6 +143,18 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
           this.shadowRoot.getElementById('is_mixed_input').checked = e.srcElement.song.mixed;
           this.shadowRoot.getElementById('add_genres_input').genres = [];
           this.shadowRoot.getElementById('replace_genres_input').genres = e.srcElement.song.styles;
+        } else if (e.detail.shift && !!this.lastSelectedListItem) {
+          let items = this.shadowRoot.querySelectorAll('song-list-item');
+          let slct = false;
+          for (let item of items) {
+            if (item == this.lastSelectedListItem || item == e.srcElement) {
+              slct = !slct;
+              if (!slct) break;
+            } else if (slct) {
+              this.selectedListItems.add(item);
+              item.setAttribute('selected', '');
+            }
+          }
         }
         this.selectedListItems.add(e.srcElement);
         this.lastSelectedListItem = e.srcElement;

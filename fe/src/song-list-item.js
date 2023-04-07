@@ -46,7 +46,7 @@ class SongListItem extends SettingsMixin(LitElement) {
   selectSong(e) {
     let grp = e.metaKey || e.shiftKey || e.ctrlKey;
     let event = new CustomEvent('select-song', {
-        detail: { song: this.song, multi: grp },
+        detail: { song: this.song, multi: grp, shift: !!e.shiftKey },
         bubbles: true,
         composed: true });
     this.dispatchEvent(event);
