@@ -12,7 +12,7 @@ public:
   : g3::FileSink(log_prefix, log_directory, logger_id) { }
 
   void log(g3::LogMessageMover msg) {
-    if (msg.get().wasFatal() || !msg.get().level().compare(WARNING.text)) {
+    if (msg.get()._level.value >= WARNING.value) {
       std::cerr << msg.get().toString() << std::endl;
       fileWrite(msg);
     } else {
