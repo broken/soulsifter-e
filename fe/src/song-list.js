@@ -85,6 +85,8 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     this.songTrail = [];
     this.search();
     this.mvRestrict = false;
+    this.selectedListItems = new Set();
+    this.lastSelectedListItem = undefined;
   }
 
   connectedCallback() {
@@ -99,7 +101,9 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
 
   keydownHandler(e) {
     if (e.code === 'Escape') {
-      this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.removeAttribute('selected'));
+      this.selectedListItems.forEach(el => el.removeAttribute('selected'));
+      this.selectedListItems.clear();
+      this.lastSelectedListItem = undefined;
     }
   }
 
@@ -128,14 +132,25 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
   selectSong(e) {
     if (e.detail.multi) {
       e.srcElement.toggleAttribute('selected');
-      if (!this.shadowRoot.getElementById('multiOptionsDialog').opened) {
+      if (this.selectedListItems.has(e.srcElement)) {
+        this.selectedListItems.delete(e.srcElement);
+        if (this.lastSelectedListItem == e.srcElement) this.lastSelectedListItem = undefined;
+      } else {
+        this.selectedListItems.add(e.srcElement);
+        this.lastSelectedListItem = e.srcElement;
+      }
+      if (this.selectedListItems.size > 0 && !this.shadowRoot.getElementById('multiOptionsDialog').opened) {
         this.shadowRoot.getElementById('multiOptionsDialog').open();
         // I have no idea why I have to explicitly set this.
         this.shadowRoot.getElementById('multiOptionsDialog').noCancelOnOutsideClick = true;
+      } else if (this.selectedListItems.size == 0 && this.shadowRoot.getElementById('multiOptionsDialog').opened) {
+        this.shadowRoot.getElementById('multiOptionsDialog').cancel();
       }
     } else {
       this.changeSong(e.detail.song);
-      this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.removeAttribute('selected'));
+      this.selectedListItems.forEach(el => el.removeAttribute('selected'));
+      this.selectedListItems.clear();
+      this.lastSelectedListItem = undefined;
       if (this.shadowRoot.getElementById('multiOptionsDialog').opened) {
         this.shadowRoot.getElementById('multiOptionsDialog').cancel();
       }
@@ -181,7 +196,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
   }
 
   updateSongField(cb) {
-    this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
+    this.selectedListItems.forEach(el => {
       if (el.hasAttribute('selected')) {
         cb(el.song);
         el.song.update();
