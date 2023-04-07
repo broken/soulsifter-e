@@ -12,7 +12,7 @@ import "./icon-button.js";
 import { AlertsMixin } from "./mixin-alerts.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { GenresMixin } from "./mixin-genres.js";
-import { PlaylistMixin } from "./mixin-playlist.js";
+import { PlaylistsMixin } from "./mixin-playlists.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
@@ -22,7 +22,7 @@ import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 import { } from "./song-list-item.js";
 
-class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))))))))) {
+class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))))))))) {
   render() {
     let songListItems = html``;
     if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}" bpm="${this.bpm}" @select-song="${this.selectSong}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
@@ -113,9 +113,9 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     else this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.bpm = this.bpm);
   }
 
-  playlistChanged(playlist) {
-    this.playlist = playlist;
-    if (!!playlist) this.search();
+  playlistsChanged(playlists) {
+    this.playlists = playlists;
+    if (!!playlists.length) this.search();
   }
 
   queryChanged(query) {
@@ -194,12 +194,16 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
 
   search() {
     let playlists = [];
-    if (!!this.playlist) {
-      if (!this.playlist.query) {
-        playlists.push(this.playlist);
-      } else {
-        this.query = this.playlist.query;
-        this.genres = this.playlist.styles;
+    if (!!this.playlists.length) {
+      this.query = '';
+      this.genres = [];
+      for (let i = 0; i < this.playlists.length; ++i) {
+        if (!this.playlists[i].query) {
+          playlists.push(this.playlists[i]);
+        } else {
+          this.query += this.playlists[i].query + " ";
+          this.genres.concat(this.playlists[i].styles);
+        }
       }
     }
     this.entries = [];
