@@ -41,7 +41,7 @@ namespace soulsifter {
         // sync with db & return true if object needs saving or updating
         bool sync();
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
         const string& getFilePath() const;
         void setFilePath(const string& filePath);

@@ -417,10 +417,10 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int Mix::getId() const { return id; }
+    int Mix::getId() const { return id; }
     void Mix::setId(const int id) { this->id = id; }
 
-    const int Mix::getOutSongId() const {
+    int Mix::getOutSongId() const {
         return (!outSongId && outSong) ? outSong->getId() : outSongId;
     }
     void Mix::setOutSongId(const int outSongId) {
@@ -449,7 +449,7 @@ namespace soulsifter {
         this->outSong = outSong;
     }
 
-    const int Mix::getInSongId() const {
+    int Mix::getInSongId() const {
         return (!inSongId && inSong) ? inSong->getId() : inSongId;
     }
     void Mix::setInSongId(const int inSongId) {
@@ -481,13 +481,13 @@ namespace soulsifter {
     const string& Mix::getBpmDiff() const { return bpmDiff; }
     void Mix::setBpmDiff(const string& bpmDiff) { this->bpmDiff = bpmDiff; }
 
-    const int Mix::getRating() const { return rating; }
+    int Mix::getRating() const { return rating; }
     void Mix::setRating(const int rating) { this->rating = rating; }
 
     const string& Mix::getComments() const { return comments; }
     void Mix::setComments(const string& comments) { this->comments = comments; }
 
-    const bool Mix::getAddon() const { return addon; }
+    bool Mix::getAddon() const { return addon; }
     void Mix::setAddon(const bool addon) { this->addon = addon; }
 
 }

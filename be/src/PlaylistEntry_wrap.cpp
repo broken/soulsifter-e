@@ -226,7 +226,7 @@ Napi::Value PlaylistEntry::erase(const Napi::CallbackInfo& info) {
 Napi::Value PlaylistEntry::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   PlaylistEntry* obj = this;
-  const int result =  obj->playlistentry->getId();
+  int result =  obj->playlistentry->getId();
 
   return Napi::Number::New(env, result);
 }
@@ -249,7 +249,7 @@ void PlaylistEntry::setId(const Napi::CallbackInfo& info, const Napi::Value &val
 Napi::Value PlaylistEntry::getPlaylistId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   PlaylistEntry* obj = this;
-  const int result =  obj->playlistentry->getPlaylistId();
+  int result =  obj->playlistentry->getPlaylistId();
 
   return Napi::Number::New(env, result);
 }
@@ -318,7 +318,7 @@ void PlaylistEntry::setPlaylist(const Napi::CallbackInfo& info, const Napi::Valu
 Napi::Value PlaylistEntry::getSongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   PlaylistEntry* obj = this;
-  const int result =  obj->playlistentry->getSongId();
+  int result =  obj->playlistentry->getSongId();
 
   return Napi::Number::New(env, result);
 }
@@ -387,7 +387,7 @@ void PlaylistEntry::setSong(const Napi::CallbackInfo& info, const Napi::Value &v
 Napi::Value PlaylistEntry::getPosition(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   PlaylistEntry* obj = this;
-  const int result =  obj->playlistentry->getPosition();
+  int result =  obj->playlistentry->getPosition();
 
   return Napi::Number::New(env, result);
 }

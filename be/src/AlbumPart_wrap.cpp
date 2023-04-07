@@ -213,7 +213,7 @@ Napi::Value AlbumPart::sync(const Napi::CallbackInfo& info) {
 Napi::Value AlbumPart::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   AlbumPart* obj = this;
-  const int result =  obj->albumpart->getId();
+  int result =  obj->albumpart->getId();
 
   return Napi::Number::New(env, result);
 }
@@ -282,7 +282,7 @@ void AlbumPart::setName(const Napi::CallbackInfo& info, const Napi::Value &value
 Napi::Value AlbumPart::getAlbumId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   AlbumPart* obj = this;
-  const int result =  obj->albumpart->getAlbumId();
+  int result =  obj->albumpart->getAlbumId();
 
   return Napi::Number::New(env, result);
 }

@@ -198,7 +198,7 @@ Napi::Value BasicGenre::findByArtist(const Napi::CallbackInfo& info) {
 Napi::Value BasicGenre::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   BasicGenre* obj = this;
-  const int result =  obj->basicgenre->getId();
+  int result =  obj->basicgenre->getId();
 
   return Napi::Number::New(env, result);
 }

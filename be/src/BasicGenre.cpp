@@ -213,7 +213,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int BasicGenre::getId() const { return id; }
+    int BasicGenre::getId() const { return id; }
     void BasicGenre::setId(const int id) { this->id = id; }
 
     const string& BasicGenre::getName() const { return name; }

@@ -938,7 +938,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int Song::getId() const { return id; }
+    int Song::getId() const { return id; }
     void Song::setId(const int id) { this->id = id; }
 
     const string& Song::getArtist() const { return artist; }
@@ -959,10 +959,10 @@ namespace soulsifter {
     const string& Song::getFilepath() const { return filepath; }
     void Song::setFilepath(const string& filepath) { this->filepath = filepath; }
 
-    const int Song::getRating() const { return rating; }
+    int Song::getRating() const { return rating; }
     void Song::setRating(const int rating) { this->rating = rating; }
 
-    const time_t Song::getDateAdded() const { return dateAdded; }
+    time_t Song::getDateAdded() const { return dateAdded; }
     void Song::setDateAdded(const time_t dateAdded) { this->dateAdded = dateAdded; }
 
     const string& Song::getBpm() const { return bpm; }
@@ -971,16 +971,16 @@ namespace soulsifter {
     const string& Song::getTonicKey() const { return tonicKey; }
     void Song::setTonicKey(const string& tonicKey) { this->tonicKey = tonicKey; }
 
-    const int Song::getEnergy() const { return energy; }
+    int Song::getEnergy() const { return energy; }
     void Song::setEnergy(const int energy) { this->energy = energy; }
 
     const string& Song::getComments() const { return comments; }
     void Song::setComments(const string& comments) { this->comments = comments; }
 
-    const bool Song::getTrashed() const { return trashed; }
+    bool Song::getTrashed() const { return trashed; }
     void Song::setTrashed(const bool trashed) { this->trashed = trashed; }
 
-    const bool Song::getLowQuality() const { return lowQuality; }
+    bool Song::getLowQuality() const { return lowQuality; }
     void Song::setLowQuality(const bool lowQuality) { this->lowQuality = lowQuality; }
 
     const string& Song::getGoogleSongId() const { return googleSongId; }
@@ -992,13 +992,13 @@ namespace soulsifter {
     const string& Song::getSpotifyId() const { return spotifyId; }
     void Song::setSpotifyId(const string& spotifyId) { this->spotifyId = spotifyId; }
 
-    const int Song::getDurationInMs() const { return durationInMs; }
+    int Song::getDurationInMs() const { return durationInMs; }
     void Song::setDurationInMs(const int durationInMs) { this->durationInMs = durationInMs; }
 
     const string& Song::getCurator() const { return curator; }
     void Song::setCurator(const string& curator) { this->curator = curator; }
 
-    const int Song::getRESongId() const {
+    int Song::getRESongId() const {
         return (!reSongId && reSong) ? reSong->getId() : reSongId;
     }
     void Song::setRESongId(const int reSongId) {
@@ -1027,7 +1027,7 @@ namespace soulsifter {
         this->reSong = reSong;
     }
 
-    const int Song::getAlbumId() const {
+    int Song::getAlbumId() const {
         return (!albumId && album) ? album->getId() : albumId;
     }
     void Song::setAlbumId(const int albumId) {
@@ -1056,7 +1056,7 @@ namespace soulsifter {
         this->album = album;
     }
 
-    const int Song::getAlbumPartId() const {
+    int Song::getAlbumPartId() const {
         return (!albumPartId && albumPart) ? albumPart->getId() : albumPartId;
     }
     void Song::setAlbumPartId(const int albumPartId) {
@@ -1085,7 +1085,7 @@ namespace soulsifter {
         this->albumPart = albumPart;
     }
 
-    const int Song::getMusicVideoId() const {
+    int Song::getMusicVideoId() const {
         return (!musicVideoId && musicVideo) ? musicVideo->getId() : musicVideoId;
     }
     void Song::setMusicVideoId(const int musicVideoId) {
@@ -1138,10 +1138,10 @@ namespace soulsifter {
         }
     }
 
-    const bool Song::getBpmLock() const { return bpmLock; }
+    bool Song::getBpmLock() const { return bpmLock; }
     void Song::setBpmLock(const bool bpmLock) { this->bpmLock = bpmLock; }
 
-    const bool Song::getTonicKeyLock() const { return tonicKeyLock; }
+    bool Song::getTonicKeyLock() const { return tonicKeyLock; }
     void Song::setTonicKeyLock(const bool tonicKeyLock) { this->tonicKeyLock = tonicKeyLock; }
 
 }

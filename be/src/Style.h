@@ -50,11 +50,11 @@ namespace soulsifter {
         static void findAllSortedByName(vector<Style*>** stylesPtr);
         static void findAllSortedByREId(vector<Style*>** stylesPtr);
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
         const string& getName() const;
         void setName(const string& name);
-        const int getREId() const;
+        int getREId() const;
         void setREId(int reId);
         const string& getRELabel() const;
         void setRELabel(const string& reLabel);

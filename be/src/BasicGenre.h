@@ -46,7 +46,7 @@ namespace soulsifter {
         static void findAll(const vector<const BasicGenre*>** genresPtr);
         static BasicGenre* findByArtist(const string& artist);
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
         const string& getName() const;
         void setName(const string& name);

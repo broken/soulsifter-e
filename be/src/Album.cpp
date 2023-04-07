@@ -471,7 +471,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int Album::getId() const { return id; }
+    int Album::getId() const { return id; }
     void Album::setId(const int id) { this->id = id; }
 
     const string& Album::getName() const { return name; }
@@ -483,7 +483,7 @@ namespace soulsifter {
     const string& Album::getCoverFilepath() const { return coverFilepath; }
     void Album::setCoverFilepath(const string& coverFilepath) { this->coverFilepath = coverFilepath; }
 
-    const bool Album::getMixed() const { return mixed; }
+    bool Album::getMixed() const { return mixed; }
     void Album::setMixed(const bool mixed) { this->mixed = mixed; }
 
     const string& Album::getLabel() const { return label; }
@@ -492,16 +492,16 @@ namespace soulsifter {
     const string& Album::getCatalogId() const { return catalogId; }
     void Album::setCatalogId(const string& catalogId) { this->catalogId = catalogId; }
 
-    const int Album::getReleaseDateYear() const { return releaseDateYear; }
+    int Album::getReleaseDateYear() const { return releaseDateYear; }
     void Album::setReleaseDateYear(const int releaseDateYear) { this->releaseDateYear = releaseDateYear; }
 
-    const int Album::getReleaseDateMonth() const { return releaseDateMonth; }
+    int Album::getReleaseDateMonth() const { return releaseDateMonth; }
     void Album::setReleaseDateMonth(const int releaseDateMonth) { this->releaseDateMonth = releaseDateMonth; }
 
-    const int Album::getReleaseDateDay() const { return releaseDateDay; }
+    int Album::getReleaseDateDay() const { return releaseDateDay; }
     void Album::setReleaseDateDay(const int releaseDateDay) { this->releaseDateDay = releaseDateDay; }
 
-    const int Album::getBasicGenreId() const {
+    int Album::getBasicGenreId() const {
         return (!basicGenreId && basicGenre) ? basicGenre->getId() : basicGenreId;
     }
     void Album::setBasicGenreId(const int basicGenreId) {

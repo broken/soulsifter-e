@@ -380,13 +380,13 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int Style::getId() const { return id; }
+    int Style::getId() const { return id; }
     void Style::setId(const int id) { this->id = id; }
 
     const string& Style::getName() const { return name; }
     void Style::setName(const string& name) { this->name = name; }
 
-    const int Style::getREId() const { return reId; }
+    int Style::getREId() const { return reId; }
     void Style::setREId(const int reId) { this->reId = reId; }
 
     const string& Style::getRELabel() const { return reLabel; }

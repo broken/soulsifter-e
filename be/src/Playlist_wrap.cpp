@@ -190,7 +190,7 @@ Napi::Value Playlist::erase(const Napi::CallbackInfo& info) {
 Napi::Value Playlist::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const int result =  obj->playlist->getId();
+  int result =  obj->playlist->getId();
 
   return Napi::Number::New(env, result);
 }

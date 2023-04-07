@@ -730,7 +730,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int RESong::getId() const { return id; }
+    int RESong::getId() const { return id; }
     void RESong::setId(const int id) { this->id = id; }
 
     const string& RESong::getSongidWinfo() const { return songidWinfo; }
@@ -775,16 +775,16 @@ namespace soulsifter {
     const string& RESong::getKeyStart() const { return keyStart; }
     void RESong::setKeyStart(const string& keyStart) { this->keyStart = keyStart; }
 
-    const int RESong::getKeyAccuracy() const { return keyAccuracy; }
+    int RESong::getKeyAccuracy() const { return keyAccuracy; }
     void RESong::setKeyAccuracy(const int keyAccuracy) { this->keyAccuracy = keyAccuracy; }
 
     const string& RESong::getBpmStart() const { return bpmStart; }
     void RESong::setBpmStart(const string& bpmStart) { this->bpmStart = bpmStart; }
 
-    const int RESong::getBpmAccuracy() const { return bpmAccuracy; }
+    int RESong::getBpmAccuracy() const { return bpmAccuracy; }
     void RESong::setBpmAccuracy(const int bpmAccuracy) { this->bpmAccuracy = bpmAccuracy; }
 
-    const int RESong::getRating() const { return rating; }
+    int RESong::getRating() const { return rating; }
     void RESong::setRating(const int rating) { this->rating = rating; }
 
     const string& RESong::getDateAdded() const { return dateAdded; }
@@ -799,7 +799,7 @@ namespace soulsifter {
     const string& RESong::getRemix() const { return remix; }
     void RESong::setRemix(const string& remix) { this->remix = remix; }
 
-    const int RESong::getNumPlays() const { return numPlays; }
+    int RESong::getNumPlays() const { return numPlays; }
     void RESong::setNumPlays(const int numPlays) { this->numPlays = numPlays; }
 
     const string& RESong::getComments() const { return comments; }
@@ -820,7 +820,7 @@ namespace soulsifter {
     const string& RESong::getBpmEnd() const { return bpmEnd; }
     void RESong::setBpmEnd(const string& bpmEnd) { this->bpmEnd = bpmEnd; }
 
-    const int RESong::getBeatIntensity() const { return beatIntensity; }
+    int RESong::getBeatIntensity() const { return beatIntensity; }
     void RESong::setBeatIntensity(const int beatIntensity) { this->beatIntensity = beatIntensity; }
 
     const string& RESong::getReplayGain() const { return replayGain; }

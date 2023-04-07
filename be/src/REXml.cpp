@@ -230,7 +230,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int REXml::getId() const { return id; }
+    int REXml::getId() const { return id; }
     void REXml::setId(const int id) { this->id = id; }
 
     const string& REXml::getName() const { return name; }

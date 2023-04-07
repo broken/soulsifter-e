@@ -391,7 +391,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int Playlist::getId() const { return id; }
+    int Playlist::getId() const { return id; }
     void Playlist::setId(const int id) { this->id = id; }
 
     const string& Playlist::getName() const { return name; }

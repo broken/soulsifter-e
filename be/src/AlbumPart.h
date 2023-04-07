@@ -45,13 +45,13 @@ namespace soulsifter {
         // sync with db & return true if object needs saving or updating
         bool sync();
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
         const string& getPos() const;
         void setPos(const string& pos);
         const string& getName() const;
         void setName(const string& name);
-        const int getAlbumId() const;
+        int getAlbumId() const;
         void setAlbumId(int albumId);
         Album* getAlbum();
         Album* getAlbumConst() const;

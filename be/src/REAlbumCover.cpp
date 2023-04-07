@@ -230,7 +230,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int REAlbumCover::getId() const { return id; }
+    int REAlbumCover::getId() const { return id; }
     void REAlbumCover::setId(const int id) { this->id = id; }
 
     const string& REAlbumCover::getREId() const { return reId; }

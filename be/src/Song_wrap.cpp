@@ -317,7 +317,7 @@ void Song::setDateAddedToNow(const Napi::CallbackInfo& info) {
 Napi::Value Song::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const int result =  obj->song->getId();
+  int result =  obj->song->getId();
 
   return Napi::Number::New(env, result);
 }
@@ -478,7 +478,7 @@ void Song::setFilepath(const Napi::CallbackInfo& info, const Napi::Value &value)
 Napi::Value Song::getRating(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const int result =  obj->song->getRating();
+  int result =  obj->song->getRating();
 
   return Napi::Number::New(env, result);
 }
@@ -501,7 +501,7 @@ void Song::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
 Napi::Value Song::getDateAdded(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const time_t result =  obj->song->getDateAdded();
+  time_t result =  obj->song->getDateAdded();
 
   return Napi::Number::New(env, result * 1000);
 }
@@ -570,7 +570,7 @@ void Song::setTonicKey(const Napi::CallbackInfo& info, const Napi::Value &value)
 Napi::Value Song::getEnergy(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const int result =  obj->song->getEnergy();
+  int result =  obj->song->getEnergy();
 
   return Napi::Number::New(env, result);
 }
@@ -616,7 +616,7 @@ void Song::setComments(const Napi::CallbackInfo& info, const Napi::Value &value)
 Napi::Value Song::getTrashed(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const bool result =  obj->song->getTrashed();
+  bool result =  obj->song->getTrashed();
 
   return Napi::Boolean::New(env, result);
 }
@@ -639,7 +639,7 @@ void Song::setTrashed(const Napi::CallbackInfo& info, const Napi::Value &value) 
 Napi::Value Song::getLowQuality(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const bool result =  obj->song->getLowQuality();
+  bool result =  obj->song->getLowQuality();
 
   return Napi::Boolean::New(env, result);
 }
@@ -731,7 +731,7 @@ void Song::setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &value
 Napi::Value Song::getDurationInMs(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const int result =  obj->song->getDurationInMs();
+  int result =  obj->song->getDurationInMs();
 
   return Napi::Number::New(env, result);
 }
@@ -777,7 +777,7 @@ void Song::setCurator(const Napi::CallbackInfo& info, const Napi::Value &value) 
 Napi::Value Song::getRESongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const int result =  obj->song->getRESongId();
+  int result =  obj->song->getRESongId();
 
   return Napi::Number::New(env, result);
 }
@@ -800,7 +800,7 @@ void Song::setRESongId(const Napi::CallbackInfo& info, const Napi::Value &value)
 Napi::Value Song::getAlbumId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const int result =  obj->song->getAlbumId();
+  int result =  obj->song->getAlbumId();
 
   return Napi::Number::New(env, result);
 }
@@ -869,7 +869,7 @@ void Song::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value) {
 Napi::Value Song::getAlbumPartId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const int result =  obj->song->getAlbumPartId();
+  int result =  obj->song->getAlbumPartId();
 
   return Napi::Number::New(env, result);
 }
@@ -938,7 +938,7 @@ void Song::setAlbumPart(const Napi::CallbackInfo& info, const Napi::Value &value
 Napi::Value Song::getMusicVideoId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const int result =  obj->song->getMusicVideoId();
+  int result =  obj->song->getMusicVideoId();
 
   return Napi::Number::New(env, result);
 }
@@ -1082,7 +1082,7 @@ void Song::setStyles(const Napi::CallbackInfo& info, const Napi::Value &value) {
 Napi::Value Song::getBpmLock(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const bool result =  obj->song->getBpmLock();
+  bool result =  obj->song->getBpmLock();
 
   return Napi::Boolean::New(env, result);
 }
@@ -1105,7 +1105,7 @@ void Song::setBpmLock(const Napi::CallbackInfo& info, const Napi::Value &value) 
 Napi::Value Song::getTonicKeyLock(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const bool result =  obj->song->getTonicKeyLock();
+  bool result =  obj->song->getTonicKeyLock();
 
   return Napi::Boolean::New(env, result);
 }

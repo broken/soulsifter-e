@@ -46,7 +46,7 @@ namespace soulsifter {
 
         string& getValueRef();
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
         const string& getName() const;
         void setName(const string& name);

@@ -48,7 +48,7 @@ namespace soulsifter {
 
         const string reReleaseDate() const;
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
         const string& getName() const;
         void setName(const string& name);
@@ -56,19 +56,19 @@ namespace soulsifter {
         void setArtist(const string& artist);
         const string& getCoverFilepath() const;
         void setCoverFilepath(const string& coverFilepath);
-        const bool getMixed() const;
+        bool getMixed() const;
         void setMixed(bool mixed);
         const string& getLabel() const;
         void setLabel(const string& label);
         const string& getCatalogId() const;
         void setCatalogId(const string& catalogId);
-        const int getReleaseDateYear() const;
+        int getReleaseDateYear() const;
         void setReleaseDateYear(int releaseDateYear);
-        const int getReleaseDateMonth() const;
+        int getReleaseDateMonth() const;
         void setReleaseDateMonth(int releaseDateMonth);
-        const int getReleaseDateDay() const;
+        int getReleaseDateDay() const;
         void setReleaseDateDay(int releaseDateDay);
-        const int getBasicGenreId() const;
+        int getBasicGenreId() const;
         void setBasicGenreId(int basicGenreId);
         BasicGenre* getBasicGenre();
         BasicGenre* getBasicGenreConst() const;

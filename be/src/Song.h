@@ -59,7 +59,7 @@ namespace soulsifter {
         const string getDateAddedString() const;
         void setDateAddedToNow();
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
         const string& getArtist() const;
         void setArtist(const string& artist);
@@ -73,21 +73,21 @@ namespace soulsifter {
         void setFeaturing(const string& featuring);
         const string& getFilepath() const;
         void setFilepath(const string& filepath);
-        const int getRating() const;
+        int getRating() const;
         void setRating(int rating);
-        const time_t getDateAdded() const;
+        time_t getDateAdded() const;
         void setDateAdded(time_t dateAdded);
         const string& getBpm() const;
         void setBpm(const string& bpm);
         const string& getTonicKey() const;
         void setTonicKey(const string& tonicKey);
-        const int getEnergy() const;
+        int getEnergy() const;
         void setEnergy(int energy);
         const string& getComments() const;
         void setComments(const string& comments);
-        const bool getTrashed() const;
+        bool getTrashed() const;
         void setTrashed(bool trashed);
-        const bool getLowQuality() const;
+        bool getLowQuality() const;
         void setLowQuality(bool lowQuality);
         const string& getGoogleSongId() const;
         void setGoogleSongId(const string& googleSongId);
@@ -95,29 +95,29 @@ namespace soulsifter {
         void setYoutubeId(const string& youtubeId);
         const string& getSpotifyId() const;
         void setSpotifyId(const string& spotifyId);
-        const int getDurationInMs() const;
+        int getDurationInMs() const;
         void setDurationInMs(int durationInMs);
         const string& getCurator() const;
         void setCurator(const string& curator);
-        const int getRESongId() const;
+        int getRESongId() const;
         void setRESongId(int reSongId);
         RESong* getRESong();
         RESong* getRESongConst() const;
         void setRESong(const RESong& reSong);
         void setRESong(RESong* reSong);  // takes ownership
-        const int getAlbumId() const;
+        int getAlbumId() const;
         void setAlbumId(int albumId);
         Album* getAlbum();
         Album* getAlbumConst() const;
         void setAlbum(const Album& album);
         void setAlbum(Album* album);  // takes ownership
-        const int getAlbumPartId() const;
+        int getAlbumPartId() const;
         void setAlbumPartId(int albumPartId);
         AlbumPart* getAlbumPart();
         AlbumPart* getAlbumPartConst() const;
         void setAlbumPart(const AlbumPart& albumPart);
         void setAlbumPart(AlbumPart* albumPart);  // takes ownership
-        const int getMusicVideoId() const;
+        int getMusicVideoId() const;
         void setMusicVideoId(int musicVideoId);
         MusicVideo* getMusicVideo();
         MusicVideo* getMusicVideoConst() const;
@@ -127,9 +127,9 @@ namespace soulsifter {
         void setStyleIds(const vector<int>& styleIds);
         const vector<Style*>& getStyles();
         void setStyles(const vector<Style*>& styles);
-        const bool getBpmLock() const;
+        bool getBpmLock() const;
         void setBpmLock(bool bpmLock);
-        const bool getTonicKeyLock() const;
+        bool getTonicKeyLock() const;
         void setTonicKeyLock(bool tonicKeyLock);
 
         friend ResultSetIterator<Song>;

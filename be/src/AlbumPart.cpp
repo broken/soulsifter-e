@@ -329,7 +329,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int AlbumPart::getId() const { return id; }
+    int AlbumPart::getId() const { return id; }
     void AlbumPart::setId(const int id) { this->id = id; }
 
     const string& AlbumPart::getPos() const { return pos; }
@@ -338,7 +338,7 @@ namespace soulsifter {
     const string& AlbumPart::getName() const { return name; }
     void AlbumPart::setName(const string& name) { this->name = name; }
 
-    const int AlbumPart::getAlbumId() const {
+    int AlbumPart::getAlbumId() const {
         return (!albumId && album) ? album->getId() : albumId;
     }
     void AlbumPart::setAlbumId(const int albumId) {

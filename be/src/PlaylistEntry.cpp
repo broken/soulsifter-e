@@ -387,10 +387,10 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int PlaylistEntry::getId() const { return id; }
+    int PlaylistEntry::getId() const { return id; }
     void PlaylistEntry::setId(const int id) { this->id = id; }
 
-    const int PlaylistEntry::getPlaylistId() const {
+    int PlaylistEntry::getPlaylistId() const {
         return (!playlistId && playlist) ? playlist->getId() : playlistId;
     }
     void PlaylistEntry::setPlaylistId(const int playlistId) {
@@ -419,7 +419,7 @@ namespace soulsifter {
         this->playlist = playlist;
     }
 
-    const int PlaylistEntry::getSongId() const {
+    int PlaylistEntry::getSongId() const {
         return (!songId && song) ? song->getId() : songId;
     }
     void PlaylistEntry::setSongId(const int songId) {
@@ -448,7 +448,7 @@ namespace soulsifter {
         this->song = song;
     }
 
-    const int PlaylistEntry::getPosition() const { return position; }
+    int PlaylistEntry::getPosition() const { return position; }
     void PlaylistEntry::setPosition(const int position) { this->position = position; }
 
 }

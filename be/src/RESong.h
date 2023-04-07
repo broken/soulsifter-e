@@ -47,7 +47,7 @@ namespace soulsifter {
         static const int maxREId();
         void setStylesBitmaskFromDb();
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
         const string& getSongidWinfo() const;
         void setSongidWinfo(const string& songidWinfo);
@@ -77,13 +77,13 @@ namespace soulsifter {
         void setCompilation(const string& compilation);
         const string& getKeyStart() const;
         void setKeyStart(const string& keyStart);
-        const int getKeyAccuracy() const;
+        int getKeyAccuracy() const;
         void setKeyAccuracy(int keyAccuracy);
         const string& getBpmStart() const;
         void setBpmStart(const string& bpmStart);
-        const int getBpmAccuracy() const;
+        int getBpmAccuracy() const;
         void setBpmAccuracy(int bpmAccuracy);
-        const int getRating() const;
+        int getRating() const;
         void setRating(int rating);
         const string& getDateAdded() const;
         void setDateAdded(const string& dateAdded);
@@ -93,7 +93,7 @@ namespace soulsifter {
         void setLabel(const string& label);
         const string& getRemix() const;
         void setRemix(const string& remix);
-        const int getNumPlays() const;
+        int getNumPlays() const;
         void setNumPlays(int numPlays);
         const string& getComments() const;
         void setComments(const string& comments);
@@ -107,7 +107,7 @@ namespace soulsifter {
         void setDisabled(const string& disabled);
         const string& getBpmEnd() const;
         void setBpmEnd(const string& bpmEnd);
-        const int getBeatIntensity() const;
+        int getBeatIntensity() const;
         void setBeatIntensity(int beatIntensity);
         const string& getReplayGain() const;
         void setReplayGain(const string& replayGain);

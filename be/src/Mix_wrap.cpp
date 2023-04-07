@@ -236,7 +236,7 @@ Napi::Value Mix::mixoutCountForRESongId(const Napi::CallbackInfo& info) {
 Napi::Value Mix::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  const int result =  obj->mix->getId();
+  int result =  obj->mix->getId();
 
   return Napi::Number::New(env, result);
 }
@@ -259,7 +259,7 @@ void Mix::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
 Napi::Value Mix::getOutSongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  const int result =  obj->mix->getOutSongId();
+  int result =  obj->mix->getOutSongId();
 
   return Napi::Number::New(env, result);
 }
@@ -328,7 +328,7 @@ void Mix::setOutSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
 Napi::Value Mix::getInSongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  const int result =  obj->mix->getInSongId();
+  int result =  obj->mix->getInSongId();
 
   return Napi::Number::New(env, result);
 }
@@ -420,7 +420,7 @@ void Mix::setBpmDiff(const Napi::CallbackInfo& info, const Napi::Value &value) {
 Napi::Value Mix::getRating(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  const int result =  obj->mix->getRating();
+  int result =  obj->mix->getRating();
 
   return Napi::Number::New(env, result);
 }
@@ -466,7 +466,7 @@ void Mix::setComments(const Napi::CallbackInfo& info, const Napi::Value &value) 
 Napi::Value Mix::getAddon(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  const bool result =  obj->mix->getAddon();
+  bool result =  obj->mix->getAddon();
 
   return Napi::Boolean::New(env, result);
 }

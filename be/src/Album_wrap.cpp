@@ -254,7 +254,7 @@ Napi::Value Album::reReleaseDate(const Napi::CallbackInfo& info) {
 Napi::Value Album::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Album* obj = this;
-  const int result =  obj->album->getId();
+  int result =  obj->album->getId();
 
   return Napi::Number::New(env, result);
 }
@@ -346,7 +346,7 @@ void Album::setCoverFilepath(const Napi::CallbackInfo& info, const Napi::Value &
 Napi::Value Album::getMixed(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Album* obj = this;
-  const bool result =  obj->album->getMixed();
+  bool result =  obj->album->getMixed();
 
   return Napi::Boolean::New(env, result);
 }
@@ -415,7 +415,7 @@ void Album::setCatalogId(const Napi::CallbackInfo& info, const Napi::Value &valu
 Napi::Value Album::getReleaseDateYear(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Album* obj = this;
-  const int result =  obj->album->getReleaseDateYear();
+  int result =  obj->album->getReleaseDateYear();
 
   return Napi::Number::New(env, result);
 }
@@ -438,7 +438,7 @@ void Album::setReleaseDateYear(const Napi::CallbackInfo& info, const Napi::Value
 Napi::Value Album::getReleaseDateMonth(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Album* obj = this;
-  const int result =  obj->album->getReleaseDateMonth();
+  int result =  obj->album->getReleaseDateMonth();
 
   return Napi::Number::New(env, result);
 }
@@ -461,7 +461,7 @@ void Album::setReleaseDateMonth(const Napi::CallbackInfo& info, const Napi::Valu
 Napi::Value Album::getReleaseDateDay(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Album* obj = this;
-  const int result =  obj->album->getReleaseDateDay();
+  int result =  obj->album->getReleaseDateDay();
 
   return Napi::Number::New(env, result);
 }
@@ -484,7 +484,7 @@ void Album::setReleaseDateDay(const Napi::CallbackInfo& info, const Napi::Value 
 Napi::Value Album::getBasicGenreId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Album* obj = this;
-  const int result =  obj->album->getBasicGenreId();
+  int result =  obj->album->getBasicGenreId();
 
   return Napi::Number::New(env, result);
 }

@@ -230,7 +230,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int RESetting::getId() const { return id; }
+    int RESetting::getId() const { return id; }
     void RESetting::setId(const int id) { this->id = id; }
 
     const string& RESetting::getName() const { return name; }

@@ -608,7 +608,7 @@ end
 def hAccessor(f)
   str = ""
   if ([:int, :bool, :time_t].include?(f[$type]))
-    str << "        const #{f[$type]} get#{cap(f[$name])}() const;\n"
+    str << "        #{f[$type]} get#{cap(f[$name])}() const;\n"
     str << "        void set#{cap(f[$name])}(#{f[$type]} #{f[$name]});\n"
   elsif (f[$attrib] & Attrib::PTR > 0)
     str << "        #{f[$type]}* get#{cap(f[$name])}();\n"
@@ -663,10 +663,10 @@ def cAccessor(name, f)
     str << "    void #{cap(name)}::add#{cap(single(f[$name]))}(const #{getSetGeneric(f[$type])}& #{single(f[$name])}) {\n        this->#{f[$name]}.insert(#{single(f[$name])});\n    }\n"
     str << "    void #{cap(name)}::remove#{cap(single(f[$name]))}(const #{getSetGeneric(f[$type])}& #{single(f[$name])}) {\n        this->#{f[$name]}.erase(#{single(f[$name])});\n    }\n"
   elsif (f[$type] == :int && f[$attrib] & Attrib::ID > 0)
-    str << "    const #{f[$type]} #{cap(name)}::get#{cap(f[$name])}() const {\n        return (!#{f[$name]} && #{f[$name][0..-3]}) ? #{f[$name][0..-3]}->getId() : #{f[$name]};\n    }\n"
+    str << "    #{f[$type]} #{cap(name)}::get#{cap(f[$name])}() const {\n        return (!#{f[$name]} && #{f[$name][0..-3]}) ? #{f[$name][0..-3]}->getId() : #{f[$name]};\n    }\n"
     str << "    void #{cap(name)}::set#{cap(f[$name])}(const #{f[$type]} #{f[$name]}) {\n        this->#{f[$name]} = #{f[$name]};\n        delete #{f[$name][0..-3]};\n        #{f[$name][0..-3]} = NULL;\n    }\n"
   else
-    str << "    const #{f[$type]} #{cap(name)}::get#{cap(f[$name])}() const { return #{f[$name]}; }\n"
+    str << "    #{f[$type]} #{cap(name)}::get#{cap(f[$name])}() const { return #{f[$name]}; }\n"
     str << "    void #{cap(name)}::set#{cap(f[$name])}(const #{f[$type]} #{f[$name]}) { this->#{f[$name]} = #{f[$name]}; }\n"
   end
   str << "\n"

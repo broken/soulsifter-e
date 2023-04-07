@@ -174,7 +174,7 @@ Napi::Value Style::findAllParents(const Napi::CallbackInfo& info) {
 Napi::Value Style::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const int result =  obj->style->getId();
+  int result =  obj->style->getId();
 
   return Napi::Number::New(env, result);
 }
@@ -220,7 +220,7 @@ void Style::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
 Napi::Value Style::getREId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const int result =  obj->style->getREId();
+  int result =  obj->style->getREId();
 
   return Napi::Number::New(env, result);
 }

@@ -203,7 +203,7 @@ namespace soulsifter {
 
 # pragma mark accessors
 
-    const int MusicVideo::getId() const { return id; }
+    int MusicVideo::getId() const { return id; }
     void MusicVideo::setId(const int id) { this->id = id; }
 
     const string& MusicVideo::getFilePath() const { return filePath; }

@@ -49,15 +49,15 @@ namespace soulsifter {
 
         static int mixoutCountForRESongId(int outSongId);
 
-        const int getId() const;
+        int getId() const;
         void setId(int id);
-        const int getOutSongId() const;
+        int getOutSongId() const;
         void setOutSongId(int outSongId);
         Song* getOutSong();
         Song* getOutSongConst() const;
         void setOutSong(const Song& outSong);
         void setOutSong(Song* outSong);  // takes ownership
-        const int getInSongId() const;
+        int getInSongId() const;
         void setInSongId(int inSongId);
         Song* getInSong();
         Song* getInSongConst() const;
@@ -65,11 +65,11 @@ namespace soulsifter {
         void setInSong(Song* inSong);  // takes ownership
         const string& getBpmDiff() const;
         void setBpmDiff(const string& bpmDiff);
-        const int getRating() const;
+        int getRating() const;
         void setRating(int rating);
         const string& getComments() const;
         void setComments(const string& comments);
-        const bool getAddon() const;
+        bool getAddon() const;
         void setAddon(bool addon);
 
         friend ResultSetIterator<Mix>;

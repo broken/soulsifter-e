@@ -124,7 +124,7 @@ Napi::Value MusicVideo::sync(const Napi::CallbackInfo& info) {
 Napi::Value MusicVideo::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   MusicVideo* obj = this;
-  const int result =  obj->musicvideo->getId();
+  int result =  obj->musicvideo->getId();
 
   return Napi::Number::New(env, result);
 }
