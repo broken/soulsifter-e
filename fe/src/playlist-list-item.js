@@ -43,9 +43,8 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
 
   toggleSelect(e) {
     this.select = !this.selected;
-    let grp = e.metaKey || e.shiftKey || e.ctrlKey;
     let event = new CustomEvent('toggle-select', {
-        detail: { playlist: this.playlist, multi: grp },
+        detail: { playlist: this.playlist },
         bubbles: true,
         composed: true });
     this.dispatchEvent(event);
