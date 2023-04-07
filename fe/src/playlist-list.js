@@ -3,12 +3,12 @@ import { css, html, LitElement } from "lit";
 import "@material/mwc-fab/mwc-fab.js";
 
 import "./playlist-list-item.js";
-import { PlaylistMixin } from "./mixin-playlist.js";
+import { PlaylistsMixin } from "./mixin-playlist.js";
 
 
-class PlaylistList extends PlaylistMixin(LitElement) {
+class PlaylistList extends PlaylistsMixin(LitElement) {
   render() {
-    let items = this.playlists.map(p => html`<playlist-list-item .playlist="${p}" @toggle-select="${this.toggleSelection}" ?selected="${!!this.playlist && this.playlist.id == p.id}"></playlist-list-item>`);
+    let items = this.allPlaylists.map(p => html`<playlist-list-item .playlist="${p}" @toggle-select="${this.toggleSelection}" ?selected="${this.isPlaylistSelected(p)}"></playlist-list-item>`);
     return html`
       ${items}
       <mwc-fab mini icon="add" @click="${this.createPlaylist}"></mwc-fab>
@@ -17,15 +17,15 @@ class PlaylistList extends PlaylistMixin(LitElement) {
 
   static get properties() {
     return {
-      playlists: { type: Array },
+      allPlaylists: { type: Array },
     }
   }
 
   constructor() {
     super();
-    this.playlists = ss.Playlist.findAll().sort((a, b) => a.name.localeCompare(b.name));
+    this.allPlaylists = ss.Playlist.findAll().sort((a, b) => a.name.localeCompare(b.name));
     this.updatePlaylistsListener = (e) => {
-      this.playlists = ss.Playlist.findAll().sort((a, b) => a.name.localeCompare(b.name));
+      this.allPlaylists = ss.Playlist.findAll().sort((a, b) => a.name.localeCompare(b.name));
       this.requestUpdate();
     };
   }
@@ -46,9 +46,15 @@ class PlaylistList extends PlaylistMixin(LitElement) {
     window.dispatchEvent(event);
   }
 
+  isPlaylistSelected(p) {
+    for (let i = 0; i < this.playlists.length; ++i) {
+      if (this.playlists[i].id == p.id) return true;
+    }
+    return false;
+  }
+
   toggleSelection(e) {
-    this.playlist = !!this.playlist && this.playlist.id == e.detail.playlist.id ? null : e.detail.playlist;
-    this.changePlaylist(this.playlist);
+    this.togglePlaylist(e.detail.playlist, e.detail.multi);
   }
 
   static get styles() {
