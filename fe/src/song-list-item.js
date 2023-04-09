@@ -100,7 +100,10 @@ class SongListItem extends SettingsMixin(LitElement) {
 
   removeSongFromPlaylist(e) {
     this.playlistEntry.erase();
-    this.shadowRoot.host.remove();
+    let event = new CustomEvent('search', {
+        bubbles: true,
+        composed: true });
+    this.dispatchEvent(event);
     e.stopPropagation();
   }
 
