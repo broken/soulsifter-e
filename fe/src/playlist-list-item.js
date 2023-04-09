@@ -62,6 +62,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
     ss.PlaylistEntry.findByPlaylistId(this.playlist.id).forEach(
         (e) => str += ++i + ". " + e.song.artist + " - "  + e.song.title + "\n");
     ipcRenderer.send('copytoclipboard', str);
+    e.stopPropagation();
   }
 
   deleteAction(e) {
