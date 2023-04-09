@@ -175,6 +175,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
         this.shadowRoot.getElementById('multiOptionsDialog').cancel();
       }
     }
+    e.preventDefault();
   }
 
   searchOptionsChanged(opts) {

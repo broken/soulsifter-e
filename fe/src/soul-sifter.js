@@ -40,9 +40,9 @@ class SoulSifter extends LitElement {
       </aside>
       <main>
         <search-toolbar></search-toolbar>
-        <mix-list></mix-list>
+        <mix-list @select-song="${this.selectSong}"></mix-list>
         <div class="list-seperator"></div>
-        <song-list></song-list>
+        <song-list id="sl"></song-list>
       </main>
       <genre-edit></genre-edit>
       <mix-edit></mix-edit>
@@ -79,6 +79,10 @@ class SoulSifter extends LitElement {
   }
   playlistsTabClicked() {
     this.tabClicked(2);
+  }
+
+  selectSong(e) {
+    this.shadowRoot.getElementById('sl').selectSong(e);
   }
 
   static get styles() {
