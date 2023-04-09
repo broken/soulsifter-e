@@ -18,7 +18,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
             <span>${this.playlist.name}</span>
             ${icon}
           </div>
-          <options-menu>
+          <options-menu id="opt">
             <options-menu-item @click="${this.editAction}">Edit playlist</options-menu-item>
             <options-menu-item @click="${this.copyAction}">Copy to clipboard</options-menu-item>
             <options-menu-item @click="${this.deleteAction}">Delete playlist</options-menu-item>
@@ -62,6 +62,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
     ss.PlaylistEntry.findByPlaylistId(this.playlist.id).forEach(
         (e) => str += ++i + ". " + e.song.artist + " - "  + e.song.title + "\n");
     ipcRenderer.send('copytoclipboard', str);
+    this.shadowRoot.getElementById('opt').style.display = 'none';
     e.stopPropagation();
   }
 
