@@ -322,10 +322,10 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
       this.sterilizeSong(this.song);
       this.songChanged();
       if (!this.song.bpm) {
-        var songId = this.song.id;
+        var songPath = this.song.filepath;
         if (!this.soulSifterSettings.getBool('music.autoAdd')) ss.AudioAnalyzer.analyzeBpmAsync(this.song)
         .then((candidates) => {
-          if (songId == this.song.id) {
+          if (songPath == this.song.filepath) {
             let bpmList = "";
             for (let i = 0; i < 4 && i < candidates.length; ++i) {
               if (i == 0) this.editedSong.bpm = candidates[i].toFixed(2);
