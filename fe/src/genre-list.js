@@ -90,9 +90,10 @@ class GenreList extends GenresMixin(LitElement) {
   }
 
   clearGenres(e) {
-    this.genres = [];
+    this.genres.length = 0;
     if (this.main) this.changeGenres(this.genres);
     else this.genresChanged(this.genres);
+    this.requestUpdate();
   }
 
   static get styles() {
