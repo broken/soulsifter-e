@@ -15,6 +15,7 @@ import { SongTrailMixin } from "./mixin-song-trail.js";
 class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement)))) {
   render() {
     let localeDateTime = !!this.song ? new Date(this.song.dateAdded).toLocaleString() : '';
+    let debugMode = this.settings.getBool('app.debug');
     return html`
       <div id="nav" draggable="true" @dragstart="${this.dragSong}">
         <icon-button @click="${this.backAction}" ?disabled="${!this.songTrail.length}" icon="arrow_back"></icon-button>
@@ -43,10 +44,10 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
         <audio-player id="audio" .song="${this.song}"></audio-player>
         <div>${this.song.styles.map(s => s.name).join(', ')}</div>
         <div id="musicVideoThumbnail" draggable="true" @dragstart="${this.dragMusicVideo}" ?hide="${!this.musicVideo}"></div>
-        <div id="musicVideoInput" ?hide="${!!this.musicVideo}">
-          <paper-input label="video url" no-label-float id="videoUrlInput"></paper-input>
-          <icon-button @click="${this.associateVideo}" icon="movie"></paper-icon-button>
-        </div>
+        ${debugMode ? html`<div id="musicVideoInput" ?hide="${!!this.musicVideo}">
+            <paper-input label="video url" no-label-float id="videoUrlInput"></paper-input>
+            <icon-button @click="${this.associateVideo}" icon="movie"></icon-button>
+          </div>` : ''}
       </div>
     `;
   }
@@ -97,7 +98,7 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
     this.changeSongTrail(this.songTrail);
     if (this.clearCache) this.songTrailCache = [];
     this.clearCache = true;
-    this.shadowRoot.getElementById('videoUrlInput').value = '';
+    if (this.settings.getBool('app.debug')) this.shadowRoot.getElementById('videoUrlInput').value = '';
     this.setCoverImage(this.settings.getString('music.dir') + this.song.album.coverFilepath);
     this.setMusicVideo(this.song.musicVideo);
   }
