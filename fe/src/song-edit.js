@@ -5,6 +5,7 @@ import "@polymer/paper-checkbox/paper-checkbox.js";
 import "@polymer/paper-input/paper-input.js";
 
 import { AlertsMixin } from "./mixin-alerts.js";
+import { SettingsMixin } from "./mixin-settings.js";
 import { SongEditMixin } from "./mixin-song-edit.js";
 import "./abstract-action-page.js";
 import "./audio-player.js";
@@ -14,7 +15,7 @@ import "./options-menu-item.js";
 import "./options-menu-paper-input.js";
 
 
-class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
+class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   render() {
     let basicGenreItems = this.basicGenreList.map(g => html`<options-menu-item>${g.name}</options-menu-item>`);
     return html`
@@ -106,7 +107,6 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
       filepaths: { type: Array },
       taggedSong: { type: Object },
       editedSong: { type: Object },
-      soulSifterSettings: { type: Object },
       newSongManager: { type: Object },
       albumArtistCompilation: { type: Boolean },
       changedAlbumCover: { type: Boolean },
@@ -135,7 +135,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
         this.filepaths = e.detail.filepaths;
         this.videoUrl = e.detail.videoUrl;
         this.filepathsChanged();
-        if (!this.soulSifterSettings.getBool('music.autoAdd')) this.classList.add('show');
+        if (!this.settings.getBool('music.autoAdd')) this.classList.add('show');
       }
       if (e.detail.autoplay) setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
     };
@@ -143,7 +143,6 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
     this.songIsTrashed = false;
     this.taggedBasicGenreName = '';
     this.filepaths = [];
-    this.soulSifterSettings = new ss.SoulSifterSettings();
     this.newSongManager = new ss.NewSongManager();
     this.albumArtistCompilation = false;
     this.changedAlbumCover = false;
@@ -197,7 +196,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
     // TODO this whole section should move to MusicService
     if (this.changedSongFile && !!this.editedSong.id) {
       // remove current song (copied to /var/tmp)
-      let currentSongFilepath = this.soulSifterSettings.getString('music.dir') + this.song.filepath;
+      let currentSongFilepath = this.settings.getString('music.dir') + this.song.filepath;
       let albumFilepath = this.path.dirname(this.song.filepath);
       let rmToTmpFilename = '/var/tmp/' + this.path.basename(this.song.filepath);
       try {
@@ -209,7 +208,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
       }
       // copy new file to current albumFilepaths location
       let basename = ss.MusicService.cleanDirName(this.path.basename(this.editedSong.filepath));
-      let newpath = this.soulSifterSettings.getString('music.dir') + albumFilepath + '/' + basename;
+      let newpath = this.settings.getString('music.dir') + albumFilepath + '/' + basename;
       if (newpath != this.editedSong.filepath) {
         this.fs.renameSync(this.editedSong.filepath, newpath);
         console.log('Renamed ' + this.editedSong.filepath + ' to ' + newpath);
@@ -241,7 +240,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
       // TODO the file moving should be done externally
       let basename = ss.MusicService.cleanDirName(this.path.basename(this.editedSong.album.coverFilepath));
       let dirname = this.path.dirname(this.editedSong.filepath);
-      let newpath = this.soulSifterSettings.getString('music.dir') + dirname + '/' + basename;
+      let newpath = this.settings.getString('music.dir') + dirname + '/' + basename;
       // TODO use rename with callback
       if (this.editedSong.album.coverFilepath != newpath) this.fs.renameSync(this.editedSong.album.coverFilepath, newpath);
       this.editedSong.album.coverFilepath = dirname + '/' + basename;
@@ -269,13 +268,13 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
     this.sterilizeSong(this.editedSong);
     if (!!this.editedSong.album.basicGenre) this.basicGenreName = this.editedSong.album.basicGenre.name;
     else this.basicGenreName = '';
-    this.shadowRoot.getElementById('cover').style.backgroundImage = 'url("file://' + this.soulSifterSettings.getString('music.dir') + this.editedSong.album.coverFilepath + '")';
+    this.shadowRoot.getElementById('cover').style.backgroundImage = 'url("file://' + this.settings.getString('music.dir') + this.editedSong.album.coverFilepath + '")';
     this.changedAlbumCover = false;
     this.changedSongFile = false;
     // this does not seem to play well when working straight on the array object
     this.genres = this.editedSong.styles;
     this.forceEdits();
-    if (this.soulSifterSettings.getBool('music.autoAdd')) this.save();
+    if (this.settings.getBool('music.autoAdd')) this.save();
   }
 
   filepathsChanged() {
@@ -323,7 +322,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
       this.songChanged();
       if (!this.song.bpm) {
         var songPath = this.song.filepath;
-        if (!this.soulSifterSettings.getBool('music.autoAdd')) ss.AudioAnalyzer.analyzeBpmAsync(this.song)
+        if (!this.settings.getBool('music.autoAdd')) ss.AudioAnalyzer.analyzeBpmAsync(this.song)
         .then((candidates) => {
           if (songPath == this.song.filepath) {
             let bpmList = "";
@@ -403,7 +402,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
   }
 
   changeCoverFile() {
-    let editedSongFilepath = this.soulSifterSettings.getString('music.dir') + this.path.dirname(this.editedSong.filepath);
+    let editedSongFilepath = this.settings.getString('music.dir') + this.path.dirname(this.editedSong.filepath);
     ipcRenderer.invoke('opendialog', 'Album Cover', editedSongFilepath, ['openFile'])
     .then((file) => {
       if (!file.canceled) {
@@ -416,7 +415,7 @@ class SongEdit extends AlertsMixin(SongEditMixin(LitElement)) {
   }
 
   changeSongFile() {
-    let editedSongFilepath = this.soulSifterSettings.getString('music.dir') + this.path.dirname(this.editedSong.filepath);
+    let editedSongFilepath = this.settings.getString('music.dir') + this.path.dirname(this.editedSong.filepath);
     ipcRenderer.invoke('opendialog', 'Song Path', editedSongFilepath, ['openFile'])
     .then((file) => {
       if (!file.canceled) {
