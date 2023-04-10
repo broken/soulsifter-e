@@ -337,69 +337,109 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
     // assume key lock always on for now
     ss << " and (";
     int num = 0;
-    switch (CamelotKeys::rmap.at(key)) {
-      case 17: // Abm = 1A
+    switch (CamelotKeys::rmap.at(key)) {  // 0 - 11 B , 12 - 23 A
       case 5:  // B = 1B
-        ss << "tonicKey = '" << CamelotKeys::map.at("12A") << "' or tonicKey = '" << CamelotKeys::map.at("12B") << "'";
+        ss << "tonicKey = '" << CamelotKeys::map.at("1A") << "' or tonicKey = '" << CamelotKeys::map.at("12B") << "'";
+        if (++num == 3) break;
+      case 6:  // Gb = 2B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("2A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("1B") << "'";
+        if (++num == 3) break;
+      case 7:  // Db = 3B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("3A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("2B") << "'";
+        if (++num == 3) break;
+      case 8:  // Ab = 4B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("4A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("3B") << "'";
+        if (++num == 3) break;
+      case 9:  // Eb = 5B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("5A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("4B") << "'";
+        if (++num == 3) break;
+      case 10: // Bb = 6B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("6A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("5B") << "'";
+        if (++num == 3) break;
+      case 11: // F = 7B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("7A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("6B") << "'";
+        if (++num == 3) break;
+      case 0:  // C = 8B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("8A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("7B") << "'";
+        if (++num == 3) break;
+      case 1:  // G = 9B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("9A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("8B") << "'";
+        if (++num == 3) break;
+      case 2:  // D = 10B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("10A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("9B") << "'";
+        if (++num == 3) break;
+      case 3:  // A = 11B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("11A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("10B") << "'";
+        if (++num == 3) break;
+      case 4:  // E = 12B
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("12A") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("11B") << "'";
+        if (++num == 3) break;
+        ss << " or tonicKey = '" << CamelotKeys::map.at("12B") << "'";
+        if (++num == 3) break;
+        ss << " or tonicKey = '" << CamelotKeys::map.at("1B") << "'";
+        if (++num == 3) break;
+    // 0 - 11 B (above), 12 - 23 A (below)
+      case 17: // Abm = 1A
+        ss << "tonicKey = '" << CamelotKeys::map.at("1B") << "' or tonicKey = '" << CamelotKeys::map.at("12A") << "'";
         if (++num == 3) break;
       case 18: // Ebm = 2A
-      case 6:  // Gb = 2B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("1A") << "' or tonicKey = '" << CamelotKeys::map.at("1B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("2B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("1A") << "'";
         if (++num == 3) break;
       case 19: // Bbm = 3A
-      case 7:  // Db = 3B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("2A") << "' or tonicKey = '" << CamelotKeys::map.at("2B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("3B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("2A") << "'";
         if (++num == 3) break;
       case 20: // Fm = 4A
-      case 8:  // Ab = 4B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("3A") << "' or tonicKey = '" << CamelotKeys::map.at("3B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("4B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("3A") << "'";
         if (++num == 3) break;
       case 21: // Cm = 5A
-      case 9:  // Eb = 5B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("4A") << "' or tonicKey = '" << CamelotKeys::map.at("4B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("5B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("4A") << "'";
         if (++num == 3) break;
       case 22: // Gm = 6A
-      case 10: // Bb = 6B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("5A") << "' or tonicKey = '" << CamelotKeys::map.at("5B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("6B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("5A") << "'";
         if (++num == 3) break;
       case 23: // Dm = 7A
-      case 11: // F = 7B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("6A") << "' or tonicKey = '" << CamelotKeys::map.at("6B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("7B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("6A") << "'";
         if (++num == 3) break;
       case 12: // Am = 8A
-      case 0:  // C = 8B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("7A") << "' or tonicKey = '" << CamelotKeys::map.at("7B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("8B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("7A") << "'";
         if (++num == 3) break;
       case 13: // Em = 9A
-      case 1:  // G = 9B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("8A") << "' or tonicKey = '" << CamelotKeys::map.at("8B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("9B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("8A") << "'";
         if (++num == 3) break;
       case 14: // Bm = 10A
-      case 2:  // D = 10B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("9A") << "' or tonicKey = '" << CamelotKeys::map.at("9B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("10B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("9A") << "'";
         if (++num == 3) break;
       case 15: // Gbm = 11A
-      case 3:  // A = 11B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("10A") << "' or tonicKey = '" << CamelotKeys::map.at("10B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("11B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("10A") << "'";
         if (++num == 3) break;
       case 16: // Csm = 12A
-      case 4:  // E = 12B
-        if (num != 0) ss << " or ";
-        ss << "tonicKey = '" << CamelotKeys::map.at("11A") << "' or tonicKey = '" << CamelotKeys::map.at("11B") << "'";
+        if (num == 0) ss << "tonicKey = '" << CamelotKeys::map.at("12B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("11A") << "'";
         if (++num == 3) break;
-        ss << " or tonicKey = '" << CamelotKeys::map.at("12A") << "' or tonicKey = '" << CamelotKeys::map.at("12B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("12A") << "'";
         if (++num == 3) break;
-        ss << " or tonicKey = '" << CamelotKeys::map.at("1A") << "' or tonicKey = '" << CamelotKeys::map.at("1B") << "'";
+        ss << " or tonicKey = '" << CamelotKeys::map.at("1A") << "'";
         if (++num == 3) break;
       default:
         // TODO bubble up this error
