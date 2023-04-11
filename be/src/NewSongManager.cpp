@@ -49,9 +49,9 @@ void NewSongManager::preprocessAllFiles(const vector<boost::filesystem::path>& f
 
   for (const boost::filesystem::path& filepath : filepaths) {
 
-    // skip files starting with period
+    // delete files starting with period
     if (filepath.filename().string().at(0) == '.') {
-      LOG(INFO) << "skipping " << filepath;
+      filesToTrash.push_back(filepath);
       continue;
     }
 
@@ -59,8 +59,8 @@ void NewSongManager::preprocessAllFiles(const vector<boost::filesystem::path>& f
     if (boost::filesystem::is_directory(filepath)) {
       vector<boost::filesystem::path> dirContents;
       copy(boost::filesystem::directory_iterator(filepath), boost::filesystem::directory_iterator(), back_inserter(dirContents));
-      filesToTrash.push_back(filepath);
       preprocessAllFiles(dirContents);
+      filesToTrash.push_back(filepath);
       continue;
     }
 
@@ -127,11 +127,11 @@ bool NewSongManager::nextSong(Song* updatedSong, Song* originalSong) {
     return nextSong(updatedSong, originalSong);  // should never return true
   }
 
-  // TODO trash files if desired
-  /*for (auto& fileToTrash : filesToTrash) {
-    NSLog(@"trashing file %@", fileToTrash);
-    [[NSFileManager defaultManager] trashItemAtURL:fileToTrash resultingItemURL:nil error:nil];
-  }*/
+  for (int i = 0; i < filesToTrash.size(); ++i) {
+    if (!boost::filesystem::remove(filesToTrash[i])) {
+      LOG(WARNING) << "Unable to delete file at " << filesToTrash[i];
+    }
+  }
   filesToTrash.clear();
   MusicManager::getInstance().clearLastSongs();
   return false;
