@@ -23,6 +23,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag">Overwrite values when reading ID3 tags</paper-checkbox>
           <paper-checkbox ?checked="${this.appDebugMode}" id="appDebugMode">Debug mode (requires restart)</paper-checkbox>
           <paper-checkbox ?checked="${this.musicAutoAdd}" id="musicAutoAdd">Auto add music (skip edit dialog)</paper-checkbox>
+          <br>
+          <paper-checkbox ?checked="${this.songListColBpm}" id="songListColBpm">Include BPM in song list</paper-checkbox>
         </div>
         <div class="fields">
           <paper-input label="Database Name" value="${this.dbName}" id="dbName"></paper-input>
@@ -64,6 +66,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.dbUrl = this.settings.getString('db.url');
     this.feedlyDevToken = this.settings.getString('feedly.devToken');
     this.feedlyUserId = this.settings.getString('feedly.userId');
+    this.songListColBpm = this.settings.getBool('songList.column.bpm');
     this.songListLimit = this.settings.getInt('songList.limit');
     this.songListSearchOnSelect = this.settings.getBool('songList.searchOnSelect');
     this.songListShowComments = this.settings.getBool('songList.showComments');
@@ -104,6 +107,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('db.url', this.shadowRoot.getElementById('dbUrl').value);
     this.puts('feedly.devToken', this.shadowRoot.getElementById('feedlyDevToken').value);
     this.puts('feedly.userId', this.shadowRoot.getElementById('feedlyUserId').value);
+    this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);
     this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
     this.putb('songList.searchOnSelect', this.shadowRoot.getElementById('songListSearchOnSelect').checked);
     this.putb('songList.showComments', this.shadowRoot.getElementById('songListShowComments').checked);

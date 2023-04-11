@@ -22,6 +22,7 @@ class SongListItem extends SettingsMixin(LitElement) {
         ${!!this.playlistEntry ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
         <div>${this.computeBpmShift(this.song, this.bpm)}</div>
+        ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm}</div>` : html``}
         <div class="energy-${this.song.energy}">${this.song.energy}</div>
         <div>${this.computeDuration(this.song)}</div>
         <star-rating value="${this.song.rating}" class="${this.trashedClass(this.song.trashed)}" readonly></star-rating>

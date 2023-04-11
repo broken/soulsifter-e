@@ -50,6 +50,7 @@ namespace soulsifter {
       ptree.put("music.autoAdd", false);
       ptree.put("search.energyGap", 1);
       ptree.put("search.includeUnknownKeys", true);
+      ptree.put("songList.column.bpm", false);
       ptree.put("songList.limit", 128);
       ptree.put("songList.searchOnSelect", false);
       ptree.put("songList.showComments", false);
