@@ -4,7 +4,9 @@
   "description": "Scripts for automating builds of the backend & fronted of SoulSifter app.",
   "scripts": {
     "all": "npm run buildnumber && cd be && npm run be:compile && cd ../fe && npm run fe:start",
+    "branch": "git checkout -b $(echo $npm_package_version | cut -d. -f1,2) && npm run bump patch && git checkout master",
     "buildnumber": "cd fe && npm run fe:buildnumber",
+    "bump": "npm version $1 && cd fe && npm version $1 && cd ../be && npm version $1 && git add package* fe/package* be/package* && git commit -m 'bump $1'",
     "generatemodel": "cd be && npm run be:generatemodel",
     "package": "npm run buildnumber && cd fe && npm run fe:package",
     "packagedebug": "npm run buildnumber && cd fe && npm run fe:packagedebug",
