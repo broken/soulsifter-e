@@ -25,6 +25,7 @@
 #include "DTVectorUtil.h"
 #include "MusicVideo.h"
 #include "MysqlAccess.h"
+#include "Playlist.h"
 #include "Song.h"
 #include "SoulSifterSettings.h"
 #include "Style.h"
@@ -331,7 +332,7 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
   return ss.str();
 }
 
-string buildOptionPredicate(const int bpm, const string& key, const vector<Style*>& styles, const vector<Song*>& songsToOmit, const int limit, const int energy, const int orderBy) {
+string buildOptionPredicate(const int bpm, const string& key, const vector<Style*>& styles, const vector<Song*>& songsToOmit, const vector<Playlist*>& playlists, const int limit, const int energy, const int orderBy) {
   stringstream ss;
   if (CamelotKeys::rmap.find(key) != CamelotKeys::rmap.end()) {
     // assume key lock always on for now
@@ -480,6 +481,15 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
     }
     ss << ")";
   }
+  if (playlists.size() > 0) {
+    ss << " and pe.playlistid in (";
+    string separator("");
+    for (Playlist* p : playlists) {
+      ss << separator << p->getId();
+      separator = ",";
+    }
+    ss << ")";
+  }
 
   ss << " group by s.id order by ";
   if (orderBy == RELEASE_DATE) {
@@ -498,11 +508,12 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
 }  // anon namespace
 
 vector<Song*>* SearchUtil::searchSongs(const string& query,
+                                       int limit,
                                        const int bpm,
                                        const string& key,
                                        const vector<Style*>& styles,
                                        const vector<Song*>& songsToOmit,
-                                       int limit,
+                                       const vector<Playlist*>& playlists,
                                        int energy,
                                        const bool musicVideoMode,
                                        int orderBy,
@@ -512,10 +523,12 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
   stringstream ss;
   if (musicVideoMode)
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist, v.filepath as mvFilePath, v.thumbnailFilePath as mvTnFilePath from Songs s inner join Albums a on s.albumid = a.id inner join MusicVideos v on s.musicVideoId=v.id left outer join SongStyles ss on ss.songid=s.id where true";
+  else if (playlists.size() > 0)
+    ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from Songs s inner join Albums a on s.albumid = a.id inner join PlaylistEntries pe on pe.songid=s.id left outer join SongStyles ss on ss.songid=s.id where true";
   else
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from Songs s inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
   ss << buildQueryPredicate(query, &limit, &energy, &orderBy);
-  ss << buildOptionPredicate(bpm, key, styles, songsToOmit, limit, energy, orderBy);
+  ss << buildOptionPredicate(bpm, key, styles, songsToOmit, playlists, limit, energy, orderBy);
 
   LOG(DEBUG) << "Query:";
   LOG(DEBUG) << ss.str();

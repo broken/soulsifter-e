@@ -18,6 +18,7 @@ using namespace std;
 
 namespace dogatech {
 namespace soulsifter {
+class Playlist;
 class Song;
 class Style;
 
@@ -26,11 +27,12 @@ enum OrderBy { DATE_ADDED, RELEASE_DATE, RANDOM, BPM };
 class SearchUtil {
 public:
   static vector<Song*>* searchSongs(const string& query,
-                                    const int bpm,
-                                    const string& key,
-                                    const vector<Style*>& styles,
-                                    const vector<Song*>& songsToOmit,
-                                    int limit,
+                                    int limit = 1000,
+                                    const int bpm = 0,
+                                    const string& key = "",
+                                    const vector<Style*>& styles = vector<Style*>(),
+                                    const vector<Song*>& songsToOmit = vector<Song*>(),
+                                    const vector<Playlist*>& playlists = vector<Playlist*>(),
                                     int energy = 0,
                                     const bool musicVideoMode = false,
                                     int orderBy = DATE_ADDED,

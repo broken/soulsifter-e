@@ -193,12 +193,10 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
   }
 
   search() {
+    let playlists = [];
     if (!!this.playlist) {
       if (!this.playlist.query) {
-        this.entries = ss.PlaylistEntry.findByPlaylistId(this.playlist.id);
-        this.entries = this.entries.sort(function(a, b) { return a.position - b.position; });
-        this.songs = this.entries.map(function(x) { return x.song; });
-        return;
+        playlists.push(this.playlist);
       } else {
         this.query = this.playlist.query;
         this.genres = this.playlist.styles;
@@ -213,7 +211,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistMixin(QueryMixin
     p.energy = this.searchOptions.energyRestrict && !!this.song ? Number(this.song.energy) : 0;
     p.q += !this.searchOptions.trashedRestrict ? '' : (p.q.length ? ' ' : '') + 'trashed:0';
     omitSongs = !this.searchOptions.repeatRestrict ? [] : this.songTrail.map(e => e.song);
-    this.songs = ss.SearchUtil.searchSongs(p.q, p.bpm, p.keys, this.genres, omitSongs, this.settings.getInt('songList.limit'), p.energy, this.searchOptions.mvRestrict, this.searchOptions.orderBy, (msg) => { this.addAlert(msg, 5); });
+    this.songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, this.genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, this.searchOptions.orderBy, (msg) => { this.addAlert(msg, 5); });
   }
 
   updateSongField(cb) {

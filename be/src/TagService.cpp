@@ -436,10 +436,8 @@ void TagService::updateSongAttributesFromTags(std::function<void(float)> progres
   LOG(INFO) << "updating song attributes from tags";
 
   // get max id
-  vector<Style*> emptyStyles;
-  vector<Song*> emptySongs;
   string query = "id:\"(select max(id) from songs)\"";
-  vector<Song*>* songs = SearchUtil::searchSongs(query, 0, "", emptyStyles, emptySongs, 1);
+  vector<Song*>* songs = SearchUtil::searchSongs(query, 1);
   int maxId = 0;
   for (Song* song : *songs) {
     maxId = song->getId();
@@ -455,7 +453,7 @@ void TagService::updateSongAttributesFromTags(std::function<void(float)> progres
     ss << "q:\"s.id >= " << i << "\" q:\"s.id < " << (i + span) << "\"";
     ss << " trashed:0";  // q:\"bpm is null\"";
     query = ss.str();
-    songs = SearchUtil::searchSongs(query,  0, "", emptyStyles, emptySongs, span);
+    songs = SearchUtil::searchSongs(query, span);
 
     for (Song* song : *songs) {
       if (readId3v2TagAttributes(song)) {

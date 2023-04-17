@@ -88,10 +88,8 @@ namespace dogatech {
     void AudioAnalyzer::analyzeBpms() {
       LOG(INFO) << "analyze bpms";
 
-      vector<Style*> emptyStyles;
-      vector<Song*> emptySongs;
       string query = "id:\"(select max(id) from songs)\"";
-      vector<Song*>* songs = SearchUtil::searchSongs(query, 0, "", emptyStyles, emptySongs, 1);
+      vector<Song*>* songs = SearchUtil::searchSongs(query, 1);
       int maxId = 0;
       for (Song* song : *songs) {
         maxId = song->getId();
@@ -104,7 +102,7 @@ namespace dogatech {
         ss << "q:\"s.id >= " << i << "\" q:\"s.id < " << (i + span) << "\"";
         ss << " trashed:0 q:\"bpm is null\"";
         query = ss.str();
-        songs = SearchUtil::searchSongs(query, 0, "", emptyStyles, emptySongs, span);
+        songs = SearchUtil::searchSongs(query, span);
 
         for (Song* song : *songs) {
           string bpm = song->getBpm();
@@ -139,10 +137,8 @@ namespace dogatech {
     void AudioAnalyzer::analyzeDurations() {
       LOG(INFO) << "analyze durations";
 
-      vector<Style*> emptyStyles;
-      vector<Song*> emptySongs;
       string query = "id:\"(select max(id) from songs)\"";
-      vector<Song*>* songs = SearchUtil::searchSongs(query, 0, "", emptyStyles, emptySongs, 1);
+      vector<Song*>* songs = SearchUtil::searchSongs(query, 1);
       int maxId = 0;
       for (Song* song : *songs) {
         maxId = song->getId();
@@ -155,7 +151,7 @@ namespace dogatech {
         ss << "q:\"s.id >= " << i << "\" q:\"s.id < " << (i + span) << "\"";
         ss << " trashed:0";  // todo time is null
         query = ss.str();
-        songs = SearchUtil::searchSongs(query, 0, "", emptyStyles, emptySongs, span);
+        songs = SearchUtil::searchSongs(query, span);
         for (Song* song : *songs) {
           int duration = song->getDurationInMs();
           AudioAnalyzer::analyzeDuration(song);
