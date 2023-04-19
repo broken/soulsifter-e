@@ -104,6 +104,7 @@ static inline std::string trim_copy(std::string s) {
 }
 
 float strToFloat(const string& s) {
+  if (s.size() == 0) return 0;
   stringstream ss(s);
   float x;
   ss >> x;
