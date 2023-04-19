@@ -121,6 +121,8 @@ struct Atom {
     A_MIXED,
     A_LABEL,
     A_YEAR,
+    A_MONTH,
+    A_DAY,
     CUSTOM_QUERY_PREDICATE,
     LIMIT,
     ORDER_BY,
@@ -153,7 +155,7 @@ void splitString(const string& query, vector<string>* atoms) {
 
 bool parse(const string& queryFragment, Atom* atom) {
   atom->clear();
-  boost::regex regex("^(-)?((id|a|artist|t|title|remixer|r|rating|comment|c|curator|e|energy|bpm|trashed|lowq|aid|n|album|m|mixed|l|label|y|year|q|query|limit|o|order|orderby|orderBy):)?(<|>)?(=)?(.+)$");
+  boost::regex regex("^(-)?((id|a|artist|t|title|remixer|r|rating|comment|c|curator|e|energy|bpm|trashed|lowq|aid|n|album|m|mixed|l|label|y|year|month|day|q|query|limit|o|order|orderby|orderBy):)?(<|>)?(=)?(.+)$");
   boost::smatch match;
   if (!boost::regex_match(queryFragment, match, regex)) {
     return false;
@@ -205,6 +207,10 @@ bool parse(const string& queryFragment, Atom* atom) {
       atom->type = Atom::A_LABEL;
     } else if (!match[3].compare("y") || !match[3].compare("year")) {
       atom->type = Atom::A_YEAR;
+    } else if (!match[3].compare("month")) {
+      atom->type = Atom::A_MONTH;
+    } else if (!match[3].compare("day")) {
+      atom->type = Atom::A_DAY;
     } else if (!match[3].compare("q") || !match[3].compare("query")) {
       atom->type = Atom::CUSTOM_QUERY_PREDICATE;
     } else if (!match[3].compare("limit")) {
@@ -284,6 +290,10 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
       ss << "ifnull(a.label,'') like '%" << atom.value << "%'";
     } else if (atom.type == Atom::A_YEAR) {
       ss << "a.releaseDateYear " << buildEqualityOperator(atom.props) << " " << atom.value;
+    } else if (atom.type == Atom::A_MONTH) {
+      ss << "a.releaseDateMonth " << buildEqualityOperator(atom.props) << " " << atom.value;
+    } else if (atom.type == Atom::A_DAY) {
+      ss << "a.releaseDateDay " << buildEqualityOperator(atom.props) << " " << atom.value;
     } else if (atom.type == Atom::CUSTOM_QUERY_PREDICATE) {
       ss << atom.value;
     } else if (atom.type == Atom::S_BPM) {

@@ -19,6 +19,8 @@ class SearchInfo extends LitElement {
           <span class="emphasis">c</span> or <span class="emphasis">curator</span> : <br>
           <span class="emphasis">e</span> or <span class="emphasis">energy</span> : <br>
           <span class="emphasis">bpm</span> : <br>
+          <span class="emphasis">trashed</span> : <br>
+          <span class="emphasis">lowq</span> : <br>
         </div>
         <div class="flex">
           Internal song ID<br>
@@ -30,6 +32,8 @@ class SearchInfo extends LitElement {
           Discovery curator<br>
           Song energy<br>
           Song BPM (single or span)<br>
+          Has song been deleted<br>
+          Is song low quality<br>
         </div>
         <div class="right flex">
           <span class="emphasis">aid</span> : <br>
@@ -37,8 +41,8 @@ class SearchInfo extends LitElement {
           <span class="emphasis">m</span> or <span class="emphasis">mixed</span> : <br>
           <span class="emphasis">l</span> or <span class="emphasis">label</span> : <br>
           <span class="emphasis">y</span> or <span class="emphasis">year</span> : <br>
-          <span class="emphasis">trashed</span> : <br>
-          <span class="emphasis">lowq</span> : <br>
+          <span class="emphasis">month</span> : <br>
+          <span class="emphasis">day</span> : <br>
           <span class="emphasis">l</span> or <span class="emphasis">limit</span> : <br>
           <span class="emphasis">q</span> or <span class="emphasis">query</span> : <br>
           <span class="emphasis">o</span> or <span class="emphasis">order</span> : <br>
@@ -49,8 +53,8 @@ class SearchInfo extends LitElement {
           Is album mixed<br>
           Label released on<br>
           Year released<br>
-          Has song been deleted<br>
-          Is song low quality<br>
+          Month released<br>
+          Day released<br>
           Result count limit<br>
           Custom query predicate<br>
           Order By (rand, released, added)<br>
