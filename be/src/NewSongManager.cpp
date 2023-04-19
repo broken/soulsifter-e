@@ -175,7 +175,6 @@ void NewSongManager::trashMusicFile(Song* song) {
 
   song->setTrashed(true);
   song->setFilepath(song->getFilepath() + ".txt");
-  song->setRating(0);
   song->update();
 }
 
