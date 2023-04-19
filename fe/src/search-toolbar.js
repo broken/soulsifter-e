@@ -127,11 +127,15 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   updateSongAttributesFromTags(e) {
     let msg = "Updating song attributes from id3 tags.";
     let alertId = this.addAlert(msg, 0, -1);
-    ss.TagService.updateSongAttributesFromTags((p) => { this.updateAlert(alertId, p); },
-                                               (e) => {
-                                                  if (!e) this.updateAlert(alertId, 1, '[done] ' + msg);
-                                                  else this.updateAlert(alertId, a = '[failed] ' + msg + ' ' + e);
-                                                });
+    ss.TagService.updateSongAttributesFromTags((err, ok, p) => {
+      if (!!err) {
+        this.updateAlert(alertId, a = '[failed] ' + msg + ' :: ' + err);
+      } else if (!!ok) {
+        this.updateAlert(alertId, 1, '[done] ' + msg);
+      } else {
+       this.updateAlert(alertId, p);
+      }
+    });
   }
 
   showDevTools(e) {
