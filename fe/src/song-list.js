@@ -87,6 +87,8 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     this.mvRestrict = false;
     this.selectedListItems = new Set();
     this.lastSelectedListItem = undefined;
+    // used for setting back original genres after playlist selection
+    this.genresBeforePlaylist = [];
   }
 
   connectedCallback() {
@@ -116,6 +118,12 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
   playlistsChanged(playlists) {
     this.playlists = playlists;
     if (!!playlists.length) this.search();
+    else this.genres = this.genresBeforePlaylist;
+  }
+
+  genresChanged(x) {
+    this.genres = x;
+    if (!this.playlists.length) this.genresBeforePlaylist = this.genres;
   }
 
   queryChanged(query) {
