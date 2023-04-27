@@ -9,11 +9,9 @@ class WavePlayer extends SettingsMixin(LitElement) {
   render() {
     let progress = this.currentTime / this.duration;
     return html`
-      <icon-button id="playPause" icon="play_pause" @click="${this.playAction}"></icon-button>
-      <div class="timebar">
-        <div id="time" self-end>${this.currentTimeStr()}</div>
-        <div id="wavesurfer"></div>
-      </div>
+      <icon-button id="playPause" icon="pause" @click="${this.playAction}" class="meta"></icon-button>
+      <div id="wavesurfer"></div>
+      <div id="time" class="meta">${this.currentTimeStr()}</div>
     `;
   }
 
@@ -55,9 +53,9 @@ class WavePlayer extends SettingsMixin(LitElement) {
   }
 
   firstUpdated() {
-    let el = this.shadowRoot.getElementById('wavesurfer');
     this.wavesurfer = WaveSurfer.create({
-      container: el
+      container: this.shadowRoot.getElementById('wavesurfer'),
+      height: 24
     });
     this.wavesurfer.on('error', function (msg) {
       console.error('Audio error: ' + msg);
@@ -121,15 +119,15 @@ class WavePlayer extends SettingsMixin(LitElement) {
           display: flex;
           flex-direction: row;
         }
-        .timebar {
-          flex: 1 1 auto;
-          display: flex;
-          flex-direction: column;
-          margin-left: 6px;
+        icon-button {
+          --mdc-icon-size: 24px;
         }
-        #wave {
+        .meta {
+          width: 24px;
+        }
+        #wavesurfer {
           width: 100%;
-          height: 62px;
+          height: 24px;
         }
       `,
     ];
