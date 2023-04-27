@@ -111,7 +111,9 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
       string date;
       if (url.find("music.youtube") != std::string::npos) {
         // youtube music
-        song->setArtist(ptree.get<string>("artist"));
+        LOG(DEBUG) << "artist = " << ptree.get<string>("artist");
+        LOG(DEBUG) << "creator = " << ptree.get<string>("creator");
+        song->setArtist(ptree.get<string>("creator"));
         song->setTitle(ptree.get<string>("track"));
         album->setName(ptree.get<string>("album"));
         song->setTrack(ptree.get<string>("playlist_index"));
@@ -120,9 +122,6 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
           int yr = ptree.get<int>("release_year", 0);
           if (yr > 0) date = std::to_string(yr) + "0000";
         }
-        // remix people are added inline, so let's remove them
-        boost::regex artistRegex(", .*$");
-        song->setArtist(boost::regex_replace(song->getArtist(), artistRegex, ""));
       } else {
         // youtube
         song->setYoutubeId(ptree.get<string>("id"));
