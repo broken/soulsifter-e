@@ -126,7 +126,7 @@ class WavePlayer extends SettingsMixin(LitElement) {
           width: 24px;
         }
         #wavesurfer {
-          width: 100%;
+          flex-grow: 512;
           height: 24px;
         }
       `,
