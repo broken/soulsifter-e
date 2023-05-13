@@ -64,6 +64,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
         (e) => str += ++i + ". " + e.song.artist + " - "  + e.song.title + "\n");
     ipcRenderer.send('copytoclipboard', str);
     this.shadowRoot.getElementById('opt').style.display = 'none';
+    setTimeout(() => this.shadowRoot.getElementById('opt').style.removeProperty('display'), 1);
     e.stopPropagation();
   }
 
