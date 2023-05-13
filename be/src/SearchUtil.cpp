@@ -335,6 +335,8 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
         *orderBy = DATE_ADDED;
       } else if (!atom.value.compare("bpm")) {
         *orderBy = BPM;
+      }else if (!atom.value.compare("playlist")) {
+        *orderBy = PLAYLIST;
       }
       ss << "true";
     }
@@ -508,6 +510,8 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
     ss << "rand()";
   } else if (orderBy == BPM) {
     ss << "s.bpm asc";
+  } else if (orderBy == PLAYLIST) {
+    ss << "pe.playlistid desc, pe.position asc";
   } else {
     ss << "s.id desc";
   }

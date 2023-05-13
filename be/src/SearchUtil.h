@@ -22,7 +22,7 @@ class Playlist;
 class Song;
 class Style;
 
-enum OrderBy { DATE_ADDED, RELEASE_DATE, RANDOM, BPM };
+enum OrderBy { DATE_ADDED, RELEASE_DATE, RANDOM, BPM, PLAYLIST };
 
 class SearchUtil {
 public:

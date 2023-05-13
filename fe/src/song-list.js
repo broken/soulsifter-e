@@ -202,12 +202,14 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
 
   search() {
     let playlists = [];
+    let orderBy = this.searchOptions.orderBy;
     if (!!this.playlists.length) {
       this.query = '';
       this.genres = [];
       for (let i = 0; i < this.playlists.length; ++i) {
         if (!this.playlists[i].query) {
           playlists.push(this.playlists[i]);
+          orderBy = /* playlist */ 4;
         } else {
           this.query += this.playlists[i].query + " ";
           this.genres.concat(this.playlists[i].styles);
@@ -223,7 +225,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     p.energy = this.searchOptions.energyRestrict && !!this.song ? Number(this.song.energy) : 0;
     p.q += !this.searchOptions.trashedRestrict ? '' : (p.q.length ? ' ' : '') + 'trashed:0';
     omitSongs = !this.searchOptions.repeatRestrict ? [] : this.songTrail.map(e => e.song);
-    this.songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, this.genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, this.searchOptions.orderBy, (msg) => { this.addAlert(msg, 5); });
+    this.songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, this.genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, (msg) => { this.addAlert(msg, 5); });
   }
 
   updateSongField(cb) {
