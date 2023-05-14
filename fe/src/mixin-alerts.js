@@ -13,7 +13,6 @@ let alertsMixin = (superClass) => class extends superClass {
   constructor() {
     super();
     this._alertsListener = (e) => this._alertsChanged(e);
-    this._alertIdPool = 0;
     this.alerts = [];
   }
 
@@ -41,11 +40,11 @@ let alertsMixin = (superClass) => class extends superClass {
   }
 
   addAlert(a, timeoutInSeconds = 0, progress = 0) {
-    this.alerts.push(new Alert(++this._alertIdPool, a, progress));
+    let id = Math.random().toString(36).substring(2);
+    this.alerts.push(new Alert(id, a, progress));
     this.changeAlerts(this.alerts);
-    let id = this._alertIdPool;
     if (timeoutInSeconds) setTimeout(() => this.rmAlert(id), timeoutInSeconds * 1000);
-    return this._alertIdPool;
+    return id;
   }
 
   rmAlert(id = undefined) {
