@@ -129,7 +129,7 @@ void copyRemixer(Song* updatedSong) {
     // Remove dangling remix terms that shouldn't be a part of the name
     rtrim(remixer);
     boost::regex nonRemixerRegex(NON_REMIXER_REGEX);
-    boost::regex_replace(remixer, nonRemixerRegex, "");
+    remixer = boost::regex_replace(remixer, nonRemixerRegex, "");
     trim(remixer);
     updatedSong->setRemixer(remixer);
   }
