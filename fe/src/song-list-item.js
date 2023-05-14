@@ -10,6 +10,7 @@ class SongListItem extends SettingsMixin(LitElement) {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     let bgImg = 'background-image: url("file://' + this.settings.getString('music.dir') + this.song.album.coverFilepath + '")';
+    let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}">
         <div id="cover" style="${bgImg}"></div>
@@ -19,7 +20,7 @@ class SongListItem extends SettingsMixin(LitElement) {
           <span class="title">${this.song.title}</span>
           <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${comments}</span>
         </div>
-        ${!!this.playlistEntry ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
+        ${inPlaylist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
         <div>${this.computeBpmShift(this.song, this.bpm)}</div>
         ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm}</div>` : html``}
@@ -35,13 +36,14 @@ class SongListItem extends SettingsMixin(LitElement) {
     return {
       bpm: { type: Number },
       mvRestrict: { type: Boolean },
-      playlistEntry: { type: Object },
+      playlists: { type: Array },
       song: { type: Object },
     };
   }
 
   constructor() {
     super();
+    this.playlists = [];
   }
 
   selectSong(e) {
@@ -100,7 +102,10 @@ class SongListItem extends SettingsMixin(LitElement) {
   }
 
   removeSongFromPlaylist(e) {
-    this.playlistEntry.erase();
+    for (let p of this.playlists.filter(p => p.query === "")) {
+      let entry = ss.PlaylistEntry.findByPlaylistIdAndSongId(p.id, this.song.id);
+      if (!!entry) entry.erase();
+    }
     let event = new CustomEvent('search', {
         bubbles: true,
         composed: true });

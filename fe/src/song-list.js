@@ -25,8 +25,7 @@ import { } from "./song-list-item.js";
 class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))))))))) {
   render() {
     let songListItems = html``;
-    if (this.entries.length) songListItems = this.entries.map(e => html`<song-list-item .song="${e.song}" .playlistEntry="${e}" bpm="${this.bpm}" @select-song="${this.selectSong}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
-    else songListItems = this.songs.map(s => html`<song-list-item .song="${s}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
+    songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
     const fields = ['artist', 'comments', 'curator']
     let dialogs = fields.map(f => html`
         <paper-dialog id="${f}">
