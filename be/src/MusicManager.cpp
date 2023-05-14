@@ -64,6 +64,7 @@ namespace {
   const string REMIX_TERM_REGEX = "[Rr]emix|[Rr]mx|[Mm]ix|[Rr]efix|[Dd]ub|[Ff]lip|[Bb]ootleg|[Ee]dit|[Cc]ut";
   const string REMIX_REGEX = "[(]([^()]+) (" + REMIX_TERM_REGEX + ")[)]";
   const string NON_REMIXER_REGEX = "([Oo]riginal|[Rr]adio|[Vv]ideo|" + REMIX_TERM_REGEX + ")$";
+  const string POSSESSION_REGEX = "^[^']'";
 
   // trim from start (in place)
   static inline void ltrim(std::string &s) {
@@ -122,6 +123,10 @@ void copyRemixer(Song* updatedSong) {
   if (boost::regex_search(updatedSong->getTitle(), rmxrMatch, rmxrRegex, boost::match_extra) &&
       updatedSong->getRemixer().length() == 0) {
     string remixer(rmxrMatch[1]);
+    // Remove possession "'s" from remixer name
+    size_t apostropheIndex = remixer.find("'");
+    if (apostropheIndex != std::string::npos) remixer = remixer.substr(0, apostropheIndex);
+    // Remove dangling remix terms that shouldn't be a part of the name
     rtrim(remixer);
     boost::regex nonRemixerRegex(NON_REMIXER_REGEX);
     boost::regex_replace(remixer, nonRemixerRegex, "");
