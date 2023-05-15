@@ -56,3 +56,13 @@ Thus, I created the first version of [SoulSifter](https://github.com/broken/soul
 When I found out about Node-Webkit (later NW.js) and discovered you could write a desktop app using web APIs I was immidiately sold. The new [SoulSifter v0.0](https://github.com/broken/soulsifter) repository was just shy of two years later on Aug 13, 2014. The app flourished, features were added more quickly, the GUI looked much better, and most of the backend code was the same - compiling the C++ into native js components. However, it had its own pain points. The main one being it did not support drag & drop (which was required for DJing), so any upgrade the NW.js code would need to be hacked and recompiled which would take a full day. At one point I was having to compile in ffmpeg codec myself. I felt nw-gyp was the janky and not-often-looked at cousin of node-gyp. There was simply a lot of time wasted getting everything working that should have been given to feature development.
 
 In Feb of 2023, at v0.18, I upgraded my laptop and libraries got out of wack to the point I was no longer able to build a working copy of SoulSifter. I was fed up with NW.js, and the promise of native file drag & drop Electron delivered inticed me to switch. In parallel, it seemed converting over to the new Electron framework would be faster then getting the current version working. It had been something I had wanted to do for some time, which had me limiting any new feature development anyways, and this was the forcing function. Now the third incarnation, [SoulSifter v1.0]() was born Feb 27, 2023. I've been working on SoulSifter in one form or another for over a decade, and I plan to work on it for decades to come.
+
+
+Release process
+===============
+* npm run release
+* create release on github. tag version. upload zipped build.
+* locally move app from out to applications
+* pull new tag
+* npm run branch
+* npm run bump:minor
