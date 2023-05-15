@@ -22,6 +22,7 @@
 #include <sstream>
 #include <vector>
 
+#include <boost/algorithm/string.hpp>
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/regex.hpp>
@@ -50,7 +51,6 @@
 #include "Style.h"
 #include "TagService.h"
 
-using namespace boost;
 using namespace std;
 
 namespace dogatech {
@@ -315,6 +315,15 @@ void MusicManager::writeTagsToSong(Song* song) {
         // so we remove it since it rarely matches in practice.
         boost::regex featRegex(" [(]ft[.] .*");
         updatedSong->setArtist(boost::regex_replace(lastSongFixed->getArtist(), featRegex, ""));
+      } else {
+        // youtube music adds featuring and remixers to artists, so we remove it possibly here
+        std::vector<std::string> artists;
+        boost::split(artists, updatedSong->getArtist(), boost::is_any_of(","));
+        for (int i = 1; i < artists.size(); ++i) {
+          if (updatedSong->getTitle().find(trim_copy(artists[i])) == std::string::npos) {
+            artists[0] += ", " + artists[i];
+          }
+        }
       }
       if (song.getTrack().length() == 0) {
         int trackNum = atoi(lastSongFixed->getTrack().c_str());  // returns 0 on error
@@ -576,8 +585,8 @@ bool MusicManager::splitArtistAndTitle(const string& songString, Song* updatedSo
   boost::regex splitRegex("^(.+) - (.+)$");
   boost::smatch match;
   if (boost::regex_search(songString, match, splitRegex, boost::match_extra)) {
-    updatedSong->setArtist(trim_copy(match[1]));
-    updatedSong->setTitle(trim_copy(match[2]));
+    updatedSong->setArtist(dogatech::soulsifter::trim_copy(match[1]));
+    updatedSong->setTitle(dogatech::soulsifter::trim_copy(match[2]));
     return true;
   }
   return false;
