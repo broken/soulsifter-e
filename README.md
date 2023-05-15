@@ -65,4 +65,5 @@ Release process
 * locally move app from out to applications
 * pull new tag
 * npm run branch
+* git push -u origin <new_branch> && git checkout master
 * npm run bump:minor
