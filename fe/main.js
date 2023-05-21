@@ -93,16 +93,30 @@ app.whenReady().then(() => {
   })
 })
 
+var ss_img = nativeImage.createFromPath("resources/soulsifter.png").resize({width: 50, quality: 'best'});
 ipcMain.on('ondragstart', (event, filepath, icon) => {
-  nativeImage.createThumbnailFromPath(icon, {width: 50, height: 50})
-  .then((img) => {
-    event.sender.startDrag({
-      file: filepath,
-      icon: img,
-    });
-  })
-  .catch((err) => {
-    console.log(err);
+  let ext = icon.split('.').pop();
+  let img = ss_img;
+  if (ext == 'jpg' || ext == 'jpeg' || ext == 'png') {
+    let tmp = nativeImage.createFromPath(icon);
+    if (!tmp.isEmpty()) {
+      img = tmp;
+      let size = img.getSize();
+      size.x = 0, size.y = 0;
+      if (size.height > size.width) {
+        size.y = Math.floor((size.height - size.width) / 2);
+        size.height = size.width;
+      } else if (size.width > size.height) {
+        size.x = Math.floor((size.width - size.height) / 2);
+        size.width = size.height;
+      }
+      console.log(size);
+      img = img.crop(size).resize({width: 50, quality: 'good'});
+    }
+  }
+  event.sender.startDrag({
+    file: filepath,
+    icon: img,
   });
 })
 
