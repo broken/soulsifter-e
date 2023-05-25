@@ -61,7 +61,7 @@ namespace soulsifter {
 namespace {
 
   const string FEATURING_REGEX = " [(]?[Ff](eaturing|t[.]?|eat[.]?) ([^()]+)[)]?";
-  const string REMIX_TERM_REGEX = "[Rr]emix|[Rr]mx|[Mm]ix|[Rr]efix|[Dd]ub|[Ff]lip|[Bb]ootleg|[Ee]dit|[Cc]ut";
+  const string REMIX_TERM_REGEX = "[Rr]emix|[Rr]mx|[Mm]ix|[Rr]efix|[Dd]ub|[Ff]lip|[Bb]ootleg|[Ee]dit|[Cc]ut|[Vv]ocal";
   const string REMIX_REGEX = "[(]([^()]+) (" + REMIX_TERM_REGEX + ")[)]";
   const string NON_REMIXER_REGEX = "([Oo]riginal|[Rr]adio|[Vv]ideo|" + REMIX_TERM_REGEX + ")$";
   const string POSSESSION_REGEX = "^[^']'";
