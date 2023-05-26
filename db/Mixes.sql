@@ -33,7 +33,7 @@ CREATE TABLE `Mixes` (
   KEY `mixes_outSongId_idx` (`outSongId`),
   CONSTRAINT `fk_mixes_inSongId` FOREIGN KEY (`inSongId`) REFERENCES `Songs` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_mixes_outSongId` FOREIGN KEY (`outSongId`) REFERENCES `Songs` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=1003 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

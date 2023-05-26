@@ -26,7 +26,7 @@ CREATE TABLE `REXml` (
   `xml` text,
   PRIMARY KEY (`id`),
   UNIQUE KEY `reXml_name_uq` (`name`)
-) ENGINE=InnoDB AUTO_INCREMENT=4 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

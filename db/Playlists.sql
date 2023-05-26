@@ -30,7 +30,7 @@ CREATE TABLE `Playlists` (
   PRIMARY KEY (`id`),
   UNIQUE KEY `playlists_name_uq` (`name`),
   UNIQUE KEY `playlists_spotifyId_uq` (`spotifyId`)
-) ENGINE=InnoDB AUTO_INCREMENT=42 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;

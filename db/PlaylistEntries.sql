@@ -31,7 +31,7 @@ CREATE TABLE `PlaylistEntries` (
   KEY `playlistEntries_songId_idx` (`songId`),
   CONSTRAINT `fk_playlistEntries_playlistId` FOREIGN KEY (`playlistId`) REFERENCES `Playlists` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
   CONSTRAINT `fk_playlistEntries_songId` FOREIGN KEY (`songId`) REFERENCES `Songs` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=409 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=1 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
