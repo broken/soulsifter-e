@@ -93,9 +93,9 @@ app.whenReady().then(() => {
   })
 })
 
-var ss_img = nativeImage.createFromPath("resources/soulsifter.png").resize({width: 50, quality: 'best'});
+var ss_img = nativeImage.createFromPath(path.join(__dirname, 'resources/soulsifter.png')).resize({width: 50, quality: 'best'});
 ipcMain.on('ondragstart', (event, filepath, icon) => {
-  let ext = icon.split('.').pop();
+  let ext = icon.split('.').pop().toLowerCase();
   let img = ss_img;
   if (ext == 'jpg' || ext == 'jpeg' || ext == 'png') {
     let tmp = nativeImage.createFromPath(icon);
