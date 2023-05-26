@@ -22,13 +22,13 @@ DROP TABLE IF EXISTS `AlbumParts`;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `AlbumParts` (
   `id` int NOT NULL AUTO_INCREMENT,
-  `pos` varchar(45) DEFAULT NULL,
+  `pos` varchar(45) NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `albumId` int NOT NULL,
   PRIMARY KEY (`id`),
   KEY `albumParts_albumId_idx` (`albumId`),
   CONSTRAINT `fk_albumParts_albumId` FOREIGN KEY (`albumId`) REFERENCES `Albums` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb3;
+) ENGINE=InnoDB AUTO_INCREMENT=25 DEFAULT CHARSET=utf8mb3;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -39,4 +39,4 @@ CREATE TABLE `AlbumParts` (
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2023-03-12  1:35:07
+-- Dump completed on 2023-05-25  0:05:13
