@@ -42,12 +42,13 @@ class OptionsMenuPaperInput extends LitElement {
   selected(e) {
     this.shadowRoot.getElementById('selectBox').classList.remove('show');
     let i = 0;
-    for (; i < e.path.length; ++i) {
-      if (e.path[i].nodeName == 'OPTIONS-MENU-ITEM') {
+    let path = e.composedPath();
+    for (; i < path.length; ++i) {
+      if (path[i].nodeName == 'OPTIONS-MENU-ITEM') {
         break;
       }
     }
-    this.value = e.path[i].innerText;
+    this.value = path[i].innerText;
     this.shadowRoot.getElementById('input').value = this.value;
     this.unhideChildren();
   }
