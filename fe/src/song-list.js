@@ -203,7 +203,6 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     let playlists = [];
     let orderBy = this.searchOptions.orderBy;
     if (!!this.playlists.length) {
-      this.query = '';
       this.genres = [];
       for (let i = 0; i < this.playlists.length; ++i) {
         if (!this.playlists[i].query) {
