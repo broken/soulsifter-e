@@ -273,13 +273,15 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     } else if (f == 'add_genres') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').genres;
-        this.updateSongField(s => s.styles = s.styles.concat(val));
+        const keys = val.map(g => g.id);
+        this.updateSongField(s => s.styleIds = s.styleIds.concat(keys));
         this.shadowRoot.getElementById(f).toggle();
       };
     } else if (f == 'replace_genres') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').genres;
-        this.updateSongField(s => s.styles = val);
+        const keys = val.map(g => g.id);
+        this.updateSongField(s => s.styleIds = keys);
         this.shadowRoot.getElementById(f).toggle();
       };
     }
