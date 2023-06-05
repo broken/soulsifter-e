@@ -6,7 +6,7 @@ let alertsMixin = (superClass) => class extends superClass {
 
   static get properties() {
     return {
-      alerts: { type: Object }
+      alerts: { type: Array }
     };
   }
 
