@@ -36,6 +36,7 @@ class SongListItem extends SettingsMixin(LitElement) {
     return {
       bpm: { type: Number },
       mvRestrict: { type: Boolean },
+      useStems: { type: Boolean },
       playlists: { type: Array },
       song: { type: Object },
     };
@@ -95,6 +96,12 @@ class SongListItem extends SettingsMixin(LitElement) {
     } else {
       filepath = this.settings.getString('music.dir') + this.song.filepath;
       iconpath = this.settings.getString('music.dir') + this.song.album.coverFilepath;
+      if (this.useStems) {
+        let stemFilepath = this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
+        if (true /* todo verify exists */) {
+          filepath = this.settings.getString('dir.stems') + stemFilepath;
+        }
+      }
     }
 
     ipcRenderer.send('ondragstart', filepath, iconpath);

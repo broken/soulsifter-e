@@ -25,7 +25,7 @@ import { } from "./song-list-item.js";
 class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))))))))) {
   render() {
     let songListItems = html``;
-    songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}"></song-list-item>`);
+    songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
     const fields = ['artist', 'comments', 'curator']
     let dialogs = fields.map(f => html`
         <paper-dialog id="${f}">
@@ -74,6 +74,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
       song: { type: Object },
       genres: { type: Array },
       mvRestrict: { type: Boolean },
+      useStems: { type: Boolean },
     }
   }
 
@@ -84,6 +85,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     this.songTrail = [];
     this.search();
     this.mvRestrict = false;
+    this.useStems = false;
     this.selectedListItems = new Set();
     this.lastSelectedListItem = undefined;
     // used for setting back original genres after playlist selection
@@ -190,6 +192,10 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     if (this.searchOptions.mvRestrict != this.mvRestrict) {
       this.mvRestrict = this.searchOptions.mvRestrict;
       this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.mvRestrict = this.mvRestrict);
+    }
+    if (this.searchOptions.useStems != this.useStems) {
+      this.useStems = this.searchOptions.useStems;
+      this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.useStems = this.useStems);
     }
   }
 

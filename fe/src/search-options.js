@@ -38,6 +38,10 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
           <paper-toggle-button id="dynamicGenres" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
           <span>Dynamic genre mode</span>
         </div>
+        <div class="option">
+          <paper-toggle-button id="useStems" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
+          <span>Use stems when available</span>
+        </div>
         <br>
         <div class="option">
           <span>Order by:</span>
@@ -68,6 +72,7 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
         repeatRestrict: this.shadowRoot.getElementById('repeatRestrict').checked,
         mvRestrict: this.shadowRoot.getElementById('mvRestrict').checked,
         dynamicGenres: this.shadowRoot.getElementById('dynamicGenres').checked,
+        useStems: this.shadowRoot.getElementById('useStems').checked,
         orderBy: this.orderBy,
     };
     this.changeSearchOptions(this.searchOptions);
@@ -106,6 +111,7 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
     this.shadowRoot.getElementById('repeatRestrict').checked =  this.searchOptions.repeatRestrict;
     this.shadowRoot.getElementById('mvRestrict').checked =  this.searchOptions.mvRestrict;
     this.shadowRoot.getElementById('dynamicGenres').checked =  this.searchOptions.dynamicGenres;
+    this.shadowRoot.getElementById('useStems').checked =  this.searchOptions.useStems;
     this.orderByChanged(this.searchOptions.orderBy);
   }
 
