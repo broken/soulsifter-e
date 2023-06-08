@@ -14,6 +14,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
         <div class="fields">
           <paper-input label="Music Directory" value="${this.musicDir}" id="musicDir"></paper-input>
           <paper-input label="Music Video Directory" value="${this.musicVideoDir}" id="musicVideoDir"></paper-input>
+          <paper-input label="Stems Directory" value="${this.stemsDir}" id="stemsDir"></paper-input>
           <br>
           <paper-input label="Default song list limit" value="${this.songListLimit}" allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></paper-input>
           <paper-input label="Energy search difference" value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></paper-input>
@@ -54,6 +55,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.musicAutoAdd = this.settings.getBool('music.autoAdd');
     this.musicVideoDir = this.settings.getString('mv.dir');
     this.appDebugMode = this.settings.getBool('app.debug');
+    this.stemsDir = this.settings.getString('dir.stems');
     this.googleAndroidId = this.settings.getString('google.androidId');
     this.googleAppKey = this.settings.getString('google.appKey');
     this.googleEmail = this.settings.getString('google.email');
@@ -95,6 +97,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.putb('music.autoAdd', this.shadowRoot.getElementById('musicAutoAdd').checked);
     this.puts('mv.dir', this.shadowRoot.getElementById('musicVideoDir').value);
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
+    this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);
     this.puts('google.androidId', this.shadowRoot.getElementById('googleAndroidId').value);
     this.puts('google.appKey', this.shadowRoot.getElementById('googleAppKey').value);
     this.puts('google.email', this.shadowRoot.getElementById('googleEmail').value);
