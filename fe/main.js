@@ -1,5 +1,6 @@
 // Modules to control application life and create native browser window
-const { app, clipboard, dialog, BrowserWindow, ipcMain, nativeImage } = require('electron')
+const { app, clipboard, dialog, BrowserWindow, ipcMain, nativeImage } = require('electron');
+const fs = require('fs');
 const path = require('path');
 const { google } = require('googleapis');
 const ss = require('soulsifter');
@@ -127,6 +128,10 @@ ipcMain.handle('opendialog', async (event, title, defaultPath, props) => {
     properties: props
   });
   return result;
+})
+
+ipcMain.handle('existsfilepath', (event, fp) => {
+  return fs.existsSync(fp);
 })
 
 ipcMain.handle('getclipboard', (event) => {

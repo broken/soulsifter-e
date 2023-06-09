@@ -97,10 +97,18 @@ class SongListItem extends SettingsMixin(LitElement) {
       filepath = this.settings.getString('music.dir') + this.song.filepath;
       iconpath = this.settings.getString('music.dir') + this.song.album.coverFilepath;
       if (this.useStems) {
-        let stemFilepath = this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
-        if (true /* todo verify exists */) {
-          filepath = this.settings.getString('dir.stems') + stemFilepath;
-        }
+        let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
+        ipcRenderer.invoke('existsfilepath', stemFilepath)
+        .then((exists) => {
+          if (exists) {
+            filepath = stemFilepath;
+          }
+          ipcRenderer.send('ondragstart', filepath, iconpath);
+          window.ssDraggedObj = this.song;
+        }).catch((err) => {
+          this.updateAlert(alertId, undefined, "Failed checking for existence of stems file.\n" + err);
+        });
+        return;
       }
     }
 
