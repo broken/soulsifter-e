@@ -23,6 +23,9 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
                                                         : html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note"></icon-button>`;
     let keyRestrictBtn = this.searchOptions.keyRestrict ? html`<icon-button @click=${this.toggleKeyRestrict} icon="vpn_key" class="active"></icon-button>`
                                                         : html`<icon-button @click=${this.toggleKeyRestrict} icon="vpn_key"></icon-button>`;
+    let stemsBtn = !this.settings.getString('dir.stems') ? html`` :
+                   (this.searchOptions.useStems ? html`<icon-button @click=${this.toggleUseStems} icon="dehaze" class="active"></icon-button>`
+                                               : html`<icon-button @click=${this.toggleUseStems} icon="dehaze"></icon-button>`);
     let debugMode = this.settings.getBool('app.debug');
     return html`
       <icon-button @click=${this.requestSearch} icon="search"></icon-button>
@@ -31,6 +34,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       <icon-button @click=${this.toggleSearchInfoDialog} icon="info_outline"></icon-button>
       ${bpmRestrictBtn}
       ${keyRestrictBtn}
+      ${stemsBtn}
       <icon-button @click=${this.toggleSearchOptionsDialog} icon="build"></icon-button>
       <paper-input label="bpm" value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></paper-input>
       <icon-button @click=${this.tapBpm} icon="hearing"></icon-button>
@@ -247,6 +251,11 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   toggleKeyRestrict(e) {
     this.searchOptions.keyRestrict = !this.searchOptions.keyRestrict;
+    this.changeSearchOptions(this.searchOptions);
+  }
+
+  toggleUseStems(e) {
+    this.searchOptions.useStems = !this.searchOptions.useStems;
     this.changeSearchOptions(this.searchOptions);
   }
 
