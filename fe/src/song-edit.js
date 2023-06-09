@@ -265,7 +265,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     if (!this.song) return;
     this.songIsTrashed = this.song.trashed;
     this.editedSong = new ss.Song(this.song);
-    this.sterilizeSong(this.song);
+    // this.sterilizeSong(this.song);  This affects original song, so do not want to change it.
     this.sterilizeSong(this.editedSong);
     if (!!this.editedSong.album.basicGenre) this.basicGenreName = this.editedSong.album.basicGenre.name;
     else this.basicGenreName = '';
@@ -339,8 +339,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
       }
       return true;
     }
+    // this.sterilizeSong(this.song);  This affects original song, so do not want to change it.
     this.sterilizeSong(this.taggedSong);
-    this.sterilizeSong(this.song);
     this.sterilizeSong(this.editedSong);
     return false;
   }
@@ -495,8 +495,13 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.shadowRoot.getElementById('album_artist').value = this.song.album.artist.trim();
     this.albumArtistValChanged();  // I'm not sure why this isn't always called from the above change.
     this.shadowRoot.getElementById('album_name').value = this.song.album.name.trim();
-    this.shadowRoot.getElementById('albumpart_pos').value = this.song.albumPart.pos;
-    this.shadowRoot.getElementById('albumpart_name').value = this.song.albumPart.name.trim();
+    if (!!this.song.albumPart) {
+      this.shadowRoot.getElementById('albumpart_pos').value = this.song.albumPart.pos;
+      this.shadowRoot.getElementById('albumpart_name').value = this.song.albumPart.name.trim();
+    } else {
+      this.shadowRoot.getElementById('albumpart_pos').value = "";
+      this.shadowRoot.getElementById('albumpart_name').value = "";
+    }
     this.shadowRoot.getElementById('album_label').value = this.song.album.label.trim();
     this.shadowRoot.getElementById('album_catalogId').value = this.song.album.catalogId.trim();
     this.shadowRoot.getElementById('album_releaseDateYear').value = this.song.album.releaseDateYear;
