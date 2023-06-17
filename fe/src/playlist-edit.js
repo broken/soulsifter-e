@@ -14,26 +14,31 @@ class PlaylistEdit extends LitElement {
     this.spotifySync = !!this.playlist.spotifyId;
     this.youtubeSync = !!this.playlist.youtubeId;
     return html`
-      <ss-googleplaymusic id="gpm"></ss-googleplaymusic>
-      <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
-        <div class="fields">
-          <paper-input floatingLabel label="Name" value="${this.playlist.name}" id="name"></paper-input>
-          <div class="query-container">
-            <paper-input floatingLabel label="Query" value="${this.playlist.query}" id="query"></paper-input>
-            <icon-button @click=${this.toggleSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
+      <div class="mainContainer">
+        <ss-googleplaymusic id="gpm"></ss-googleplaymusic>
+        <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
+          <div class="fields">
+            <paper-input floatingLabel label="Name" value="${this.playlist.name}" id="name"></paper-input>
+            <div class="query-container">
+              <paper-input floatingLabel label="Query" value="${this.playlist.query}" id="query"></paper-input>
+              <icon-button @click=${this.toggleSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
+            </div>
+            <br>
+            <paper-checkbox ?checked="${this.fromSongTrail}" id="trail">from Song Trail</paper-checkbox>
+            <paper-checkbox ?checked="${this.spotifySync}" id="spotifySync" disabled>sync with Spotify</paper-checkbox>
+            <paper-checkbox ?checked="${this.youtubeSync}" id="youtubeSync">sync with YouTube</paper-checkbox>
           </div>
-          <br>
-          <paper-checkbox ?checked="${this.fromSongTrail}" id="trail">from Song Trail</paper-checkbox>
-          <paper-checkbox ?checked="${this.spotifySync}" id="spotifySync" disabled>sync with Spotify</paper-checkbox>
-          <paper-checkbox ?checked="${this.youtubeSync}" id="youtubeSync">sync with YouTube</paper-checkbox>
+          <div class="genres">
+            <genre-list id="genreList" .genres="${this.genres}"></genre-list>
+          </div>
+          <paper-dialog id="searchInfoDialog">
+            <search-info></search-info>
+          </paper-dialog>
+        </abstract-action-page>
+        <div class="metadata">
+          <div style="user-select:text">${this.playlist.id}</div>
         </div>
-        <div class="genres">
-          <genre-list id="genreList" .genres="${this.genres}"></genre-list>
-        </div>
-        <paper-dialog id="searchInfoDialog">
-          <search-info></search-info>
-        </paper-dialog>
-      </abstract-action-page>
+      </div>
     `;
   }
 
@@ -143,6 +148,23 @@ class PlaylistEdit extends LitElement {
         }
         #searchInfoDialog {
           max-width: none !important;
+        }
+        .metadata {
+          display: flex;
+          flex-direction: row;
+          position: absolute;
+          align-content: flex-end;
+          bottom: 0;
+          right: 0;
+          left: 0;
+          font-size: 13px;
+          color: #777777;  /* TODO put into theme */
+          background-color: var(--primary-background-color);
+        }
+        .mainContainer {
+          display: relative;
+          height: 100%;
+          width: 100%;
         }
       `,
     ];
