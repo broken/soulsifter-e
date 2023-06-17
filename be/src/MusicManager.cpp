@@ -319,7 +319,7 @@ void MusicManager::writeTagsToSong(Song* song) {
         // youtube music adds featuring and remixers to artists, so we remove it possibly here
         std::vector<std::string> artists;
         boost::split(artists, updatedSong->getArtist(), boost::is_any_of(","));
-        for (int i = 1; i < artists.size(); ++i) {
+        for (size_t i = 1; i < artists.size(); ++i) {
           if (updatedSong->getTitle().find(trim_copy(artists[i])) == std::string::npos) {
             artists[0] += ", " + artists[i];
           }
@@ -470,6 +470,34 @@ string MusicManager::getCopyToPath() {
         return SoulSifterSettings::getInstance().get<string>("staging.dir");
     }
     return "";
+}
+
+bool MusicManager::updateAlbumCover(const string& img, Album* album) {
+  // create path
+  std::ostringstream ssdirpath;
+  std::string albumartist = album->getArtist().length() > 0 ? album->getArtist() : "_compilations_";
+  std::string albumname = album->getName();
+  ssdirpath << album->getBasicGenre()->getName() << "/" << cleanDirName(albumartist) << "/" << cleanDirName(albumname);
+  std::string albumSubPathForImage = ssdirpath.str();
+  transform(albumSubPathForImage.begin(), albumSubPathForImage.end(), albumSubPathForImage.begin(), ::tolower);
+
+  // move file to dest
+  try {
+    std::stringstream destpath;
+    boost::filesystem::path src(img);
+    albumSubPathForImage = albumSubPathForImage + "/" + cleanDirName(src.filename().string());
+    destpath << SoulSifterSettings::getInstance().get<string>("music.dir") << albumSubPathForImage;
+    boost::filesystem::path dest(destpath.str());
+    boost::filesystem::rename(src, dest);
+
+    album->setCoverFilepath(albumSubPathForImage);
+    album->update();
+
+    return true;
+  } catch (const boost::filesystem::filesystem_error& ex) {
+    LOG(WARNING) << ex.what() << '\n';
+  }
+  return false;
 }
 
 // TODO shouldn't need to lower case full path

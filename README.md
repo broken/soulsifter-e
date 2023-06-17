@@ -25,8 +25,8 @@ Presteps:
     * grant SESSION_VARIABLES_ADMIN on *.* to 'ssadmin'@'localhost';
     * grant FILE on *.* to 'ssadmin'@'localhost';
     * grant PROCESS on *.* to 'ssadmin'@'localhost';
-    * flush privileges;
     * SET GLOBAL local_infile=1;
+    * flush privileges;
   * run restore_db.sh to create all the tables (the last line to populate the data may fail, but that's okay if you don't have any)
   * git_add_update.sh script available if you periodically wish to take snapshots of your data and save it to a git repo. Can be really handy to take a backup using it before running any scripts on the db, and then git diff allows for a good comparison to make sure changes are expected.
 * (to build) install npm modules

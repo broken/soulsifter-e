@@ -1,5 +1,7 @@
 #include <napi.h>
 #include "MusicService_wrap.h"
+#include "Album.h"
+#include "Album_wrap.h"
 
 Napi::FunctionReference* MusicService::constructor = nullptr;
 
@@ -15,6 +17,7 @@ void MusicService::setWrappedValue(dogatech::soulsifter::MusicService* v, bool o
 Napi::Object MusicService::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "MusicService", {
     StaticMethod<&MusicService::cleanDirName>("cleanDirName"),
+    StaticMethod<&MusicService::updateAlbumCover>("updateAlbumCover"),
   });
 
   constructor = new Napi::FunctionReference();
@@ -49,5 +52,27 @@ Napi::Value MusicService::cleanDirName(const Napi::CallbackInfo& info) {
       dogatech::soulsifter::MusicService::cleanDirName(a0);
 
   return Napi::String::New(env, result);
+}
+
+Napi::Value MusicService::updateAlbumCover(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 2) {
+    Napi::TypeError::New(env, "Expected at least 2 arguments.").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  if (!info[0].IsString()) {
+    Napi::TypeError::New(env, "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  if (!info[1].IsObject()) {
+    Napi::TypeError::New(env, "TypeError: Object expected (for info[1])").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  dogatech::soulsifter::Album* a1(Napi::ObjectWrap<Album>::Unwrap(info[1].As<Napi::Object>())->getWrappedValue());
+  bool result =
+      dogatech::soulsifter::MusicService::updateAlbumCover(a0, a1);
+
+  return Napi::Boolean::New(env, result);
 }
 

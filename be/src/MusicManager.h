@@ -18,6 +18,7 @@ using namespace std;
 namespace dogatech {
 namespace soulsifter {
 
+class Album;
 class BasicGenre;
 class Song;
 
@@ -46,6 +47,8 @@ public:
     string getCopyToPath();
     bool moveSong(Song* song);
     bool moveImage(const string& filepath);
+    static bool updateAlbumCover(const string& img, Album* album);
+
 
     // organizational genres
     void updateDatabaseBasicGenres();

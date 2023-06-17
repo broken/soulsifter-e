@@ -107,6 +107,19 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
     e.preventDefault();
     let filepath = this.settings.getString('music.dir') + this.song.filepath;
     let iconpath = this.settings.getString('music.dir') + this.song.album.coverFilepath;
+    if (this.useStems) {
+      let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
+      ipcRenderer.invoke('existsfilepath', stemFilepath)
+      .then((exists) => {
+        if (exists) {
+          filepath = stemFilepath;
+        }
+        ipcRenderer.send('ondragstart', filepath, iconpath);
+      }).catch((err) => {
+        this.updateAlert(alertId, undefined, "Failed checking for existence of stems file.\n" + err);
+      });
+      return;
+    }
     ipcRenderer.send('ondragstart', filepath, iconpath);
   }
 

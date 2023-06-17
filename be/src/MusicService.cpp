@@ -3,6 +3,7 @@
 #include <stdlib.h>
 #include <string>
 
+#include "Album.h"
 #include "MusicManager.h"
 
 namespace dogatech {
@@ -39,6 +40,11 @@ std::string MusicService::cleanDirName(const std::string& name) {
   }
   return s;
 }
+
+bool MusicService::updateAlbumCover(const string& img, Album* album) {
+  return MusicManager::updateAlbumCover(img, album);
+}
+
 
 }  // namespace soulsifter
 }  // namespace dogatech

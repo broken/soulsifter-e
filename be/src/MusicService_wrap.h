@@ -16,6 +16,7 @@ class MusicService : public Napi::ObjectWrap<MusicService> {
 
  private:
   static Napi::Value cleanDirName(const Napi::CallbackInfo& info);
+  static Napi::Value updateAlbumCover(const Napi::CallbackInfo& info);
 
   static Napi::FunctionReference* constructor;
   dogatech::soulsifter::MusicService* musicservice;

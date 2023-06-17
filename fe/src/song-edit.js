@@ -238,14 +238,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     // NewSongManager processes it last, so anything changed will just be
     // overwritten.
     if (this.changedAlbumCover) {
-      // TODO the file moving should be done externally
-      let basename = ss.MusicService.cleanDirName(this.path.basename(this.editedSong.album.coverFilepath));
-      let dirname = this.path.dirname(this.editedSong.filepath);
-      let newpath = this.settings.getString('music.dir') + dirname + '/' + basename;
-      // TODO use rename with callback
-      if (this.editedSong.album.coverFilepath != newpath) this.fs.renameSync(this.editedSong.album.coverFilepath, newpath);
-      this.editedSong.album.coverFilepath = dirname + '/' + basename;
-      this.editedSong.album.update();
+      ss.MusicService.updateAlbumCover(this.editedSong.album.coverFilepath, this.editedSong.album);
     }
 
     this.savedPreviously = true;
