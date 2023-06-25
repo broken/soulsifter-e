@@ -315,15 +315,6 @@ void MusicManager::writeTagsToSong(Song* song) {
         // so we remove it since it rarely matches in practice.
         boost::regex featRegex(" [(]ft[.] .*");
         updatedSong->setArtist(boost::regex_replace(lastSongFixed->getArtist(), featRegex, ""));
-      } else {
-        // youtube music adds featuring and remixers to artists, so we remove it possibly here
-        std::vector<std::string> artists;
-        boost::split(artists, updatedSong->getArtist(), boost::is_any_of(","));
-        for (size_t i = 1; i < artists.size(); ++i) {
-          if (updatedSong->getTitle().find(trim_copy(artists[i])) == std::string::npos) {
-            artists[0] += ", " + artists[i];
-          }
-        }
       }
       if (song.getTrack().length() == 0) {
         int trackNum = atoi(lastSongFixed->getTrack().c_str());  // returns 0 on error
@@ -387,6 +378,18 @@ void MusicManager::writeTagsToSong(Song* song) {
           updatedSong->getAlbumPart()->setPos(lastSongFixed->getAlbumPart()->getPos());
         }
       }
+    }
+
+    // youtube music adds featuring and remixers to artists, so we remove it possibly here
+    {
+      std::vector<std::string> artists;
+      boost::split(artists, updatedSong->getArtist(), boost::is_any_of(","));
+      for (size_t i = 1; i < artists.size(); ++i) {
+        if (updatedSong->getTitle().find(trim_copy(artists[i])) == std::string::npos) {
+          artists[0] += ", " + artists[i];
+        }
+      }
+      updatedSong->setArtist(artists[0]);
     }
 
     // copy remixer
