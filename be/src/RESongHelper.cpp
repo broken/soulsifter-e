@@ -10,9 +10,9 @@
 
 #include <sstream>
 
-#include <cppconn/connection.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+#include <jdbc/cppconn/connection.h>
+#include <jdbc/cppconn/prepared_statement.h>
+#include <jdbc/cppconn/resultset.h>
 #include <g3log/g3log.hpp>
 
 #include "MysqlAccess.h"
@@ -20,7 +20,7 @@
 
 namespace dogatech {
 namespace soulsifter {
-    
+
     const int RESong::maxREId() {
         sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("select max(id) from RESongs");
         sql::ResultSet *rs = ps->executeQuery();
@@ -31,7 +31,7 @@ namespace soulsifter {
         delete rs;
         return max;
     }
-    
+
     void RESong::setStylesBitmaskFromDb() {
         sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("select count(*) from Styles");
         sql::ResultSet *rs = ps->executeQuery();
@@ -44,7 +44,7 @@ namespace soulsifter {
         }
         rs->close();
         delete rs;
-        
+
         // this next statement always returns false even though it sets the variable correctly
         MysqlAccess::getInstance().getPreparedStatement("set @n=0")->execute();
         // the order of the styles in this query needs to be the order they're written out to the RE
@@ -67,7 +67,7 @@ namespace soulsifter {
         }
         rs->close();
         delete rs;
-        
+
         setStylesBitmask(ss.str());
     }
 }

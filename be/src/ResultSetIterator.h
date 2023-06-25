@@ -11,17 +11,17 @@
 
 #include <vector>
 
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+#include <jdbc/cppconn/prepared_statement.h>
+#include <jdbc/cppconn/resultset.h>
 
 namespace dogatech {
-    
+
     template <typename T>
     class ResultSetIterator {
     public:
         explicit ResultSetIterator(sql::ResultSet* resultset) : rs(resultset) { }
         virtual ~ResultSetIterator() { delete rs; }
-        
+
         bool next(T* obj) {
             if (rs->next()) {
                 T::populateFields(rs, obj);
@@ -30,7 +30,7 @@ namespace dogatech {
                 return false;
             }
         }
-        
+
         std::vector<T*>* toVector() {
             std::vector<T*>* v = new std::vector<T*>;
             T* obj = new T();
@@ -42,7 +42,7 @@ namespace dogatech {
             delete this;
             return v;
         }
-        
+
     private:
         sql::ResultSet* rs;
         ResultSetIterator();

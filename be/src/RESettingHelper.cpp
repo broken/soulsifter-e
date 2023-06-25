@@ -8,9 +8,9 @@
 
 #include "RESetting.h"
 
-#include <cppconn/connection.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+#include <jdbc/cppconn/connection.h>
+#include <jdbc/cppconn/prepared_statement.h>
+#include <jdbc/cppconn/resultset.h>
 
 #include "MysqlAccess.h"
 

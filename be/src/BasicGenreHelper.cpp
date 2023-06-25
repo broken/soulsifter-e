@@ -11,9 +11,9 @@
 #include <string>
 #include <vector>
 
-#include <cppconn/connection.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+#include <jdbc/cppconn/connection.h>
+#include <jdbc/cppconn/prepared_statement.h>
+#include <jdbc/cppconn/resultset.h>
 #include <g3log/g3log.hpp>
 
 #include "MysqlAccess.h"
@@ -21,12 +21,12 @@
 
 namespace dogatech {
 namespace soulsifter {
-    
+
     BasicGenre* BasicGenre::findByFilepath(const string& filepath) {
         unsigned long pos = filepath.find("/", 0);
         return findByName(filepath.substr(0, pos));
     }
-    
+
     void BasicGenre::findAll(const vector<const BasicGenre*>** genresPtr) {
         static vector<const BasicGenre*> basicGenres;
         for (int i = 0; i < 3; ++i) {
@@ -83,6 +83,6 @@ namespace soulsifter {
         }
         LOG(FATAL) << "Unable to complete model operation";
     }
-    
+
 }
 }

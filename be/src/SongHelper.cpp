@@ -10,9 +10,9 @@
 
 #include <sstream>
 
-#include <cppconn/connection.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+#include <jdbc/cppconn/connection.h>
+#include <jdbc/cppconn/prepared_statement.h>
+#include <jdbc/cppconn/resultset.h>
 
 #include "Album.h"
 #include "AlbumPart.h"
@@ -24,7 +24,7 @@
 
 namespace dogatech {
 namespace soulsifter {
-    
+
     Song::Song(RESong* song) :
     id(0),
     artist(song->getArtist()),
@@ -56,7 +56,7 @@ namespace soulsifter {
     styles(),
     bpmLock(false),
     tonicKeyLock(false) {
-        
+
         // styles
         vector<Style*>* allStyles;
         Style::findAllSortedByREId(&allStyles);
@@ -66,7 +66,7 @@ namespace soulsifter {
             pos = song->getStylesBitmask().find('1', ++pos);
         }
         while (!allStyles->empty()) delete allStyles->back(), allStyles->pop_back();
-        
+
         // album
         album = Album::findByNameAndArtist(song->getAlbum(), song->getArtist());
         if (!album) album = new Album();
@@ -85,19 +85,19 @@ namespace soulsifter {
                 }
             }
         }
-      
+
         // basic genre
         const BasicGenre *genre = BasicGenre::findByFilepath(song->getFilename());
         if (genre)
             album->setBasicGenre(*genre);
-      
+
         // date added
         dateAdded = timeFromString(song->getDateAdded());
-      
+
         // keys
         // TODO tonicKey(<RE KEY TO KEY>);
     }
-    
+
     const string Song::reAlbum() {
         if (!getAlbum()->getName().empty()) {
             return getAlbum()->getName();
@@ -105,10 +105,10 @@ namespace soulsifter {
             return getTitle();
         }
     }
-    
+
     const string Song::getDateAddedString() const { return stringFromTime(dateAdded); }
     void Song::setDateAddedToNow() { dateAdded = time(0); }
-    
+
     RESong* Song::createRESongFromSong(Song& song) {
         RESong* re = new RESong();
         re->setId(0);

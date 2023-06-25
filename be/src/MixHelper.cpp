@@ -8,9 +8,9 @@
 
 #include "Mix.h"
 
-#include <cppconn/connection.h>
-#include <cppconn/prepared_statement.h>
-#include <cppconn/resultset.h>
+#include <jdbc/cppconn/connection.h>
+#include <jdbc/cppconn/prepared_statement.h>
+#include <jdbc/cppconn/resultset.h>
 #include <g3log/g3log.hpp>
 
 #include "MysqlAccess.h"
@@ -19,7 +19,7 @@
 
 namespace dogatech {
 namespace soulsifter {
-    
+
     int Mix::mixoutCountForRESongId(int outRESongId) {
         for (int i = 0; i < 3; ++i) {
             try {
@@ -32,7 +32,7 @@ namespace soulsifter {
                 }
                 rs->close();
                 delete rs;
-                
+
                 return count;
             } catch (sql::SQLException &e) {
                 LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
@@ -43,6 +43,6 @@ namespace soulsifter {
         }
         LOG(FATAL) << "Unable to complete model operation";
     }
-    
+
 }
 }
