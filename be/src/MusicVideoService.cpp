@@ -73,9 +73,9 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
 
   FILE *fpipe;
   stringstream command;
-  command << "cd " << tmpPath << "; youtube-dl --print-json --write-thumbnail --restrict-filenames --extract-audio -f 'bestaudio/best' --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt " << url;
+  command << "cd " << tmpPath << "; yt-dlp --print-json --write-thumbnail --restrict-filenames --extract-audio -f 'bestaudio/best' --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt " << url;
   if (!(fpipe = (FILE*)popen(command.str().c_str(), "r"))) {
-    LOG(WARNING) << "Problem with youtube-dl pipe.";
+    LOG(WARNING) << "Problem with yt-dlp pipe.";
     return filepaths;
   }
 
@@ -183,9 +183,9 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
 
   FILE *fpipe;
   stringstream command;
-  command << "cd \"" << mvArtistDir << "\"; youtube-dl -f 'bestvideo[ext=mp4]+bestaudio' --write-thumbnail --restrict-filenames " << url;
+  command << "cd \"" << mvArtistDir << "\"; yt-dlp -f 'bestvideo[ext=mp4]+bestaudio' --write-thumbnail --restrict-filenames " << url;
   if (!(fpipe = (FILE*)popen(command.str().c_str(), "r"))) {
-    LOG(WARNING) << "Problem with youtube-dl pipe.";
+    LOG(WARNING) << "Problem with yt-dlp pipe.";
     pclose(fpipe);
     return NULL;
   }
@@ -227,7 +227,7 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
   }
   if (tmpVideoName.empty() && musicVideo->getFilePath().empty()) {
     delete musicVideo;
-    LOG(WARNING) << "Did not find music video file from youtube-dl output.";
+    LOG(WARNING) << "Did not find music video file from yt-dlp output.";
     return NULL;
   }
 
