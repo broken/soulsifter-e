@@ -32,6 +32,9 @@ namespace soulsifter {
 
 JobQueue<std::vector<std::string>> MusicVideoService::job_queue;
 
+std::string mv_yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --write-thumbnail ");
+std::string yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --print-json --write-thumbnail --restrict-filenames --extract-audio --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt ");
+
 namespace {
 
 string removeSpecialCharsFromPath(string filepath) {
@@ -73,7 +76,7 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
 
   FILE *fpipe;
   stringstream command;
-  command << "cd " << tmpPath << "; yt-dlp --print-json --write-thumbnail --restrict-filenames --extract-audio -f 'bestaudio/best' --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt " << url;
+  command << "cd " << tmpPath << "; yt-dlp " << yt_dlp_opts << url;
   if (!(fpipe = (FILE*)popen(command.str().c_str(), "r"))) {
     LOG(WARNING) << "Problem with yt-dlp pipe.";
     return filepaths;
@@ -183,7 +186,7 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
 
   FILE *fpipe;
   stringstream command;
-  command << "cd \"" << mvArtistDir << "\"; yt-dlp -f 'bestvideo[ext=mp4]+bestaudio' --write-thumbnail --restrict-filenames " << url;
+  command << "cd \"" << mvArtistDir << "\"; yt-dlp " << mv_yt_dlp_opts << url;
   if (!(fpipe = (FILE*)popen(command.str().c_str(), "r"))) {
     LOG(WARNING) << "Problem with yt-dlp pipe.";
     pclose(fpipe);
