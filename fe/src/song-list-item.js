@@ -12,7 +12,7 @@ class SongListItem extends SettingsMixin(LitElement) {
     let bgImg = 'background-image: url("file://' + this.settings.getString('music.dir') + this.song.album.coverFilepath + '")';
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
-      <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}">
+      <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         <div id="cover" style="${bgImg}"></div>
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
@@ -114,6 +114,38 @@ class SongListItem extends SettingsMixin(LitElement) {
 
     ipcRenderer.send('ondragstart', filepath, iconpath);
     window.ssDraggedObj = this.song;
+  }
+
+  handleDragLeave(e) {
+    e.preventDefault();
+  }
+
+  handleDragOver(e) {
+    e.preventDefault();
+  }
+
+  handleDrop(e) {
+    if (this.playlists.length == 1 && this.playlists[0].query === "") {
+      let playlist = this.playlists[0];
+      let song = window.ssDraggedObj;
+      let posChange = 0;
+      let newPosition = ss.PlaylistEntry.findByPlaylistIdAndSongId(playlist.id,  this.song.id).position + 1;
+      for (let entry of ss.PlaylistEntry.findByPlaylistId(playlist.id)) {
+        if (entry.song.id == song.id) {
+          posChange -= 1;
+          entry.position = newPosition;
+        } else {
+          entry.position = entry.position + posChange;
+        }
+        if (entry.song.id == this.song.id) posChange += 1;
+        entry.update();
+      }
+    }
+    let event = new CustomEvent('search', {
+        bubbles: true,
+        composed: true });
+    this.dispatchEvent(event);
+    e.preventDefault();
   }
 
   removeSongFromPlaylist(e) {
