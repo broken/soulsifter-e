@@ -125,19 +125,29 @@ class SongListItem extends SettingsMixin(LitElement) {
   }
 
   handleDrop(e) {
-    if (this.playlists.length == 1 && this.playlists[0].query === "") {
+    if (this.playlists.length == 1 && this.playlists[0].query === "" &&
+        this.song.id != window.ssDraggedObj.id) {
+      let before = false;
+      {
+        let rect = this.getBoundingClientRect();
+        if (e.clientY < rect.y || e.clientY > rect.y + rect.height)
+          console.error('Drop location y (' + e.clientY + ') was out of range of landing element (' + rect.y + ' to ' + (rect.y + rect.height) + ').');
+        if (e.clientY < rect.y + rect.height / 2) before = true;
+        console.log(rect.y + ', ' + e.clientY);
+      }
       let playlist = this.playlists[0];
       let song = window.ssDraggedObj;
       let posChange = 0;
-      let newPosition = ss.PlaylistEntry.findByPlaylistIdAndSongId(playlist.id,  this.song.id).position + 1;
+      let newPosition = ss.PlaylistEntry.findByPlaylistIdAndSongId(playlist.id,  this.song.id).position + (before ? 0 : 1);
       for (let entry of ss.PlaylistEntry.findByPlaylistId(playlist.id)) {
+        if (before && entry.song.id == this.song.id) posChange += 1;
         if (entry.song.id == song.id) {
           posChange -= 1;
           entry.position = newPosition;
         } else {
           entry.position = entry.position + posChange;
         }
-        if (entry.song.id == this.song.id) posChange += 1;
+        if (!before && entry.song.id == this.song.id) posChange += 1;
         entry.update();
       }
     }
