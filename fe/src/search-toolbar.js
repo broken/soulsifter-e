@@ -213,7 +213,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         let url = entry.alternate[0].href;
         let filepaths = ss.MusicVideoService.downloadAudio(url);
         if (filepaths.length > 0) {
-          let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths, autoplay: true } });
+          let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths } });
           window.dispatchEvent(event);
           // wait for completion response event
           let e = await completed();

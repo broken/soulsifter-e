@@ -49,6 +49,7 @@ namespace soulsifter {
       //ptree.put("google.email", "");
       //ptree.put("google.androidId", "");
       ptree.put("music.autoAdd", false);
+      ptree.put("music.autoPlay", false);
       ptree.put("search.energyGap", 1);
       ptree.put("search.includeUnknownKeys", true);
       ptree.put("songList.column.bpm", false);

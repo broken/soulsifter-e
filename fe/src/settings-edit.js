@@ -24,6 +24,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag">Overwrite values when reading ID3 tags</paper-checkbox>
           <paper-checkbox ?checked="${this.appDebugMode}" id="appDebugMode">Debug mode (requires restart)</paper-checkbox>
           <paper-checkbox ?checked="${this.musicAutoAdd}" id="musicAutoAdd">Auto add music (skip edit dialog)</paper-checkbox>
+          <paper-checkbox ?checked="${this.musicAutoPlay}" id="musicAutoPlay">Auto play music when editting song</paper-checkbox>
           <br>
           <paper-checkbox ?checked="${this.songListColBpm}" id="songListColBpm">Include BPM in song list</paper-checkbox>
         </div>
@@ -53,6 +54,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     super();
     this.musicDir = this.settings.getString('music.dir');
     this.musicAutoAdd = this.settings.getBool('music.autoAdd');
+    this.musicAutoPlay = this.settings.getBool('music.autoPlay');
     this.musicVideoDir = this.settings.getString('mv.dir');
     this.appDebugMode = this.settings.getBool('app.debug');
     this.stemsDir = this.settings.getString('dir.stems');
@@ -95,6 +97,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   save(e, detail, sender) {
     this.puts('music.dir', this.shadowRoot.getElementById('musicDir').value);
     this.putb('music.autoAdd', this.shadowRoot.getElementById('musicAutoAdd').checked);
+    this.putb('music.autoPlay', this.shadowRoot.getElementById('musicAutoPlay').checked);
     this.puts('mv.dir', this.shadowRoot.getElementById('musicVideoDir').value);
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
     this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);

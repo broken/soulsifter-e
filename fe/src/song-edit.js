@@ -137,7 +137,6 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         this.filepathsChanged();
         if (!this.settings.getBool('music.autoAdd')) this.classList.add('show');
       }
-      if (e.detail.autoplay) setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
     };
     // Defaults
     this.songIsTrashed = false;
@@ -269,6 +268,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.genres = this.editedSong.styles;
     this.forceEdits();
     if (this.settings.getBool('music.autoAdd')) this.save();
+    else if (this.settings.getBool('music.autoPlay')) setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
   }
 
   filepathsChanged() {
