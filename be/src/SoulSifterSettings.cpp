@@ -15,6 +15,35 @@ namespace dogatech {
 namespace soulsifter {
 
   SoulSifterSettings::SoulSifterSettings() {
+    // first set defaults
+    //ptree.put("music.dir", "");
+    //ptree.put("staging.dir", "");
+    //ptree.put("mv.dir", "");
+    ptree.put("app.debug", false);
+    //ptree.put("dir.stems", "");
+    ptree.put("dir.tmp", "/tmp");
+    ptree.put("db.url", "localhost");
+    ptree.put("db.user", "ss");
+    ptree.put("db.name", "music");
+    ptree.put("db.password", "pw");
+    ptree.put("edit.autoAdd", false);
+    ptree.put("edit.autoPlay", false);
+    //ptree.put("feedly.userId", "");
+    //ptree.put("feedly.devToken", "");
+    //ptree.put("google.clientId", "");
+    //ptree.put("google.clientSecret", "");
+    //ptree.put("google.oauthRefreshToken", "");
+    //ptree.put("google.appKey", "");
+    //ptree.put("google.email", "");
+    //ptree.put("google.androidId", "");
+    ptree.put("search.energyGap", 1);
+    ptree.put("search.includeUnknownKeys", true);
+    ptree.put("songList.column.bpm", false);
+    ptree.put("songList.limit", 128);
+    ptree.put("songList.searchOnSelect", false);
+    ptree.put("songList.showComments", false);
+    //ptree.put("tag.readOverwrite", "");
+
     // TODO settings file stored in other OS place
     filename.append(getenv("HOME"));
     filename.append("/Library/Application Support/SoulSifter");
@@ -28,35 +57,6 @@ namespace soulsifter {
       // Load the JSON file into the property tree. If reading fails
       // (cannot open file, parse error), an exception is thrown.
       read_json(filename, ptree);
-    } else {
-      // defaults
-      //ptree.put("music.dir", "");
-      //ptree.put("staging.dir", "");
-      //ptree.put("mv.dir", "");
-      ptree.put("app.debug", false);
-      //ptree.put("dir.stems", "");
-      ptree.put("dir.tmp", "/tmp");
-      ptree.put("db.url", "localhost");
-      ptree.put("db.user", "ss");
-      ptree.put("db.name", "music");
-      ptree.put("db.password", "pw");
-      ptree.put("edit.autoAdd", false);
-      ptree.put("edit.autoPlay", false);
-      //ptree.put("feedly.userId", "");
-      //ptree.put("feedly.devToken", "");
-      //ptree.put("google.clientId", "");
-      //ptree.put("google.clientSecret", "");
-      //ptree.put("google.oauthRefreshToken", "");
-      //ptree.put("google.appKey", "");
-      //ptree.put("google.email", "");
-      //ptree.put("google.androidId", "");
-      ptree.put("search.energyGap", 1);
-      ptree.put("search.includeUnknownKeys", true);
-      ptree.put("songList.column.bpm", false);
-      ptree.put("songList.limit", 128);
-      ptree.put("songList.searchOnSelect", false);
-      ptree.put("songList.showComments", false);
-      //ptree.put("tag.readOverwrite", "");
     }
   }
 
