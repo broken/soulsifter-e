@@ -160,7 +160,7 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
 MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& url) {
   LOG(INFO) << "Associate YouTube video " << url << " with song " << song->getId();
 
-  boost::filesystem::path mvBasePath(SoulSifterSettings::getInstance().get<string>("mv.dir"));
+  boost::filesystem::path mvBasePath(SoulSifterSettings::getInstance().get<string>("dir.mv"));
   if (!boost::filesystem::exists(mvBasePath) || !boost::filesystem::is_directory(mvBasePath)) {
     LOG(WARNING) << "Music video base path does not exist. " << mvBasePath;
     return NULL;
@@ -257,8 +257,8 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
   musicVideo->setThumbnailFilePath(removeSpecialCharsFromPath(musicVideo->getThumbnailFilePath()));
 
   // remove base path
-  musicVideo->setFilePath(boost::algorithm::ireplace_first_copy(musicVideo->getFilePath(), SoulSifterSettings::getInstance().get<string>("mv.dir"), ""));
-  musicVideo->setThumbnailFilePath(boost::algorithm::ireplace_first_copy(musicVideo->getThumbnailFilePath(), SoulSifterSettings::getInstance().get<string>("mv.dir"), ""));
+  musicVideo->setFilePath(boost::algorithm::ireplace_first_copy(musicVideo->getFilePath(), SoulSifterSettings::getInstance().get<string>("dir.mv"), ""));
+  musicVideo->setThumbnailFilePath(boost::algorithm::ireplace_first_copy(musicVideo->getThumbnailFilePath(), SoulSifterSettings::getInstance().get<string>("dir.mv"), ""));
 
   musicVideo->save();
 

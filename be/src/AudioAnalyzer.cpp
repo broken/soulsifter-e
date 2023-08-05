@@ -55,8 +55,8 @@ namespace dogatech {
       string songFilepath;
       if (stat(song->getFilepath().c_str(), &statBuffer) == 0) {
         songFilepath = song->getFilepath();
-      } else if (stat((SoulSifterSettings::getInstance().get<string>("music.dir") + song->getFilepath()).c_str(), &statBuffer) == 0) {
-        songFilepath = SoulSifterSettings::getInstance().get<string>("music.dir") + song->getFilepath();
+      } else if (stat((SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath()).c_str(), &statBuffer) == 0) {
+        songFilepath = SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath();
       } else {
         LOG(WARNING) << "File does not exist for song " << song->getId();
         vector<double> bpms;
@@ -122,8 +122,8 @@ namespace dogatech {
       string songFilepath;
       if (stat(song->getFilepath().c_str(), &statBuffer) == 0) {
         songFilepath = song->getFilepath();
-      } else if (stat((SoulSifterSettings::getInstance().get<string>("music.dir") + song->getFilepath()).c_str(), &statBuffer) == 0) {
-        songFilepath = SoulSifterSettings::getInstance().get<string>("music.dir") + song->getFilepath();
+      } else if (stat((SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath()).c_str(), &statBuffer) == 0) {
+        songFilepath = SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath();
       } else {
         LOG(WARNING) << "File does not exist for song " << song->getId();
         return 0;
@@ -169,7 +169,7 @@ namespace dogatech {
       FILE *fpipe;
       stringstream command;
       command << "/Users/rneale/sonic-annotator -d vamp:qm-vamp-plugins:qm-keydetector:key -w csv --csv-stdout ";
-      command << "\"" << SoulSifterSettings::getInstance().get<string>("music.dir") << song->getFilepath() << "\"";
+      command << "\"" << SoulSifterSettings::getInstance().get<string>("dir.music") << song->getFilepath() << "\"";
       char buffer[1024];
 
       if (!(fpipe = (FILE*)popen(command.str().c_str(), "r")) ) {

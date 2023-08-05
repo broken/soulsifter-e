@@ -99,14 +99,14 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
     if (this.clearCache) this.songTrailCache = [];
     this.clearCache = true;
     if (this.settings.getBool('app.debug')) this.shadowRoot.getElementById('videoUrlInput').value = '';
-    this.setCoverImage(this.settings.getString('music.dir') + this.song.album.coverFilepath);
+    this.setCoverImage(this.settings.getString('dir.music') + this.song.album.coverFilepath);
     this.setMusicVideo(this.song.musicVideo);
   }
 
   dragSong(e) {
     e.preventDefault();
-    let filepath = this.settings.getString('music.dir') + this.song.filepath;
-    let iconpath = this.settings.getString('music.dir') + this.song.album.coverFilepath;
+    let filepath = this.settings.getString('dir.music') + this.song.filepath;
+    let iconpath = this.settings.getString('dir.music') + this.song.album.coverFilepath;
     if (this.useStems) {
       let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
       ipcRenderer.invoke('existsfilepath', stemFilepath)
@@ -165,7 +165,7 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
     this.musicVideo = mv;
     var url = '';
     if (!!mv && !!mv.thumbnailFilePath) {
-      url = 'url("file://' + this.settings.getString('mv.dir') + mv.thumbnailFilePath + '")';
+      url = 'url("file://' + this.settings.getString('dir.mv') + mv.thumbnailFilePath + '")';
     }
     this.shadowRoot.getElementById('musicVideoThumbnail').style.backgroundImage = url;
   }
@@ -178,8 +178,8 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
 
   dragMusicVideo(e) {
     e.preventDefault();
-    let filepath = this.settings.getString('mv.dir') + this.song.musicVideo.filePath;
-    let iconpath = this.settings.getString('mv.dir') + this.song.musicVideo.thumbnailFilePath;
+    let filepath = this.settings.getString('dir.mv') + this.song.musicVideo.filePath;
+    let iconpath = this.settings.getString('dir.mv') + this.song.musicVideo.thumbnailFilePath;
     ipcRenderer.send('ondragstart', filepath, iconpath);
   }
 

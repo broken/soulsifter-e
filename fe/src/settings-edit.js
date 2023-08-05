@@ -52,9 +52,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   constructor() {
     super();
-    this.musicDir = this.settings.getString('music.dir');
-    this.musicVideoDir = this.settings.getString('mv.dir');
     this.appDebugMode = this.settings.getBool('app.debug');
+    this.musicDir = this.settings.getString('dir.music');
+    this.musicVideoDir = this.settings.getString('dir.mv');
     this.stemsDir = this.settings.getString('dir.stems');
     this.googleAndroidId = this.settings.getString('google.androidId');
     this.googleAppKey = this.settings.getString('google.appKey');
@@ -95,9 +95,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   }
 
   save(e, detail, sender) {
-    this.puts('music.dir', this.shadowRoot.getElementById('musicDir').value);
-    this.puts('mv.dir', this.shadowRoot.getElementById('musicVideoDir').value);
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
+    this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
+    this.puts('dir.mv', this.shadowRoot.getElementById('musicVideoDir').value);
     this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);
     this.puts('google.androidId', this.shadowRoot.getElementById('googleAndroidId').value);
     this.puts('google.appKey', this.shadowRoot.getElementById('googleAppKey').value);

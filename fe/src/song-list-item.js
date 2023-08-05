@@ -9,7 +9,7 @@ class SongListItem extends SettingsMixin(LitElement) {
   render() {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
-    let bgImg = 'background-image: url("file://' + this.settings.getString('music.dir') + this.song.album.coverFilepath + '")';
+    let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
@@ -91,11 +91,11 @@ class SongListItem extends SettingsMixin(LitElement) {
     let filepath = '';
     let iconpath = '';
     if (this.mvRestrict) {
-      filepath = this.settings.getString('mv.dir') + this.song.musicVideo.filePath;
-      iconpath = this.settings.getString('mv.dir') + this.song.musicVideo.thumbnailFilePath;
+      filepath = this.settings.getString('dir.mv') + this.song.musicVideo.filePath;
+      iconpath = this.settings.getString('dir.mv') + this.song.musicVideo.thumbnailFilePath;
     } else {
-      filepath = this.settings.getString('music.dir') + this.song.filepath;
-      iconpath = this.settings.getString('music.dir') + this.song.album.coverFilepath;
+      filepath = this.settings.getString('dir.music') + this.song.filepath;
+      iconpath = this.settings.getString('dir.music') + this.song.album.coverFilepath;
       if (this.useStems) {
         let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
         ipcRenderer.invoke('existsfilepath', stemFilepath)

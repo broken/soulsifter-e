@@ -75,7 +75,7 @@ class WavePlayer extends SettingsMixin(LitElement) {
     if (!!this.song && this.song.filepath != this.prevSongFilepath) {
       this.prevSongFilepath = this.song.filepath;
       // audio source; use local, otherwise contact google api
-      let filepath = this.song.filepath.charAt(0) === '/' ? this.song.filepath : this.settings.getString('music.dir') + this.song.filepath;
+      let filepath = this.song.filepath.charAt(0) === '/' ? this.song.filepath : this.settings.getString('dir.music') + this.song.filepath;
       let promiseAccess = (filepath) => new Promise((resolve) => this.fs.access(filepath, this.fs.F_OK | this.fs.R_OK, resolve));
       let err = await promiseAccess(filepath);
       if (!err) {
