@@ -57,7 +57,7 @@ class SearchInfo extends LitElement {
           Day released<br>
           Result count limit<br>
           Custom query predicate<br>
-          Order By (rand, released, added)<br>
+          Order By<br>(rand, released, added, bpm, album)<br>
         </div>
       </section>
       <header>

@@ -215,7 +215,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
       for (let i = 0; i < this.playlists.length; ++i) {
         if (!this.playlists[i].query) {
           playlists.push(this.playlists[i]);
-          orderBy = /* playlist */ 4;
+          orderBy = /* playlist */ 5;
         } else {
           this.query += this.playlists[i].query + " ";
           this.genres.concat(this.playlists[i].styles);
