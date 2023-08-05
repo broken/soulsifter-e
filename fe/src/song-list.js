@@ -95,11 +95,13 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('keydown', this.keydownHandler.bind(this));
+    window.addEventListener('song-list-pos', this.getNextOrPrevSong.bind(this));
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.keydownHandler.bind(this));
+    window.removeEventListener('song-list-pos', this.getNextOrPrevSong.bind(this));
   }
 
   keydownHandler(e) {
@@ -290,6 +292,32 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
         this.updateSongField(s => s.styleIds = keys);
         this.shadowRoot.getElementById(f).toggle();
       };
+    }
+  }
+
+  getNextOrPrevSong(e) {
+    let songId = e.detail.songId
+    let isPrev = e.detail.isPrev
+    let result = undefined
+    if (isPrev) {
+      let prevSong = undefined
+      this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
+        if (el.song.id == songId) result = prevSong;
+        else prevSong = el.song;
+      });
+    } else {
+      let found = false
+      this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
+        if (el.song.id == songId) found = true;
+        else if (found) {
+          result = el.song;
+          found = false;
+        }
+      });
+    }
+    if (!!result) {
+      let event = new CustomEvent('song-edit', { detail: {song: result } });
+      window.dispatchEvent(event);
     }
   }
 

@@ -94,6 +94,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         </abstract-action-page>
         <div class="metadata">
           <audio-player id="audio" .song="${this.song}"></audio-player>
+          <icon-button @click=${this.prevSong} icon="chevron_left"></icon-button>
+          <icon-button @click=${this.nextSong} icon="chevron_right"></icon-button>
           <div style="user-select:text">${this.editedSong.id}</div>
           <div @click="${this.changeSongFile}" style="user-select:text">${this.editedSong.filepath}</div>
         </div>
@@ -346,6 +348,20 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     }
     this.taggedSong.bpm = tmp.join(', ');
     this.requestUpdate();
+  }
+
+  prevSong() {
+    this.nextPrevSong = true;
+    let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: true } });
+    this.save();
+    window.dispatchEvent(event);
+  }
+
+  nextSong() {
+    this.nextPrevSong = true;
+    let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: false } });
+    this.save();
+    window.dispatchEvent(event);
   }
 
   validate() {
