@@ -201,9 +201,9 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     }
   }
 
-  updateEditedSong(s) {
+  updateEditedSong(id) {
     this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
-      if (el.song.id == s.id) el.song = s;
+      if (el.song.id == id) el.song = ss.Song.findById(id);
     });
   }
 

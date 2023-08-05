@@ -208,8 +208,8 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
     e.stopPropagation();
   }
 
-  updateEditedSong(s) {
-    if (this.song.id == s.id) this.song = s;
+  updateEditedSong(id) {
+    if (this.song.id == id) this.song = ss.Song.findById(id);
   }
 
   songEnded(e) {
