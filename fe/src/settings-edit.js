@@ -23,8 +23,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys">Include unknown keys in key searches</paper-checkbox>
           <paper-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag">Overwrite values when reading ID3 tags</paper-checkbox>
           <paper-checkbox ?checked="${this.appDebugMode}" id="appDebugMode">Debug mode (requires restart)</paper-checkbox>
-          <paper-checkbox ?checked="${this.musicAutoAdd}" id="musicAutoAdd">Auto add music (skip edit dialog)</paper-checkbox>
-          <paper-checkbox ?checked="${this.musicAutoPlay}" id="musicAutoPlay">Auto play music when editting song</paper-checkbox>
+          <paper-checkbox ?checked="${this.editAutoAdd}" id="editAutoAdd">Auto add music (skip edit dialog)</paper-checkbox>
+          <paper-checkbox ?checked="${this.editAutoPlay}" id="editAutoPlay">Auto play music when editting song</paper-checkbox>
           <br>
           <paper-checkbox ?checked="${this.songListColBpm}" id="songListColBpm">Include BPM in song list</paper-checkbox>
         </div>
@@ -53,8 +53,6 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   constructor() {
     super();
     this.musicDir = this.settings.getString('music.dir');
-    this.musicAutoAdd = this.settings.getBool('music.autoAdd');
-    this.musicAutoPlay = this.settings.getBool('music.autoPlay');
     this.musicVideoDir = this.settings.getString('mv.dir');
     this.appDebugMode = this.settings.getBool('app.debug');
     this.stemsDir = this.settings.getString('dir.stems');
@@ -68,6 +66,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.dbUser = this.settings.getString('db.user');
     this.dbPassword = this.settings.getString('db.password');
     this.dbUrl = this.settings.getString('db.url');
+    this.editAutoAdd = this.settings.getBool('edit.autoAdd');
+    this.editAutoPlay = this.settings.getBool('edit.autoPlay');
     this.feedlyDevToken = this.settings.getString('feedly.devToken');
     this.feedlyUserId = this.settings.getString('feedly.userId');
     this.songListColBpm = this.settings.getBool('songList.column.bpm');
@@ -96,8 +96,6 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   save(e, detail, sender) {
     this.puts('music.dir', this.shadowRoot.getElementById('musicDir').value);
-    this.putb('music.autoAdd', this.shadowRoot.getElementById('musicAutoAdd').checked);
-    this.putb('music.autoPlay', this.shadowRoot.getElementById('musicAutoPlay').checked);
     this.puts('mv.dir', this.shadowRoot.getElementById('musicVideoDir').value);
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
     this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);
@@ -111,6 +109,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('db.user', this.shadowRoot.getElementById('dbUser').value);
     this.puts('db.password', this.shadowRoot.getElementById('dbPassword').value);
     this.puts('db.url', this.shadowRoot.getElementById('dbUrl').value);
+    this.putb('edit.autoAdd', this.shadowRoot.getElementById('editAutoAdd').checked);
+    this.putb('edit.autoPlay', this.shadowRoot.getElementById('editAutoPlay').checked);
     this.puts('feedly.devToken', this.shadowRoot.getElementById('feedlyDevToken').value);
     this.puts('feedly.userId', this.shadowRoot.getElementById('feedlyUserId').value);
     this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);

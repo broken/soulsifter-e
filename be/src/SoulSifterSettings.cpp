@@ -40,6 +40,8 @@ namespace soulsifter {
       ptree.put("db.user", "ss");
       ptree.put("db.name", "music");
       ptree.put("db.password", "pw");
+      ptree.put("edit.autoAdd", false);
+      ptree.put("edit.autoPlay", false);
       //ptree.put("feedly.userId", "");
       //ptree.put("feedly.devToken", "");
       //ptree.put("google.clientId", "");
@@ -48,8 +50,6 @@ namespace soulsifter {
       //ptree.put("google.appKey", "");
       //ptree.put("google.email", "");
       //ptree.put("google.androidId", "");
-      ptree.put("music.autoAdd", false);
-      ptree.put("music.autoPlay", false);
       ptree.put("search.energyGap", 1);
       ptree.put("search.includeUnknownKeys", true);
       ptree.put("songList.column.bpm", false);

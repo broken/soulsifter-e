@@ -137,7 +137,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         this.filepaths = e.detail.filepaths;
         this.videoUrl = e.detail.videoUrl;
         this.filepathsChanged();
-        if (!this.settings.getBool('music.autoAdd')) this.classList.add('show');
+        if (!this.settings.getBool('edit.autoAdd')) this.classList.add('show');
       }
     };
     // Defaults
@@ -269,8 +269,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     // this does not seem to play well when working straight on the array object
     this.genres = this.editedSong.styles;
     this.forceEdits();
-    if (this.settings.getBool('music.autoAdd')) this.save();
-    else if (this.settings.getBool('music.autoPlay')) setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
+    if (this.settings.getBool('edit.autoAdd')) this.save();
+    else if (this.settings.getBool('edit.autoPlay')) setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
   }
 
   filepathsChanged() {
@@ -318,7 +318,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
       this.songChanged();
       if (!this.song.bpm) {
         var songPath = this.song.filepath;
-        if (!this.settings.getBool('music.autoAdd')) ss.AudioAnalyzer.analyzeBpmAsync(this.song)
+        if (!this.settings.getBool('edit.autoAdd')) ss.AudioAnalyzer.analyzeBpmAsync(this.song)
         .then((candidates) => {
           if (songPath == this.song.filepath) {
             let bpmList = "";
