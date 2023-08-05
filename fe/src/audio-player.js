@@ -49,6 +49,8 @@ class AudioPlayer extends SettingsMixin(LitElement) {
     };
     this.endedListener = () => {
       this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
+      let event = new CustomEvent('song-ended', { bubbles: true, composed: true });
+      this.dispatchEvent(event);
     };
     this.errorListener = () => {
       console.error('Audio error: ' + mediaError.code);

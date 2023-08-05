@@ -41,7 +41,7 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
           <div>pitch</div>
           <pitch-slider></pitch-slider>
         </div>
-        <audio-player id="audio" .song="${this.song}"></audio-player>
+        <audio-player id="audio" .song="${this.song}" @song-ended="${this.songEnded}"></audio-player>
         <div>${this.song.styles.map(s => s.name).join(', ')}</div>
         <div id="musicVideoThumbnail" draggable="true" @dragstart="${this.dragMusicVideo}" ?hide="${!this.musicVideo}"></div>
         ${debugMode ? html`<div id="musicVideoInput" ?hide="${!!this.musicVideo}">
@@ -69,6 +69,7 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
     this.saveSongTrailListener = (e) => this.saveSongTrail(e);
     this.song = new ss.Song();
     this.song.album = new ss.Album();
+    this.autoplay = false;
   }
 
   connectedCallback() {
@@ -101,6 +102,10 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
     if (this.settings.getBool('app.debug')) this.shadowRoot.getElementById('videoUrlInput').value = '';
     this.setCoverImage(this.settings.getString('dir.music') + this.song.album.coverFilepath);
     this.setMusicVideo(this.song.musicVideo);
+    if (this.autoplay) {
+      this.autoplay = false;
+      setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
+    }
   }
 
   dragSong(e) {
@@ -205,6 +210,12 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
 
   updateEditedSong(s) {
     if (this.song.id == s.id) this.song = s;
+  }
+
+  songEnded(e) {
+    this.autoplay = true;
+    let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: false, isEdit: false } });
+    window.dispatchEvent(event);
   }
 
   static get styles() {

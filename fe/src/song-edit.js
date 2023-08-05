@@ -352,14 +352,14 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
 
   prevSong() {
     this.nextPrevSong = true;
-    let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: true } });
+    let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: true, isEdit: true } });
     this.save();
     window.dispatchEvent(event);
   }
 
   nextSong() {
     this.nextPrevSong = true;
-    let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: false } });
+    let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: false, isEdit: true } });
     this.save();
     window.dispatchEvent(event);
   }

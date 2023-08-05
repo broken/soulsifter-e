@@ -296,8 +296,9 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
   }
 
   getNextOrPrevSong(e) {
-    let songId = e.detail.songId
-    let isPrev = e.detail.isPrev
+    let songId = e.detail.songId;
+    let isPrev = e.detail.isPrev;
+    let isEdit = e.detail.isEdit;
     let result = undefined
     if (isPrev) {
       let prevSong = undefined
@@ -316,8 +317,12 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
       });
     }
     if (!!result) {
-      let event = new CustomEvent('song-edit', { detail: {song: result } });
-      window.dispatchEvent(event);
+      if (isEdit) {
+        let event = new CustomEvent('song-edit', { detail: {song: result } });
+        window.dispatchEvent(event);
+      } else {
+        this.changeSong(result);
+      }
     }
   }
 
