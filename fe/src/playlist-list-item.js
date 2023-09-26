@@ -60,7 +60,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
   copyAction(e) {
     let str = this.playlist.name + "\n\n";
     let i = 0;
-    ss.PlaylistEntry.findByPlaylistId(this.playlist.id).forEach(
+    ss.PlaylistEntry.findByPlaylistId(this.playlist.id).sort((a, b) => a.position - b.position).forEach(
         (e) => str += ++i + ". " + e.song.artist + " - "  + e.song.title + "\n");
     ipcRenderer.send('copytoclipboard', str);
     this.shadowRoot.getElementById('opt').style.display = 'none';
