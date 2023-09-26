@@ -117,6 +117,14 @@ void removeFeaturingFromAlbumArtist(Song* updatedSong) {
   }
 }
 
+void removeOriginalMix(Song* updatedSong) {
+  boost::regex originalMixRegex(" [(][Oo]riginal [Mm]ix[)]");
+  boost::smatch origMixMatch;
+  if (boost::regex_search(updatedSong->getTitle(), origMixMatch, originalMixRegex, boost::match_extra)) {
+    updatedSong->setTitle(boost::regex_replace(updatedSong->getTitle(), originalMixRegex, ""));
+  }
+}
+
 void copyRemixer(Song* updatedSong) {
   boost::regex rmxrRegex(REMIX_REGEX);
   boost::smatch rmxrMatch;
@@ -392,7 +400,8 @@ void MusicManager::writeTagsToSong(Song* song) {
       updatedSong->setArtist(artists[0]);
     }
 
-    // copy remixer
+    // handle remix in song title
+    removeOriginalMix(updatedSong);
     copyRemixer(updatedSong);
 
     // add an album artist if one does not exist & not a compilation
