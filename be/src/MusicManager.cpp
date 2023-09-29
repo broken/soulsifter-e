@@ -123,6 +123,11 @@ void removeOriginalMix(Song* updatedSong) {
   if (boost::regex_search(updatedSong->getTitle(), origMixMatch, originalMixRegex, boost::match_extra)) {
     updatedSong->setTitle(boost::regex_replace(updatedSong->getTitle(), originalMixRegex, ""));
   }
+  boost::regex officialVideoRegex(" [(][Oo]fficial [Vv]ideo[)]");
+  boost::smatch officialVidMatch;
+  if (boost::regex_search(updatedSong->getTitle(), officialVidMatch, officialVideoRegex, boost::match_extra)) {
+    updatedSong->setTitle(boost::regex_replace(updatedSong->getTitle(), officialVideoRegex, ""));
+  }
 }
 
 void copyRemixer(Song* updatedSong) {
