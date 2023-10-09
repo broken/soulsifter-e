@@ -74,6 +74,7 @@ Release process
 * create release on github. tag version. upload zipped build.
 * locally move app from out to applications
 * pull new tag
+* if minor release, do below, otherwise if patch release, do: npm run bump:patch && git push
 * npm run branch
 * git push -u origin <new_branch> && git checkout master
 * npm run bump:minor
