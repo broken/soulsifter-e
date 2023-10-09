@@ -99,6 +99,10 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
       boost::property_tree::ptree ptree;
       std::stringstream tmp(json);
       read_json(tmp, ptree);
+      if (SoulSifterSettings::getInstance().get<bool>("app.debug")) {
+        LOG(DEBUG) << "song info";
+        LOG(DEBUG) << json;
+      }
 
       Song* song = new Song();
       Album* album = new Album();
