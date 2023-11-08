@@ -393,18 +393,6 @@ void MusicManager::writeTagsToSong(Song* song) {
       }
     }
 
-    // youtube music adds featuring and remixers to artists, so we remove it possibly here
-    {
-      std::vector<std::string> artists;
-      boost::split(artists, updatedSong->getArtist(), boost::is_any_of(","));
-      for (size_t i = 1; i < artists.size(); ++i) {
-        if (updatedSong->getTitle().find(trim_copy(artists[i])) == std::string::npos) {
-          artists[0] += ", " + artists[i];
-        }
-      }
-      updatedSong->setArtist(artists[0]);
-    }
-
     // handle remix in song title
     removeOriginalMix(updatedSong);
     copyRemixer(updatedSong);
