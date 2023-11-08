@@ -126,6 +126,14 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
         song->setTrack(ptree.get<string>("playlist_index"));
         date = ptree.get<string>("release_date", "00000000");
         if (!date.compare("null") || !date.compare("00000000")) {
+          string songDescription = ptree.get<string>("description");
+          boost::regex descReleasedRegex("Released on: (\\d{4})-(\\d{2})-(\\d{2})\\b");
+          boost::smatch match;
+          if (boost::regex_search(songDescription, match, descReleasedRegex, boost::match_extra)) {
+            date = match[1] + match[2] + match[3];
+          }
+        }
+        if (!date.compare("null") || !date.compare("00000000")) {
           int yr = ptree.get<int>("release_year", 0);
           if (yr > 0) date = std::to_string(yr) + "0000";
         }
