@@ -53,6 +53,32 @@ string removeSpecialCharsFromPath(string filepath) {
   }
 }
 
+// trim from start (in place)
+static inline void ltrim(std::string &s) {
+  s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+    return !std::isspace(ch);
+  }));
+}
+
+// trim from end (in place)
+static inline void rtrim(std::string &s) {
+  s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+    return !std::isspace(ch);
+  }).base(), s.end());
+}
+
+// trim from both ends (in place)
+static inline void trim(std::string &s) {
+  ltrim(s);
+  rtrim(s);
+}
+
+// trim from both ends (copying)
+static inline std::string trim_copy(std::string s) {
+    trim(s);
+    return s;
+}
+
 }  // namespace
 
 future<vector<string>> MusicVideoService::downloadAudioAsync(const string& url) {
@@ -118,10 +144,27 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
       string date;
       if (url.find("music.youtube") != std::string::npos) {
         // youtube music
+        song->setTitle(ptree.get<string>("track"));
         LOG(DEBUG) << "artist = " << ptree.get<string>("artist");
         LOG(DEBUG) << "creator = " << ptree.get<string>("creator");
-        song->setArtist(ptree.get<string>("creator"));
-        song->setTitle(ptree.get<string>("track"));
+        LOG(DEBUG) << "channel = " << ptree.get<string>("channel");
+        // youtube music adds featuring and remixers to artists, so we remove it possibly here
+        {
+          std::vector<std::string> artists;
+          boost::split(artists, ptree.get<string>("artist"), boost::is_any_of(","));
+          // remove remixer
+          for (size_t i = 1; i < artists.size(); ++i) {
+            if (song->getTitle().find(trim_copy(artists[i])) == std::string::npos) {
+              artists[0] += ", " + artists[i];
+            }
+          }
+          song->setArtist(artists[0]);
+          // update featuring
+          if (song->getArtist().rfind(ptree.get<string>("channel"), 0) == 0
+              && ptree.get<string>("artist") != ptree.get<string>("channel")) {
+            song->setArtist(ptree.get<string>("channel") + " (ft. " + song->getArtist().substr(ptree.get<string>("channel").length() + 2) + ")");
+          }
+        }
         album->setName(ptree.get<string>("album"));
         song->setTrack(ptree.get<string>("playlist_index"));
         date = ptree.get<string>("release_date", "00000000");
