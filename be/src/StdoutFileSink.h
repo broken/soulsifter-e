@@ -3,6 +3,8 @@
 #include <g3log/filesink.hpp>
 #include <g3log/logmessage.hpp>
 
+#include "SoulSifterSettings.h"
+
 namespace dogatech {
 namespace soulsifter {
 
@@ -17,6 +19,7 @@ public:
       fileWrite(msg);
     } else {
       std::cout << msg.get().toString() << std::endl;
+      if (SoulSifterSettings::getInstance().get<bool>("app.debug")) fileWrite(msg);
     }
   }
 };
