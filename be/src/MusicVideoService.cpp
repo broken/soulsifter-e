@@ -79,6 +79,10 @@ static inline std::string trim_copy(std::string s) {
     return s;
 }
 
+// returns true if both characters are a space
+template<char C>
+bool bothAre(char lhs, char rhs) { return (lhs == rhs) && (lhs == C); }
+
 }  // namespace
 
 future<vector<string>> MusicVideoService::downloadAudioAsync(const string& url) {
@@ -164,6 +168,11 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
               && ptree.get<string>("artist") != ptree.get<string>("channel")) {
             song->setArtist(ptree.get<string>("channel") + " (ft. " + song->getArtist().substr(ptree.get<string>("channel").length() + 2) + ")");
           }
+          // consolidate double spaces to a single space
+          string s = song->getArtist();
+          std::string::iterator new_end = std::unique(s.begin(), s.end(), bothAre<' '>);
+          s.erase(new_end, s.end());
+          song->setArtist(s);
         }
         album->setName(ptree.get<string>("album"));
         song->setTrack(ptree.get<string>("playlist_index"));
