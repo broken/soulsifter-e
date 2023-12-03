@@ -505,7 +505,7 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
     ss << ")";
   }
 
-  ss << " group by s.id order by ";
+  ss << " group by " << (playlists.size() > 0 ? "pe.id, " : "") << "s.id order by ";
   if (orderBy == RELEASE_DATE) {
     ss << "a.releaseDateYear desc, a.releaseDateMonth desc, a.releaseDateDay desc";
   } else if (orderBy == RANDOM) {
@@ -542,7 +542,7 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
   if (musicVideoMode)
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist, v.filepath as mvFilePath, v.thumbnailFilePath as mvTnFilePath from Songs s inner join Albums a on s.albumid = a.id inner join MusicVideos v on s.musicVideoId=v.id left outer join SongStyles ss on ss.songid=s.id where true";
   else if (playlists.size() > 0)
-    ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from Songs s inner join Albums a on s.albumid = a.id inner join PlaylistEntries pe on pe.songid=s.id left outer join SongStyles ss on ss.songid=s.id where true";
+    ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from PlaylistEntries pe left outer join Songs s on pe.songid=s.id inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
   else
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from Songs s inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
   ss << buildQueryPredicate(query, &limit, &energy, &orderBy);
