@@ -180,7 +180,21 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   }
 
   save() {
+    // TODO throw exception
     if (!this.validate()) return;
+    // Check if this song already exists
+    if (!this.editedSong.id) {
+      try {
+        let query = 'a:="' + this.shadowRoot.getElementById('artist').value + '" t:=' + this.shadowRoot.getElementById('title').value + '"';
+        this.songs = ss.SearchUtil.searchSongs(query, 1, 0, "", [], [], [], 0, false, 0, (msg) => { this.addAlert(msg, 10); });
+        if (this.songs.length > 0) {
+          this.addAlert('Track already exists.');
+          // TODO get confirmation before adding
+        }
+      } catch(e) {
+        console.error(e);
+      }
+    }
     this.syncEdits();
     // If there is no album part, we should clear this object out so it is
     // not saved. Setting the ID deletes the object, and having an ID of 0
@@ -351,14 +365,12 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   }
 
   prevSong() {
-    this.nextPrevSong = true;
     let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: true, isEdit: true } });
     this.save();
     window.dispatchEvent(event);
   }
 
   nextSong() {
-    this.nextPrevSong = true;
     let event = new CustomEvent('song-list-pos', { detail: { songId: this.song.id, isPrev: false, isEdit: true } });
     this.save();
     window.dispatchEvent(event);

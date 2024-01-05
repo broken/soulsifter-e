@@ -265,9 +265,17 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
     } else if (atom.type == Atom::S_ID) {
       ss << "s.id " << buildEqualityOperator(atom.props) << " " << atom.value;
     } else if (atom.type == Atom::S_ARTIST) {
-      ss << "ifnull(s.artist,'') like '%" << atom.value << "%'";
+      ss << "ifnull(s.artist,'') ";
+      if (atom.props & (Atom::LESS_THAN | Atom::GREATER_THAN | Atom::EQUAL))
+        ss << buildEqualityOperator(atom.props) << " '" << atom.value << "'";
+      else
+        ss << "like '%" << atom.value << "%'";
     } else if (atom.type == Atom::S_TITLE) {
-      ss << "ifnull(s.title,'') like '%" << atom.value << "%'";
+      ss << "ifnull(s.title,'') ";
+      if (atom.props & (Atom::LESS_THAN | Atom::GREATER_THAN | Atom::EQUAL))
+        ss << buildEqualityOperator(atom.props) << " '" << atom.value << "'";
+      else
+        ss << "like '%" << atom.value << "%'";
     } else if (atom.type == Atom::S_REMIXER) {
       ss << "ifnull(s.remixer,'') like '%" << atom.value << "%'";
     } else if (atom.type == Atom::S_RATING) {
