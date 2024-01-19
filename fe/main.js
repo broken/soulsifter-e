@@ -149,7 +149,7 @@ class YoutubeClientMain {
     this.oauth2Client = null;
   }
 
-  sleep(ms=500) {
+  sleep(ms=1000) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
@@ -227,6 +227,7 @@ class YoutubeClientMain {
       }
       song.youtubeId = response.data.items[0].id.videoId;
       song.update();
+      await this.sleep();
     }
     await this._addPlaylistItem(playlist.youtubeId, song.youtubeId);
   }
@@ -250,11 +251,12 @@ class YoutubeClientMain {
                     .map(function(x) { return x.song; });
     } else {
       songs = ss.SearchUtil.searchSongs(playlist.query + ' trashed:0',
+                                        /* limit */ 200,
                                         /* bpm */ 0,
                                         /* key */ '',
                                         playlist.styles,
                                         /* songsToOmit */ [],
-                                        /* limit */ 200,
+                                        /* playlists */ [],
                                         /* energy */ 0,
                                         /* musicVideoMode */ false,
                                         /* orderBy */ 0,
