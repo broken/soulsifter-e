@@ -14,6 +14,7 @@
 #include <string>
 #include <vector>
 
+#include <boost/exception/all.hpp>
 #include <boost/regex.hpp>
 #include <boost/tokenizer.hpp>
 #include <boost/unordered_map.hpp>
@@ -160,9 +161,6 @@ bool parse(const string& queryFragment, Atom* atom) {
   if (!boost::regex_match(queryFragment, match, regex)) {
     return false;
   }
-  // set value
-  boost::regex quoteRegex("(?<=[^=])'(?=.)");
-  atom->value = boost::regex_replace(string(match[6]), quoteRegex, "\\\\'");
   if (match[1].length() > 0) {
     atom->props |= Atom::NEGATED;
   }
@@ -219,7 +217,7 @@ bool parse(const string& queryFragment, Atom* atom) {
       // This is special, as l can be label or limit depending on usage
       boost::regex numRegex("^[0-9]+$");
       boost::smatch ignored;
-      if (boost::regex_match(atom->value, ignored, numRegex)) {
+      if (boost::regex_match(string(match[6]), ignored, numRegex)) {
         atom->type = Atom::LIMIT;
       } else {
         atom->type = Atom::A_LABEL;
@@ -230,6 +228,13 @@ bool parse(const string& queryFragment, Atom* atom) {
       // error
       return false;
     }
+  }
+  // set value
+  if (atom->type == Atom::CUSTOM_QUERY_PREDICATE) {
+    atom->value = string(match[6]);
+  } else {
+    boost::regex quoteRegex("'");
+    atom->value = boost::regex_replace(string(match[6]), quoteRegex, "\\\\'");
   }
   return true;
 }
@@ -545,6 +550,7 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
                                        int orderBy,
                                        std::function<void(string)> errorCallback) {
   LOG(INFO) << "q:" << query << ", bpm:" << bpm << ", key:" << key << ", styles:" << ", limit:" << limit;
+  vector<Song*>* songs = new vector<Song*>();
 
   stringstream ss;
   if (musicVideoMode)
@@ -553,13 +559,19 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from PlaylistEntries pe left outer join Songs s on pe.songid=s.id inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
   else
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from Songs s inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
-  ss << buildQueryPredicate(query, &limit, &energy, &orderBy);
-  ss << buildOptionPredicate(bpm, key, styles, songsToOmit, playlists, limit, energy, orderBy);
+  try {
+    ss << buildQueryPredicate(query, &limit, &energy, &orderBy);
+    ss << buildOptionPredicate(bpm, key, styles, songsToOmit, playlists, limit, energy, orderBy);
+  } catch (boost::exception &e) {
+    LOG(WARNING) << "ERROR: Error parsing query. " << boost::diagnostic_information(e);
+    if (errorCallback) errorCallback(boost::diagnostic_information(e));
+    else LOG(WARNING) << "Undefined callback. Unable to send error.";
+    return songs;
+  }
 
   LOG(DEBUG) << "Query:";
   LOG(DEBUG) << ss.str();
 
-  vector<Song*>* songs = new vector<Song*>();
   int i = 0;
   for (; i < 2; ++i) {
     try {
