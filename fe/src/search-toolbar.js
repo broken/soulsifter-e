@@ -50,6 +50,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         <options-menu-item @click="${this.analyzeDurations}">Analyze Durations</options-menu-item>
         <options-menu-item @click="${this.syncSpotifyPlaylists}"><span style="text-decoration: line-through">Sync Spotify Playlists</span></options-menu-item>
         <options-menu-item @click="${this.syncYouTubePlaylists}">Sync YouTube Playlists</options-menu-item>
+        <options-menu-item @click="${this.showHiddenAlerts}">Show hidden alerts</options-menu-item>
         <options-menu-item @click="${this.toggleAboutPageDialog}">About</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
       </options-menu>
@@ -152,6 +153,10 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   syncYouTubePlaylists(e) {
     window.yt.syncPlaylists();
+  }
+
+  showHiddenAlerts(e) {
+    this.unhideAlerts();
   }
 
   addSongFromUrl(e) {

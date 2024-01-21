@@ -65,6 +65,10 @@ let alertsMixin = (superClass) => class extends superClass {
     if (timeoutInSeconds) setTimeout(() => this.rmAlert(id), timeoutInSeconds * 1000);
     this.changeAlerts(this.alerts);
   }
+
+  unhideAlerts() {
+    this.changeAlerts(this.alerts);
+  }
 }
 
 export const AlertsMixin = dedupingMixin(alertsMixin);
