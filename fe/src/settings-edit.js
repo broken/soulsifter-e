@@ -95,6 +95,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   }
 
   save(e, detail, sender) {
+    this.validate();
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
     this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
     this.puts('dir.mv', this.shadowRoot.getElementById('musicVideoDir').value);
@@ -122,6 +123,14 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.putb('tag.readOverwrite', this.shadowRoot.getElementById('overwriteSongFromTag').checked);
     this.settings.save();
     this.exit();
+  }
+
+  validate() {
+    // Ensure that directory paths end in a slash
+    ['musicDir', 'musicVideoDir', 'stemsDir'].map(label => {
+      let el = this.shadowRoot.getElementById(label);
+      el.value = el.value.replace(/(\/)?$/, '/');
+    })
   }
 
   puts(key, value) {
