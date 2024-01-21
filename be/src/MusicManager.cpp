@@ -45,7 +45,9 @@
 #include "Album.h"
 #include "AlbumPart.h"
 #include "BasicGenre.h"
+#include "DTVectorUtil.h"
 #include "MysqlAccess.h"
+#include "SearchUtil.h"
 #include "Song.h"
 #include "SoulSifterSettings.h"
 #include "Style.h"
@@ -234,6 +236,22 @@ void guessGenresForSong(Song* song) {
       }
     }
   }
+}
+
+std::string getAlbumSubPath(const Album& album) {
+  std::ostringstream ssdirpath;
+  std::string albumartist = album.getArtist().length() > 0 ? album.getArtist() : "_compilations_";
+  std::string albumname = album.getName();
+  ssdirpath << album.getBasicGenreConst()->getName() << "/" << MusicManager::cleanDirName(albumartist) << "/" << MusicManager::cleanDirName(albumname);
+  std::string albumSubPath = ssdirpath.str();
+  transform(albumSubPath.begin(), albumSubPath.end(), albumSubPath.begin(), ::tolower);
+  return albumSubPath;
+}
+
+std::string getAlbumFullPath(const Album& album) {
+  std::stringstream path;
+  path << SoulSifterSettings::getInstance().get<string>("dir.music") << getAlbumSubPath(album);
+  return path.str();
 }
 
 }  // namespace
@@ -479,12 +497,7 @@ string MusicManager::getCopyToPath() {
 
 bool MusicManager::updateAlbumCover(const string& img, Album* album) {
   // create path
-  std::ostringstream ssdirpath;
-  std::string albumartist = album->getArtist().length() > 0 ? album->getArtist() : "_compilations_";
-  std::string albumname = album->getName();
-  ssdirpath << album->getBasicGenre()->getName() << "/" << cleanDirName(albumartist) << "/" << cleanDirName(albumname);
-  std::string albumSubPathForImage = ssdirpath.str();
-  transform(albumSubPathForImage.begin(), albumSubPathForImage.end(), albumSubPathForImage.begin(), ::tolower);
+  std::string albumSubPathForImage = getAlbumSubPath(*album);
 
   // move file to dest
   try {
@@ -505,23 +518,132 @@ bool MusicManager::updateAlbumCover(const string& img, Album* album) {
   return false;
 }
 
+bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> errorCallback) {
+  vector<Song*>* songs = SearchUtil::searchSongs("q:albumid=" + std::to_string(album->getId()));
+
+  // determine current album directory
+  if (songs->size() == 0) {
+    std::string errMsg("Cannot move album " + std::to_string(album->getId()) + ", because it has no songs.");
+    LOG(WARNING) << errMsg;
+    if (errorCallback) errorCallback(errMsg);
+    return false;
+  }
+  const Song& song = *(*songs)[0];
+  // TODO handle album parts
+  // will need to select the right source directory (right now songs can but may not be in subdirs)
+  if (song.getAlbumPartId()) {
+    std::string errMsg("Will not move album " + std::to_string(album->getId()) + ", because album parts are not supported.");
+    LOG(WARNING) << errMsg;
+    if (errorCallback) errorCallback(errMsg);
+    return false;
+  }
+  boost::filesystem::path aSongPath(song.getFilepath());
+  boost::filesystem::path aSongFullPath(SoulSifterSettings::getInstance().get<string>("dir.music") + aSongPath.string());
+  boost::filesystem::path src = aSongFullPath.parent_path();
+  if (!boost::filesystem::exists(src) || !boost::filesystem::is_directory(src)) {
+    std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because source path does not exist.");
+    LOG(WARNING) << errMsg;
+    if (errorCallback) errorCallback(errMsg);
+    return false;
+  }
+
+  // get new directory
+  boost::filesystem::path dest(getAlbumFullPath(*album));
+  if (boost::filesystem::exists(dest)) {
+    std::string errMsg("Will not move album " + std::to_string(album->getId()) + ", because destination path already exists.");
+    LOG(WARNING) << errMsg;
+    if (errorCallback) errorCallback(errMsg);
+    return false;
+  }
+  if (src == dest) {
+    std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because source and destination paths are the same.");
+    LOG(WARNING) << errMsg;
+    if (errorCallback) errorCallback(errMsg);
+    return false;
+  }
+
+  // create dest parent directory
+  boost::filesystem::path destParent = dest.parent_path();
+  if (!boost::filesystem::exists(destParent)) {
+    if (!boost::filesystem::create_directories(destParent)) {
+      std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because parent directory cannot be created.");
+      LOG(WARNING) << errMsg;
+      if (errorCallback) errorCallback(errMsg);
+      return false;
+    }
+  } else if (!boost::filesystem::is_directory(destParent)) {
+      std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because destination is not a directory.");
+      LOG(WARNING) << errMsg;
+      if (errorCallback) errorCallback(errMsg);
+      return false;
+  }
+
+  // move directory
+  try {
+    boost::filesystem::rename(src, dest);
+  } catch (const boost::filesystem::filesystem_error& err) {
+    std::string errMsg("Failed moving album " + std::to_string(album->getId()) + ", because " + err.what());
+    LOG(WARNING) << errMsg;
+    if (errorCallback) errorCallback(errMsg);
+    return false;
+  }
+
+  // remove src parent directory if empty
+  boost::filesystem::path artistDir = src.parent_path();
+  if (boost::filesystem::is_empty(artistDir)) {
+    try {
+      boost::filesystem::remove(artistDir);
+      LOG(INFO) << "Removed empty artist path.";
+    } catch (const boost::filesystem::filesystem_error& err) {
+      std::string errMsg("Error removing directory " + artistDir.string() + ", because " + err.what());
+      LOG(WARNING) << errMsg;
+      if (errorCallback) errorCallback(errMsg);
+    }
+  }
+
+  // update song paths
+  for (Song* s : *songs) {
+    boost::filesystem::path songPath(s->getFilepath());
+    boost::filesystem::path filename = songPath.filename();
+    s->setFilepath(getAlbumSubPath(*album) + "/" + filename.string());
+    s->update();
+    if (!boost::filesystem::exists(SoulSifterSettings::getInstance().get<string>("dir.music") + s->getFilepath())) {
+      std::string errMsg("Moved song " + std::to_string(s->getId()) + " does not exist at new path.");
+      LOG(WARNING) << errMsg;
+      if (errorCallback) errorCallback(errMsg);
+    }
+  }
+
+  // update coverfilepath
+  if (album->getCoverFilepath().length()) {
+    boost::filesystem::path cvrPath(album->getCoverFilepath());
+    boost::filesystem::path filename = cvrPath.filename();
+    album->setCoverFilepath(getAlbumSubPath(*album) + "/" + filename.string());
+    album->update();
+    if (!boost::filesystem::exists(SoulSifterSettings::getInstance().get<string>("dir.music") + album->getCoverFilepath())) {
+      std::string errMsg("Moved cover for album " + std::to_string(album->getId()) + " does not exist at new path.");
+      LOG(WARNING) << errMsg;
+      if (errorCallback) errorCallback(errMsg);
+    }
+  }
+
+  // cleanup
+  deleteVectorPointers(songs);
+  return true;
+}
+
 // TODO shouldn't need to lower case full path
 // TODO removed use of stagingPath. Add back feature?
 bool MusicManager::moveSong(Song* song) {
     try {
         string albumPath;
         {
-            ostringstream ssdirpath;
-            string albumartist = song->getAlbum()->getArtist().length() > 0 ? song->getAlbum()->getArtist() : "_compilations_";
-            string albumname = song->getAlbum()->getName();
-            ssdirpath << song->getAlbum()->getBasicGenre()->getName() << "/" << cleanDirName(albumartist) << "/" << cleanDirName(albumname);
-            albumSubPathForImage = ssdirpath.str();
-            transform(albumSubPathForImage.begin(), albumSubPathForImage.end(), albumSubPathForImage.begin(), ::tolower);
+            albumSubPathForImage = getAlbumSubPath(*(song->getAlbum()));
+            albumPath = albumSubPathForImage;
             if (song->getAlbumPart() && song->getAlbumPart()->getName().length()) {
                 string part = song->getAlbumPart()->getName();
-                ssdirpath << "/" << cleanDirName(part);
+                albumPath += "/" + cleanDirName(part);
             }
-            albumPath = ssdirpath.str();
         }
         // create directory
         transform(albumPath.begin(), albumPath.end(), albumPath.begin(), ::tolower);

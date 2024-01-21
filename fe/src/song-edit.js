@@ -195,6 +195,16 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         console.error(e);
       }
     }
+    // Check if this song should move the album folder
+    let moveAlbum = false;
+    if (this.editedSong.id) {
+      // TODO support album parts
+      if (this.song.album.basicGenre.name != this.shadowRoot.getElementById('basicGenreInput').value ||
+          this.song.album.name != this.shadowRoot.getElementById('album_name').value ||
+          this.song.album.artist != this.shadowRoot.getElementById('album_artist').value) {
+        moveAlbum = true;
+      }
+    }
     this.syncEdits();
     // If there is no album part, we should clear this object out so it is
     // not saved. Setting the ID deletes the object, and having an ID of 0
@@ -255,6 +265,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     if (this.changedAlbumCover) {
       ss.MusicService.updateAlbumCover(this.editedSong.album.coverFilepath, this.editedSong.album);
     }
+
+    if (moveAlbum) ss.MusicService.moveAlbum(this.editedSong.album,  (msg) => { this.addAlert(msg); });
 
     this.savedPreviously = true;
     this.exit();

@@ -45,6 +45,9 @@ bool MusicService::updateAlbumCover(const string& img, Album* album) {
   return MusicManager::updateAlbumCover(img, album);
 }
 
+bool MusicService::moveAlbum(Album* album, std::function<void(std::string)> errorCallback) {
+  return MusicManager::moveAlbum(album, errorCallback);
+}
 
 }  // namespace soulsifter
 }  // namespace dogatech

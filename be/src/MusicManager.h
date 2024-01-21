@@ -48,7 +48,7 @@ public:
     bool moveSong(Song* song);
     bool moveImage(const string& filepath);
     static bool updateAlbumCover(const string& img, Album* album);
-
+    static bool moveAlbum(Album* album, std::function<void(std::string)> errorCallback = {});
 
     // organizational genres
     void updateDatabaseBasicGenres();
