@@ -41,7 +41,7 @@ std::string MusicService::cleanDirName(const std::string& name) {
   return s;
 }
 
-bool MusicService::updateAlbumCover(const string& img, Album* album) {
+bool MusicService::updateAlbumCover(const string& img, Album* album, std::function<void(std::string)> errorCallback) {
   return MusicManager::updateAlbumCover(img, album);
 }
 

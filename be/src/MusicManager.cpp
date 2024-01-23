@@ -495,27 +495,42 @@ string MusicManager::getCopyToPath() {
     return "";
 }
 
-bool MusicManager::updateAlbumCover(const string& img, Album* album) {
-  // create path
+bool MusicManager::updateAlbumCover(const string& img, Album* album, std::function<void(std::string)> errorCallback) {
+  boost::filesystem::path src(img);
+
+  // determine destination path
   std::string albumSubPathForImage = getAlbumSubPath(*album);
+  albumSubPathForImage = albumSubPathForImage + "/" + cleanDirName(src.filename().string());
+  std::stringstream destpath;
+  destpath << SoulSifterSettings::getInstance().get<string>("dir.music") << albumSubPathForImage;
+  boost::filesystem::path dest(destpath.str());
 
-  // move file to dest
-  try {
-    std::stringstream destpath;
-    boost::filesystem::path src(img);
-    albumSubPathForImage = albumSubPathForImage + "/" + cleanDirName(src.filename().string());
-    destpath << SoulSifterSettings::getInstance().get<string>("dir.music") << albumSubPathForImage;
-    boost::filesystem::path dest(destpath.str());
-    boost::filesystem::rename(src, dest);
+  if (boost::filesystem::equivalent(src, dest)) {
+    LOG(INFO) << "Not moving cover because source path is equivalent to destination path.";
+  } else {
+    if (boost::filesystem::exists(dest)) {
+      std::string errMsg("Will not move cover image, because destination path already exists.");
+      LOG(WARNING) << errMsg;
+      if (errorCallback) errorCallback(errMsg);
+      return false;
+    }
 
-    album->setCoverFilepath(albumSubPathForImage);
-    album->update();
-
-    return true;
-  } catch (const boost::filesystem::filesystem_error& ex) {
-    LOG(WARNING) << ex.what() << '\n';
+    // move file to dest
+    try {
+      boost::filesystem::rename(src, dest);
+    } catch (const boost::filesystem::filesystem_error& ex) {
+      std::string errMsg("Failed  moving cover image. " + std::string(ex.what()));
+      LOG(WARNING) << errMsg;
+      if (errorCallback) errorCallback(errMsg);
+      return false;
+    }
   }
-  return false;
+
+  // update album with filepath
+  album->setCoverFilepath(albumSubPathForImage);
+  album->update();
+
+  return true;
 }
 
 bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> errorCallback) {

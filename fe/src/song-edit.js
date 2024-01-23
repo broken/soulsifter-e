@@ -263,7 +263,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     // NewSongManager processes it last, so anything changed will just be
     // overwritten.
     if (this.changedAlbumCover) {
-      ss.MusicService.updateAlbumCover(this.editedSong.album.coverFilepath, this.editedSong.album);
+      ss.MusicService.updateAlbumCover(this.editedSong.album.coverFilepath, this.editedSong.album,  (msg) => { this.addAlert(msg); });
     }
 
     if (moveAlbum) ss.MusicService.moveAlbum(this.editedSong.album,  (msg) => { this.addAlert(msg); });
