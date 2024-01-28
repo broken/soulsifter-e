@@ -561,6 +561,11 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
     if (errorCallback) errorCallback(errMsg);
     return false;
   }
+  // check if stems directory exists
+  boost::filesystem::path aSongStemsFullPath(SoulSifterSettings::getInstance().get<string>("dir.stems") + aSongPath.string());
+  boost::filesystem::path stemsSrc = aSongStemsFullPath.parent_path();
+  bool stemsExists = boost::filesystem::exists(stemsSrc) && boost::filesystem::is_directory(stemsSrc);
+
 
   // get new directory
   boost::filesystem::path dest(getAlbumFullPath(*album));
@@ -576,6 +581,8 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
     if (errorCallback) errorCallback(errMsg);
     return false;
   }
+  // now stems
+  boost::filesystem::path stemsDest(SoulSifterSettings::getInstance().get<string>("dir.stems") + getAlbumSubPath(*album));
 
   // create dest parent directory
   boost::filesystem::path destParent = dest.parent_path();
@@ -592,6 +599,23 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
       if (errorCallback) errorCallback(errMsg);
       return false;
   }
+  // do same for stems
+  if (stemsExists) {
+    boost::filesystem::path stemsDestParent = stemsDest.parent_path();
+    if (!boost::filesystem::exists(stemsDestParent)) {
+      if (!boost::filesystem::create_directories(stemsDestParent)) {
+        std::string errMsg("Unable to move stems album " + std::to_string(album->getId()) + ", because parent directory cannot be created.");
+        LOG(WARNING) << errMsg;
+        if (errorCallback) errorCallback(errMsg);
+        return false;
+      }
+    } else if (!boost::filesystem::is_directory(stemsDestParent)) {
+        std::string errMsg("Unable to move stems album " + std::to_string(album->getId()) + ", because destination is not a directory.");
+        LOG(WARNING) << errMsg;
+        if (errorCallback) errorCallback(errMsg);
+        return false;
+    }
+  }
 
   // move directory
   try {
@@ -602,15 +626,12 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
     if (errorCallback) errorCallback(errMsg);
     return false;
   }
-
-  // remove src parent directory if empty
-  boost::filesystem::path artistDir = src.parent_path();
-  if (boost::filesystem::is_empty(artistDir)) {
+  // do same for stems
+  if (stemsExists) {
     try {
-      boost::filesystem::remove(artistDir);
-      LOG(INFO) << "Removed empty artist path.";
+      boost::filesystem::rename(stemsSrc, stemsDest);
     } catch (const boost::filesystem::filesystem_error& err) {
-      std::string errMsg("Error removing directory " + artistDir.string() + ", because " + err.what());
+      std::string errMsg("Failed moving stems album " + std::to_string(album->getId()) + " (though continuing), because " + err.what());
       LOG(WARNING) << errMsg;
       if (errorCallback) errorCallback(errMsg);
     }
@@ -627,6 +648,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
       LOG(WARNING) << errMsg;
       if (errorCallback) errorCallback(errMsg);
     }
+    // TODO move music video if it exists
   }
 
   // update coverfilepath
@@ -639,6 +661,33 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
       std::string errMsg("Moved cover for album " + std::to_string(album->getId()) + " does not exist at new path.");
       LOG(WARNING) << errMsg;
       if (errorCallback) errorCallback(errMsg);
+    }
+  }
+
+  // remove src parent directory if empty
+  // do this after the updating of db to buffer ms of time for move to complete. may not be needed, but won't hurt.
+  boost::filesystem::path artistDir = src.parent_path();
+  if (boost::filesystem::is_empty(artistDir)) {
+    try {
+      boost::filesystem::remove(artistDir);
+      LOG(INFO) << "Removed empty artist path.";
+    } catch (const boost::filesystem::filesystem_error& err) {
+      std::string errMsg("Error removing directory " + artistDir.string() + ", because " + err.what());
+      LOG(WARNING) << errMsg;
+      if (errorCallback) errorCallback(errMsg);
+    }
+  }
+  if (stemsExists) {
+    boost::filesystem::path stemsArtistDir = stemsSrc.parent_path();
+    if (boost::filesystem::is_empty(stemsArtistDir)) {
+      try {
+        boost::filesystem::remove(stemsArtistDir);
+        LOG(INFO) << "Removed empty artist stems path.";
+      } catch (const boost::filesystem::filesystem_error& err) {
+        std::string errMsg("Error removing stems directory " + artistDir.string() + ", because " + err.what());
+        LOG(WARNING) << errMsg;
+        if (errorCallback) errorCallback(errMsg);
+      }
     }
   }
 
