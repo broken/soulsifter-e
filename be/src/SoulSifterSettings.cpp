@@ -32,6 +32,8 @@ namespace soulsifter {
     //ptree.put("feedly.devToken", "");
     //ptree.put("google.clientId", "");
     //ptree.put("google.clientSecret", "");
+    //ptree.put("google.oauthAccessToken", "");
+    //ptree.put("google.oauthAccessTokenExpiration", "0");
     //ptree.put("google.oauthRefreshToken", "");
     //ptree.put("google.appKey", "");
     //ptree.put("google.email", "");

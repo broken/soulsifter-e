@@ -145,7 +145,7 @@ ipcMain.on('copytoclipboard', (event, str) => {
 class YoutubeClientMain {
 
   constructor() {
-    this.service = null;
+    this.service = google.youtube('v3');
     this.oauth2Client = null;
   }
 
@@ -153,68 +153,98 @@ class YoutubeClientMain {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
-  auth() {
-    return new Promise((resolve, reject) => {
-      if (!this.service) {
-        let settings = new ss.SoulSifterSettings();
-        this.oauth2Client = new google.auth.OAuth2(
-            settings.getString('google.clientId'),
-            settings.getString('google.clientSecret'),
-            'http://localhost:3000/oauth2callback'
-        );
-        google.options({auth: this.oauth2Client});
-        this.service = google.youtube('v3');
-        // const refreshToken = settings.getString('google.oauthRefreshToken');
-        // if (!!refreshToken) {
-        //   this.oauth2Client.setCredentials({ refresh_token: refreshToken });
-        //   return new Promise((resolve, reject) => {
-        //     resolve(this.oauth2Client);
-        //   });
-        // }
-        const authUrl = this.oauth2Client.generateAuthUrl({
-          access_type: 'offline',
-          scope: ['https://www.googleapis.com/auth/youtube'],
-        });
-        const authWindow = new BrowserWindow({
-          width: 800,
-          height: 600,
-          show: false,
-          'node-integration': false,
-          webPreferences: {
-            nodeIntegration: false,
-          },
-        });
-        authWindow.loadURL(authUrl);
-        authWindow.show();
-        authWindow.on('closed', () => {
-          // Handle the window being closed
-          console.log('authwindow closed');
-        });
-        authWindow.webContents.on('will-redirect', (event, url) => {
-          console.log('capture will redirect: ' + url);
-          if (url.startsWith(this.oauth2Client.redirectUri)) {
-            let q = require('url').parse(url, true).query;
-            console.log('code: ' + q.code);
-            this.oauth2Client.getToken(q.code, (err, tokens) => {
-              console.log('err: ' + err);
-              console.log('tokens; ', tokens);
-              if (!err) {
-                this.oauth2Client.setCredentials(tokens);
-                // Store the access and refresh tokens for future use
-                // tokens.access_token
-                // tokens.refresh_token
-                // tokens.expiry_date
-                resolve();
-              } else {
-                reject(err);
-              }
-              authWindow.destroy();
-            });
-          }
-        });
-      } else {
-        resolve();
+  async auth(reauthenticate=false) {
+    // check if already authenticated
+    if (!!this.oauth2Client && !reauthenticate) return;
+
+    // oauth object
+    let settings = new ss.SoulSifterSettings();
+    this.oauth2Client = new google.auth.OAuth2(
+        settings.getString('google.clientId'),
+        settings.getString('google.clientSecret'),
+        'http://localhost:3000/oauth2callback'
+    );
+    google.options({auth: this.oauth2Client});
+
+    // use access token if available
+    if (!reauthenticate) {
+      const accessToken = settings.getString('google.oauthAccessToken');
+      if (!!accessToken) {
+        const expiry_date = settings.getString('google.oauthAccessTokenExpiration');
+        if (new Date().getTime() + 60 * 5 < Number(expiry_date)) {
+          this.oauth2Client.setCredentials({ access_token: accessToken });
+          console.log('Access token used.');
+          return;
+        } else console.log('access token is expired');
+      } else console.log('no access token to use');
+    } else console.log('reauthenticating');
+
+    // attempt to get new access token from the refresh token
+    const refreshToken = settings.getString('google.oauthRefreshToken');
+    if (!!refreshToken) {
+      this.oauth2Client.setCredentials({ refresh_token: refreshToken });
+      try {
+        const tokens = await this.oauth2Client.refreshAccessToken();
+        console.log('Refresh token used to generate new access token.');
+        console.log('tokens: ', tokens);
+        this.oauth2Client.setCredentials(tokens.credentials);
+        settings.putString('google.oauthAccessToken', tokens.credentials.access_token);
+        settings.putString('google.oauthAccessTokenExpiration', tokens.credentials.expiry_date.toString());
+        settings.putString('google.oauthRefreshToken', tokens.credentials.refresh_token);
+        settings.save();
+        return;
+      } catch (error) {
+        // refresh token expired or revoked. continue with flow.
+        console.log('Unable to refresh access token. ', error);
       }
+    } else console.log('no refresh token available.');
+
+    // authenticate with user
+    const authUrl = this.oauth2Client.generateAuthUrl({
+      access_type: 'offline',
+      scope: ['https://www.googleapis.com/auth/youtube'],
+    });
+    const authWindow = new BrowserWindow({
+      width: 800,
+      height: 600,
+      show: false,
+      'node-integration': false,
+      webPreferences: {
+        nodeIntegration: false,
+      },
+    });
+    authWindow.loadURL(authUrl);
+    authWindow.show();
+    authWindow.on('closed', () => {
+      // TODO Handle the window being closed
+      console.log('authwindow closed');
+    });
+    const result = await new Promise((resolve, reject) => {
+      authWindow.webContents.on('will-redirect', (event, url) => {
+        console.log('capture will redirect: ' + url);
+        if (url.startsWith(this.oauth2Client.redirectUri)) {
+          let q = require('url').parse(url, true).query;
+          console.log('code: ' + q.code);
+          this.oauth2Client.getToken(q.code, (err, tokens) => {
+            console.log('err: ' + err);
+            console.log('tokens; ', tokens);
+            if (!err) {
+              this.oauth2Client.setCredentials(tokens);
+              // Store the access and refresh tokens for future use
+              settings.putString('google.oauthAccessToken', tokens.access_token);
+              settings.putString('google.oauthRefreshToken', tokens.refresh_token);
+              // write as string since int doesn't seem to be big enough
+              settings.putString('google.oauthAccessTokenExpiration', tokens.expiry_date.toString());
+              settings.save();
+              resolve();
+            } else {
+              console.warn('throwing error: ', err);
+              reject(err);
+            }
+            authWindow.destroy();
+          });
+        }
+      });
     });
   }
 
