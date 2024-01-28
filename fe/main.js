@@ -147,15 +147,20 @@ class YoutubeClientMain {
   constructor() {
     this.service = google.youtube('v3');
     this.oauth2Client = null;
+    this.expiry_date = 0;
   }
 
   sleep(ms=1000) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
+  isExpired(bufferInMins=2) {
+    return new Date().getTime() + bufferInMins * 60 * 1000 >= this.expiry_date;
+  }
+
   async auth(reauthenticate=false) {
     // check if already authenticated
-    if (!!this.oauth2Client && !reauthenticate) return;
+    if (!!this.oauth2Client && !reauthenticate && !this.isExpired()) return;
 
     // oauth object
     let settings = new ss.SoulSifterSettings();
@@ -170,8 +175,8 @@ class YoutubeClientMain {
     if (!reauthenticate) {
       const accessToken = settings.getString('google.oauthAccessToken');
       if (!!accessToken) {
-        const expiry_date = settings.getString('google.oauthAccessTokenExpiration');
-        if (new Date().getTime() + 60 * 5 < Number(expiry_date)) {
+        this.expiry_date = Number(settings.getString('google.oauthAccessTokenExpiration'));
+        if (!this.isExpired()) {
           this.oauth2Client.setCredentials({ access_token: accessToken });
           console.log('Access token used.');
           return;
@@ -191,6 +196,7 @@ class YoutubeClientMain {
         settings.putString('google.oauthAccessToken', tokens.credentials.access_token);
         settings.putString('google.oauthAccessTokenExpiration', tokens.credentials.expiry_date.toString());
         settings.putString('google.oauthRefreshToken', tokens.credentials.refresh_token);
+        this.expiry_date = tokens.credentials.expiry_date;
         settings.save();
         return;
       } catch (error) {
@@ -235,6 +241,7 @@ class YoutubeClientMain {
               settings.putString('google.oauthRefreshToken', tokens.refresh_token);
               // write as string since int doesn't seem to be big enough
               settings.putString('google.oauthAccessTokenExpiration', tokens.expiry_date.toString());
+              this.expiry_date = tokens.expiry_date;
               settings.save();
               resolve();
             } else {
