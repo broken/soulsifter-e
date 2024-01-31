@@ -148,6 +148,7 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
       string date;
       if (url.find("music.youtube") != std::string::npos) {
         // youtube music
+        LOG(DEBUG) << "title = " << ptree.get<string>("track");
         song->setTitle(ptree.get<string>("track"));
         LOG(DEBUG) << "artist = " << ptree.get<string>("artist");
         LOG(DEBUG) << "creator = " << ptree.get<string>("creator");
@@ -162,17 +163,20 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
               artists[0] += ", " + artists[i];
             }
           }
-          song->setArtist(artists[0]);
+          song->setArtist(trim_copy(artists[0]));
+          LOG(DEBUG) << "artist after removing remixer = " << song->getArtist();
           // update featuring
           if (song->getArtist().rfind(ptree.get<string>("channel"), 0) == 0
-              && ptree.get<string>("artist") != ptree.get<string>("channel")) {
+              && song->getArtist() != ptree.get<string>("channel")) {
             song->setArtist(ptree.get<string>("channel") + " (ft. " + song->getArtist().substr(ptree.get<string>("channel").length() + 2) + ")");
           }
+          LOG(DEBUG) << "artist after updating featuring = " << song->getArtist();
           // consolidate double spaces to a single space
           string s = song->getArtist();
           std::string::iterator new_end = std::unique(s.begin(), s.end(), bothAre<' '>);
           s.erase(new_end, s.end());
           song->setArtist(s);
+          LOG(DEBUG) << "artist after removing double spaces = " << song->getArtist();
         }
         album->setName(ptree.get<string>("album"));
         song->setTrack(ptree.get<string>("playlist_index"));
