@@ -274,6 +274,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
 
   skip() {
     if (this.hasMoreSongs()) {
+      this.shadowRoot.getElementById('audio').pause();
       return;  // stay on this page
     }
     this.albumArtistCompilation = false;
