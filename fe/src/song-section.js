@@ -6,13 +6,14 @@ import "./audio-player.js";
 import "./icon-button.js";
 import "./pitch-slider.js";
 import "./star-rating.js";
+import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { SongEditMixin } from "./mixin-song-edit.js";
 import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 
 
-class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement)))) {
+class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))) {
   render() {
     let localeDateTime = !!this.song ? new Date(this.song.dateAdded).toLocaleString() : '';
     let debugMode = this.settings.getBool('app.debug');
@@ -110,21 +111,29 @@ class SongSection extends SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(L
 
   dragSong(e) {
     e.preventDefault();
-    let filepath = this.settings.getString('dir.music') + this.song.filepath;
-    let iconpath = this.settings.getString('dir.music') + this.song.album.coverFilepath;
-    if (this.useStems) {
-      let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
-      ipcRenderer.invoke('existsfilepath', stemFilepath)
-      .then((exists) => {
-        if (exists) {
-          filepath = stemFilepath;
-        }
+    let filepath = '';
+    let iconpath = '';
+    if (this.searchOptions.mvRestrict) {
+      filepath = this.settings.getString('dir.mv') + this.song.musicVideo.filePath;
+      iconpath = this.settings.getString('dir.mv') + this.song.musicVideo.thumbnailFilePath;
+    } else {
+      filepath = this.settings.getString('dir.music') + this.song.filepath;
+      iconpath = this.settings.getString('dir.music') + this.song.album.coverFilepath;
+      if (this.useStems) {
+        let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
+        ipcRenderer.invoke('existsfilepath', stemFilepath)
+        .then((exists) => {
+          if (exists) {
+            filepath = stemFilepath;
+          }
         ipcRenderer.send('ondragstart', filepath, iconpath);
-      }).catch((err) => {
-        this.updateAlert(alertId, undefined, "Failed checking for existence of stems file.\n" + err);
-      });
+        }).catch((err) => {
+          this.updateAlert(alertId, undefined, "Failed checking for existence of stems file.\n" + err);
+        });
       return;
     }
+  }
+
     ipcRenderer.send('ondragstart', filepath, iconpath);
   }
 
