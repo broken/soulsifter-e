@@ -15,6 +15,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-input label="Music Directory" value="${this.musicDir}" id="musicDir"></paper-input>
           <paper-input label="Music Video Directory" value="${this.musicVideoDir}" id="musicVideoDir"></paper-input>
           <paper-input label="Stems Directory" value="${this.stemsDir}" id="stemsDir"></paper-input>
+          <paper-input label="Waveforms Directory" value="${this.waveformsDir}" id="waveformsDir"></paper-input>
           <br>
           <paper-input label="Default song list limit" value="${this.songListLimit}" allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></paper-input>
           <paper-input label="Energy search difference" value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></paper-input>
@@ -56,6 +57,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.musicDir = this.settings.getString('dir.music');
     this.musicVideoDir = this.settings.getString('dir.mv');
     this.stemsDir = this.settings.getString('dir.stems');
+    this.waveformsDir = this.settings.getString('dir.waveforms');
     this.googleAndroidId = this.settings.getString('google.androidId');
     this.googleAppKey = this.settings.getString('google.appKey');
     this.googleEmail = this.settings.getString('google.email');
@@ -100,6 +102,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
     this.puts('dir.mv', this.shadowRoot.getElementById('musicVideoDir').value);
     this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);
+    this.puts('dir.waveforms', this.shadowRoot.getElementById('waveformsDir').value);
     this.puts('google.androidId', this.shadowRoot.getElementById('googleAndroidId').value);
     this.puts('google.appKey', this.shadowRoot.getElementById('googleAppKey').value);
     this.puts('google.email', this.shadowRoot.getElementById('googleEmail').value);
@@ -127,7 +130,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   validate() {
     // Ensure that directory paths end in a slash
-    ['musicDir', 'musicVideoDir', 'stemsDir'].map(label => {
+    ['musicDir', 'musicVideoDir', 'stemsDir', 'waveformsDir'].map(label => {
       let el = this.shadowRoot.getElementById(label);
       el.value = el.value.replace(/(\/)?$/, '/');
     })
