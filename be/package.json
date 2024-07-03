@@ -8,7 +8,7 @@
     "be:build": "npm i",
     "be:compile": "npm run be:build && npm run be:rebuild",
     "be:generatemodel": "ruby generate_model.rb",
-    "be:rebuild": "HOME=~/.electron-gyp npx node-gyp rebuild --target=21.4.2 --arch=x64 --dist-url=https://atom.io/download/electron",
+    "be:rebuild": "HOME=~/.electron-gyp npx node-gyp rebuild --target=21.7.3 --arch=x64 --dist-url=https://nodejs.org/dist",
     "be:test": "npm run be:build && node test.js"
   },
   "author": "Robert Neale",
