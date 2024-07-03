@@ -48,7 +48,7 @@ const createWindow = () => {
       }
       // this.updateAlert(alertId, 1, 'Completed syncing playlists.', 20);
     }).catch(err => {
-      console.error('Failed to sync playlists.');
+      console.error('Failed to sync playlists: ' + err);
       mainWindow.webContents.send('addalert', {'progress': progress, 'a': 'Failed to sync playlists. ' + err});
       // this.updateAlert(alertId, progress, 'Failed to sync playlists. ' + err);
       console.error(err);
