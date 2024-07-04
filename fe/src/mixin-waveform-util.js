@@ -3,7 +3,7 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
 let waveformUtilMixin = (superClass) => class extends superClass {
 
   // should match css values in song-list-item.js
-  waveformHeight = 30;
+  waveformHeight = 24;
   waveformWidth = 200;
 
   getFullWaveformFilepath(songFilepath) {

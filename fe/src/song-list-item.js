@@ -267,8 +267,10 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         #waveform {
           background-position: center center;
           background-size: contain;
-          height: 30px;
+          background-repeat: no-repeat;
+          height: 24px;
           width: 200px;
+          padding: 0 3px;
         }
 
         .key {
