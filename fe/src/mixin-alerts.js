@@ -40,6 +40,7 @@ let alertsMixin = (superClass) => class extends superClass {
   }
 
   addAlert(a, timeoutInSeconds = 0, progress = 0) {
+    console.log(a);
     let id = Math.random().toString(36).substring(2);
     this.alerts.push(new Alert(id, a, progress));
     this.changeAlerts(this.alerts);

@@ -35,7 +35,6 @@ class WaveGen extends AlertsMixin(SettingsMixin(WavesurferMixin(LitElement))) {
       waveColor: '#FFFFFF',
     });
     this.wavesurfer.on('error', function (msg) {
-      console.error('Wavesurfer audio error: ' + msg);
       this.addAlert('Wavesurfer audio error: ' + msg, 8);
     });
   }

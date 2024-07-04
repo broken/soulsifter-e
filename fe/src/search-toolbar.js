@@ -162,7 +162,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   addSongFromUrl(e) {
     ipcRenderer.invoke('getclipboard')
     .then((url) => {
-      window.console.log('Audio url = ' + url);
       let alertId = this.addAlert('Processing ' + url, undefined, -1);
       let p = ss.MusicVideoService.downloadAudioAsync(url);
       p.then((filepaths) => {

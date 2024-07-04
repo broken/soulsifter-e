@@ -136,8 +136,7 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
       playlist.spotifyId = response.body.id;
       playlist.update();
     } catch (err) {
-      this.addAlert('Unable to create Spotify playlist ' + playlist.name);
-      console.error(err);
+      this.addAlert('Unable to create Spotify playlist ' + playlist.name + '. ' + err);
       return;
     }
     if (!!playlist.query) {
@@ -149,8 +148,7 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
           await this._addSongToPlaylist(songs[i], playlist);
         }
       } catch (err) {
-        this.addAlert('Unable to add song ' + songs[i].id + ' to YouTube playlist ' + playlist.name);
-        console.error(err);
+        this.addAlert('Unable to add song ' + songs[i].id + ' to YouTube playlist ' + playlist.name + '. ' + err);
         return;
       }
     }
@@ -165,8 +163,7 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
         await this._updatePlaylistEntries(playlists[i]);
       }
     } catch (err) {
-      this.addAlert('Failed to sync playlists.');
-      console.error(err);
+      this.addAlert('Failed to sync playlists. ' + err);
     }
   }
 
