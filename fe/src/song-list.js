@@ -21,9 +21,10 @@ import { SongEditMixin } from "./mixin-song-edit.js";
 import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
+import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 import { } from "./song-list-item.js";
 
-class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(WaveGenQueueMixin(LitElement)))))))))))) {
+class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(WaveGenQueueMixin(WaveformUtilMixin(LitElement))))))))))))) {
   render() {
     let songListItems = html``;
     songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);

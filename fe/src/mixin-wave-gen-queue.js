@@ -53,15 +53,6 @@ let waveGenQueueMixin = (superClass) => class extends superClass {
   clearWaveGenQueue() {
     this._changeWaveGenQueue([]);
   }
-
-  getFullWaveformFilepath(filepath) {
-    return this.settings.getString('dir.waveforms') + filepath.replace(/\.[^.]+$/, '.webp');
-  }
-
-  async hasWaveformCachedFile(song) {
-    let f = this.getFullWaveformFilepath(song.filepath);
-    return ipcRenderer.invoke('existsfilepath', f);
-  }
 }
 
 export const WaveGenQueueMixin = dedupingMixin(waveGenQueueMixin);

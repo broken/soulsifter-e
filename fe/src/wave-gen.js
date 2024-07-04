@@ -5,9 +5,10 @@ import WaveSurfer from 'wavesurfer.js';
 import { AlertsMixin } from "./mixin-alerts.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
+import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 
 
-class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(LitElement))) {
+class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMixin(LitElement)))) {
   render() {
     return html`
       <div id="wavesurfer"></div>

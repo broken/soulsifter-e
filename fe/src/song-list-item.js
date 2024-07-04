@@ -2,15 +2,16 @@ import { css, html, LitElement } from "lit";
 
 import "./icon-button.js";
 import { SettingsMixin } from "./mixin-settings.js";
+import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 import { } from "./star-rating.js";
 
 
-class SongListItem extends SettingsMixin(LitElement) {
+class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
   render() {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
-    let wfImg = 'background-image: url("file://' + this.settings.getString('dir.waveforms') + this.song.filepath.replace(/\.[^.]+$/, '.webp') + '")';
+    let wfImg = 'background-image: url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '")';
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
