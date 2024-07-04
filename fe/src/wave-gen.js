@@ -45,8 +45,6 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
     if (!this.isWavesurferProcessing) {
       this.isWavesurferProcessing = true;
       this.startProcessing(this.removeSongFromWaveGenQueue());
-        // window.console.log('gen xyz');
-        // ipcRenderer.send('wave-gen');
     }
   }
 
@@ -65,6 +63,7 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
       }
       await this.fs.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
       console.log('File written successfully to ' + waveformFilepath);
+      this.notifyWaveGenCompleted(filepath);
     } catch(err) {
       this.addAlert('Wavesurfer failed creating waveform for ' + filepath + ' : ' + err, 8);
     }

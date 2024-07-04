@@ -68,6 +68,11 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     return ((bpm / songBpm - 1) * 100).toFixed(2);
   }
 
+  async reloadWaveform() {
+    let style = this.shadowRoot.getElementById('waveform').style;
+    style.backgroundImage = 'url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '?forceReload=1")';
+  }
+
   computeDuration(song) {
     let duration = Math.round(song.durationInMs / 1000);
     let secs = duration % 60;
@@ -249,7 +254,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
 
         #waveform {
           background-position: center center;
-          background-size: cover;
+          background-size: contain;
           height: 30px;
           width: 200px;
         }

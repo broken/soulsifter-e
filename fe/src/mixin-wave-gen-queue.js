@@ -11,16 +11,19 @@ let waveGenQueueMixin = (superClass) => class extends superClass {
   constructor() {
     super();
     this._waveGenQueueListener = (e) => this._waveGenQueueChanged(e);
+    this._waveGenCompletedListener = (e) => this._waveGenCompleted(e);
     this.waveGenQueue = [];
   }
 
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('waveGenQueue-changed', this._waveGenQueueListener);
+    window.addEventListener('waveGen-completed', this._waveGenCompletedListener);
   }
 
   disconnectedCallback() {
     window.removeEventListener('waveGenQueue-changed', this._waveGenQueueListener);
+    window.removeEventListener('waveGen-completed', this._waveGenCompletedListener);
     super.disconnectedCallback();
   }
 
@@ -37,6 +40,19 @@ let waveGenQueueMixin = (superClass) => class extends superClass {
   // This should never be publicly called, only publicly overridden
   waveGenQueueChanged(x) {
     this.waveGenQueue = x;
+  }
+
+  notifyWaveGenCompleted(x) {
+    let event = new CustomEvent('waveGen-completed', { detail: x });
+    window.dispatchEvent(event);
+  }
+
+  _waveGenCompleted(e) {
+    this.waveGenCompleted(e.detail);
+  }
+
+  // To be overridden
+  waveGenCompleted(x) {
   }
 
   pushSongToWaveGenQueue(song) {

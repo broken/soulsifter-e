@@ -241,13 +241,22 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     this.clearWaveGenQueue();
     for (let song of this.songs) {
       try {
-        if (!await this.hasWaveformCachedFile(song)) {
+        if (!song.trashed && !await this.hasWaveformCachedFile(song)) {
           this.pushSongToWaveGenQueue(song);
         }
       } catch (err) {
         this.addAlert('Failed checking for existence of waveforms file. ' + err, 8);
       }
     }
+  }
+
+  waveGenCompleted(fp) {
+    this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
+      if (el.song.filepath == fp) {
+        el.reloadWaveform();
+        return;
+      }
+    });
   }
 
   updateSongField(cb) {
