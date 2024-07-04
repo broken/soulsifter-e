@@ -2,8 +2,12 @@ import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
 
 let waveformUtilMixin = (superClass) => class extends superClass {
 
+  // should match css values in song-list-item.js
+  waveformHeight = 30;
+  waveformWidth = 200;
+
   getFullWaveformFilepath(songFilepath) {
-    return this.settings.getString('dir.waveforms') + songFilepath.replace(/\.[^.]+$/, '.webp');
+    return this.settings.getString('dir.waveforms') + songFilepath.replace(/\.[^.]+$/, '_' + this.waveformHeight + 'x' + this.waveformWidth + '.webp');
   }
 
   async hasWaveformCachedFile(song) {

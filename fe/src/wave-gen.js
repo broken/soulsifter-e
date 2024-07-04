@@ -31,8 +31,8 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
   firstUpdated() {
     this.wavesurfer = WaveSurfer.create({
       container: this.shadowRoot.getElementById('wavesurfer'),
-      height: 300,
-      width: 2000,
+      height: this.waveformHeight,
+      width: this.waveformWidth,
       waveColor: '#FFFFFF',
     });
     this.wavesurfer.on('error', function (msg) {
