@@ -167,6 +167,12 @@ class AudioPlayer extends SettingsMixin(LitElement) {
     play();
   }
 
+  preview() {
+    clearTimeout(this.timeoutId);
+    this.play();
+    this.timeoutId = setTimeout(() => this.pause(), 10000);
+  }
+
   pause() {
     if (!!this.audio) {
       this.audio.pause();

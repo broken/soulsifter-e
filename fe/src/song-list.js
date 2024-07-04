@@ -268,7 +268,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     el.song = song;
     await el.possiblyUpdateSrc();
     el.changeCurrentTimePct(pct);
-    el.play();
+    el.preview();
   }
 
   updateSongField(cb) {
