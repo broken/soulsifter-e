@@ -51,7 +51,7 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(LitElement))) 
 
   async startProcessing(filepath) {
     let fullFilepath = this.settings.getString('dir.music') + filepath;
-    let waveformFilepath = this.getWaveGenQueueImageFilepathFromSongPath(filepath);
+    let waveformFilepath = this.getFullWaveformFilepath(filepath);
     try {
       await this.fs.access(fullFilepath, this.fs.F_OK | this.fs.R_OK);
       await this.wavesurfer.load(fullFilepath);

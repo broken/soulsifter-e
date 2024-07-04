@@ -240,7 +240,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     this.clearWaveGenQueue();
     for (let song of this.songs) {
       try {
-        if (!await this.hasWaveGenQueueImageFilepath(song)) {
+        if (!await this.hasWaveformCachedFile(song)) {
           this.pushSongToWaveGenQueue(song);
         }
       } catch (err) {

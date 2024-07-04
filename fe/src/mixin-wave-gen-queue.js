@@ -54,16 +54,12 @@ let waveGenQueueMixin = (superClass) => class extends superClass {
     this._changeWaveGenQueue([]);
   }
 
-  getWaveGenQueueImageFilepath(song) {
-    return this.settings.getString('dir.waveforms') + song.filepath.replace(/\.[^.]+$/, '.webp');
-  }
-
-  getWaveGenQueueImageFilepathFromSongPath(filepath) {
+  getFullWaveformFilepath(filepath) {
     return this.settings.getString('dir.waveforms') + filepath.replace(/\.[^.]+$/, '.webp');
   }
 
-  async hasWaveGenQueueImageFilepath(song) {
-    let f = this.getWaveGenQueueImageFilepath(song);
+  async hasWaveformCachedFile(song) {
+    let f = this.getFullWaveformFilepath(song.filepath);
     return ipcRenderer.invoke('existsfilepath', f);
   }
 }
