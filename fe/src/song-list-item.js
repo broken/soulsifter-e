@@ -11,8 +11,8 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
-    let wfImg = 'background-image: url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '")';
-    wfImg += ';filter: ' + this.waveformColorFilter();
+    let wfImg = '-webkit-mask-box-image: url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '")';
+    wfImg += ';background-color: ' + this.waveformColorFilter();
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
@@ -71,7 +71,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
 
   async reloadWaveform() {
     let style = this.shadowRoot.getElementById('waveform').style;
-    style.backgroundImage = 'url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '?forceReload=1")';
+    style.WebkitMaskBoxImage = 'url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '?forceReload=1")';
   }
 
   computeDuration(song) {
@@ -199,33 +199,33 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
 
   waveformColorFilter() {
     if (!this.song.energy) {
-      return 'grayscale(1) saturate(0) brightness(1.2)';
+      return 'var(--ss-song-list-item-artist-color)';
     } else {
       switch (this.song.energy) {
         case 0:  // none found
-          return 'grayscale(1) saturate(0) brightness(1.2)';
+          return 'var(--ss-song-list-item-energy-0)';
         case 1:
-          return 'hue-rotate(243deg) saturate(6) brightness(3)';
+          return 'var(--ss-song-list-item-energy-1)';
         case 2:
-          return 'hue-rotate(237deg) saturate(3) brightness(2.5)';
+          return 'var(--ss-song-list-item-energy-2)';
         case 3:
-          return 'hue-rotate(229deg) saturate(8) brightness(1.8)';
+          return 'var(--ss-song-list-item-energy-3)';
         case 4:
-          return 'hue-rotate(199deg) saturate(3) brightness(1.4)';
+          return 'var(--ss-song-list-item-energy-4)';
         case 5:
-          return 'hue-rotate(160deg) saturate(3) brightness(1)';
+          return 'var(--ss-song-list-item-energy-5)';
         case 6:
-          return 'hue-rotate(68deg) saturate(9) brightness(1.3)';
+          return 'var(--ss-song-list-item-energy-6)';
         case 7:
-          return 'hue-rotate(65deg) saturate(9) brightness(1.3)';
+          return 'var(--ss-song-list-item-energy-7)';
         case 8:
-          return 'hue-rotate(61deg) saturate(5) brightness(1)';
+          return 'var(--ss-song-list-item-energy-8)';
         case 9:
-          return 'hue-rotate(54deg) saturate(3.5) brightness(1)';
+          return 'var(--ss-song-list-item-energy-9)';
         case 10:  // none found
-          return 'hue-rotate(0deg) saturate(1) brightness(0.78)';
+        return 'var(--ss-song-list-item-energy-10)';
         default:
-          return 'grayscale(1) saturate(0) brightness(1.2)';
+          return 'var(--ss-song-list-item-artist-color)';
       }
     }
   }
@@ -302,6 +302,8 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
           background-position: center center;
           background-size: contain;
           background-repeat: no-repeat;
+          background-color: var(--ss-song-list-item-artist-color);
+          filter: brightness(0.5) saturate(2);
           height: 24px;
           width: 200px;
           padding: 0 3px;
