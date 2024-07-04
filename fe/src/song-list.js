@@ -22,13 +22,12 @@ import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
-import "./audio-player.js";
 import { } from "./song-list-item.js";
 
 class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(WaveGenQueueMixin(WaveformUtilMixin(LitElement))))))))))))) {
   render() {
     let songListItems = html``;
-    songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" @preview-song="${this.previewSong}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
+    songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
     const fields = ['artist', 'comments', 'curator']
     let dialogs = fields.map(f => html`
         <paper-dialog id="${f}">
@@ -55,7 +54,6 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
             </div>
           </paper-dialog>`));
     return html`
-      <audio-player id="audio"></audio-player>
       ${songListItems}
       <paper-dialog id="multiOptionsDialog" noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8">
         <options-menu icon="edit" topright>
@@ -261,16 +259,6 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     });
   }
 
-  async previewSong(e) {
-    let song = e.detail.song;
-    let pct = e.detail.pct;
-    let el = this.shadowRoot.getElementById('audio');
-    el.song = song;
-    await el.possiblyUpdateSrc();
-    el.changeCurrentTimePct(pct);
-    el.preview();
-  }
-
   updateSongField(cb) {
     this.selectedListItems.forEach(el => {
       if (el.hasAttribute('selected')) {
@@ -373,9 +361,6 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
         icon-button {
           --mdc-icon-size: 24px;
           color: var(--primary-text-color);
-        }
-        #audio {
-          display: none;
         }
         #multiOptionsDialog {
           background-color: var(--search-toolbar-background);
