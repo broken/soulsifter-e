@@ -12,6 +12,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
     let wfImg = 'background-image: url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '")';
+    wfImg += ';filter: ' + this.waveformColorFilter();
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
@@ -194,6 +195,39 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     });
     this.dispatchEvent(event);
     e.stopPropagation();
+  }
+
+  waveformColorFilter() {
+    if (!this.song.energy) {
+      return 'grayscale(1) saturate(0) brightness(1.2)';
+    } else {
+      switch (this.song.energy) {
+        case 0:  // none found
+          return 'grayscale(1) saturate(0) brightness(1.2)';
+        case 1:
+          return 'hue-rotate(243deg) saturate(6) brightness(3)';
+        case 2:
+          return 'hue-rotate(237deg) saturate(3) brightness(2.5)';
+        case 3:
+          return 'hue-rotate(229deg) saturate(8) brightness(1.8)';
+        case 4:
+          return 'hue-rotate(199deg) saturate(3) brightness(1.4)';
+        case 5:
+          return 'hue-rotate(160deg) saturate(3) brightness(1)';
+        case 6:
+          return 'hue-rotate(68deg) saturate(9) brightness(1.3)';
+        case 7:
+          return 'hue-rotate(65deg) saturate(9) brightness(1.3)';
+        case 8:
+          return 'hue-rotate(61deg) saturate(5) brightness(1)';
+        case 9:
+          return 'hue-rotate(54deg) saturate(3.5) brightness(1)';
+        case 10:  // none found
+          return 'hue-rotate(0deg) saturate(1) brightness(0.78)';
+        default:
+          return 'grayscale(1) saturate(0) brightness(1.2)';
+      }
+    }
   }
 
   static get styles() {
