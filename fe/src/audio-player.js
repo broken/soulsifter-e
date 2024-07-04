@@ -106,6 +106,30 @@ class AudioPlayer extends SettingsMixin(LitElement) {
     }
   }
 
+  async possiblyUpdateSrc() {
+    if (!this.audio) {
+      this.possiblyCreate();
+    } else if (!!this.song && this.song.filepath != this.prevSongFilepath) {
+      this.prevSongFilepath = this.song.filepath;
+      // audio source; use local, otherwise contact google api
+      let filepath = this.song.filepath.charAt(0) === '/' ? this.song.filepath : this.settings.getString('dir.music') + this.song.filepath;
+      let promiseAccess = (filepath) => new Promise((resolve) => this.fs.access(filepath, this.fs.F_OK | this.fs.R_OK, resolve));
+      let err = await promiseAccess(filepath);
+      if (!err) {
+        this.src = 'file://' + filepath;
+        this.audio.src = this.src;
+      } else {
+        if (!this.song.youtubeId) {
+          console.warn('Unable to play song ' + this.song.id + ' because it does not have a YouTube song ID associated with it.');
+        } else {
+          let url = await window.gpm.getStreamUrl(this.song.youtubeId);
+          this.src = url;
+          this.audio.src = this.src;
+        }
+      }
+    }
+  }
+
   async possiblyCreate() {
     if (!!this.song && this.song.filepath != this.prevSongFilepath) {
       this.destroyAudio();
@@ -167,6 +191,10 @@ class AudioPlayer extends SettingsMixin(LitElement) {
   changeCurrentTime(e) {
     let bounds = this.shadowRoot.getElementById('progress').getBoundingClientRect();
     let pct = (e.clientX - bounds.x) / bounds.width;
+    this.changeCurrentTimePct(pct);
+  }
+
+  changeCurrentTimePct(pct) {
     this.audio.currentTime = pct * this.duration;
   }
 

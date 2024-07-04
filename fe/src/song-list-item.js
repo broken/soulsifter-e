@@ -16,7 +16,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         <div id="cover" style="${bgImg}"></div>
-        <div id="waveform" style="${wfImg}"></div>
+        <div id="waveform" style="${wfImg}" @click="${this.previewSong}"></div>
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
           <span> - </span>
@@ -181,6 +181,18 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
   openEditSongPage(e) {
     let event = new CustomEvent('song-edit', { detail: {song: this.song } });
     window.dispatchEvent(event);
+    e.stopPropagation();
+  }
+
+  previewSong(e) {
+    let bounds = this.shadowRoot.getElementById('waveform').getBoundingClientRect();
+    let pct = (e.clientX - bounds.x) / bounds.width;
+    let event = new CustomEvent('preview-song', {
+        bubbles: true,
+        composed: true,
+        detail: { song: this.song, pct: pct }
+    });
+    this.dispatchEvent(event);
     e.stopPropagation();
   }
 
