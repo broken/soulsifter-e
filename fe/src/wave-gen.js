@@ -49,24 +49,28 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
   }
 
   async startProcessing(filepath) {
-    let fullFilepath = this.settings.getString('dir.music') + filepath;
-    let waveformFilepath = this.getFullWaveformFilepath(filepath);
     try {
-      await this.fs.access(fullFilepath, this.fs.F_OK | this.fs.R_OK);
-      await this.wavesurfer.load(fullFilepath);
-      let img = await this.wavesurfer.exportImage('image/webp', 1, 'blob');
-      let wfDirPath = this.path.dirname(waveformFilepath);
-      try  {
-        await this.fs.access(wfDirPath, this.fs.F_OK);
-      } catch(err) {
-        await this.fs.mkdir(wfDirPath, { recursive: true });
+      while (!!filepath) {
+        let fullFilepath = this.settings.getString('dir.music') + filepath;
+        let waveformFilepath = this.getFullWaveformFilepath(filepath);
+        await this.fs.access(fullFilepath, this.fs.F_OK | this.fs.R_OK);
+        await this.wavesurfer.load(fullFilepath);
+        let img = await this.wavesurfer.exportImage('image/webp', 1, 'blob');
+        let wfDirPath = this.path.dirname(waveformFilepath);
+        try  {
+          await this.fs.access(wfDirPath, this.fs.F_OK);
+        } catch(err) {
+          await this.fs.mkdir(wfDirPath, { recursive: true });
+        }
+        await this.fs.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
+        console.log('File written successfully to ' + waveformFilepath);
+        this.notifyWaveGenCompleted(filepath);
+        filepath = this.removeSongFromWaveGenQueue();
       }
-      await this.fs.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
-      console.log('File written successfully to ' + waveformFilepath);
-      this.notifyWaveGenCompleted(filepath);
     } catch(err) {
       this.addAlert('Wavesurfer failed creating waveform for ' + filepath + ' : ' + err, 8);
     }
+    this.isWavesurferProcessing = false;
   }
 
   static get styles() {
