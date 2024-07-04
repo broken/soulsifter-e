@@ -4,10 +4,10 @@ import WaveSurfer from 'wavesurfer.js';
 
 import { AlertsMixin } from "./mixin-alerts.js";
 import { SettingsMixin } from "./mixin-settings.js";
-import { WavesurferMixin } from "./mixin-wavesurfer.js";
+import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
 
 
-class WaveGen extends AlertsMixin(SettingsMixin(WavesurferMixin(LitElement))) {
+class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(LitElement))) {
   render() {
     return html`
       <div id="wavesurfer"></div>
@@ -39,11 +39,11 @@ class WaveGen extends AlertsMixin(SettingsMixin(WavesurferMixin(LitElement))) {
     });
   }
 
-  wavesurferQueueChanged(q) {
-    this.wavesurferQueue = q;
+  waveGenQueueChanged(q) {
+    this.waveGenQueue = q;
     if (!this.isWavesurferProcessing) {
       this.isWavesurferProcessing = true;
-      this.startProcessing(this.removeSongFromWavesurferQueue());
+      this.startProcessing(this.removeSongFromWaveGenQueue());
         // window.console.log('gen xyz');
         // ipcRenderer.send('wave-gen');
     }
@@ -51,7 +51,7 @@ class WaveGen extends AlertsMixin(SettingsMixin(WavesurferMixin(LitElement))) {
 
   async startProcessing(filepath) {
     let fullFilepath = this.settings.getString('dir.music') + filepath;
-    let waveformFilepath = this.getWavesurferImageFilepathFromSongPath(filepath);
+    let waveformFilepath = this.getWaveGenQueueImageFilepathFromSongPath(filepath);
     try {
       await this.fs.access(fullFilepath, this.fs.F_OK | this.fs.R_OK);
       await this.wavesurfer.load(fullFilepath);

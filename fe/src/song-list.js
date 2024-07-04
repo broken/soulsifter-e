@@ -20,10 +20,10 @@ import { SettingsMixin } from "./mixin-settings.js";
 import { SongEditMixin } from "./mixin-song-edit.js";
 import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
-import { WavesurferMixin } from "./mixin-wavesurfer.js";
+import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
 import { } from "./song-list-item.js";
 
-class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(WavesurferMixin(LitElement)))))))))))) {
+class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(WaveGenQueueMixin(LitElement)))))))))))) {
   render() {
     let songListItems = html``;
     songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
@@ -237,11 +237,11 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
   }
 
   async generateMissingWaveforms() {
-    this.clearWavesurferQueue();
+    this.clearWaveGenQueue();
     for (let song of this.songs) {
       try {
-        if (!await this.hasWavesurferImageFilepath(song)) {
-          this.pushSongToWavesurferQueue(song);
+        if (!await this.hasWaveGenQueueImageFilepath(song)) {
+          this.pushSongToWaveGenQueue(song);
         }
       } catch (err) {
         this.addAlert('Failed checking for existence of waveforms file. ' + err, 8);
