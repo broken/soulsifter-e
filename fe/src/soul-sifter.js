@@ -15,6 +15,7 @@ import "./settings-edit.js";
 import "./song-edit.js";
 import "./song-list.js";
 import "./song-section.js";
+import "./wave-gen.js"
 import "./youtube-client.js"
 
 import 'material-design-icons/iconfont/material-icons.css';
@@ -26,6 +27,7 @@ class SoulSifter extends LitElement {
   render() {
     return html`
       <alert-list></alert-list>
+      <wave-gen></wave-gen>
       <aside>
         <mwc-tab-bar activeIndex="1" dense="true">
           <mwc-tab @click="${this.songTabClicked}" label="Song" isFadingIndicator></mwc-tab>

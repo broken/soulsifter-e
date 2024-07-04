@@ -10,10 +10,12 @@ class SongListItem extends SettingsMixin(LitElement) {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
+    let wfImg = 'background-image: url("file://' + this.settings.getString('dir.waveforms') + this.song.filepath.replace(/\.[^.]+$/, '.webp') + '")';
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         <div id="cover" style="${bgImg}"></div>
+        <div id="waveform" style="${wfImg}"></div>
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
           <span> - </span>
@@ -106,7 +108,7 @@ class SongListItem extends SettingsMixin(LitElement) {
           ipcRenderer.send('ondragstart', filepath, iconpath);
           window.ssDraggedObj = this.song;
         }).catch((err) => {
-          this.updateAlert(alertId, undefined, "Failed checking for existence of stems file.\n" + err);
+          this.addAlert("Failed checking for existence of stems file.\n" + err, 8);
         });
         return;
       }
@@ -242,6 +244,13 @@ class SongListItem extends SettingsMixin(LitElement) {
           background-size: cover;
           height: 30px;
           width: 30px;
+        }
+
+        #waveform {
+          background-position: center center;
+          background-size: cover;
+          height: 30px;
+          width: 200px;
         }
 
         .key {
