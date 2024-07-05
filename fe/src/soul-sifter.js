@@ -3,8 +3,9 @@ import { css, html, LitElement, unsafeCSS } from 'lit';
 import "@material/mwc-tab";
 import "@material/mwc-tab-bar";
 
+import { AudioMixin } from "./mixin-audio.js";
+import { SettingsMixin } from "./mixin-settings.js";
 import "./alert-list.js";
-import "./audio-player.js";
 import "./genre-edit.js";
 import "./genre-list.js";
 import "./playlist-edit.js";
@@ -24,12 +25,11 @@ import 'typeface-roboto/index.css';
 import theme from './theme-serato.css?inline';
 
 
-class SoulSifter extends LitElement {
+class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
   render() {
     return html`
       <alert-list></alert-list>
       <wave-gen></wave-gen>
-      <audio-player id="audio"></audio-player>
       <aside>
         <mwc-tab-bar activeIndex="1" dense="true">
           <mwc-tab @click="${this.songTabClicked}" label="Song" isFadingIndicator></mwc-tab>
@@ -46,7 +46,7 @@ class SoulSifter extends LitElement {
         <search-toolbar></search-toolbar>
         <mix-list @select-song="${this.selectSong}"></mix-list>
         <div class="list-seperator"></div>
-        <song-list id="sl" @preview-song="${this.previewSong}"></song-list>
+        <song-list id="sl"></song-list>
       </main>
       <genre-edit></genre-edit>
       <mix-edit></mix-edit>
@@ -89,16 +89,6 @@ class SoulSifter extends LitElement {
     this.shadowRoot.getElementById('sl').selectSong(e);
   }
 
-  async previewSong(e) {
-    let song = e.detail.song;
-    let pct = e.detail.pct;
-    let el = this.shadowRoot.getElementById('audio');
-    el.song = song;
-    await el.possiblyUpdateSrc();
-    el.changeCurrentTimePct(pct);
-    el.preview();
-  }
-
   static get styles() {
     return [
       css`${unsafeCSS(theme)}`,
@@ -128,9 +118,6 @@ class SoulSifter extends LitElement {
         }
         main {
           flex: 1 1 auto;
-        }
-        #audio {
-          display: none;
         }
         #sections {
           flex: 1 1 auto;
