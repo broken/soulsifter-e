@@ -16,8 +16,8 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
-        <div id="cover" style="${bgImg}"></div>
         <div id="waveform" style="${wfImg}" @click="${this.previewSong}"></div>
+        <div id="cover" style="${bgImg}"></div>
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
           <span> - </span>
