@@ -11,12 +11,16 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     let comments = !this.settings.getBool('songList.showComments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
-    let wfImg = '-webkit-mask-box-image: url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '")';
-    wfImg += ';background-color: ' + this.waveformColorFilter();
+    let waveforms = '';
+    if (this.settings.getBool('songList.showWaveforms')) {
+      let wfImg = '-webkit-mask-box-image: url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '")';
+      wfImg += ';background-color: ' + this.waveformColorFilter();
+      waveforms = html`<div id="waveform" style="${wfImg}" @click="${this.previewSong}"></div>`;
+    }
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
-        <div id="waveform" style="${wfImg}" @click="${this.previewSong}"></div>
+        ${waveforms}
         <div id="cover" style="${bgImg}"></div>
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
