@@ -188,10 +188,10 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
   previewSong(e) {
     let bounds = this.shadowRoot.getElementById('waveform').getBoundingClientRect();
     let pct = (e.clientX - bounds.x) / bounds.width;
-    let event = new CustomEvent('preview-song', {
+    let event = new CustomEvent('audio-preview-song', {
         bubbles: true,
         composed: true,
-        detail: { song: this.song, pct: pct }
+        detail: { song: this.song, pct: pct, player: this }
     });
     this.dispatchEvent(event);
     e.stopPropagation();

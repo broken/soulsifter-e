@@ -1,3 +1,10 @@
+/**
+ * HTML controls of an audio-player.
+ *
+ * This doesn't actually play audio, but sends events to trigger the audio
+ * player on an ancestor component.
+ */
+
 import { css, html, LitElement } from "lit";
 
 import "@material/mwc-linear-progress";
@@ -8,12 +15,11 @@ import { SettingsMixin } from "./mixin-settings.js";
 
 class AudioPlayer extends SettingsMixin(LitElement) {
   render() {
-    let progress = this.currentTime / this.duration;
     return html`
       <icon-button id="playPause" icon="play_arrow" @click="${this.playAction}"></icon-button>
       <div class="timebar">
         <div id="time" self-end>${this.currentTimeStr()}</div>
-        <mwc-linear-progress id="progress" determinate progress="${progress}" buffer="1" @click="${this.changeCurrentTime}"></mwc-linear-progress>
+        <mwc-linear-progress id="progress" determinate progress="${this.progress}" buffer="1" @click="${this.changeCurrentTime}"></mwc-linear-progress>
       </div>
     `;
   }
@@ -22,15 +28,9 @@ class AudioPlayer extends SettingsMixin(LitElement) {
     return {
       song: { type: Object },
       src: { type: String },
+      progress: { type: Number },
+      currentTime: { type: Number },
       prevSongId: {
-        type: Number,
-        attribute: false
-      },
-      duration: {
-        type: Number,
-        attribute: false
-      },
-      currentTime: {
         type: Number,
         attribute: false
       },
@@ -39,30 +39,9 @@ class AudioPlayer extends SettingsMixin(LitElement) {
 
   constructor() {
     super();
-    this.fs = require('fs');
-    this.duration = 1;
+    this.progress = 0;
     this.currentTime = 0;
     this.prevSongId = 0;
-
-    this.durationChangeListener = () =>  {
-      this.duration = this.audio.duration;
-    };
-    this.endedListener = () => {
-      this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
-      let event = new CustomEvent('song-ended', { bubbles: true, composed: true });
-      this.dispatchEvent(event);
-    };
-    this.errorListener = () => {
-      console.error('Audio error: ' + mediaError.code);
-    };
-    this.timeUpdateListener = () => {
-      this.currentTime = this.audio.currentTime;
-    };
-  }
-
-  disconnectedCallback() {
-    this.destroyAudio();
-    super.disconnectedCallback();
   }
 
   attributeChangedCallback(name, oldval, newval) {
@@ -70,32 +49,10 @@ class AudioPlayer extends SettingsMixin(LitElement) {
     if (name == 'src') this.srcChanged(newval);
   }
 
-  destroyAudio() {
-    if (!!this.audio) {
-      this.audio.removeEventListener('durationchange', this.durationChangeListener);
-      this.audio.removeEventListener('ended', this.endedListener);
-      this.audio.removeEventListener('error', this.errorListener);
-      this.audio.removeEventListener('timeupdate', this.timeUpdateListener);
-    }
-    this.audio = null;
-  }
-
-  createAudio() {
-    if (!!this.src) {
-      this.audio = new Audio(this.src);
-      this.audio.addEventListener('durationchange', this.durationChangeListener);
-      this.audio.addEventListener('ended', this.endedListener);
-      this.audio.addEventListener('error', this.errorListener);
-      this.audio.addEventListener('timeupdate', this.timeUpdateListener);
-    }
-  }
-
   srcChanged(newValue) {
     this.currentTime = 0;
     this.song = null;
     this.prevSongFilepath = '';
-    this.destroyAudio();
-    this.createAudio();
   }
 
   playAction(e) {
@@ -106,78 +63,32 @@ class AudioPlayer extends SettingsMixin(LitElement) {
     }
   }
 
-  async possiblyUpdateSrc() {
-    if (!this.audio) {
-      this.possiblyCreate();
-    } else if (!!this.song && this.song.filepath != this.prevSongFilepath) {
-      this.prevSongFilepath = this.song.filepath;
-      // audio source; use local, otherwise contact google api
-      let filepath = this.song.filepath.charAt(0) === '/' ? this.song.filepath : this.settings.getString('dir.music') + this.song.filepath;
-      let promiseAccess = (filepath) => new Promise((resolve) => this.fs.access(filepath, this.fs.F_OK | this.fs.R_OK, resolve));
-      let err = await promiseAccess(filepath);
-      if (!err) {
-        this.src = 'file://' + filepath;
-        this.audio.src = this.src;
-      } else {
-        if (!this.song.youtubeId) {
-          console.warn('Unable to play song ' + this.song.id + ' because it does not have a YouTube song ID associated with it.');
-        } else {
-          let url = await window.gpm.getStreamUrl(this.song.youtubeId);
-          this.src = url;
-          this.audio.src = this.src;
-        }
-      }
-    }
-  }
-
-  async possiblyCreate() {
-    if (!!this.song && this.song.filepath != this.prevSongFilepath) {
-      this.destroyAudio();
-      this.prevSongFilepath = this.song.filepath;
-      // audio source; use local, otherwise contact google api
-      let filepath = this.song.filepath.charAt(0) === '/' ? this.song.filepath : this.settings.getString('dir.music') + this.song.filepath;
-      let promiseAccess = (filepath) => new Promise((resolve) => this.fs.access(filepath, this.fs.F_OK | this.fs.R_OK, resolve));
-      let err = await promiseAccess(filepath);
-      if (!err) {
-        this.src = 'file://' + filepath;
-        this.createAudio();
-      } else {
-        if (!this.song.youtubeId) {
-          console.warn('Unable to play song ' + this.song.id + ' because it does not have a YouTube song ID associated with it.');
-        } else {
-          let url = await window.gpm.getStreamUrl(this.song.youtubeId);
-          this.src = url;
-          this.createAudio();
-        }
-      }
-    }
-  }
-
   play() {
-    let play = async () => {
-      try {
-        await this.possiblyCreate();
-        this.audio.play();
-        this.shadowRoot.getElementById('playPause').icon = 'pause';
-      } catch(err) {
-        console.warn('Unable to play song.');
-        console.warn(err);
-      }
-    };
-    play();
-  }
-
-  preview() {
-    clearTimeout(this.timeoutId);
-    this.play();
-    this.timeoutId = setTimeout(() => this.pause(), 10000);
+    let event = new CustomEvent(
+        'audio-play',
+        { bubbles: true,
+          composed: true,
+          detail: {song: this.song, src: this.src, player: this}
+        }
+    );
+    this.dispatchEvent(event);
+    this.shadowRoot.getElementById('playPause').icon = 'pause';
   }
 
   pause() {
-    if (!!this.audio) {
-      this.audio.pause();
-      this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
-    }
+    this.dispatchEvent(new CustomEvent('audio-pause', {bubbles: true, composed: true}));
+    this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
+  }
+
+  audioEnded() {
+    this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
+    let event = new CustomEvent('song-ended', { bubbles: true, composed: true });
+    this.dispatchEvent(event);
+  }
+
+  audioUnload() {
+    this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
+    this.progress = 0;
   }
 
   currentTimeStr() {
@@ -197,11 +108,11 @@ class AudioPlayer extends SettingsMixin(LitElement) {
   changeCurrentTime(e) {
     let bounds = this.shadowRoot.getElementById('progress').getBoundingClientRect();
     let pct = (e.clientX - bounds.x) / bounds.width;
-    this.changeCurrentTimePct(pct);
-  }
-
-  changeCurrentTimePct(pct) {
-    this.audio.currentTime = pct * this.duration;
+    let event = new CustomEvent(
+        'audio-set-time-pct',
+        { bubbles: true, composed: true, detail: {pct: pct}}
+    );
+    this.dispatchEvent(event);
   }
 
   static get styles() {
