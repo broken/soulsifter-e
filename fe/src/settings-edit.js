@@ -21,6 +21,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-input label="Energy search difference" value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></paper-input>
           <paper-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect">Automatically search after selecting a song</paper-checkbox>
           <paper-checkbox ?checked="${this.songListShowComments}" id="songListShowComments">Show comments in song list</paper-checkbox>
+          <paper-checkbox ?checked="${this.songListShowWaveforms}" id="songListShowWaveforms">Show waveforms in song list</paper-checkbox>
           <paper-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys">Include unknown keys in key searches</paper-checkbox>
           <paper-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag">Overwrite values when reading ID3 tags</paper-checkbox>
           <paper-checkbox ?checked="${this.appDebugMode}" id="appDebugMode">Debug mode (requires restart)</paper-checkbox>
@@ -76,6 +77,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.songListLimit = this.settings.getInt('songList.limit');
     this.songListSearchOnSelect = this.settings.getBool('songList.searchOnSelect');
     this.songListShowComments = this.settings.getBool('songList.showComments');
+    this.songListShowWaveforms = this.settings.getBool('songList.showWaveforms');
     this.energyGap = this.settings.getInt('search.energyGap');
     this.includeUnknownKeys = this.settings.getBool('search.includeUnknownKeys');
     this.overwriteSongFromTag = this.settings.getBool('tag.readOverwrite');
@@ -121,6 +123,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
     this.putb('songList.searchOnSelect', this.shadowRoot.getElementById('songListSearchOnSelect').checked);
     this.putb('songList.showComments', this.shadowRoot.getElementById('songListShowComments').checked);
+    this.putb('songList.showWaveforms', this.shadowRoot.getElementById('songListShowWaveforms').checked);
     this.puti('search.energyGap', Number(this.shadowRoot.getElementById('energyGap').value));
     this.putb('search.includeUnknownKeys', this.shadowRoot.getElementById('includeUnknownKeys').checked);
     this.putb('tag.readOverwrite', this.shadowRoot.getElementById('overwriteSongFromTag').checked);

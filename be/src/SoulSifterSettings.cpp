@@ -45,6 +45,7 @@ namespace soulsifter {
     ptree.put("songList.limit", 128);
     ptree.put("songList.searchOnSelect", false);
     ptree.put("songList.showComments", false);
+    ptree.put("songList.showWaveforms", false);
     //ptree.put("tag.readOverwrite", "");
 
     // TODO settings file stored in other OS place
