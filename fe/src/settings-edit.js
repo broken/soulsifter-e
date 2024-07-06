@@ -36,8 +36,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-input label="Database Password" value="${this.dbPassword}" id="dbPassword"></paper-input>
           <paper-input label="Database URL" value="${this.dbUrl}" id="dbUrl"></paper-input>
           <br>
-          <paper-input label="Feedly User ID" value="${this.feedlyUserId}" id="feedlyUserId"></paper-input>
-          <paper-input label="Feedly Developer Token" value="${this.feedlyDevToken}" id="feedlyDevToken"></paper-input>
+          <paper-input label="Theme" value="${this.appTheme}" id="appTheme"></paper-input>
         </div>
         <div class="fields">
           <paper-input label="Google Music Email" value="${this.googleEmail}" id="googleEmail"></paper-input>
@@ -47,6 +46,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-input label="Google Client ID" value="${this.googleClientId}" id="googleClientId"></paper-input>
           <paper-input label="Google Client Secret" value="${this.googleClientSecret}" id="googleClientSecret"></paper-input>
           <paper-input label="Google OAuth Refresh Token" value="${this.googleOauthRefreshToken}" id="googleOauthRefreshToken"></paper-input>
+          <br>
+          <paper-input label="Feedly User ID" value="${this.feedlyUserId}" id="feedlyUserId"></paper-input>
+          <paper-input label="Feedly Developer Token" value="${this.feedlyDevToken}" id="feedlyDevToken"></paper-input>
         </div>
       </abstract-action-page>
     `;
@@ -55,6 +57,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   constructor() {
     super();
     this.appDebugMode = this.settings.getBool('app.debug');
+    this.appTheme = this.settings.getString('app.theme');
     this.musicDir = this.settings.getString('dir.music');
     this.musicVideoDir = this.settings.getString('dir.mv');
     this.stemsDir = this.settings.getString('dir.stems');
@@ -101,6 +104,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   save(e, detail, sender) {
     this.validate();
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
+    this.puts('app.theme', this.shadowRoot.getElementById('appTheme').value);
     this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
     this.puts('dir.mv', this.shadowRoot.getElementById('musicVideoDir').value);
     this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);
@@ -137,6 +141,19 @@ class SettingsEdit extends SettingsMixin(LitElement) {
       let el = this.shadowRoot.getElementById(label);
       el.value = el.value.replace(/(\/)?$/, '/');
     })
+    // Replace theme
+    let event = new CustomEvent(
+      'ss-update-theme',
+      {
+        bubbles: true,
+        composed: true,
+        detail: {
+          'old': this.settings.getBool('app.theme'),
+          'new': this.shadowRoot.getElementById('appTheme').value
+        }
+      }
+    );
+    this.dispatchEvent(event);
   }
 
   puts(key, value) {

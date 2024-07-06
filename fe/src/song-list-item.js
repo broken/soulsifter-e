@@ -202,35 +202,10 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
   }
 
   waveformColorFilter() {
-    if (!this.song.energy) {
-      return 'var(--ss-song-list-item-artist-color)';
+    if (!!this.song.energy) {
+      return `var(--ss-song-list-item-waveform-${this.song.energy})`
     } else {
-      switch (this.song.energy) {
-        case 0:  // none found
-          return 'var(--ss-song-list-item-energy-0)';
-        case 1:
-          return 'var(--ss-song-list-item-energy-1)';
-        case 2:
-          return 'var(--ss-song-list-item-energy-2)';
-        case 3:
-          return 'var(--ss-song-list-item-energy-3)';
-        case 4:
-          return 'var(--ss-song-list-item-energy-4)';
-        case 5:
-          return 'var(--ss-song-list-item-energy-5)';
-        case 6:
-          return 'var(--ss-song-list-item-energy-6)';
-        case 7:
-          return 'var(--ss-song-list-item-energy-7)';
-        case 8:
-          return 'var(--ss-song-list-item-energy-8)';
-        case 9:
-          return 'var(--ss-song-list-item-energy-9)';
-        case 10:  // none found
-        return 'var(--ss-song-list-item-energy-10)';
-        default:
-          return 'var(--ss-song-list-item-artist-color)';
-      }
+      return 'var(--ss-song-list-item-waveform-0)'
     }
   }
 

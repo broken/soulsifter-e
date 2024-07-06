@@ -23,6 +23,7 @@ import "./youtube-client.js"
 import 'material-design-icons/iconfont/material-icons.css';
 import 'typeface-roboto/index.css';
 import theme from './css/theme-serato.css?inline';
+import greyscalewaveforms from './css/waveforms-greyscale.css?inline';
 
 
 class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
@@ -65,6 +66,16 @@ class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
   constructor() {
     super();
     this.selectedTab = 1;
+    this.addEventListener('ss-update-theme', e => {
+      if (e.detail.old) this.classList.remove(e.detail.old);
+      if (e.detail.new) this.classList.add(e.detail.new);
+    });
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    let theme = this.settings.getString('app.theme');
+    if (theme) this.classList.add(theme);
   }
 
   tabClicked(tab) {
@@ -92,6 +103,7 @@ class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
   static get styles() {
     return [
       css`${unsafeCSS(theme)}`,
+      css`${unsafeCSS(greyscalewaveforms)}`,
       css`
         :host {
           display: flex;

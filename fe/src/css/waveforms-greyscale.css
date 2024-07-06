@@ -1,0 +1,13 @@
+:host(.waveforms-greyscale) {
+  --ss-song-list-item-waveform-0: #222;
+  --ss-song-list-item-waveform-1: #333;
+  --ss-song-list-item-waveform-2: #444;
+  --ss-song-list-item-waveform-3: #666;
+  --ss-song-list-item-waveform-4: #777;
+  --ss-song-list-item-waveform-5: #888;
+  --ss-song-list-item-waveform-6: #999;
+  --ss-song-list-item-waveform-7: #AAA;
+  --ss-song-list-item-waveform-8: #BBB;
+  --ss-song-list-item-waveform-9: #CCC;
+  --ss-song-list-item-waveform-10: #FFF;
+}

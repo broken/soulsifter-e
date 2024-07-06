@@ -17,6 +17,7 @@ namespace soulsifter {
   SoulSifterSettings::SoulSifterSettings() {
     // first set defaults
     ptree.put("app.debug", false);
+    // ptree.put("app.theme", "");
     //ptree.put("dir.music", "");
     //ptree.put("dir.mv", "");
     //ptree.put("dir.staging", "");
