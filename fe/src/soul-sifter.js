@@ -22,7 +22,9 @@ import "./youtube-client.js"
 
 import 'material-design-icons/iconfont/material-icons.css';
 import 'typeface-roboto/index.css';
-import theme from './css/theme-serato.css?inline';
+import theme_default from './css/theme-default.css?inline';
+import theme_serato from './css/theme-serato.css?inline';
+import theme_traktor from './css/theme-traktor.css?inline';
 import greyscalewaveforms from './css/waveforms-greyscale.css?inline';
 
 
@@ -114,7 +116,9 @@ class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
 
   static get styles() {
     return [
-      css`${unsafeCSS(theme)}`,
+      css`${unsafeCSS(theme_default)}`,
+      css`${unsafeCSS(theme_serato)}`,
+      css`${unsafeCSS(theme_traktor)}`,
       css`${unsafeCSS(greyscalewaveforms)}`,
       css`
         :host {

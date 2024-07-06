@@ -1,7 +1,6 @@
-:host(.serato) {
+:host {
   --inherit: inherit;
   --black: black;
-  --osx_grey: #B1B1B1;
 
   --sl_blue: #1EC8FA;
   --sl_brown: #6E330A;
@@ -11,46 +10,51 @@
   --sl_purple: #AC1AFA;
 
   /* main */
-  --bg: var(--sl_grey);
+  --bg: #292929;
+  --bg2: #161616;
   --clr: #999999;
   --clr_bold: #CCCCCC;
+  --clr_disabled: #999;
   --err: #F92772;
+  --accent: #FF8D3B; /* */
+  --accent2: #1EC8FA;
+  --accent3: #6E330A;
   --sidebar-width: 270px;
   --scrollbar-width: 15px;
   /* star rating */
-  --sr_clr: #666;
-  --sr_selected: #EEE;
+  --sr_clr: var(--clr);
+  --sr_selected: var(--clr_bold);
   --sr_trashed: #833;
   /* paper menu */
-  --pm_bg: #161616;
+  --pm_bg: var(--bg2);
   --pm_bghover: var(--black);
   /* paper input */
-  --pi_accent: var(--sl_blue);
+  --pi_accent: var(--accent2);
   /* paper toggle button */
-  --pb_clr: var(--sl_blue);
+  --pb_clr: var(--accent);
   /* paper alert toast */
-  --pt_bg: var(--sl_orange);
+  --pt_bg: #FDC443;
   --pt_clr: var(--black);
   /* abstract actions */
-  --aa_ok: var(--sl_orange);
+  --aa_ok: var(--accent);
   /* drawer tabs */
-  --dt_bg: #1F1F1F;
+  --dt_bg: var(--bg2);
   --dt_clr: var(--inherit);
-  --dt_bar: var(--sl_orange);
-  --dt_ink: var(--sl_orange);
+  --dt_bar: var(--accent); /* no longer works */
+  --dt_ink: var(--accent);
   /* genre list */
-  --gl_ink: var(--sl_orange);
-  --gl_select: var(--sl_brown);
+  --gl_ink: var(--accent);
+  --gl_select: var(--accent3);
   /* playlist list */
-  --pl_fab: var(--sl_brown);
+  --pl_fab: var(--accent);
   /* search toolbar */
   --st_bg: var(--black);
   /* pitch slider */
-  --ps_clr: var(--sl_blue);
-  --ps_bg: #999;
+  --ps_clr: var(--accent2);
+  --ps_bg: var(--clr);
   /* search info */
-  --si_heading: #CCC;
-  --si_emphasis: var(--sl_green);
+  --si_heading: var(--clr_bold);
+  --si_emphasis: #39FF7E;
   /* song list */
   --sl_border: 1px solid #2F2F2F;
   --sl_hover: rgb(20,20,20);
@@ -70,8 +74,8 @@
   --sl_energy9: #ff5500;
   --sl_energy10: #ff2266;
   /* audio */
-  --au_play: #CCC;
-  --au_disabled: #999;
+  --au_play: var(--clr_bold);
+  --au_disabled: var(--clr_disabled);
 
   /** main **/
   --dark-primary-color: #303f9f;
