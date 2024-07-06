@@ -18,14 +18,20 @@ class AlertList extends AlertsMixin(LitElement) {
     `;
   }
 
-  constructor() {
-    super();
+  connectedCallback() {
+    super.connectedCallback();
     ipcRenderer.on('addalert', (e, data) => {
       this.addAlert(data.a, data.timeoutInSeconds, data.progress);
     });
     ipcRenderer.on('updatealert', (e, data) => {
       this.updateAlert(data.id, data.progress, data.a, data.timeoutInSeconds);
     });
+  }
+
+  disconnectedCallback() {
+    ipcRenderer.removeAllListeners('addalert');
+    ipcRenderer.removeAllListeners('updatealert');
+    super.disconnectedCallback();
   }
 
   alertsChanged(x) {
