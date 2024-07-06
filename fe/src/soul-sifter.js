@@ -22,7 +22,7 @@ import "./youtube-client.js"
 
 import 'material-design-icons/iconfont/material-icons.css';
 import 'typeface-roboto/index.css';
-import theme from './theme-serato.css?inline';
+import theme from './css/theme-serato.css?inline';
 
 
 class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
