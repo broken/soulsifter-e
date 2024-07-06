@@ -67,15 +67,27 @@ class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
     super();
     this.selectedTab = 1;
     this.addEventListener('ss-update-theme', e => {
-      if (e.detail.old) this.classList.remove(e.detail.old);
-      if (e.detail.new) this.classList.add(e.detail.new);
+      if (e.detail.old) {
+        e.detail.old.split(',').forEach(theme => {
+          this.classList.remove(theme.trim());
+        });
+      }
+      if (e.detail.new) {
+        e.detail.new.split(',').forEach(theme => {
+          this.classList.add(theme.trim());
+        });
+      }
     });
   }
 
   connectedCallback() {
     super.connectedCallback();
-    let theme = this.settings.getString('app.theme');
-    if (theme) this.classList.add(theme);
+    let themes = this.settings.getString('app.theme');
+    if (themes) {
+      themes.split(',').forEach(theme => {
+        this.classList.add(theme.trim());
+      });
+    }
   }
 
   tabClicked(tab) {
