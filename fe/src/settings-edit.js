@@ -161,21 +161,15 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   }
 
   puts(key, value) {
-    if (!!key && !!value) {
-      this.settings.putString(key, value);
-    }
+    this.settings.putString(key, value);
   }
 
   puti(key, value) {
-    if (!!key && (!!value || value === 0)) {
-      this.settings.putInt(key, value);
-    }
+    this.settings.putInt(key, value);
   }
 
   putb(key, value) {
-    if (!!key) {
-      this.settings.putBool(key, value);
-    }
+    this.settings.putBool(key, value);
   }
 
   static get styles() {
