@@ -63,7 +63,7 @@ let audioMixin = (superClass) => class extends superClass {
     this._audioChangeCurrentTimePct(pct);
     clearTimeout(this.timeoutId);
     this.audio.play();
-    this.timeoutId = setTimeout(() => this.audio.pause(), 10000);
+    this.timeoutId = setTimeout(() => this.audio.pause(), 1000 * this.settings.getInt('songList.previewTimeInSec'));
   }
 
   _audioPlayListener = async e => {

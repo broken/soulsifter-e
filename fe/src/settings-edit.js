@@ -37,6 +37,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-input label="Database URL" value="${this.dbUrl}" id="dbUrl"></paper-input>
           <br>
           <paper-input label="Theme" value="${this.appTheme}" id="appTheme"></paper-input>
+          <br>
+          <paper-input label="Preview Time (in secs)" value="${this.songListPreviewTimeInSecs}" id="songListPreviewTimeInSecs"></paper-input>
         </div>
         <div class="fields">
           <paper-input label="Google Music Email" value="${this.googleEmail}" id="googleEmail"></paper-input>
@@ -78,6 +80,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.feedlyUserId = this.settings.getString('feedly.userId');
     this.songListColBpm = this.settings.getBool('songList.column.bpm');
     this.songListLimit = this.settings.getInt('songList.limit');
+    this.songListPreviewTimeInSecs = this.settings.getInt('songList.previewTimeInSec');
     this.songListSearchOnSelect = this.settings.getBool('songList.searchOnSelect');
     this.songListShowComments = this.settings.getBool('songList.showComments');
     this.songListShowWaveforms = this.settings.getBool('songList.showWaveforms');
@@ -125,6 +128,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('feedly.userId', this.shadowRoot.getElementById('feedlyUserId').value);
     this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);
     this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
+    this.puti('songList.previewTimeInSec', Number(this.shadowRoot.getElementById('songListPreviewTimeInSecs').value));
     this.putb('songList.searchOnSelect', this.shadowRoot.getElementById('songListSearchOnSelect').checked);
     this.putb('songList.showComments', this.shadowRoot.getElementById('songListShowComments').checked);
     this.putb('songList.showWaveforms', this.shadowRoot.getElementById('songListShowWaveforms').checked);
