@@ -152,7 +152,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
         bubbles: true,
         composed: true,
         detail: {
-          'old': this.settings.getBool('app.theme'),
+          'old': this.settings.getString('app.theme'),
           'new': this.shadowRoot.getElementById('appTheme').value
         }
       }
