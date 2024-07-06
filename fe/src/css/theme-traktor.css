@@ -1,21 +1,23 @@
 :host(.traktor) {
   /* main */
-  --bg: #2E2E2E;
+  --bg: #282828;
   --bg2: #141414;
   --clr: #AFAFAF;
   --clr_bold: #D2D2D2;
   --clr_disabled: #3A3A3A;
   --err: #FF3900;
+  --err_disabled: #833;
   --accent: #FF8D3B;
   --accent2: #40D9FF;
   --accent3: #00425C;
   /* star rating */
-  --sr_clr: var(--clr);
+  --sr_clr: var(--clr_disabled);
   --sr_selected: var(--accent);
-  --sr_trashed: #833;
-  /* paper menu */
-  --pm_bg: var(--bg2);
-  --pm_bghover: var(--accent3);
+  --sr_trashed: var(--err_disabled);
+  /* options menu */
+  --om_bg: var(--bg2);
+  --om_bg_hover: var(--accent3);
+  --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--accent2);
   /* paper toggle button */

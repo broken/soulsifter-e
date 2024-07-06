@@ -21,9 +21,10 @@
   --sr_clr: #666;
   --sr_selected: #EEE;
   --sr_trashed: #833;
-  /* paper menu */
-  --pm_bg: #161616;
-  --pm_bghover: var(--black);
+  /* options menu */
+  --om_bg: #161616;
+  --om_bg_hover: var(--black);
+  --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--sl_blue);
   /* paper toggle button */
@@ -102,8 +103,6 @@
   --ss-drawer-tab-clr-active: var(--clr_bold);
   --ss-genre-list-item-ripple-color: var(--gl_ink);
   --ss-genre-list-item-select-color: var(--gl_select);
-  --ss-options-button-menu-background-color: var(--pm_bg);
-  --ss-options-button-menu-item-hover-color: var(--pm_bghover);
   --ss-playlist-list-item-selected-background-color: var(--gl_select);
   --ss-search-info-heading-color: var(--si_heading);
   --ss-search-info-emphasis-color: var(--si_emphasis);
@@ -138,9 +137,6 @@
   --ss-song-list-item-waveform-8: var(--sl_energy8);
   --ss-song-list-item-waveform-9: var(--sl_energy9);
   --ss-song-list-item-waveform-10: var(--sl_energy10);
-  --ss-star-rating-color: var(--sr_clr);
-  --ss-star-rating-selected-color: var(--sr_selected);
-  --ss-star-rating-trashed-color: var(--sr_trashed);
 }
 
 /** paper toggle button **/
