@@ -49,6 +49,9 @@
   --l_select: var(--sl_brown);
   --l_fab: var(--sl_brown);
   --l_fab_clr: var(--inherit);
+  /* volume dial */
+  --vd_clr: var(--clr);
+  --vd_clr_accent: var(--sl_blue);
   /* search toolbar */
   --st_bg: var(--black);
   /* pitch slider */

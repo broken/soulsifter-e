@@ -20,6 +20,7 @@ let audioMixin = (superClass) => class extends superClass {
     this.addEventListener('audio-set-time-pct', this._audioSetTimePctListener);
     this.addEventListener('audio-pause', this._audioPauseListener);
     this.addEventListener('audio-play', this._audioPlayListener);
+    this.addEventListener('audio-set-volume', this._audioSetVolume);
   }
 
   connectedCallback() {
@@ -81,6 +82,10 @@ let audioMixin = (superClass) => class extends superClass {
   _audioSetTimePctListener = e => {
     let pct = e.detail.pct;
     this._audioChangeCurrentTimePct(pct);
+  }
+
+  _audioSetVolume = e => {
+    this.audio.volume = e.detail.volume;
   }
 
   /* private member methods */

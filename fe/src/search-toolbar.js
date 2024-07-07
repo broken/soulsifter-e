@@ -2,6 +2,7 @@ import { css, html, LitElement } from "lit";
 
 import "@polymer/paper-dialog/paper-dialog.js";
 import "@polymer/paper-input/paper-input.js";
+import "@thomasloven/round-slider";
 
 import { AlertsMixin } from "./mixin-alerts.js";
 import { BpmMixin } from "./mixin-bpm.js";
@@ -41,6 +42,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       <icon-button @click=${this.openCreateSongPage} icon="add_circle" id="createSongButton" @drop="${this.dropCreateSongButton}" @dragover="${this.dragOverCreateSongButton}" @dragleave="${this.dragLeaveCreateSongButton}"></icon-button>
       ${debugMode ? html`<icon-button @click=${this.addSongFromUrl} icon="link"></icon-button>` : ''}
       <icon-button @click=${this.openSettingsPage} icon="settings"></icon-button>
+      <round-slider value="${this.volume}" valueLabel="Volume" @value-changing="${this.volumeChanged}" @value-changed="${this.volumeChanged}" min="0" max="100" handleSize="3"></round-slider>
       <options-menu>
         ${debugMode ? html`<options-menu-item @click="${this.addSongFromUrl}">Add Song From URL</options-menu-item>` : ''}
         ${debugMode ? html`<options-menu-item @click="${this.addSongAndVideoFromUrl}">Add Song & Video From URL</options-menu-item>` : ''}
@@ -76,6 +78,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     this.bpm = '';
     this.taps = [];
     this.lastTap = Date.now();
+    this.volume = 100;
   }
 
   requestSearch(e) {
@@ -300,6 +303,15 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     this.changeBpm((60000 / avg).toFixed(1));
   }
 
+  volumeChanged(e) {
+    let vol = e.detail.value / 100;
+    let event = new CustomEvent(
+      'audio-set-volume',
+      { bubbles: true, composed: true, detail: { volume: vol }}
+    );
+    this.dispatchEvent(event);
+  }
+
   static get styles() {
     return [
       css`
@@ -336,6 +348,10 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
           padding: 8px 0;
           margin-left: -24px;
           z-index: 0;
+        }
+        round-slider {
+          padding: 7px;
+          max-width: 29px;
         }
       `
     ];

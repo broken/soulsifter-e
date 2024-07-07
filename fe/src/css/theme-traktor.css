@@ -42,6 +42,9 @@
   --l_select: var(--accent3);
   --l_fab: var(--accent2);
   --l_fab_clr: var(--black);
+  /* volume dial */
+  --vd_clr: var(--clr);
+  --vd_clr_accent: var(--accent);
   /* search toolbar */
   --st_bg: var(--bg2);
   /* pitch slider */
