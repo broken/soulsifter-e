@@ -37,8 +37,7 @@
   /* drawer tabs */
   --dt_bg: var(--bg2);
   --dt_clr: var(--inherit);
-  --dt_bar: var(--accent); /* not working: */
-  --dt_ink: var(--accent);
+  --dt_bar: var(--accent);
   /* genre list */
   --gl_ink: var(--accent);
   --gl_select: var(--accent3);

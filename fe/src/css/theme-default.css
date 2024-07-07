@@ -5,7 +5,7 @@
 
   /* main */
   --bg: #292929;
-  --bg2: #161616;
+  --bg2: #1F1F1F;
   --clr: #999999;
   --clr_bold: #CCCCCC;
   --clr_disabled: #666;
@@ -44,8 +44,7 @@
   /* drawer tabs */
   --dt_bg: var(--bg2);
   --dt_clr: var(--inherit);
-  --dt_bar: var(--accent); /* no longer works */
-  --dt_ink: var(--accent);
+  --dt_bar: var(--clr_bold);
   /* genre list */
   --gl_ink: var(--accent);
   --gl_select: var(--accent3);
@@ -99,8 +98,6 @@
   --paper-input-container-invalid-color: var(--pi_err);
   --paper-input-container-input-color: var(--pi_clr);
   --paper-item-min-height: 13px;
-  --paper-tab-ink: var(--dt_ink);
-  --paper-tabs-selection-bar-color: var(--dt_bar);
   --paper-toast-background-color: var(--pt_bg);
   --paper-toast-color: var(--pt_clr);
   --paper-toggle-button-checked-bar-color:  var(--ptb_clr_checked);
@@ -117,7 +114,7 @@
   --ss-abstract-action-button-accent-clr: var(--pb_accent_clr);
   --ss-drawer-tab-bg: var(--dt_bg);
   --ss-drawer-tab-clr: var(--clr);
-  --ss-drawer-tab-clr-active: var(--clr_bold);
+  --ss-drawer-tab-active-clr: var(--dt_bar);
   --ss-genre-list-item-ripple-color: var(--gl_ink);
   --ss-genre-list-item-select-color: var(--gl_select);
   --ss-options-menu-background-color: var(--om_bg);
