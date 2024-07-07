@@ -2,13 +2,6 @@
   --inherit: inherit;
   --black: black;
 
-  --sl_blue: #1EC8FA;
-  --sl_brown: #6E330A;
-  --sl_green: #39FF7E;
-  --sl_grey: #292929;
-  --sl_orange: #FDC443;
-  --sl_purple: #AC1AFA;
-
   /* main */
   --bg: #292929;
   --bg2: #161616;
@@ -17,11 +10,12 @@
   --clr_disabled: #666;
   --err: #F92772;
   --err_disabled: #833;
-  --accent: #FDC443;
+  --accent: #4054AF;
   --accent2: #1EC8FA;
   --accent3: #6E330A;
   --sidebar-width: 270px;
   --scrollbar-width: 15px;
+
   /* star rating */
   --sr_clr: var(--clr_disabled);
   --sr_selected: var(--clr_bold);
@@ -32,8 +26,11 @@
   --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--accent2);
+  --pi_clr: var(--clr);
+  --pi_err: var(--err);
   /* paper toggle button */
-  --pb_clr: var(--accent);
+  --ptb_clr_checked: var(--accent);
+  --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
   --pt_bg: #FDC443;
   --pt_clr: var(--black);
@@ -93,13 +90,19 @@
 
   /* paper elements */
   --paper-button-accent: var(--aa_ok);
-  --paper-input-container-color: var(--clr);
+  --paper-input-container-color: var(--pi_clr);
   --paper-input-container-focus-color: var(--pi_accent);
-  --paper-input-container-invalid-color: var(--err);
-  --paper-input-container-input-color: var(--clr);
+  --paper-input-container-invalid-color: var(--pi_err);
+  --paper-input-container-input-color: var(--pi_clr);
   --paper-item-min-height: 13px;
   --paper-tab-ink: var(--dt_ink);
   --paper-tabs-selection-bar-color: var(--dt_bar);
+  --paper-toggle-button-checked-bar-color:  var(--ptb_clr_checked);
+  --paper-toggle-button-checked-button-color:  var(--ptb_clr_checked);
+  --paper-toggle-button-checked-ink-color: var(--ptb_clr_checked);
+  --paper-toggle-button-unchecked-bar-color:  var(--ptb_clr_unchecked);
+  --paper-toggle-button-unchecked-button-color:  var(--ptb_clr_unchecked);
+  --paper-toggle-button-unchecked-ink-color: var(--ptb_clr_unchecked);
 
   /* soulsifter elements */
   --ss-alert-list-bg-clr: var(--gl_select);
@@ -148,14 +151,6 @@
   --ss-star-rating-color: var(--sr_clr);
   --ss-star-rating-selected-color: var(--sr_selected);
   --ss-star-rating-trashed-color: var(--sr_trashed);
-}
-
-/** paper toggle button **/
-paper-toggle-button::shadow [checked] .toggle-ink {
-  color: var(--pb_clr);
-}
-paper-toggle-button::shadow [checked] .toggle {
-  background-color: var(--pb_clr);
 }
 
 /** paper toast (alert) **/

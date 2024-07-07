@@ -17,6 +17,7 @@
   --err: #F92772;
   --sidebar-width: 270px;
   --scrollbar-width: 15px;
+
   /* star rating */
   --sr_clr: #666;
   --sr_selected: #EEE;
@@ -27,8 +28,11 @@
   --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--sl_blue);
+  --pi_clr: var(--clr);
+  --pi_err: var(--err);
   /* paper toggle button */
-  --pb_clr: var(--sl_blue);
+  --ptb_clr_checked: var(--sl_blue);
+  --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
   --pt_bg: var(--sl_orange);
   --pt_clr: var(--black);
@@ -88,10 +92,6 @@
 
   /* paper elements */
   --paper-button-accent: var(--aa_ok);
-  --paper-input-container-color: var(--clr);
-  --paper-input-container-focus-color: var(--pi_accent);
-  --paper-input-container-invalid-color: var(--err);
-  --paper-input-container-input-color: var(--clr);
   --paper-item-min-height: 13px;
   --paper-tab-ink: var(--dt_ink);
   --paper-tabs-selection-bar-color: var(--dt_bar);
@@ -137,14 +137,6 @@
   --ss-song-list-item-waveform-8: var(--sl_energy8);
   --ss-song-list-item-waveform-9: var(--sl_energy9);
   --ss-song-list-item-waveform-10: var(--sl_energy10);
-}
-
-/** paper toggle button **/
-paper-toggle-button::shadow [checked] .toggle-ink {
-  color: var(--pb_clr);
-}
-paper-toggle-button::shadow [checked] .toggle {
-  background-color: var(--pb_clr);
 }
 
 /** paper toast (alert) **/

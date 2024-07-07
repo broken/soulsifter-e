@@ -10,6 +10,7 @@
   --accent: #FF8D3B;
   --accent2: #40D9FF;
   --accent3: #00425C;
+
   /* star rating */
   --sr_clr: var(--clr_disabled);
   --sr_selected: var(--accent);
@@ -20,8 +21,11 @@
   --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--accent2);
+  --pi_clr: var(--clr);
+  --pi_err: var(--err);
   /* paper toggle button */
-  --pb_clr: var(--accent);
+  --ptb_clr_checked: var(--accent);
+  --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
   --pt_bg: var(--accent3);
   --pt_clr: var(--black);
