@@ -45,11 +45,10 @@
   --dt_bg: var(--bg2);
   --dt_clr: var(--inherit);
   --dt_bar: var(--clr_bold);
-  /* genre list */
-  --gl_ink: var(--accent);
-  --gl_select: var(--accent3);
-  /* playlist list */
-  --pl_fab: var(--accent);
+  /* genre/playlist list */
+  --l_select: var(--accent3);
+  --l_fab: var(--accent);
+  --l_fab_clr: var(--black);
   /* search toolbar */
   --st_bg: var(--black);
   /* pitch slider */
@@ -92,6 +91,10 @@
   --disabled-text-color: #bdbdbd;
   --divider-color: #e0e0e0;
 
+  /* mdc elements */
+  --mdc-theme-secondary: var(--l_fab);
+  --mdc-theme-on-secondary: var(--l_fab_clr);
+
   /* paper elements */
   --paper-input-container-color: var(--pi_clr);
   --paper-input-container-focus-color: var(--pi_accent);
@@ -115,12 +118,11 @@
   --ss-drawer-tab-bg: var(--dt_bg);
   --ss-drawer-tab-clr: var(--clr);
   --ss-drawer-tab-active-clr: var(--dt_bar);
-  --ss-genre-list-item-ripple-color: var(--gl_ink);
-  --ss-genre-list-item-select-color: var(--gl_select);
+  --ss-genre-list-item-selected-bg: var(--l_select);
   --ss-options-menu-background-color: var(--om_bg);
   --ss-options-menu-background-color-hover: var(--om_bg_hover);
   --ss-options-menu-color-hover: var(--om_clr_hover);
-  --ss-playlist-list-item-selected-background-color: var(--gl_select);
+  --ss-playlist-list-item-selected-bg: var(--l_select);
   --ss-search-info-heading-color: var(--si_heading);
   --ss-search-info-emphasis-color: var(--si_emphasis);
   --search-toolbar-background: var(--st_bg);
@@ -157,15 +159,6 @@
   --ss-star-rating-color: var(--sr_clr);
   --ss-star-rating-selected-color: var(--sr_selected);
   --ss-star-rating-trashed-color: var(--sr_trashed);
-}
-
-/** playlist list **/
-paper-fab {
-  background-color: var(--pl_fab);
-  color: var(--clr_bold);
-}
-playlist-list-item::shadow paper-ripple {
-  color: var(--gl_ink);
 }
 
 /** pitch slider **/

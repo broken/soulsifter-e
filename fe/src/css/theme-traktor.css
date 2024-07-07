@@ -38,11 +38,10 @@
   --dt_bg: var(--bg2);
   --dt_clr: var(--inherit);
   --dt_bar: var(--accent);
-  /* genre list */
-  --gl_ink: var(--accent);
-  --gl_select: var(--accent3);
-  /* playlist list */
-  --pl_fab: var(--accent);
+  /* genre/playlist list */
+  --l_select: var(--accent3);
+  --l_fab: var(--accent2);
+  --l_fab_clr: var(--black);
   /* search toolbar */
   --st_bg: var(--bg2);
   /* pitch slider */

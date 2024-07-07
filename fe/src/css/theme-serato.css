@@ -45,11 +45,10 @@
   --dt_bg: #1F1F1F;
   --dt_clr: var(--inherit);
   --dt_bar: var(--clr_bold);
-  /* genre list */
-  --gl_ink: var(--sl_orange);
-  --gl_select: var(--sl_brown);
-  /* playlist list */
-  --pl_fab: var(--sl_brown);
+  /* genre/playlist list */
+  --l_select: var(--sl_brown);
+  --l_fab: var(--sl_brown);
+  --l_fab_clr: var(--inherit);
   /* search toolbar */
   --st_bg: var(--black);
   /* pitch slider */
@@ -94,13 +93,8 @@
 
   /* paper elements */
   --paper-item-min-height: 13px;
-  --paper-tab-ink: var(--dt_ink);
-  --paper-tabs-selection-bar-color: var(--dt_bar);
 
   /* soulsifter elements */
-  --ss-genre-list-item-ripple-color: var(--gl_ink);
-  --ss-genre-list-item-select-color: var(--gl_select);
-  --ss-playlist-list-item-selected-background-color: var(--gl_select);
   --ss-search-info-heading-color: var(--si_heading);
   --ss-search-info-emphasis-color: var(--si_emphasis);
   --search-toolbar-background: var(--st_bg);
@@ -134,15 +128,6 @@
   --ss-song-list-item-waveform-8: var(--sl_energy8);
   --ss-song-list-item-waveform-9: var(--sl_energy9);
   --ss-song-list-item-waveform-10: var(--sl_energy10);
-}
-
-/** playlist list **/
-paper-fab {
-  background-color: var(--pl_fab);
-  color: var(--clr_bold);
-}
-playlist-list-item::shadow paper-ripple {
-  color: var(--gl_ink);
 }
 
 /** pitch slider **/
