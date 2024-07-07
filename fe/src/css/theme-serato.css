@@ -34,8 +34,8 @@
   --ptb_clr_checked: var(--sl_blue);
   --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
-  --pt_bg: var(--sl_orange);
-  --pt_clr: var(--black);
+  --pt_bg: var(--sl_brown);
+  --pt_clr: #FFF;
   /* abstract actions */
   --aa_ok: var(--sl_orange);
   /* drawer tabs */
@@ -97,7 +97,6 @@
   --paper-tabs-selection-bar-color: var(--dt_bar);
 
   /* soulsifter elements */
-  --ss-alert-list-bg-clr: var(--gl_select);
   --ss-drawer-tab-bg: var(--dt_bg);
   --ss-drawer-tab-clr: var(--clr);
   --ss-drawer-tab-clr-active: var(--clr_bold);
@@ -137,12 +136,6 @@
   --ss-song-list-item-waveform-8: var(--sl_energy8);
   --ss-song-list-item-waveform-9: var(--sl_energy9);
   --ss-song-list-item-waveform-10: var(--sl_energy10);
-}
-
-/** paper toast (alert) **/
-paper-toast {
-  background-color: var(--pt_bg);
-  color: var(--pt_clr);
 }
 
 /** playlist list **/

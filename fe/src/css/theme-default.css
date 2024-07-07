@@ -1,6 +1,7 @@
 :host {
   --inherit: inherit;
   --black: black;
+  --white: white;
 
   /* main */
   --bg: #292929;
@@ -32,8 +33,8 @@
   --ptb_clr_checked: var(--accent);
   --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
-  --pt_bg: #FDC443;
-  --pt_clr: var(--black);
+  --pt_bg: var(--accent3);
+  --pt_clr: var(--white);
   /* abstract actions */
   --aa_ok: var(--accent);
   /* drawer tabs */
@@ -97,6 +98,8 @@
   --paper-item-min-height: 13px;
   --paper-tab-ink: var(--dt_ink);
   --paper-tabs-selection-bar-color: var(--dt_bar);
+  --paper-toast-background-color: var(--pt_bg);
+  --paper-toast-color: var(--pt_clr);
   --paper-toggle-button-checked-bar-color:  var(--ptb_clr_checked);
   --paper-toggle-button-checked-button-color:  var(--ptb_clr_checked);
   --paper-toggle-button-checked-ink-color: var(--ptb_clr_checked);
@@ -105,7 +108,6 @@
   --paper-toggle-button-unchecked-ink-color: var(--ptb_clr_unchecked);
 
   /* soulsifter elements */
-  --ss-alert-list-bg-clr: var(--gl_select);
   --ss-drawer-tab-bg: var(--dt_bg);
   --ss-drawer-tab-clr: var(--clr);
   --ss-drawer-tab-clr-active: var(--clr_bold);
@@ -151,12 +153,6 @@
   --ss-star-rating-color: var(--sr_clr);
   --ss-star-rating-selected-color: var(--sr_selected);
   --ss-star-rating-trashed-color: var(--sr_trashed);
-}
-
-/** paper toast (alert) **/
-paper-toast {
-  background-color: var(--pt_bg);
-  color: var(--pt_clr);
 }
 
 /** playlist list **/

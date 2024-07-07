@@ -43,17 +43,6 @@ class AlertList extends AlertsMixin(LitElement) {
     }
     this.requestUpdate();
   }
-
-  static get styles() {
-    return [
-      css`
-        #toast {
-          --paper-toast-background-color: var(--ss-alert-list-bg-clr);
-          --paper-toast-color: white;
-        }
-      `
-    ];
-  }
 }
 
 window.customElements.define('alert-list', AlertList);
