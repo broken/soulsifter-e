@@ -29,8 +29,11 @@
   /* paper alert toast */
   --pt_bg: var(--accent3);
   --pt_clr: var(--clr_bold);
-  /* abstract actions */
-  --aa_ok: var(--accent); /* not working */
+  /* paper button */
+  --pb_accent_bg: var(--bg2);
+  --pb_accent_clr: var(--accent);
+  --pb_bg: var(--bg2);
+  --pb_clr: var(--clr);
   /* drawer tabs */
   --dt_bg: var(--bg2);
   --dt_clr: var(--inherit);

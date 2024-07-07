@@ -50,8 +50,14 @@ class AbstractActionPage extends LitElement {
           padding-top: 30px;
           flex-shrink: 0;
         }
+        mwc-button {
+          padding: 0 30px;
+          --mdc-theme-primary: var(--ss-abstract-action-button-bg);
+          --mdc-theme-on-primary: var(--ss-abstract-action-button-clr);
+        }
         mwc-button.accent {
-          color: var(--paper-button-accent);
+          --mdc-theme-primary:  var(--ss-abstract-action-button-accent-bg);
+          --mdc-theme-on-primary: var(--ss-abstract-action-button-accent-clr);
         }
       `,
     ];

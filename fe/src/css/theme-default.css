@@ -14,6 +14,7 @@
   --accent: #4054AF;
   --accent2: #1EC8FA;
   --accent3: #6E330A;
+  --accent4: #5724E5;
   --sidebar-width: 270px;
   --scrollbar-width: 15px;
 
@@ -35,8 +36,11 @@
   /* paper alert toast */
   --pt_bg: var(--accent3);
   --pt_clr: var(--white);
-  /* abstract actions */
-  --aa_ok: var(--accent);
+  /* paper button */
+  --pb_accent_bg: var(--accent4);
+  --pb_accent_clr: var(--clr_bold);
+  --pb_bg: var(--accent4);
+  --pb_clr: var(--clr_bold);
   /* drawer tabs */
   --dt_bg: var(--bg2);
   --dt_clr: var(--inherit);
@@ -90,7 +94,6 @@
   --divider-color: #e0e0e0;
 
   /* paper elements */
-  --paper-button-accent: var(--aa_ok);
   --paper-input-container-color: var(--pi_clr);
   --paper-input-container-focus-color: var(--pi_accent);
   --paper-input-container-invalid-color: var(--pi_err);
@@ -108,6 +111,10 @@
   --paper-toggle-button-unchecked-ink-color: var(--ptb_clr_unchecked);
 
   /* soulsifter elements */
+  --ss-abstract-action-button-bg: var(--pb_bg);
+  --ss-abstract-action-button-clr: var(--pb_clr);
+  --ss-abstract-action-button-accent-bg: var(--pb_accent_bg);
+  --ss-abstract-action-button-accent-clr: var(--pb_accent_clr);
   --ss-drawer-tab-bg: var(--dt_bg);
   --ss-drawer-tab-clr: var(--clr);
   --ss-drawer-tab-clr-active: var(--clr_bold);

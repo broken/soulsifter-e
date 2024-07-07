@@ -36,8 +36,11 @@
   /* paper alert toast */
   --pt_bg: var(--sl_brown);
   --pt_clr: #FFF;
-  /* abstract actions */
-  --aa_ok: var(--sl_orange);
+  /* paper button */
+  --pb_accent_bg: var(--sl_brown);
+  --pb_accent_clr: var(--clr_bold);
+  --pb_bg: #555;
+  --pb_clr: var(--clr_bold);
   /* drawer tabs */
   --dt_bg: #1F1F1F;
   --dt_clr: var(--inherit);
