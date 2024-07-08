@@ -55,7 +55,7 @@
   /* search toolbar */
   --st_bg: var(--black);
   /* pitch slider */
-  --ps_clr: var(--sl_blue);
+  --ps_clr: var(--sl_purple);
   --ps_bg: #999;
   /* search info */
   --si_heading: #CCC;
@@ -130,23 +130,6 @@
   --ss-song-list-item-waveform-8: var(--sl_energy8);
   --ss-song-list-item-waveform-9: var(--sl_energy9);
   --ss-song-list-item-waveform-10: var(--sl_energy10);
-}
-
-/** pitch slider **/
-paper-slider::shadow #sliderBar::shadow #activeProgress {
-  background-color: var(--ps_clr);
-}
-paper-slider::shadow #sliderKnobInner {
-  background-color: var(--ps_clr);
-}
-paper-slider::shadow #sliderKnobInner::before {
-  background-color: var(--ps_clr);
-}
-paper-slider::shadow #sliderBar::shadow #secondaryProgress {
-  background-color: var(--ps_bg);
-}
-paper-slider::shadow #sliderBar::shadow #progressContainer {
-  background-color: var(--ps_bg);
 }
 
 /** audio **/

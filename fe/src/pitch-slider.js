@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@material/mwc-linear-progress";
+import "@material/web/progress/linear-progress.js";
 import "@polymer/paper-input/paper-input.js";
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
@@ -11,11 +11,11 @@ import { SongMixin } from "./mixin-song.js";
 
 class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
   render() {
-    let lowVal = this.pitch > 0 ? 0 : this.pitch / this.pitchMin;
+    let lowVal = this.pitch > 0 ? 1 : 1 - this.pitch / this.pitchMin;
     let highVal = this.pitch < 0 ? 0 : this.pitch / this.pitchMax;
     return html`
-      <mwc-linear-progress reverse determinate progress="${lowVal}" buffer="1" @click="${this.negativeClickAction}" id="low"></mwc-linear-progress>
-      <mwc-linear-progress determinate progress="${highVal}" buffer="1" @click="${this.positiveClickAction}" id="high"></mwc-linear-progress>
+      <md-linear-progress class="reverse" value="${lowVal}" @click="${this.negativeClickAction}" id="low"></md-linear-progress>
+      <md-linear-progress value="${highVal}" @click="${this.positiveClickAction}" id="high"></md-linear-progress>
       <paper-input value="${this.pitch}" id="val" no-label-float></paper-input>
     `;
   }
@@ -39,7 +39,7 @@ class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
 
   positiveClickAction(e) {
     let bounds = this.shadowRoot.getElementById('high').getBoundingClientRect();
-    let pct = ((e.clientX - bounds.x) / bounds.width);
+    let pct = (e.clientX - bounds.x) / bounds.width;
     this.pitchChanged(pct * this.pitchMax);
   }
 
@@ -96,8 +96,16 @@ class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
           flex-direction: row;
           align-items: center;
         }
-        mwc-linear-progress {
-          width: 61px;
+        md-linear-progress {
+          --md-linear-progress-track-height: 5px;
+          --md-linear-progress-active-indicator-height: 5px;
+          width: 57px;
+          --md-linear-progress-active-indicator-color: var(--ss-pitch-slider-clr);
+          --md-linear-progress-track-color: var(--ss-pitch-slider-bg);
+        }
+        md-linear-progress.reverse {
+          --md-linear-progress-active-indicator-color: var(--ss-pitch-slider-bg);
+          --md-linear-progress-track-color: var(--ss-pitch-slider-clr);
         }
         paper-input {
           margin-left: 12px;

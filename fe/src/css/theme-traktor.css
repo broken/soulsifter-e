@@ -2,7 +2,7 @@
   /* main */
   --bg: #282828;
   --bg2: #141414;
-  --bg3: #202020;
+  --bg3: #1E1E1E;
   --clr: #AFAFAF;
   --clr_bold: #D2D2D2;
   --clr_disabled: #3A3A3A;
@@ -50,7 +50,7 @@
   --st_bg: var(--bg2);
   /* pitch slider */
   --ps_clr: var(--accent2);
-  --ps_bg: var(--clr);
+  --ps_bg: var(--bg2);
   /* search info */
   --si_heading: var(--clr_bold);
   --si_emphasis: var(--accent2);

@@ -55,8 +55,8 @@
   /* search toolbar */
   --st_bg: var(--black);
   /* pitch slider */
-  --ps_clr: var(--accent2);
-  --ps_bg: var(--clr);
+  --ps_clr: var(--accent4);
+  --ps_bg: var(--clr_bold);
   /* search info */
   --si_heading: var(--clr_bold);
   --si_emphasis: #39FF7E;
@@ -130,6 +130,8 @@
   --ss-options-menu-background-color: var(--om_bg);
   --ss-options-menu-background-color-hover: var(--om_bg_hover);
   --ss-options-menu-color-hover: var(--om_clr_hover);
+  --ss-pitch-slider-bg: var(--ps_bg);
+  --ss-pitch-slider-clr: var(--ps_clr);
   --ss-playlist-list-item-selected-bg: var(--l_select);
   --ss-search-info-heading-color: var(--si_heading);
   --ss-search-info-emphasis-color: var(--si_emphasis);
@@ -167,23 +169,6 @@
   --ss-star-rating-color: var(--sr_clr);
   --ss-star-rating-selected-color: var(--sr_selected);
   --ss-star-rating-trashed-color: var(--sr_trashed);
-}
-
-/** pitch slider **/
-paper-slider::shadow #sliderBar::shadow #activeProgress {
-  background-color: var(--ps_clr);
-}
-paper-slider::shadow #sliderKnobInner {
-  background-color: var(--ps_clr);
-}
-paper-slider::shadow #sliderKnobInner::before {
-  background-color: var(--ps_clr);
-}
-paper-slider::shadow #sliderBar::shadow #secondaryProgress {
-  background-color: var(--ps_bg);
-}
-paper-slider::shadow #sliderBar::shadow #progressContainer {
-  background-color: var(--ps_bg);
 }
 
 /** audio **/
