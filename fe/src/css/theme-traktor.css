@@ -60,12 +60,10 @@
   --si_emphasis: var(--accent2);
   /* font-weight: 500; */
   /* song list */
-  --sl_border: 1px solid #2F2F2F;
-  --sl_hover: rgb(20,20,20);
-  --sl_fadeout: linear-gradient(to right, rgba(41,41,41,0), rgba(41,41,41,1));
-  --sl_hoverfadeout: linear-gradient(to right, rgba(20,20,20,0), rgba(20,20,20,1));
-  --sl_btnborder: 1px solid rgb(20,20,20);
-  --sl_btnborderhover: 1px solid #999999;
+  --sl_artist: var(--clr);
+  --sl_title: var(--clr_bold);
+  --sl_border: var(--bg2);
+  --sl_hover: var(--bg3);
   --sl_energy0: #999;
   --sl_energy1: #0066ff;
   --sl_energy2: #00ccff;

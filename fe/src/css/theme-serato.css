@@ -65,12 +65,10 @@
   --si_heading: #CCC;
   --si_emphasis: var(--sl_green);
   /* song list */
-  --sl_border: 1px solid #2F2F2F;
+  --sl_artist: var(--clr);
+  --sl_title: var(--clr_bold);
+  --sl_border: #2F2F2F;
   --sl_hover: rgb(20,20,20);
-  --sl_fadeout: linear-gradient(to right, rgba(41,41,41,0), rgba(41,41,41,1));
-  --sl_hoverfadeout: linear-gradient(to right, rgba(20,20,20,0), rgba(20,20,20,1));
-  --sl_btnborder: 1px solid rgb(20,20,20);
-  --sl_btnborderhover: 1px solid #999999;
   --sl_energy0: #999;
   --sl_energy1: #0066ff;
   --sl_energy2: #00ccff;
@@ -97,38 +95,4 @@
 
   /* paper elements */
   --paper-item-min-height: 13px;
-
-  /* soulsifter elements */
-  --ss-search-info-heading-color: var(--si_heading);
-  --ss-search-info-emphasis-color: var(--si_emphasis);
-  --ss-song-list-item-border-bottom: var(--sl_border);
-  --ss-song-list-item-hover-background-color: var(--sl_hover);
-  --ss-song-list-item-artist-color: var(--clr);
-  --ss-song-list-item-title-color: var(--clr_bold);
-  --ss-song-list-item-fade-out: var(--sl_fadeout);
-  --ss-song-list-item-hover-fade-out: var(--sl_hoverfadeout);
-  --ss-song-list-item-button-border: var(--sl_btnborder);
-  --ss-song-list-item-button-hover-border: var(--sl_btnborderhover);
-  --ss-song-list-item-energy-0: var(--sl_energy0);
-  --ss-song-list-item-energy-1: var(--sl_energy1);
-  --ss-song-list-item-energy-2: var(--sl_energy2);
-  --ss-song-list-item-energy-3: var(--sl_energy3);
-  --ss-song-list-item-energy-4: var(--sl_energy4);
-  --ss-song-list-item-energy-5: var(--sl_energy5);
-  --ss-song-list-item-energy-6: var(--sl_energy6);
-  --ss-song-list-item-energy-7: var(--sl_energy7);
-  --ss-song-list-item-energy-8: var(--sl_energy8);
-  --ss-song-list-item-energy-9: var(--sl_energy9);
-  --ss-song-list-item-energy-10: var(--sl_energy10);
-  --ss-song-list-item-waveform-0: var(--sl_energy0);
-  --ss-song-list-item-waveform-1: var(--sl_energy1);
-  --ss-song-list-item-waveform-2: var(--sl_energy2);
-  --ss-song-list-item-waveform-3: var(--sl_energy3);
-  --ss-song-list-item-waveform-4: var(--sl_energy4);
-  --ss-song-list-item-waveform-5: var(--sl_energy5);
-  --ss-song-list-item-waveform-6: var(--sl_energy6);
-  --ss-song-list-item-waveform-7: var(--sl_energy7);
-  --ss-song-list-item-waveform-8: var(--sl_energy8);
-  --ss-song-list-item-waveform-9: var(--sl_energy9);
-  --ss-song-list-item-waveform-10: var(--sl_energy10);
 }

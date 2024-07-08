@@ -263,12 +263,6 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         .song-item:hover .fade-out:after {
           background: var(--ss-song-list-item-hover-fade-out);
         }
-        .song-item #menuButton {
-          border: var(--ss-song-list-item-button-border);
-        }
-        .song-item #menuButton:hover {
-          border: var(--ss-song-list-item-button-hover-border);
-        }
 
         #cover {
           background-position: center center;
