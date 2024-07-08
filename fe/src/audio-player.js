@@ -7,7 +7,7 @@
 
 import { css, html, LitElement } from "lit";
 
-import "@material/mwc-linear-progress";
+import "@material/web/progress/linear-progress.js";
 
 import "./icon-button.js";
 import { SettingsMixin } from "./mixin-settings.js";
@@ -19,7 +19,7 @@ class AudioPlayer extends SettingsMixin(LitElement) {
       <icon-button id="playPause" icon="play_arrow" @click="${this.playAction}"></icon-button>
       <div class="timebar">
         <div id="time" self-end>${this.currentTimeStr()}</div>
-        <mwc-linear-progress id="progress" determinate progress="${this.progress}" buffer="1" @click="${this.changeCurrentTime}"></mwc-linear-progress>
+        <md-linear-progress value="${this.progress}" @click="${this.changeCurrentTime}" id="progress"></md-linear-progress>
       </div>
     `;
   }
@@ -128,6 +128,15 @@ class AudioPlayer extends SettingsMixin(LitElement) {
           display: flex;
           flex-direction: column;
           margin-left: 6px;
+        }
+        icon-button {
+          color: var(--ss-audio-player-button-clr);
+        }
+        md-linear-progress {
+          --md-linear-progress-track-height: 5px;
+          --md-linear-progress-active-indicator-height: 5px;
+          --md-linear-progress-active-indicator-color: var(--ss-audio-player-slider-clr);
+          --md-linear-progress-track-color: var(--ss-audio-player-slider-bg);
         }
       `,
     ];

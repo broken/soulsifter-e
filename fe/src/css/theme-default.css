@@ -57,6 +57,10 @@
   /* pitch slider */
   --ps_clr: var(--accent4);
   --ps_bg: var(--clr_bold);
+  /* audio player */
+  --ap_slider_clr: var(--accent4);
+  --ap_slider_bg: var(--clr_bold);
+  --ap_btn_clr: var(--clr_bold);
   /* search info */
   --si_heading: var(--clr_bold);
   --si_emphasis: #39FF7E;
@@ -78,9 +82,6 @@
   --sl_energy8: #ff9900;
   --sl_energy9: #ff5500;
   --sl_energy10: #ff2266;
-  /* audio */
-  --au_play: var(--clr_bold);
-  --au_disabled: var(--clr_disabled);
 
   /** main **/
   --dark-primary-color: #303f9f;
@@ -123,6 +124,9 @@
   --ss-abstract-action-button-clr: var(--pb_clr);
   --ss-abstract-action-button-accent-bg: var(--pb_accent_bg);
   --ss-abstract-action-button-accent-clr: var(--pb_accent_clr);
+  --ss-audio-player-slider-bg: var(--ap_slider_bg);
+  --ss-audio-player-slider-clr: var(--ap_slider_clr);
+  --ss-audio-player-button-clr: var(--ap_btn_clr);
   --ss-drawer-tab-bg: var(--dt_bg);
   --ss-drawer-tab-clr: var(--clr);
   --ss-drawer-tab-active-clr: var(--dt_bar);

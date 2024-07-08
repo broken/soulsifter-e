@@ -57,6 +57,10 @@
   /* pitch slider */
   --ps_clr: var(--sl_purple);
   --ps_bg: #999;
+  /* audio player */
+  --ap_slider_clr: var(--sl_purple);
+  --ap_slider_bg: #999;
+  --ap_btn_clr: #CCC;
   /* search info */
   --si_heading: #CCC;
   --si_emphasis: var(--sl_green);
@@ -78,9 +82,6 @@
   --sl_energy8: #ff9900;
   --sl_energy9: #ff5500;
   --sl_energy10: #ff2266;
-  /* audio */
-  --au_play: #CCC;
-  --au_disabled: #999;
 
   /** main **/
   --dark-primary-color: #303f9f;
@@ -130,12 +131,4 @@
   --ss-song-list-item-waveform-8: var(--sl_energy8);
   --ss-song-list-item-waveform-9: var(--sl_energy9);
   --ss-song-list-item-waveform-10: var(--sl_energy10);
-}
-
-/** audio **/
-ss-audio::shadow core-icon {
-  color: var(--au_play);
-}
-ss-audio::shadow .disabled core-icon {
-  color: var(--au_disabled);
 }

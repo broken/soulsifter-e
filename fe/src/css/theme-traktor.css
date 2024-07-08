@@ -51,6 +51,10 @@
   /* pitch slider */
   --ps_clr: var(--accent2);
   --ps_bg: var(--bg2);
+  /* audio player */
+  --ap_slider_clr: var(--accent2);
+  --ap_slider_bg: var(--bg2);
+  --ap_btn_clr: var(--clr_bold);
   /* search info */
   --si_heading: var(--clr_bold);
   --si_emphasis: var(--accent2);
