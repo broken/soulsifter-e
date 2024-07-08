@@ -316,7 +316,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     return [
       css`
         :host {
-          background-color: var(--search-toolbar-background);
+          background-color: var(--ss-search-toolbar-bg);
           display: flex;
           flex-direction: row;
           height: 42px;

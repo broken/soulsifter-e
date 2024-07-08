@@ -133,7 +133,7 @@
   --ss-playlist-list-item-selected-bg: var(--l_select);
   --ss-search-info-heading-color: var(--si_heading);
   --ss-search-info-emphasis-color: var(--si_emphasis);
-  --search-toolbar-background: var(--st_bg);
+  --ss-search-toolbar-bg: var(--st_bg);
   --ss-song-list-item-border-bottom: var(--sl_border);
   --ss-song-list-item-hover-background-color: var(--sl_hover);
   --ss-song-list-item-artist-color: var(--clr);
