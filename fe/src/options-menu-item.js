@@ -24,7 +24,7 @@ class OptionsMenuItem extends LitElement {
           white-space: nowrap;
         }
         :host(:hover) {
-          color: var(--ss-options-menu-color-hover);
+          color: var(--ss-options-menu-text-color-hover);
           background-color: var(--ss-options-menu-background-color-hover);
           cursor: pointer;
         }

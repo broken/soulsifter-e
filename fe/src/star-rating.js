@@ -57,10 +57,10 @@ class StarRating extends LitElement {
       css`
         :host {
           white-space: nowrap;
-          color: var(--ss-star-rating-color);
+          color: var(--ss-star-rating-unselected-icon-color);
         }
         :host(.trashed) {
-          color: var(--ss-star-rating-trashed-color);
+          color: var(--ss-star-rating-trashed-icon-color);
         }
         mwc-icon {
           --mdc-icon-size: 13px;
@@ -69,7 +69,7 @@ class StarRating extends LitElement {
           padding: 0 1px;
         }
         mwc-icon[selected] {
-          color: var(--ss-star-rating-selected-color);
+          color: var(--ss-star-rating-selected-icon-color);
         }
       `
     ];

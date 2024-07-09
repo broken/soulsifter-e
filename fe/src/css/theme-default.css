@@ -25,22 +25,23 @@
 
   /* component colors */
   --ss-about-page-text-emphasis-color: var(--accent2);
+  --ss-abstract-action-page-background-color: var(--bg);
   --ss-icon-button-emphasis-color: var(--accent2);
+  --ss-options-menu-background-color: var(--bg2);
+  --ss-options-menu-background-color-hover: inherit;
+  --ss-options-menu-text-color-hover: var(--clr_bold);
   --ss-search-info-text-heading-color: var(--clr_bold);
   --ss-search-info-text-emphasis-color: var(--accent2);
   --ss-song-list-multi-options-dialog-background-color: black;
   --ss-song-list-multi-options-dialog-text-color: var(--clr);
+  --ss-star-rating-unselected-icon-color: var(--clr_disabled);
+  --ss-star-rating-selected-icon-color: var(--clr_bold);
+  --ss-star-rating-trashed-icon-color: var(--err_disabled);
 
   /* main */
   --ss_bg: var(--bg);
   --ss_clr: var(--clr);
   --ss_clr_bold: var(--ss_clr_bold);
-  /* abstract action page */
-  --aap_bg: var(--bg);
-  /* star rating */
-  --sr_clr: var(--clr_disabled);
-  --sr_selected: var(--clr_bold);
-  --sr_trashed: var(--err_disabled);
   /* options menu */
   --om_bg: var(--bg2);
   --om_bg_hover: inherit;
@@ -126,11 +127,6 @@
   --round-slider-bar-color: var(--vd_clr_accent);
 
   /* soulsifter elements */
-  --ss-abstract-action-button-bg: var(--pb_bg);
-  --ss-abstract-action-button-clr: var(--pb_clr);
-  --ss-abstract-action-button-accent-bg: var(--pb_accent_bg);
-  --ss-abstract-action-button-accent-clr: var(--pb_accent_clr);
-  --ss-abstract-action-page-bg: var(--aap_bg);
   --ss-audio-player-slider-bg: var(--ap_slider_bg);
   --ss-audio-player-slider-clr: var(--ap_slider_clr);
   --ss-audio-player-button-clr: var(--ap_btn_clr);
@@ -138,9 +134,6 @@
   --ss-drawer-tab-clr: var(--clr);
   --ss-drawer-tab-active-clr: var(--dt_bar);
   --ss-genre-list-item-selected-bg: var(--l_select);
-  --ss-options-menu-background-color: var(--om_bg);
-  --ss-options-menu-background-color-hover: var(--om_bg_hover);
-  --ss-options-menu-color-hover: var(--om_clr_hover);
   --ss-pitch-slider-bg: var(--ps_bg);
   --ss-pitch-slider-clr: var(--ps_clr);
   --ss-playlist-list-item-selected-bg: var(--l_select);
@@ -173,7 +166,4 @@
   --ss-song-list-item-waveform-8: var(--sl_energy8);
   --ss-song-list-item-waveform-9: var(--sl_energy9);
   --ss-song-list-item-waveform-10: var(--sl_energy10);
-  --ss-star-rating-color: var(--sr_clr);
-  --ss-star-rating-selected-color: var(--sr_selected);
-  --ss-star-rating-trashed-color: var(--sr_trashed);
 }

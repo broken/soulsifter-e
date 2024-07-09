@@ -17,20 +17,19 @@
 
   /* component colors */
   --ss-about-page-text-emphasis-color: var(--accent2);
+  --ss-ss-abstract-action-page-background-color: var(--bg);
   --ss-icon-button-emphasis-color: var(--sl_green);
+  --ss-options-menu-background-color: #161616;
+  --ss-options-menu-background-color-hover: black;
+  --ss-options-menu-text-color-hover: var(--clr_bold);
   --ss-search-info-heading-color: #CCC;
   --ss-search-info-emphasis-color: var(--sl_green);
   --ss-song-list-multi-options-dialog-background-color: black;
   --ss-song-list-multi-options-dialog-text-color: var(--clr);
+  --ss-star-rating-unselected-icon-color: #666;
+  --ss-star-rating-selected-icon-color: #EEE;
+  --ss-star-rating-trashed-icon-color: #833;
 
-  /* star rating */
-  --sr_clr: #666;
-  --sr_selected: #EEE;
-  --sr_trashed: #833;
-  /* options menu */
-  --om_bg: #161616;
-  --om_bg_hover: black;
-  --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--sl_blue);
   --pi_clr: var(--clr);

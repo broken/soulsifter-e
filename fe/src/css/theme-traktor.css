@@ -13,15 +13,9 @@
   --accent3: #00425C;
 
   /* component colors */
+  --ss-options-menu-background-color-hover: var(--accent3);
+  --ss-star-rating-selected-icon-color: var(--accent);
 
-  /* star rating */
-  --sr_clr: var(--clr_disabled);
-  --sr_selected: var(--accent);
-  --sr_trashed: var(--err_disabled);
-  /* options menu */
-  --om_bg: var(--bg2);
-  --om_bg_hover: var(--accent3);
-  --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--accent2);
   --pi_clr: var(--clr);
