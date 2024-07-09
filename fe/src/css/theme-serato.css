@@ -1,8 +1,5 @@
 :host(.serato) {
-  --inherit: inherit;
-  --black: black;
   --osx_grey: #B1B1B1;
-
   --sl_blue: #1EC8FA;
   --sl_brown: #6E330A;
   --sl_green: #39FF7E;
@@ -28,7 +25,7 @@
   --sr_trashed: #833;
   /* options menu */
   --om_bg: #161616;
-  --om_bg_hover: var(--black);
+  --om_bg_hover: black;
   --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--sl_blue);
@@ -47,17 +44,17 @@
   --pb_clr: var(--clr_bold);
   /* drawer tabs */
   --dt_bg: #1F1F1F;
-  --dt_clr: var(--inherit);
+  --dt_clr: inherit;
   --dt_bar: var(--clr_bold);
   /* genre/playlist list */
   --l_select: var(--sl_brown);
   --l_fab: var(--sl_brown);
-  --l_fab_clr: var(--inherit);
+  --l_fab_clr: inherit;
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--sl_blue);
   /* search toolbar */
-  --st_bg: var(--black);
+  --st_bg: black;
   /* pitch slider */
   --ps_clr: var(--sl_purple);
   --ps_bg: #999;

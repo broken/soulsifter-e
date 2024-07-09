@@ -5,10 +5,6 @@
    * component colors
 */
 :host {
-  --inherit: inherit;
-  --black: black;
-  --white: white;
-
   /* core color palette */
   --bg: #292929;
   --bg2: #1F1F1F;
@@ -46,7 +42,7 @@
   --sr_trashed: var(--err_disabled);
   /* options menu */
   --om_bg: var(--bg2);
-  --om_bg_hover: var(--inherit);
+  --om_bg_hover: inherit;
   --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--accent2);
@@ -57,7 +53,7 @@
   --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
   --pt_bg: var(--accent3);
-  --pt_clr: var(--white);
+  --pt_clr: white;
   /* paper button */
   --pb_accent_bg: var(--accent4);
   --pb_accent_clr: var(--clr_bold);
@@ -65,17 +61,17 @@
   --pb_clr: var(--clr_bold);
   /* drawer tabs */
   --dt_bg: var(--bg3);
-  --dt_clr: var(--inherit);
+  --dt_clr: inherit;
   --dt_bar: var(--clr_bold);
   /* genre/playlist list */
   --l_select: var(--accent3);
   --l_fab: var(--accent);
-  --l_fab_clr: var(--black);
+  --l_fab_clr: black;
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--accent);
   /* search toolbar */
-  --st_bg: var(--black);
+  --st_bg: black;
   /* pitch slider */
   --ps_clr: var(--accent4);
   --ps_bg: var(--clr_bold);
