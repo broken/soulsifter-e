@@ -6,6 +6,8 @@
 
 import { css, html, LitElement } from "lit";
 
+import "@material/web/button/filled-button.js";
+import "@material/web/button/filled-tonal-button.js";
 import "@material/web/dialog/dialog.js";
 // Features of paper-dialog over md-dialog: noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8"
 import "@polymer/paper-dialog/paper-dialog.js";
@@ -35,24 +37,24 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
         <md-dialog id="${f}">
             <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}" slot="content"></paper-input>
             <div class="editActions" slot="actions">
-              <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
-              <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
+              <md-filled-tonal-button @click="${this.cancelEdit(f)}">Cancel</md-filled-tonal-button>
+              <md-filled-button @click="${this.saveEdit(f)}">Accept</md-filled-button>
             </div>
           </md-dialog>`);
     dialogs.push(['is_mixed'].map(f => html`
         <md-dialog id="${f}">
             <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}" slot="content"></paper-input>
             <div class="editActions" slot="actions">
-              <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
-              <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
+              <md-filled-tonal-button @click="${this.cancelEdit(f)}">Cancel</md-filled-tonal-button>
+              <md-filled-button @click="${this.saveEdit(f)}">Accept</md-filled-button>
             </div>
           </md-dialog>`));
     dialogs.push(['add_genres', 'replace_genres'].map(f => html`
         <md-dialog id="${f}">
             <genre-list id="${f + '_input'}" singleselect slot="content"></genre-list>
             <div class="editActions" slot="actions">
-              <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
-              <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
+              <md-filled-tonal-button @click="${this.cancelEdit(f)}">Cancel</md-filled-tonal-button>
+              <md-filled-button @click="${this.saveEdit(f)}">Accept</md-filled-button>
             </div>
           </md-dialog>`));
     return html`

@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@material/mwc-button";
+import "@material/web/button/outlined-button.js";
 import "@material/mwc-circular-progress";
 import "@polymer/paper-toast";
 
@@ -15,7 +15,7 @@ class AlertListItem extends AlertsMixin(LitElement) {
         <mwc-circular-progress progress="${this.alert.progress}" ?indeterminate="${this.alert.progress < 0 || this.alert.progress > 1}" density="-6"></mwc-circular-progress>
         <span>${this.alert.msg}</span>
       </div>
-      ${!!this.alert.callback ? html`<mwc-button @click="${this.resolve}" outlined>Resolve</mwc-button>` : ''}
+      ${!!this.alert.callback ? html`<md-outlined-button @click="${this.resolve}">Resolve</md-outlined-button>` : ''}
       <icon-button @click=${this.delAlert} icon="clear" id="clear"></icon-button>
     `;
   }
@@ -52,10 +52,7 @@ class AlertListItem extends AlertsMixin(LitElement) {
           justify-content: space-between;
           align-items: center;
         }
-        mwc-button {
-          --mdc-button-outline-color: white;
-          --mdc-theme-on-primary: white;
-          --mdc-theme-primary: white;
+        md-outlined-button {
           margin: -6px 0;
         }
         mwc-circular-progress {

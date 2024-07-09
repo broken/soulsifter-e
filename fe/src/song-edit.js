@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@material/mwc-button";
+import "@material/web/button/text-button.js";
 import "@material/web/checkbox/checkbox.js";
 import "@polymer/paper-input/paper-input.js";
 
@@ -52,7 +52,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
               <paper-input label="BPM" value="${this.editedSong.bpm}" @value-changed="${this.bpmInputChanged}" floatingLabel id="bpm"></paper-input>
               <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
             </div>
-            <mwc-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</mwc-button>
+            <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
             <div class="row">
               <label><md-checkbox ?checked="${this.editedSong.trashed}" ?disabled="${this.songIsTrashed}" id="trashed"></md-checkbox>Trash</label>
             </div>

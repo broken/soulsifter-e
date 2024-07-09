@@ -28,8 +28,10 @@
   --md-sys-color-on-secondary-container: color-mix(in srgb, var(--md-sys-color-on-primary), black 20%);  /* md-filled-tonal-button */
   --md-sys-color-surface-container-high: var(--bg);  /* dialog */
   --md-sys-color-on-surface-variant: var(--clr);  /* dialog */
+  --md-sys-color-outline: var(--clr_bold);  /* md-outlined-button */
 
   /* component colors */
+  --md-outlined-button-label-text-color: var(--clr_bold);
   --ss-about-page-text-emphasis-color: var(--accent2);
   --ss-abstract-action-page-background-color: var(--bg);
   --ss-icon-button-emphasis-color: var(--accent2);
