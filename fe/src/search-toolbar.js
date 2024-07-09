@@ -54,6 +54,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         <options-menu-item @click="${this.syncYouTubePlaylists}">Sync YouTube Playlists</options-menu-item>
         <options-menu-item @click="${this.showHiddenAlerts}">Show hidden alerts</options-menu-item>
         <options-menu-item @click="${this.openAboutPageDialog}">About</options-menu-item>
+        <options-menu-item @click="${this.openMouseCoordsAlert}">Show Mouse Coordinates</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
       </options-menu>
       <md-dialog id="searchInfoDialog">
@@ -79,6 +80,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     this.taps = [];
     this.lastTap = Date.now();
     this.volume = 100;
+    this.mouseCoordAlertId = undefined;
   }
 
   requestSearch(e) {
@@ -249,6 +251,26 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   openAboutPageDialog(e) {
     this.shadowRoot.getElementById('aboutPageDialog').show();
+  }
+
+  openMouseCoordsAlert(e) {
+    this.mouseCoordAlertId = this.addAlert('Mouse coordinates:');
+    window.addEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
+  }
+
+  _updateAlertWithMouseCoords = e => {
+    this.updateAlert(this.mouseCoordAlertId, undefined, `Mouse coordinates: ${e.clientX}, ${e.clientY}`);
+  }
+
+  alertsChanged(x) {
+    this.alerts = x;
+    if (!!this.mouseCoordAlertId) {
+      const idx = this.alerts.findIndex(a => a.id == this.mouseCoordAlertId);
+      if (idx == -1) {
+        window.removeEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
+        this.mouseCoordAlertId = undefined;
+      }
+    }
   }
 
   toggleBpmRestrict(e) {
