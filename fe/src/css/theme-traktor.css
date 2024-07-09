@@ -74,16 +74,4 @@
   --sl_energy8: #ff9900;
   --sl_energy9: #ff5500;
   --sl_energy10: #ff2266;
-
-  /** main **/
-  --dark-primary-color: #FFFF00;
-  --default-primary-color: #FFFF00;
-  --light-primary-color: #FFFF00;
-  --text-primary-color: #FFFF00;
-  --accent-color: #FFFF00;
-  --primary-background-color: var(--bg);
-  --primary-text-color: var(--clr);
-  --secondary-text-color: var(--clr_bold);
-  --disabled-text-color: var(--clr_disabled);
-  --divider-color: #FFFF00;
 }

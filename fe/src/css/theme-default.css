@@ -18,6 +18,12 @@
   --sidebar-width: 270px;
   --scrollbar-width: 15px;
 
+  /* main */
+  --ss_bg: var(--bg);
+  --ss_clr: var(--clr);
+  --ss_clr_bold: var(--ss_clr_bold);
+  /* abstract action page */
+  --aap_bg: var(--bg);
   /* star rating */
   --sr_clr: var(--clr_disabled);
   --sr_selected: var(--clr_bold);
@@ -42,7 +48,7 @@
   --pb_bg: var(--accent4);
   --pb_clr: var(--clr_bold);
   /* drawer tabs */
-  --dt_bg: var(--bg2);
+  --dt_bg: var(--bg3);
   --dt_clr: var(--inherit);
   --dt_bar: var(--clr_bold);
   /* genre/playlist list */
@@ -82,16 +88,9 @@
   --sl_energy10: #ff2266;
 
   /** main **/
-  --dark-primary-color: #303f9f;
-  --default-primary-color: #3f51b5;
-  --light-primary-color: #c5cae9;
-  --text-primary-color: #ffffff;
-  --accent-color: #ff4081;
-  --primary-background-color: var(--bg);
-  --primary-text-color: var(--clr);
-  --secondary-text-color: var(--clr_bold);
-  --disabled-text-color: #bdbdbd;
-  --divider-color: #e0e0e0;
+  --ss-primary-bg: var(--ss_bg);
+  --ss-primary-clr: var(--ss_clr);
+  --ss-secondary-clr: var(--ss_clr_bold);
 
   /* mdc elements */
   --mdc-theme-secondary: var(--l_fab);
@@ -121,6 +120,7 @@
   --ss-abstract-action-button-clr: var(--pb_clr);
   --ss-abstract-action-button-accent-bg: var(--pb_accent_bg);
   --ss-abstract-action-button-accent-clr: var(--pb_accent_clr);
+  --ss-abstract-action-page-bg: var(--aap_bg);
   --ss-audio-player-slider-bg: var(--ap_slider_bg);
   --ss-audio-player-slider-clr: var(--ap_slider_clr);
   --ss-audio-player-button-clr: var(--ap_btn_clr);

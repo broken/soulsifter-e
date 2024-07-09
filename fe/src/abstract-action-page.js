@@ -35,8 +35,8 @@ class AbstractActionPage extends LitElement {
           display: flex;
           flex-direction: column;
           align-items: center;
-          background-color: var(--primary-background-color);
-          overflow: scroll;
+          background-color: var(--ss-abstract-action-page-bg);
+          overflow: auto;
         }
         #layout {
           margin-top: auto;

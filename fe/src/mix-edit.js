@@ -1,5 +1,6 @@
 import { css, html, LitElement } from "lit";
 
+import "@material/web/checkbox/checkbox.js";
 import "@polymer/paper-input/paper-input.js";
 import "@polymer/paper-input/paper-textarea.js";
 
@@ -13,7 +14,7 @@ class MixEdit extends LitElement {
         <div class="fields">
           <div class="song">&nbsp;<span>Out: ${this.mix.outSong.artist} - ${this.mix.outSong.title}</span></div>
           <div class="song">&nbsp;<span>In: ${this.mix.inSong.artist} - ${this.mix.inSong.title}</span></div>
-          <paper-checkbox ?checked="${this.mix.addon}" id="addon">Is Addon</paper-checkbox>
+          <label><md-checkbox ?checked="${this.mix.addon}" id="addon"></md-checkbox>Is Addon</label>
         </div>
         <div class="fields">
           <paper-input floatingLabel label="Rating (0 - 99)" value="${this.mix.rating}" id="rating" auto-validate allowed-pattern="[0-9]"></paper-input>
@@ -89,6 +90,9 @@ class MixEdit extends LitElement {
         }
         .song {
           margin: 15px;
+        }
+        md-checkbox {
+          margin-right: 10px;
         }
       `,
     ];

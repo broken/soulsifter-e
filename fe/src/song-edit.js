@@ -1,7 +1,7 @@
 import { css, html, LitElement } from "lit";
 
 import "@material/mwc-button";
-import "@polymer/paper-checkbox/paper-checkbox.js";
+import "@material/web/checkbox/checkbox.js";
 import "@polymer/paper-input/paper-input.js";
 
 import { AlertsMixin } from "./mixin-alerts.js";
@@ -31,12 +31,10 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             <div class="prev">&nbsp;<span>${this.taggedSong.remixer}</span></div>
             <paper-input label="Remixer" value="${this.editedSong.remixer}" floatingLabel id="remixer"></paper-input>
             <paper-input label="Comments" value="${this.editedSong.comments}" floatingLabel id="comments"></paper-input>
-            <table>
-              <tr>
-                <td><paper-checkbox ?checked="${this.editedSong.lowQuality}" id="lowQuality">Low Quality</paper-checkbox></td>
-                <td><paper-checkbox ?checked="${this.editedSong.album.mixed}" id="album_mixed">Mixed</paper-checkbox></td>
-              </tr>
-            </table>
+            <div class="row">
+              <label><md-checkbox ?checked="${this.editedSong.lowQuality}" id="lowQuality"></md-checkbox>Low Quality</label>
+              <label><md-checkbox ?checked="${this.editedSong.album.mixed}" id="album_mixed"></md-checkbox>Mixed</label>
+            </div>
           </div>
           <div class="fields">
             <paper-input label="Curator" value="${this.editedSong.curator}" floatingLabel id="curator"></paper-input>
@@ -55,11 +53,9 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
               <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
             </div>
             <mwc-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</mwc-button>
-            <table>
-              <tr>
-                <td><paper-checkbox ?checked="${this.editedSong.trashed}" ?disabled="${this.songIsTrashed}" id="trashed">Trash</paper-checkbox></td>
-              </tr>
-            </table>
+            <div class="row">
+              <label><md-checkbox ?checked="${this.editedSong.trashed}" ?disabled="${this.songIsTrashed}" id="trashed"></md-checkbox>Trash</label>
+            </div>
           </div>
           <div class="fields">
             <div class="prev">&nbsp;<span>${this.taggedSong.album.artist}</span></div>
@@ -610,6 +606,17 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           width: 240px;
           margin: 10px;
         }
+        .row {
+          display: flex;
+          flex-direction: row;
+          margin: 10px 0;
+        }
+        .row > label {
+          flex-grow: 1;
+        }
+        md-checkbox {
+          margin-right: 10px;
+        }
         #bpmBtn {
           align-self: flex-end;
           margin-top: -10px;
@@ -626,10 +633,6 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         }
         paper-dropdown-menu::shadow paper-input::shadow label {
           text-align: right;
-        }
-
-        paper-checkbox {
-          margin: 10px 0;
         }
 
         #ratingContainer {
@@ -665,7 +668,6 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           left: 0;
           font-size: 13px;
           color: #777777;  /* TODO put into theme */
-          background-color: var(--primary-background-color);
         }
         .metadata div {
           padding: 0 20px;

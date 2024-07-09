@@ -326,7 +326,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         }
         icon-button {
           --mdc-icon-size: 24px;
-          color: var(--primary-text-color);
         }
         icon-button, options-menu {
           padding: 8px;

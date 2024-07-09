@@ -250,7 +250,6 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
         }
         icon-button {
           --mdc-icon-size: 24px;
-          color: var(--primary-text-color);
         }
         .hide {
           display: none;
@@ -263,7 +262,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
           flex-direction: column;
         }
         .title {
-          color: var(--secondary-text-color);
+          color: var(--ss_clr_bold);
         }
         .row {
           display: flex;

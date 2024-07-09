@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@polymer/paper-checkbox/paper-checkbox.js";
+import "@material/web/checkbox/checkbox.js";
 import "@polymer/paper-input/paper-input.js";
 
 import "./abstract-action-page.js";
@@ -24,9 +24,9 @@ class PlaylistEdit extends LitElement {
               <icon-button @click=${this.toggleSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
             </div>
             <br>
-            <paper-checkbox ?checked="${this.fromSongTrail}" id="trail">from Song Trail</paper-checkbox>
-            <paper-checkbox ?checked="${this.spotifySync}" id="spotifySync" disabled>sync with Spotify</paper-checkbox>
-            <paper-checkbox ?checked="${this.youtubeSync}" id="youtubeSync">sync with YouTube</paper-checkbox>
+            <label><md-checkbox ?checked="${this.fromSongTrail}" id="trail"></md-checkbox>from Song Trail</label>
+            <label><md-checkbox ?checked="${this.spotifySync}" id="spotifySync" disabled></md-checkbox>sync with Spotify</label>
+            <label><md-checkbox ?checked="${this.youtubeSync}" id="youtubeSync"></md-checkbox>sync with YouTube</label>
           </div>
           <div class="genres">
             <genre-list id="genreList" .genres="${this.genres}"></genre-list>
@@ -159,12 +159,14 @@ class PlaylistEdit extends LitElement {
           left: 0;
           font-size: 13px;
           color: #777777;  /* TODO put into theme */
-          background-color: var(--primary-background-color);
         }
         .mainContainer {
           display: relative;
           height: 100%;
           width: 100%;
+        }
+        md-checkbox {
+          margin-right: 10px;
         }
       `,
     ];

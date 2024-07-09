@@ -360,7 +360,6 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
         }
         icon-button {
           --mdc-icon-size: 24px;
-          color: var(--primary-text-color);
         }
         #multiOptionsDialog {
           background-color: var(--search-toolbar-background);

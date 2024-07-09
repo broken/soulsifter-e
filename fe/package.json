@@ -2,7 +2,7 @@
   "name": "SoulSifter",
   "version": "1.7.0",
   "description": "DJ & music organization app.",
-  "build": 3315,
+  "build": 3326,
   "main": "main.js",
   "scripts": {
     "fe:build": "vite build",
@@ -34,7 +34,6 @@
     "@material/mwc-tab-bar": "^0.27.0",
     "@material/ripple": "^14.0.0",
     "@material/web": "^1.5.1",
-    "@polymer/paper-checkbox": "^3.1.0",
     "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-input": "^3.2.1",
     "@polymer/paper-radio-button": "^3.0.1",

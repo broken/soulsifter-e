@@ -237,7 +237,6 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         icon-button {
           display: none;
           --mdc-icon-size: 16px;
-          color: var(--primary-text-color);
           padding: 0 3px;
         }
         .song-item:hover > icon-button {

@@ -65,7 +65,6 @@ class MixListItem extends LitElement {
           padding-left: 14px;
           display: none;
           --mdc-icon-size: 16px;
-          color: var(--primary-text-color);
         }
         .info:hover > .edit {
           display: block;

@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@polymer/paper-checkbox/paper-checkbox.js";
+import "@material/web/checkbox/checkbox.js";
 import "@polymer/paper-input/paper-input.js";
 
 import "./abstract-action-page.js";
@@ -17,18 +17,18 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-input label="Stems Directory" value="${this.stemsDir}" id="stemsDir"></paper-input>
           <paper-input label="Waveforms Directory" value="${this.waveformsDir}" id="waveformsDir"></paper-input>
           <br>
-          <paper-input label="Default song list limit" value="${this.songListLimit}" allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></paper-input>
-          <paper-input label="Energy search difference" value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></paper-input>
-          <paper-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect">Automatically search after selecting a song</paper-checkbox>
-          <paper-checkbox ?checked="${this.songListShowComments}" id="songListShowComments">Show comments in song list</paper-checkbox>
-          <paper-checkbox ?checked="${this.songListShowWaveforms}" id="songListShowWaveforms">Show waveforms in song list</paper-checkbox>
-          <paper-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys">Include unknown keys in key searches</paper-checkbox>
-          <paper-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag">Overwrite values when reading ID3 tags</paper-checkbox>
-          <paper-checkbox ?checked="${this.appDebugMode}" id="appDebugMode">Debug mode (requires restart)</paper-checkbox>
-          <paper-checkbox ?checked="${this.editAutoAdd}" id="editAutoAdd">Auto add music (skip edit dialog)</paper-checkbox>
-          <paper-checkbox ?checked="${this.editAutoPlay}" id="editAutoPlay">Auto play music when editting song</paper-checkbox>
+          <paper-input label="Default song list limit" value="${this.songListLimit}" allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></paper-input></label>
+          <paper-input label="Energy search difference" value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></paper-input></label>
+          <label><md-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect"></md-checkbox>Automatically search after selecting a song</label>
+          <label><md-checkbox ?checked="${this.songListShowComments}" id="songListShowComments"></md-checkbox>Show comments in song list</label>
+          <label><md-checkbox ?checked="${this.songListShowWaveforms}" id="songListShowWaveforms"></md-checkbox>Show waveforms in song list</label>
+          <label><md-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys"></md-checkbox>Include unknown keys in key searches</label>
+          <label><md-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag"></md-checkbox>Overwrite values when reading ID3 tags</label>
+          <label><md-checkbox ?checked="${this.appDebugMode}" id="appDebugMode"></md-checkbox>Debug mode (requires restart)</label>
+          <label><md-checkbox ?checked="${this.editAutoAdd}" id="editAutoAdd"></md-checkbox>Auto add music (skip edit dialog)</label>
+          <label><md-checkbox ?checked="${this.editAutoPlay}" id="editAutoPlay"></md-checkbox>Auto play music when editting song</label>
           <br>
-          <paper-checkbox ?checked="${this.songListColBpm}" id="songListColBpm">Include BPM in song list</paper-checkbox>
+          <label><md-checkbox ?checked="${this.songListColBpm}" id="songListColBpm"></md-checkbox>Include BPM in song list</label>
         </div>
         <div class="fields">
           <paper-input label="Database Name" value="${this.dbName}" id="dbName"></paper-input>
@@ -191,6 +191,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           flex-direction: column;
           justify-content: center;
           margin: 0 100px;
+        }
+        md-checkbox {
+          margin-right: 10px;
         }
       `,
     ];
