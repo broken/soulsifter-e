@@ -102,7 +102,6 @@
   --paper-input-container-focus-color: var(--pi_accent);
   --paper-input-container-invalid-color: var(--pi_err);
   --paper-input-container-input-color: var(--pi_clr);
-  --paper-item-min-height: 13px;
   --paper-toast-background-color: var(--pt_bg);
   --paper-toast-color: var(--pt_clr);
   --paper-toggle-button-checked-bar-color:  var(--ptb_clr_checked);
@@ -169,12 +168,4 @@
   --ss-star-rating-color: var(--sr_clr);
   --ss-star-rating-selected-color: var(--sr_selected);
   --ss-star-rating-trashed-color: var(--sr_trashed);
-}
-
-/** audio **/
-ss-audio::shadow core-icon {
-  color: var(--au_play);
-}
-ss-audio::shadow .disabled core-icon {
-  color: var(--au_disabled);
 }

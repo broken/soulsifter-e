@@ -58,7 +58,6 @@
   /* search info */
   --si_heading: var(--clr_bold);
   --si_emphasis: var(--accent2);
-  /* font-weight: 500; */
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);
@@ -75,9 +74,6 @@
   --sl_energy8: #ff9900;
   --sl_energy9: #ff5500;
   --sl_energy10: #ff2266;
-  /* audio */
-  --au_play: var(--clr_bold);
-  --au_disabled: var(--clr_disabled);
 
   /** main **/
   --dark-primary-color: #FFFF00;

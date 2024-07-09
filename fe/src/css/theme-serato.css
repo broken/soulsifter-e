@@ -92,7 +92,4 @@
   --secondary-text-color: var(--clr_bold);
   --disabled-text-color: #bdbdbd;
   --divider-color: #e0e0e0;
-
-  /* paper elements */
-  --paper-item-min-height: 13px;
 }
