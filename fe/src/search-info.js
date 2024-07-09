@@ -93,11 +93,11 @@ class SearchInfo extends LitElement {
         :host {
           display: flex;
           flex-direction: column;
-          width: 575px;
+          width: 623px;
           white-space: nowrap;
         }
         header {
-          color: var(--ss-search-info-heading-color);
+          color: var(--ss-search-info-text-heading-color);
           margin-top: 14px;
         }
         section {
@@ -105,7 +105,7 @@ class SearchInfo extends LitElement {
           flex-direction: row;
         }
         .emphasis {
-          color: var(--ss-search-info-emphasis-color);
+          color: var(--ss-search-info-text-emphasis-color);
         }
         .right {
           text-align: right;

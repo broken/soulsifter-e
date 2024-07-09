@@ -6,6 +6,8 @@
 
 import { css, html, LitElement } from "lit";
 
+import "@material/web/dialog/dialog.js";
+// Features of paper-dialog over md-dialog: noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8"
 import "@polymer/paper-dialog/paper-dialog.js";
 
 import "./icon-button.js";
@@ -30,29 +32,29 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
     const fields = ['artist', 'comments', 'curator']
     let dialogs = fields.map(f => html`
-        <paper-dialog id="${f}">
-            <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}"></paper-input>
-            <div class="editActions">
+        <md-dialog id="${f}">
+            <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}" slot="content"></paper-input>
+            <div class="editActions" slot="actions">
               <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
               <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
             </div>
-          </paper-dialog>`);
+          </md-dialog>`);
     dialogs.push(['is_mixed'].map(f => html`
-        <paper-dialog id="${f}">
-            <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}"></paper-input>
-            <div class="editActions">
+        <md-dialog id="${f}">
+            <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}" slot="content"></paper-input>
+            <div class="editActions" slot="actions">
               <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
               <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
             </div>
-          </paper-dialog>`));
+          </md-dialog>`));
     dialogs.push(['add_genres', 'replace_genres'].map(f => html`
-        <paper-dialog id="${f}">
-            <genre-list id="${f + '_input'}" singleselect></genre-list>
-            <div class="editActions">
+        <md-dialog id="${f}">
+            <genre-list id="${f + '_input'}" singleselect slot="content"></genre-list>
+            <div class="editActions" slot="actions">
               <mwc-button @click="${this.cancelEdit(f)}" raised>Cancel</mwc-button>
               <mwc-button @click="${this.saveEdit(f)}" raised class="accent">Accept</mwc-button>
             </div>
-          </paper-dialog>`));
+          </md-dialog>`));
     return html`
       ${songListItems}
       <paper-dialog id="multiOptionsDialog" noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8">
@@ -271,11 +273,11 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
   }
 
   openEdit(d) {
-    return e => this.shadowRoot.getElementById(d).toggle();
+    return e => this.shadowRoot.getElementById(d).show();
   }
 
   cancelEdit(d) {
-    return e => this.shadowRoot.getElementById(d).toggle();
+    return e => this.shadowRoot.getElementById(d).close();
   }
 
   saveEdit(f) {
@@ -362,7 +364,8 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
           --mdc-icon-size: 24px;
         }
         #multiOptionsDialog {
-          background-color: var(--search-toolbar-background);
+          color: var(--ss-song-list-multi-options-dialog-text-color);
+          background-color: var(--ss-song-list-multi-options-dialog-background-color);
           display: flex;
           flex-direction: row;
           height: 42px;
@@ -375,7 +378,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
           padding: 0;
         }
         genre-list {
-          padding: 0;
+          padding: 14px 0 0 10px;
           margin: 0;
           height: 64vh;
           display: block;

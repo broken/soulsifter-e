@@ -10,13 +10,17 @@
   --sl_orange: #FDC443;
   --sl_purple: #AC1AFA;
 
-  /* main */
+  /* core color palette */
   --bg: var(--sl_grey);
   --clr: #999999;
   --clr_bold: #CCCCCC;
   --err: #F92772;
   --sidebar-width: 270px;
   --scrollbar-width: 15px;
+
+  /* component colors */
+  --ss-search-info-heading-color: #CCC;
+  --ss-search-info-emphasis-color: var(--sl_green);
 
   /* star rating */
   --sr_clr: #666;
@@ -61,9 +65,6 @@
   --ap_slider_clr: var(--sl_purple);
   --ap_slider_bg: #999;
   --ap_btn_clr: #CCC;
-  /* search info */
-  --si_heading: #CCC;
-  --si_emphasis: var(--sl_green);
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);

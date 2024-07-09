@@ -126,6 +126,9 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
     return [
       css`
         :host {
+          display: flex;
+          flex-direction: column;
+          width: 666px;
           white-space: nowrap;
         }
         section {

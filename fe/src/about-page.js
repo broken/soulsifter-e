@@ -27,28 +27,18 @@ class AboutPage extends LitElement {
           flex-direction: column;
           white-space: nowrap;
         }
-        header {
-          color: var(--ss-search-info-heading-color);
-          margin-top: 14px;
-        }
-        img {
-          width: 162px;
-        }
         section {
           display: flex;
           flex-direction: row;
           gap: 22px;
           justify-content: center;
         }
+        img {
+          width: 162px;
+        }
         .emphasis {
-          color: var(--ss-search-info-emphasis-color);
-        }
-        .right {
-          text-align: right;
-        }
-        .flex {
-          flex: 1;
-          flex-basis: 0.000000001px;
+          color: var(--ss-about-page-text-emphasis-color);
+          font-size: 1.1em;
         }
         .text {
           position: absolute;

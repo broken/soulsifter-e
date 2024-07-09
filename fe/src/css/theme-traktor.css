@@ -1,5 +1,5 @@
 :host(.traktor) {
-  /* main */
+  /* core color palette */
   --bg: #282828;
   --bg2: #141414;
   --bg3: #1E1E1E;
@@ -11,6 +11,8 @@
   --accent: #FF8D3B;
   --accent2: #40D9FF;
   --accent3: #00425C;
+
+  /* component colors */
 
   /* star rating */
   --sr_clr: var(--clr_disabled);
@@ -55,9 +57,6 @@
   --ap_slider_clr: var(--accent2);
   --ap_slider_bg: var(--bg2);
   --ap_btn_clr: var(--clr_bold);
-  /* search info */
-  --si_heading: var(--clr_bold);
-  --si_emphasis: var(--accent2);
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);

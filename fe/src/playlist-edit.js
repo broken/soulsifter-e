@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
 
 import "@material/web/checkbox/checkbox.js";
+import "@material/web/dialog/dialog.js";
 import "@polymer/paper-input/paper-input.js";
 
 import "./abstract-action-page.js";
@@ -21,7 +22,7 @@ class PlaylistEdit extends LitElement {
             <paper-input floatingLabel label="Name" value="${this.playlist.name}" id="name"></paper-input>
             <div class="query-container">
               <paper-input floatingLabel label="Query" value="${this.playlist.query}" id="query"></paper-input>
-              <icon-button @click=${this.toggleSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
+              <icon-button @click=${this.openSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
             </div>
             <br>
             <label><md-checkbox ?checked="${this.fromSongTrail}" id="trail"></md-checkbox>from Song Trail</label>
@@ -31,9 +32,9 @@ class PlaylistEdit extends LitElement {
           <div class="genres">
             <genre-list id="genreList" .genres="${this.genres}"></genre-list>
           </div>
-          <paper-dialog id="searchInfoDialog">
-            <search-info></search-info>
-          </paper-dialog>
+          <md-dialog id="searchInfoDialog">
+            <search-info slot="content"></search-info>
+          </md-dialog>
         </abstract-action-page>
         <div class="metadata">
           <div style="user-select:text">${this.playlist.id}</div>
@@ -115,8 +116,8 @@ class PlaylistEdit extends LitElement {
     this.classList.remove('show');
   }
 
-  toggleSearchInfoDialog(e) {
-    this.shadowRoot.getElementById('searchInfoDialog').toggle();
+  openSearchInfoDialog(e) {
+    this.shadowRoot.getElementById('searchInfoDialog').show();
   }
 
   static get styles() {
@@ -147,7 +148,7 @@ class PlaylistEdit extends LitElement {
           right: 0;
         }
         #searchInfoDialog {
-          max-width: none !important;
+          max-width: none;
         }
         .metadata {
           display: flex;

@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@polymer/paper-dialog/paper-dialog.js";
+import "@material/web/dialog/dialog.js";
 import "@polymer/paper-input/paper-input.js";
 import "@thomasloven/round-slider";
 
@@ -32,11 +32,11 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       <icon-button @click=${this.requestSearch} icon="search"></icon-button>
       <paper-input label="search" value="${this.query}" class="flex" no-label-float @input=${this.queryInputChanged} id="queryInput"></paper-input>
       <icon-button @click=${this.clearSearchAction} icon="clear" id="clear"></icon-button>
-      <icon-button @click=${this.toggleSearchInfoDialog} icon="info_outline"></icon-button>
+      <icon-button @click=${this.openSearchInfoDialog} icon="info_outline"></icon-button>
       ${bpmRestrictBtn}
       ${keyRestrictBtn}
       ${stemsBtn}
-      <icon-button @click=${this.toggleSearchOptionsDialog} icon="build"></icon-button>
+      <icon-button @click=${this.openSearchOptionsDialog} icon="build"></icon-button>
       <paper-input label="bpm" value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></paper-input>
       <icon-button @click=${this.tapBpm} icon="hearing"></icon-button>
       <icon-button @click=${this.openCreateSongPage} icon="add_circle" id="createSongButton" @drop="${this.dropCreateSongButton}" @dragover="${this.dragOverCreateSongButton}" @dragleave="${this.dragLeaveCreateSongButton}"></icon-button>
@@ -53,18 +53,18 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         <options-menu-item @click="${this.syncSpotifyPlaylists}"><span style="text-decoration: line-through">Sync Spotify Playlists</span></options-menu-item>
         <options-menu-item @click="${this.syncYouTubePlaylists}">Sync YouTube Playlists</options-menu-item>
         <options-menu-item @click="${this.showHiddenAlerts}">Show hidden alerts</options-menu-item>
-        <options-menu-item @click="${this.toggleAboutPageDialog}">About</options-menu-item>
+        <options-menu-item @click="${this.openAboutPageDialog}">About</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
       </options-menu>
-      <paper-dialog id="searchInfoDialog">
-        <search-info></search-info>
-      </paper-dialog>
-      <paper-dialog id="searchOptionsDialog">
-        <search-options></search-options>
-      </paper-dialog>
-      <paper-dialog id="aboutPageDialog">
-        <about-page></about-page>
-      </paper-dialog>
+      <md-dialog id="searchInfoDialog">
+        <search-info slot="content"></search-info>
+      </md-dialog>
+      <md-dialog id="searchOptionsDialog">
+        <search-options slot="content"></search-options>
+      </md-dialog>
+      <md-dialog id="aboutPageDialog">
+        <about-page slot="content"></about-page>
+      </md-dialog>
     `;
   }
 
@@ -239,16 +239,16 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     job().then(() => console.log('success')).catch(err => console.warn(err));
   }
 
-  toggleSearchInfoDialog(e) {
-    this.shadowRoot.getElementById('searchInfoDialog').toggle();
+  openSearchInfoDialog(e) {
+    this.shadowRoot.getElementById('searchInfoDialog').show();
   }
 
-  toggleSearchOptionsDialog(e) {
-    this.shadowRoot.getElementById('searchOptionsDialog').toggle();
+  openSearchOptionsDialog(e) {
+    this.shadowRoot.getElementById('searchOptionsDialog').show();
   }
 
-  toggleAboutPageDialog(e) {
-    this.shadowRoot.getElementById('aboutPageDialog').toggle();
+  openAboutPageDialog(e) {
+    this.shadowRoot.getElementById('aboutPageDialog').show();
   }
 
   toggleBpmRestrict(e) {
@@ -331,7 +331,10 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
           padding: 8px;
         }
         #searchInfoDialog {
-          max-width: none !important;
+          max-width: none;
+        }
+        #searchOptionsDialog {
+          max-width: none;
         }
         #bpmInput {
           width: 64px;
