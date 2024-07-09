@@ -16,8 +16,12 @@
   --scrollbar-width: 15px;
 
   /* component colors */
+  --ss-about-page-text-emphasis-color: var(--accent2);
+  --ss-icon-button-emphasis-color: var(--sl_green);
   --ss-search-info-heading-color: #CCC;
   --ss-search-info-emphasis-color: var(--sl_green);
+  --ss-song-list-multi-options-dialog-background-color: black;
+  --ss-song-list-multi-options-dialog-text-color: var(--clr);
 
   /* star rating */
   --sr_clr: #666;

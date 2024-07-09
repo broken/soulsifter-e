@@ -19,12 +19,8 @@ class IconButton extends LitElement {
   static get styles() {
     return [
       css`
-        :host {
-          width: var(--mdc-icon-size);
-          height: var(--mdc-icon-size);
-        }
-        :host(.active) mwc-icon {
-          color: var(--ss-search-info-emphasis-color);
+        :host(.active) {
+          color: var(--ss-icon-button-emphasis-color);
         }
         mwc-icon {
           color: inherit;

@@ -25,6 +25,7 @@
 
   /* component colors */
   --ss-about-page-text-emphasis-color: var(--accent2);
+  --ss-icon-button-emphasis-color: var(--accent2);
   --ss-search-info-text-heading-color: var(--clr_bold);
   --ss-search-info-text-emphasis-color: var(--accent2);
   --ss-song-list-multi-options-dialog-background-color: black;
