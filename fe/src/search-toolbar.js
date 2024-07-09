@@ -259,7 +259,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   }
 
   _updateAlertWithMouseCoords = e => {
-    this.updateAlert(this.mouseCoordAlertId, undefined, `Mouse coordinates: ${e.clientX}, ${e.clientY}`);
+    this.updateAlert(this.mouseCoordAlertId, undefined, `Mouse coordinates: ${e.screenX}, ${e.screenY}`);
   }
 
   alertsChanged(x) {
