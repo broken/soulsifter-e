@@ -7,28 +7,35 @@
   --sl_orange: #FDC443;
   --sl_purple: #AC1AFA;
 
-  /* core color palette */
-  --bg: var(--sl_grey);
-  --clr: #999999;
-  --clr_bold: #CCCCCC;
-  --err: #F92772;
   --sidebar-width: 270px;
   --scrollbar-width: 15px;
 
+  /* core color palette */
+  --bg: var(--sl_grey);
+  --bg2: #161616;
+  --clr: #999999;
+  --clr_bold: #CCCCCC;
+  --clr_disabled: #666;
+  --err: #F92772;
+  --err_disabled: #833;
+  --accent: var(--sl_brown);
+  --accent2: var(--sl_green);
+  --accent3: var(--sl_brown);
+
   /* component colors */
   --ss-about-page-text-emphasis-color: var(--accent2);
-  --ss-ss-abstract-action-page-background-color: var(--bg);
+  --ss-abstract-action-page-background-color: var(--bg);
   --ss-icon-button-emphasis-color: var(--sl_green);
-  --ss-options-menu-background-color: #161616;
+  --ss-options-menu-background-color: var(--bg2);
   --ss-options-menu-background-color-hover: black;
   --ss-options-menu-text-color-hover: var(--clr_bold);
   --ss-search-info-heading-color: #CCC;
   --ss-search-info-emphasis-color: var(--sl_green);
   --ss-song-list-multi-options-dialog-background-color: black;
   --ss-song-list-multi-options-dialog-text-color: var(--clr);
-  --ss-star-rating-unselected-icon-color: #666;
+  --ss-star-rating-unselected-icon-color: var(--clr_disabled);
   --ss-star-rating-selected-icon-color: #EEE;
-  --ss-star-rating-trashed-icon-color: #833;
+  --ss-star-rating-trashed-icon-color: var(--err_disabled);
 
   /* paper input */
   --pi_accent: var(--sl_blue);

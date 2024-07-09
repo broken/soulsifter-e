@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
 
-import "@material/mwc-button";
+import "@material/web/button/filled-button.js";
+import "@material/web/button/filled-tonal-button.js";
 
 
 class AbstractActionPage extends LitElement {
@@ -10,8 +11,8 @@ class AbstractActionPage extends LitElement {
         <slot></slot>
       </div>
       <div id="abstractActions">
-        <mwc-button @click="${this.cancel}" raised>Cancel</mwc-button>
-        <mwc-button @click="${this.accept}" raised class="accent">Accept</mwc-button>
+        <md-filled-tonal-button @click="${this.cancel}">Cancel</md-filled-tonal-button>
+        <md-filled-button @click="${this.accept}">Accept</md-filled-button>
       </div>
     `;
   }
@@ -50,14 +51,8 @@ class AbstractActionPage extends LitElement {
           padding-top: 30px;
           flex-shrink: 0;
         }
-        mwc-button {
-          padding: 0 30px;
-          --mdc-theme-primary: var(--ss-abstract-action-button-bg);
-          --mdc-theme-on-primary: var(--ss-abstract-action-button-clr);
-        }
-        mwc-button.accent {
-          --mdc-theme-primary:  var(--ss-abstract-action-button-accent-bg);
-          --mdc-theme-on-primary: var(--ss-abstract-action-button-accent-clr);
+        md-filled-tonal-button {
+          margin: 0 20px;
         }
       `,
     ];

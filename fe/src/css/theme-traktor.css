@@ -12,6 +12,9 @@
   --accent2: #40D9FF;
   --accent3: #00425C;
 
+  /* material design system colors */
+  --md-sys-color-primary: var(--accent3);  /* md-filled-button */
+
   /* component colors */
   --ss-options-menu-background-color-hover: var(--accent3);
   --ss-star-rating-selected-icon-color: var(--accent);

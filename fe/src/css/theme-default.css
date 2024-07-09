@@ -5,6 +5,10 @@
    * component colors
 */
 :host {
+  /* core sizing */
+  --sidebar-width: 270px;
+  --scrollbar-width: 15px;
+
   /* core color palette */
   --bg: #292929;
   --bg2: #1F1F1F;
@@ -16,10 +20,12 @@
   --accent: #5724E5;  /* accents */
   --accent2: #1EC8FA;  /* text emphasis */
   --accent3: #6E330A;
-  --sidebar-width: 270px;
-  --scrollbar-width: 15px;
 
   /* material design system colors */
+  --md-sys-color-primary: var(--accent);  /* md-filled-button */
+  --md-sys-color-on-primary: var(--clr_bold);  /* md-filled-button */
+  --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-primary), black 20%);  /* md-filled-tonal-button */
+  --md-sys-color-on-secondary-container: color-mix(in srgb, var(--md-sys-color-on-primary), black 20%);  /* md-filled-tonal-button */
   --md-sys-color-surface-container-high: var(--bg);  /* dialog */
   --md-sys-color-on-surface-variant: var(--clr);  /* dialog */
 
@@ -42,10 +48,6 @@
   --ss_bg: var(--bg);
   --ss_clr: var(--clr);
   --ss_clr_bold: var(--ss_clr_bold);
-  /* options menu */
-  --om_bg: var(--bg2);
-  --om_bg_hover: inherit;
-  --om_clr_hover: var(--clr_bold);
   /* paper input */
   --pi_accent: var(--accent2);
   --pi_clr: var(--clr);
