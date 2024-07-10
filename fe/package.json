@@ -2,7 +2,7 @@
   "name": "SoulSifter",
   "version": "1.7.0",
   "description": "DJ & music organization app.",
-  "build": 3382,
+  "build": 3416,
   "main": "main.js",
   "scripts": {
     "fe:build": "vite build",
@@ -46,6 +46,7 @@
     "soulsifter": "file:../be",
     "typeface-roboto": "^1.1.13",
     "url": "^0.11.3",
-    "wavesurfer.js": "^7.8.1"
+    "wavesurfer.js": "^7.8.1",
+    "webmidi": "^3.1.9"
   }
 }

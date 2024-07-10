@@ -3,6 +3,8 @@ import { css, html, LitElement, unsafeCSS } from 'lit';
 import "@material/mwc-tab";
 import "@material/mwc-tab-bar";
 
+import {WebMidi, Utilities} from "webmidi";
+
 import { AudioMixin } from "./mixin-audio.js";
 import { AudioVolumeMixin } from "./mixin-audio-volume.js";
 import { SettingsMixin } from "./mixin-settings.js";
@@ -81,6 +83,36 @@ class SoulSifter extends AudioMixin(AudioVolumeMixin(SettingsMixin(LitElement)))
         });
       }
     });
+    WebMidi
+    .enable()
+    .then(() => {
+      if (WebMidi.inputs.length < 1) {
+        console.log('No device detected.');
+      } else {
+        WebMidi.inputs.forEach((device, index) => {
+          console.log(`${index}: ${device.name}`);
+        });
+      }
+      const mySynth = WebMidi.getInputByName('DDJ-SB3');
+      let myChan = mySynth.channels[7];
+      myChan.addListener('controlchange', e => {
+        console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
+        if (this.note == undefined) {
+          if (e.subtype == 'effectcontrol2coarse') {
+            this.note = e.rawValue;
+          }
+        } else {
+          let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
+          this.note = undefined;
+          console.log('Setting voluem to ' + value);
+          // 0.93\sqrt[2.5]{x}
+          let y = Math.pow(value, 1/2.6);
+          console.log('New voluem to ' + y);
+          this.changeAudioVolume(y);
+        }
+      });
+    })
+    .catch(err => alert(err));
   }
 
   connectedCallback() {
