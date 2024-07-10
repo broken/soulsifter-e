@@ -8,6 +8,7 @@ import { css, html, LitElement } from "lit";
 
 import "@material/web/button/filled-button.js";
 import "@material/web/button/filled-tonal-button.js";
+import "@material/web/checkbox/checkbox.js";
 import "@material/web/dialog/dialog.js";
 // Features of paper-dialog over md-dialog: noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8"
 import "@polymer/paper-dialog/paper-dialog.js";
@@ -43,7 +44,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
           </md-dialog>`);
     dialogs.push(['is_mixed'].map(f => html`
         <md-dialog id="${f}">
-            <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}" slot="content"></paper-input>
+            <label slot="content"><md-checkbox id="${f + '_input'}"></md-checkbox>${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}</label>
             <div class="editActions" slot="actions">
               <md-filled-tonal-button @click="${this.cancelEdit(f)}">Cancel</md-filled-tonal-button>
               <md-filled-button @click="${this.saveEdit(f)}">Accept</md-filled-button>
@@ -385,6 +386,12 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
           height: 64vh;
           display: block;
           overflow: hidden;
+        }
+        md-checkbox {
+          margin-right: 10px;
+        }
+        md-dialog > label {
+          display: block;
         }
       `
     ];
