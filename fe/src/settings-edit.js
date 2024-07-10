@@ -39,6 +39,13 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-input label="Theme" value="${this.appTheme}" id="appTheme"></paper-input>
           <br>
           <paper-input label="Preview Time (in secs)" value="${this.songListPreviewTimeInSecs}" id="songListPreviewTimeInSecs"></paper-input>
+          <br>
+          <paper-input label="Deck A X" value="${this.dragAndDropDeckLeftX}" id="dragAndDropDeckLeftX"></paper-input>
+          <paper-input label="Deck A Y" value="${this.dragAndDropDeckLeftY}" id="dragAndDropDeckLeftY"></paper-input>
+          <paper-input label="Deck B X" value="${this.dragAndDropDeckRightX}" id="dragAndDropDeckRightX"></paper-input>
+          <paper-input label="Deck B Y" value="${this.dragAndDropDeckRightY}" id="dragAndDropDeckRightY"></paper-input>
+          <paper-input label="D&D Easing" value="${this.dragAndDropEasing}" id="dragAndDropEasing"></paper-input>
+          <paper-input label="D&D Wait Time (ms)" value="${this.dragAndDropWaitTimeInMs}" id="dragAndDropWaitTimeInMs"></paper-input>
         </div>
         <div class="fields">
           <paper-input label="Google Music Email" value="${this.googleEmail}" id="googleEmail"></paper-input>
@@ -74,6 +81,12 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.dbUser = this.settings.getString('db.user');
     this.dbPassword = this.settings.getString('db.password');
     this.dbUrl = this.settings.getString('db.url');
+    this.dragAndDropDeckLeftX = this.settings.getInt('dragAndDrop.deckLeftX');
+    this.dragAndDropDeckLeftY = this.settings.getInt('dragAndDrop.deckLeftY');
+    this.dragAndDropDeckRightX = this.settings.getInt('dragAndDrop.deckRightX');
+    this.dragAndDropDeckRightY = this.settings.getInt('dragAndDrop.deckRightY');
+    this.dragAndDropEasing = this.settings.getInt('dragAndDrop.easing');
+    this.dragAndDropWaitTimeInMs = this.settings.getInt('dragAndDrop.waitTimeInMs');
     this.editAutoAdd = this.settings.getBool('edit.autoAdd');
     this.editAutoPlay = this.settings.getBool('edit.autoPlay');
     this.feedlyDevToken = this.settings.getString('feedly.devToken');
@@ -122,6 +135,12 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('db.user', this.shadowRoot.getElementById('dbUser').value);
     this.puts('db.password', this.shadowRoot.getElementById('dbPassword').value);
     this.puts('db.url', this.shadowRoot.getElementById('dbUrl').value);
+    this.puti('dragAndDrop.deckLeftX', Number(this.shadowRoot.getElementById('dragAndDropDeckLeftX').value));
+    this.puti('dragAndDrop.deckLeftY', Number(this.shadowRoot.getElementById('dragAndDropDeckLeftY').value));
+    this.puti('dragAndDrop.deckRightX', Number(this.shadowRoot.getElementById('dragAndDropDeckRightX').value));
+    this.puti('dragAndDrop.deckRightY', Number(this.shadowRoot.getElementById('dragAndDropDeckRightY').value));
+    this.puti('dragAndDrop.easing', Number(this.shadowRoot.getElementById('dragAndDropEasing').value));
+    this.puti('dragAndDrop.waitTimeInMs', Number(this.shadowRoot.getElementById('dragAndDropWaitTimeInMs').value));
     this.putb('edit.autoAdd', this.shadowRoot.getElementById('editAutoAdd').checked);
     this.putb('edit.autoPlay', this.shadowRoot.getElementById('editAutoPlay').checked);
     this.puts('feedly.devToken', this.shadowRoot.getElementById('feedlyDevToken').value);

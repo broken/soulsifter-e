@@ -29,6 +29,8 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
           <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${comments}</span>
         </div>
         ${inPlaylist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
+        <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
+        <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
         <div>${this.computeBpmShift(this.song, this.bpm)}</div>
         ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm}</div>` : html``}
@@ -187,6 +189,28 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     let event = new CustomEvent('song-edit', { detail: {song: this.song } });
     window.dispatchEvent(event);
     e.stopPropagation();
+  }
+
+  dragSongToDeckA(e) {
+    this.dragSongTo(this.settings.getInt('dragAndDrop.deckLeftX'), this.settings.getInt('dragAndDrop.deckLeftY'));
+    e.stopPropagation();
+  }
+
+  dragSongToDeckB(e) {
+    this.dragSongTo(this.settings.getInt('dragAndDrop.deckRightX'), this.settings.getInt('dragAndDrop.deckRightY'));
+    e.stopPropagation();
+  }
+
+  dragSongTo(x, y) {
+    const util = require('util');
+    const exec = util.promisify(require('node:child_process').exec);
+    const easing = this.settings.getInt('dragAndDrop.easing');
+    const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
+
+    let dnd = async () => {
+      exec(`cliclick -e ${easing} -r m:. dd:. w:10 dm:${x},${y} w:${wait} du:${x},${y} w:50`);
+    }
+    dnd();
   }
 
   previewSong(e) {

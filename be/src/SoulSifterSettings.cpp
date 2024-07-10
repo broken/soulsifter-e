@@ -17,7 +17,7 @@ namespace soulsifter {
   SoulSifterSettings::SoulSifterSettings() {
     // first set defaults
     ptree.put("app.debug", false);
-    // ptree.put("app.theme", "");
+    //ptree.put("app.theme", "");
     //ptree.put("dir.music", "");
     //ptree.put("dir.mv", "");
     //ptree.put("dir.staging", "");
@@ -28,6 +28,12 @@ namespace soulsifter {
     ptree.put("db.user", "ss");
     ptree.put("db.name", "music");
     ptree.put("db.password", "pw");
+    ptree.put("dragAndDrop.deckLeftX", 0);
+    ptree.put("dragAndDrop.deckLeftY", 0);
+    ptree.put("dragAndDrop.deckRightX", 0);
+    ptree.put("dragAndDrop.deckRightY", 0);
+    ptree.put("dragAndDrop.easing", 100);
+    ptree.put("dragAndDrop.waitTimeInMs", 300);
     ptree.put("edit.autoAdd", false);
     ptree.put("edit.autoPlay", false);
     //ptree.put("feedly.userId", "");
