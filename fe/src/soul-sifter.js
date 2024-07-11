@@ -96,7 +96,7 @@ class SoulSifter extends AudioMixin(AudioVolumeMixin(SettingsMixin(LitElement)))
       const mySynth = WebMidi.getInputByName('DDJ-SB3');
       let myChan = mySynth.channels[7];
       myChan.addListener('controlchange', e => {
-        console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
+        // console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
         if (this.note == undefined) {
           if (e.subtype == 'effectcontrol2coarse') {
             this.note = e.rawValue;
@@ -104,15 +104,17 @@ class SoulSifter extends AudioMixin(AudioVolumeMixin(SettingsMixin(LitElement)))
         } else {
           let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
           this.note = undefined;
-          console.log('Setting voluem to ' + value);
-          // 0.93\sqrt[2.5]{x}
-          let y = Math.pow(value, 1/2.6);
-          console.log('New voluem to ' + y);
+          let exp = Number(this.settings.getString('audio.exponentialFactor'));
+          let linear = Number(this.settings.getString('audio.linearFactor'));
+          // 0.93*x^1/2.5 looks to match the closest curve,
+          // but osx prob has its own curve that we have to compensate for
+          let y = Math.pow(value, exp) * linear;
+          console.log(`Setting volume to ${y} from value ${value}`);
           this.changeAudioVolume(y);
         }
       });
     })
-    .catch(err => alert(err));
+    .catch(err => console.error(err));
   }
 
   connectedCallback() {

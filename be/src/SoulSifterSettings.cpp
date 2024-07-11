@@ -18,6 +18,8 @@ namespace soulsifter {
     // first set defaults
     ptree.put("app.debug", false);
     //ptree.put("app.theme", "");
+    ptree.put("audio.exponentialFactor", "0.25");
+    ptree.put("audio.linearFactor", "1.125");
     //ptree.put("dir.music", "");
     //ptree.put("dir.mv", "");
     //ptree.put("dir.staging", "");
