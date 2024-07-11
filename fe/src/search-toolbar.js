@@ -4,6 +4,8 @@ import "@material/web/dialog/dialog.js";
 import "@polymer/paper-input/paper-input.js";
 import "@thomasloven/round-slider";
 
+import { WebMidi, Utilities } from "webmidi";
+
 import { AlertsMixin } from "./mixin-alerts.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { QueryMixin } from "./mixin-query.js";
@@ -53,8 +55,9 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         <options-menu-item @click="${this.syncSpotifyPlaylists}"><span style="text-decoration: line-through">Sync Spotify Playlists</span></options-menu-item>
         <options-menu-item @click="${this.syncYouTubePlaylists}">Sync YouTube Playlists</options-menu-item>
         <options-menu-item @click="${this.showHiddenAlerts}">Show hidden alerts</options-menu-item>
-        <options-menu-item @click="${this.openAboutPageDialog}">About</options-menu-item>
         <options-menu-item @click="${this.openMouseCoordsAlert}">Show Mouse Coordinates</options-menu-item>
+        <options-menu-item @click="${this.connectToMidiController}">Connect to Midi controller</options-menu-item>
+        <options-menu-item @click="${this.openAboutPageDialog}">About</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
       </options-menu>
       <md-dialog id="searchInfoDialog">
@@ -256,6 +259,50 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   openMouseCoordsAlert(e) {
     this.mouseCoordAlertId = this.addAlert('Mouse coordinates:');
     window.addEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
+  }
+
+  connectToMidiController(e) {
+    WebMidi
+    .enable()
+    .then(() => {
+      if (WebMidi.inputs.length < 1) {
+        console.log('No device detected.');
+      } else {
+        WebMidi.inputs.forEach((device, index) => {
+          console.log(`${index}: ${device.name}`);
+        });
+      }
+      const mySynth = WebMidi.getInputByName(this.settings.getString('audio.midiControllerName'));
+      let myChan = mySynth.channels[this.settings.getInt('audio.volumeMidiChannel')];
+      myChan.addListener('controlchange', e => {
+        const midiCC = this.settings.getInt('audio.volumeMidiCC');
+        if (e.message.dataBytes[0] != midiCC ||
+            e.message.dataBytes[0] != midiCC + 32) return;
+        // console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
+        if (this.note == undefined) {
+          if (e.message.dataBytes[0] == midiCC) {
+            this.note = e.rawValue;
+          }
+        } else {
+          let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
+          this.note = undefined;
+          let exp = Number(this.settings.getString('audio.exponentialFactor'));
+          let linear = Number(this.settings.getString('audio.linearFactor'));
+          // 0.93*x^1/2.5 looks to match the closest curve,
+          // but osx prob has its own curve that we have to compensate for
+          let y = Math.pow(value, exp) * linear;
+          console.log(`Setting volume to ${y} from value ${value}`);
+          let vol = Math.max(Math.min(y, 1), 0);
+          this.volume = vol * 100;
+          let event = new CustomEvent(
+            'audio-set-volume',
+            { bubbles: true, composed: true, detail: { volume: vol }}
+          );
+          this.dispatchEvent(event);
+        }
+      });
+    })
+    .catch(err => this.addAlert('Unable to connect to Midi controller. ' + err));
   }
 
   _updateAlertWithMouseCoords = e => {

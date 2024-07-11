@@ -3,8 +3,6 @@ import { css, html, LitElement, unsafeCSS } from 'lit';
 import "@material/mwc-tab";
 import "@material/mwc-tab-bar";
 
-import {WebMidi, Utilities} from "webmidi";
-
 import { AudioMixin } from "./mixin-audio.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import "./alert-list.js";
@@ -82,41 +80,6 @@ class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
         });
       }
     });
-    WebMidi
-    .enable()
-    .then(() => {
-      if (WebMidi.inputs.length < 1) {
-        console.log('No device detected.');
-      } else {
-        WebMidi.inputs.forEach((device, index) => {
-          console.log(`${index}: ${device.name}`);
-        });
-      }
-      const mySynth = WebMidi.getInputByName(this.settings.getString('audio.midiControllerName'));
-      let myChan = mySynth.channels[this.settings.getInt('audio.volumeMidiChannel')];
-      myChan.addListener('controlchange', e => {
-        const midiCC = this.settings.getInt('audio.volumeMidiCC');
-        if (e.message.dataBytes[0] != midiCC ||
-            e.message.dataBytes[0] != midiCC + 32) return;
-        // console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
-        if (this.note == undefined) {
-          if (e.message.dataBytes[0] == midiCC) {
-            this.note = e.rawValue;
-          }
-        } else {
-          let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
-          this.note = undefined;
-          let exp = Number(this.settings.getString('audio.exponentialFactor'));
-          let linear = Number(this.settings.getString('audio.linearFactor'));
-          // 0.93*x^1/2.5 looks to match the closest curve,
-          // but osx prob has its own curve that we have to compensate for
-          let y = Math.pow(value, exp) * linear;
-          console.log(`Setting volume to ${y} from value ${value}`);
-          this.changeAudioVolume(y);
-        }
-      });
-    })
-    .catch(err => console.error(err));
   }
 
   connectedCallback() {
