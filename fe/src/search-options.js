@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@polymer/paper-radio-button/paper-radio-button.js";
+import "@material/web/radio/radio.js";
 import "@material/web/switch/switch.js";
 
 import { SearchOptionsMixin } from "./mixin-search-options.js";
@@ -45,16 +45,16 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
         <br>
         <div class="option">
           <label>Order by:</label>
-          <paper-radio-button id="orderByDateAdded" @change="${this.orderByDateAddedChanged}" checked></paper-radio-button>
-          <label>Date added</label>
-          <paper-radio-button id="orderByReleaseDate" @change="${this.orderByReleaseDateChanged}"></paper-radio-button>
-          <label>Release Date</label>
-          <paper-radio-button id="orderByRandom" @change="${this.orderByRandomChanged}"></paper-radio-button>
-          <label>Random</label>
-          <paper-radio-button id="orderByBpm" @change="${this.orderByBpmChanged}"></paper-radio-button>
-          <label>Bpm</label>
-          <paper-radio-button id="orderByAlbum" @change="${this.orderByAlbumChanged}"></paper-radio-button>
-          <label>Album</label>
+          <md-radio id="orderByDateAdded" @change="${this.orderByDateAddedChanged}" checked></md-radio>
+          <label for="orderByDateAdded">Date added</label>
+          <md-radio id="orderByReleaseDate" @change="${this.orderByReleaseDateChanged}"></md-radio>
+          <label for="orderByReleaseDate">Release Date</label>
+          <md-radio id="orderByRandom" @change="${this.orderByRandomChanged}"></md-radio>
+          <label for="orderByRandom">Random</label>
+          <md-radio id="orderByBpm" @change="${this.orderByBpmChanged}"></md-radio>
+          <label for="orderByBpm">Bpm</label>
+          <md-radio id="orderByAlbum" @change="${this.orderByAlbumChanged}"></md-radio>
+          <label for="orderByAlbum">Album</label>
         </div>
       </section>
     `;

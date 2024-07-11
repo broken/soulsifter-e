@@ -22,12 +22,12 @@
   --accent3: #6E330A;
 
   /* material design system colors */
-  --md-sys-color-primary: var(--accent);  /* md-filled-button md-switch */
+  --md-sys-color-primary: var(--accent);  /* md-filled-button md-radio md-switch */
   --md-sys-color-on-primary: var(--clr_bold);  /* md-filled-button md-switch */
   --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-primary), black 20%);  /* md-filled-tonal-button */
   --md-sys-color-on-secondary-container: color-mix(in srgb, var(--md-sys-color-on-primary), black 20%);  /* md-filled-tonal-button */
   --md-sys-color-surface-container-high: var(--bg);  /* dialog */
-  --md-sys-color-on-surface-variant: var(--clr);  /* dialog */
+  --md-sys-color-on-surface-variant: var(--clr);  /* dialog md-radio */
   --md-sys-color-outline: var(--clr_bold);  /* md-outlined-button md-switch */
 
   /* component colors */

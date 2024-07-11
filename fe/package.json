@@ -2,7 +2,7 @@
   "name": "SoulSifter",
   "version": "1.7.0",
   "description": "DJ & music organization app.",
-  "build": 3438,
+  "build": 3439,
   "main": "main.js",
   "scripts": {
     "fe:build": "vite build",
@@ -34,7 +34,6 @@
     "@material/web": "^1.5.1",
     "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-input": "^3.2.1",
-    "@polymer/paper-radio-button": "^3.0.1",
     "@polymer/paper-toast": "^3.0.1",
     "@thomasloven/round-slider": "^0.6.0",
     "electron-squirrel-startup": "^1.0.1",
