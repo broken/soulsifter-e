@@ -18,10 +18,11 @@ namespace soulsifter {
     // first set defaults
     ptree.put("app.debug", false);
     //ptree.put("app.theme", "");
-    ptree.put("audio.exponentialFactor", "0.25");
-    ptree.put("audio.linearFactor", "1.125");
-    ptree.put("audio.volumeMidiCC", 13);
-    ptree.put("audio.volumeMidiChannel", 7);
+    //ptree.put("audio.exponentialFactor", "0.25");
+    //ptree.put("audio.linearFactor", "1.125");
+    //ptree.put("audio.midiControllerName", "DDJ-SB3");
+    //ptree.put("audio.volumeMidiCC", 13);
+    //ptree.put("audio.volumeMidiChannel", 7);
     //ptree.put("dir.music", "");
     //ptree.put("dir.mv", "");
     //ptree.put("dir.staging", "");

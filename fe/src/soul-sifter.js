@@ -93,7 +93,7 @@ class SoulSifter extends AudioMixin(AudioVolumeMixin(SettingsMixin(LitElement)))
           console.log(`${index}: ${device.name}`);
         });
       }
-      const mySynth = WebMidi.getInputByName('DDJ-SB3');
+      const mySynth = WebMidi.getInputByName(this.settings.getString('audio.midiControllerName'));
       let myChan = mySynth.channels[this.settings.getInt('audio.volumeMidiChannel')];
       myChan.addListener('controlchange', e => {
         const midiCC = this.settings.getInt('audio.volumeMidiCC');
