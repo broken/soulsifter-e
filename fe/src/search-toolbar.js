@@ -290,6 +290,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
           let linear = Number(this.settings.getString('audio.linearFactor'));
           // 0.93*x^1/2.5 looks to match the closest curve,
           // but osx prob has its own curve that we have to compensate for
+          // https://www.desmos.com/calculator/pwfyfk6yb2
           let y = Math.pow(value, exp) * linear;
           console.log(`Setting volume to ${y} from value ${value}`);
           let vol = Math.max(Math.min(y, 1), 0);
