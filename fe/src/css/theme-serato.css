@@ -23,27 +23,20 @@
   --accent3: var(--sl_brown);
 
   /* component colors */
-  --ss-about-page-text-emphasis-color: var(--accent2);
-  --ss-abstract-action-page-background-color: var(--bg);
+  --md-switch-handle-color: var(--clr);
+  --md-switch-selected-handle-color: var(--sl_blue);
+  --md-switch-selected-track-color: var(--sl_blue);
+  --md-switch-track-color: var(--clr);
   --ss-icon-button-emphasis-color: var(--sl_green);
-  --ss-options-menu-background-color: var(--bg2);
   --ss-options-menu-background-color-hover: black;
-  --ss-options-menu-text-color-hover: var(--clr_bold);
   --ss-search-info-heading-color: #CCC;
   --ss-search-info-emphasis-color: var(--sl_green);
-  --ss-song-list-multi-options-dialog-background-color: black;
-  --ss-song-list-multi-options-dialog-text-color: var(--clr);
-  --ss-star-rating-unselected-icon-color: var(--clr_disabled);
   --ss-star-rating-selected-icon-color: #EEE;
-  --ss-star-rating-trashed-icon-color: var(--err_disabled);
 
   /* paper input */
   --pi_accent: var(--sl_blue);
   --pi_clr: var(--clr);
   --pi_err: var(--err);
-  /* paper toggle button */
-  --ptb_clr_checked: var(--sl_blue);
-  --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
   --pt_bg: var(--sl_brown);
   --pt_clr: #FFF;

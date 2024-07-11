@@ -1,7 +1,7 @@
 import { css, html, LitElement } from "lit";
 
 import "@polymer/paper-radio-button/paper-radio-button.js";
-import "@polymer/paper-toggle-button/paper-toggle-button.js";
+import "@material/web/switch/switch.js";
 
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 
@@ -11,52 +11,52 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
     return html`
       <section>
         <div class="option">
-          <paper-toggle-button id="bpmRestrict" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
-          <span>BPM restrict</span>
+          <md-switch id="bpmRestrict" @change="${this.checkedChanged}"></md-switch>
+          <label for="bpmRestrict">BPM restrict</label>
         </div>
         <div class="option">
-          <paper-toggle-button id="keyRestrict" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
-          <span>Key restrict</span>
+          <md-switch id="keyRestrict" @change="${this.checkedChanged}"></md-switch>
+          <label for="keyRestrict">Key restrict</label>
         </div>
         <div class="option">
-          <paper-toggle-button id="energyRestrict" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
-          <span>Energy restrict</span>
+          <md-switch id="energyRestrict" @change="${this.checkedChanged}"></md-switch>
+          <label for="energyRestrict">Energy restrict</label>
         </div>
         <div class="option">
-          <paper-toggle-button id="trashedRestrict" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
-          <span>Trashed restrict</span>
+          <md-switch id="trashedRestrict" @change="${this.checkedChanged}"></md-switch>
+          <label for="trashedRestrict">Trashed restrict</label>
         </div>
         <div class="option">
-          <paper-toggle-button id="repeatRestrict" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
-          <span>Repeat restrict</span>
+          <md-switch id="repeatRestrict" @change="${this.checkedChanged}"></md-switch>
+          <label for="repeatRestrict">Repeat restrict</label>
         </div>
         <div class="option">
-          <paper-toggle-button id="mvRestrict" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
-          <span>Music Video mode</span>
+          <md-switch id="mvRestrict" @change="${this.checkedChanged}"></md-switch>
+          <label for="mvRestrict">Music Video mode</label>
         </div>
         <div class="option">
-          <paper-toggle-button id="dynamicGenres" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
-          <span>Dynamic genre mode</span>
+          <md-switch id="dynamicGenres" @change="${this.checkedChanged}"></md-switch>
+          <label for="dynamicGenres">Dynamic genre mode</label>
         </div>
         <div class="option">
-          <paper-toggle-button id="useStems" @checked-changed="${this.checkedChanged}"></paper-toggle-button>
-          <span>Use stems when available</span>
+          <md-switch id="useStems" @change="${this.checkedChanged}"></md-switch>
+          <label for="useStems">Use stems when available</label>
         </div>
         <br>
         <div class="option">
-          <span>Order by:</span>
+          <label>Order by:</label>
           <paper-radio-button id="orderByDateAdded" @change="${this.orderByDateAddedChanged}" checked></paper-radio-button>
-          <span>Date added</span>
+          <label>Date added</label>
           <paper-radio-button id="orderByReleaseDate" @change="${this.orderByReleaseDateChanged}"></paper-radio-button>
-          <span>Release Date</span>
+          <label>Release Date</label>
           <paper-radio-button id="orderByRandom" @change="${this.orderByRandomChanged}"></paper-radio-button>
-          <span>Random</span>
+          <label>Random</label>
           <paper-radio-button id="orderByBpm" @change="${this.orderByBpmChanged}"></paper-radio-button>
-          <span>Bpm</span>
+          <label>Bpm</label>
           <paper-radio-button id="orderByAlbum" @change="${this.orderByAlbumChanged}"></paper-radio-button>
-          <span>Album</span>
+          <label>Album</label>
         </div>
-      <section>
+      </section>
     `;
   }
 
@@ -67,14 +67,14 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
 
   checkedChanged(e) {
     this.searchOptions = {
-        bpmRestrict: this.shadowRoot.getElementById('bpmRestrict').checked,
-        keyRestrict: this.shadowRoot.getElementById('keyRestrict').checked,
-        energyRestrict: this.shadowRoot.getElementById('energyRestrict').checked,
-        trashedRestrict: this.shadowRoot.getElementById('trashedRestrict').checked,
-        repeatRestrict: this.shadowRoot.getElementById('repeatRestrict').checked,
-        mvRestrict: this.shadowRoot.getElementById('mvRestrict').checked,
-        dynamicGenres: this.shadowRoot.getElementById('dynamicGenres').checked,
-        useStems: this.shadowRoot.getElementById('useStems').checked,
+        bpmRestrict: this.shadowRoot.getElementById('bpmRestrict').selected,
+        keyRestrict: this.shadowRoot.getElementById('keyRestrict').selected,
+        energyRestrict: this.shadowRoot.getElementById('energyRestrict').selected,
+        trashedRestrict: this.shadowRoot.getElementById('trashedRestrict').selected,
+        repeatRestrict: this.shadowRoot.getElementById('repeatRestrict').selected,
+        mvRestrict: this.shadowRoot.getElementById('mvRestrict').selected,
+        dynamicGenres: this.shadowRoot.getElementById('dynamicGenres').selected,
+        useStems: this.shadowRoot.getElementById('useStems').selected,
         orderBy: this.orderBy,
     };
     this.changeSearchOptions(this.searchOptions);
@@ -111,14 +111,14 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
 
   searchOptionsChanged(x) {
     this.searchOptions = x;
-    this.shadowRoot.getElementById('bpmRestrict').checked = this.searchOptions.bpmRestrict;
-    this.shadowRoot.getElementById('keyRestrict').checked = this.searchOptions.keyRestrict;
-    this.shadowRoot.getElementById('energyRestrict').checked = this.searchOptions.energyRestrict;
-    this.shadowRoot.getElementById('trashedRestrict').checked = this.searchOptions.trashedRestrict;
-    this.shadowRoot.getElementById('repeatRestrict').checked =  this.searchOptions.repeatRestrict;
-    this.shadowRoot.getElementById('mvRestrict').checked =  this.searchOptions.mvRestrict;
-    this.shadowRoot.getElementById('dynamicGenres').checked =  this.searchOptions.dynamicGenres;
-    this.shadowRoot.getElementById('useStems').checked =  this.searchOptions.useStems;
+    this.shadowRoot.getElementById('bpmRestrict').selected = this.searchOptions.bpmRestrict;
+    this.shadowRoot.getElementById('keyRestrict').selected = this.searchOptions.keyRestrict;
+    this.shadowRoot.getElementById('energyRestrict').selected = this.searchOptions.energyRestrict;
+    this.shadowRoot.getElementById('trashedRestrict').selected = this.searchOptions.trashedRestrict;
+    this.shadowRoot.getElementById('repeatRestrict').selected =  this.searchOptions.repeatRestrict;
+    this.shadowRoot.getElementById('mvRestrict').selected =  this.searchOptions.mvRestrict;
+    this.shadowRoot.getElementById('dynamicGenres').selected =  this.searchOptions.dynamicGenres;
+    this.shadowRoot.getElementById('useStems').selected =  this.searchOptions.useStems;
     this.orderByChanged(this.searchOptions.orderBy);
   }
 
@@ -139,11 +139,12 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
           display: flex;
           flex-direction: row;
         }
-        paper-toggle-button {
+        md-switch {
           padding-top: 3px;
           margin-left: 15px;
         }
-        span {
+        label {
+          padding-top: 10px;
           padding-left: 10px;
           margin-right: 15px;
         }

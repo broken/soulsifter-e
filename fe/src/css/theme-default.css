@@ -22,13 +22,13 @@
   --accent3: #6E330A;
 
   /* material design system colors */
-  --md-sys-color-primary: var(--accent);  /* md-filled-button */
-  --md-sys-color-on-primary: var(--clr_bold);  /* md-filled-button */
+  --md-sys-color-primary: var(--accent);  /* md-filled-button md-switch */
+  --md-sys-color-on-primary: var(--clr_bold);  /* md-filled-button md-switch */
   --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-primary), black 20%);  /* md-filled-tonal-button */
   --md-sys-color-on-secondary-container: color-mix(in srgb, var(--md-sys-color-on-primary), black 20%);  /* md-filled-tonal-button */
   --md-sys-color-surface-container-high: var(--bg);  /* dialog */
   --md-sys-color-on-surface-variant: var(--clr);  /* dialog */
-  --md-sys-color-outline: var(--clr_bold);  /* md-outlined-button */
+  --md-sys-color-outline: var(--clr_bold);  /* md-outlined-button md-switch */
 
   /* component colors */
   --md-outlined-button-label-text-color: var(--clr_bold);
@@ -54,9 +54,6 @@
   --pi_accent: var(--accent2);
   --pi_clr: var(--clr);
   --pi_err: var(--err);
-  /* paper toggle button */
-  --ptb_clr_checked: var(--accent);
-  --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
   --pt_bg: var(--accent3);
   --pt_clr: white;
@@ -118,12 +115,6 @@
   --paper-input-container-input-color: var(--pi_clr);
   --paper-toast-background-color: var(--pt_bg);
   --paper-toast-color: var(--pt_clr);
-  --paper-toggle-button-checked-bar-color:  var(--ptb_clr_checked);
-  --paper-toggle-button-checked-button-color:  var(--ptb_clr_checked);
-  --paper-toggle-button-checked-ink-color: var(--ptb_clr_checked);
-  --paper-toggle-button-unchecked-bar-color:  var(--ptb_clr_unchecked);
-  --paper-toggle-button-unchecked-button-color:  var(--ptb_clr_unchecked);
-  --paper-toggle-button-unchecked-ink-color: var(--ptb_clr_unchecked);
 
   /* misc elements */
   --round-slider-path-color: var(--vd_clr);

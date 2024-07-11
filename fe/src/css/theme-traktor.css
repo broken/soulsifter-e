@@ -23,9 +23,6 @@
   --pi_accent: var(--accent2);
   --pi_clr: var(--clr);
   --pi_err: var(--err);
-  /* paper toggle button */
-  --ptb_clr_checked: var(--accent);
-  --ptb_clr_unchecked: var(--clr);
   /* paper alert toast */
   --pt_bg: var(--accent3);
   --pt_clr: var(--clr_bold);
