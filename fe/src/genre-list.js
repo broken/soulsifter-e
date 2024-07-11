@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
 
-import "@material/mwc-fab/mwc-fab.js";
+import "@material/mwc-icon";
+import "@material/web/fab/fab.js";
 
 import "./genre-list-item.js";
 import { GenresMixin } from "./mixin-genres.js";
@@ -11,7 +12,7 @@ class GenreList extends GenresMixin(LitElement) {
   render() {
     let genreNames = this.genres.map(g => g.name).join(', ');
     let genreListItems = this.genreParents.map(g => html`<genre-list-item .genre="${g}" @toggle-select="${this.toggleSelection}" ?optionsmenu="${this.main}" ?singleselect="${this.singleSelect}"></genre-list-item>`);
-    let fab = this.main ? html`<mwc-fab mini icon="add" @click="${this.createGenre}"></mwc-fab>` : html``;
+    let fab = this.main ? html`<md-fab size="small" @click="${this.createGenre}"><mwc-icon slot="icon">add</mwc-icon></md-fab>` : html``;
     return html`
       <div class="gnames">
         ${genreNames}
@@ -104,10 +105,10 @@ class GenreList extends GenresMixin(LitElement) {
           height: 100%;
           overflow-x: hidden;
         }
-        mwc-fab {
-          bottom: 33px;
+        md-fab {
+          bottom: 34px;
           position: absolute;
-          left: 182px;
+          left: 200px;
         }
         .gnames {
           height: 19px;

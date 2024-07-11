@@ -1,6 +1,5 @@
 import { css, html, LitElement } from "lit";
 
-import "@material/mwc-fab/mwc-fab.js";
 import "@material/mwc-icon";
 
 import "./options-menu.js";

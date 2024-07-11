@@ -1,6 +1,7 @@
 import { css, html, LitElement } from "lit";
 
-import "@material/mwc-fab/mwc-fab.js";
+import "@material/mwc-icon";
+import "@material/web/fab/fab.js";
 
 import "./playlist-list-item.js";
 import { PlaylistsMixin } from "./mixin-playlists.js";
@@ -11,7 +12,7 @@ class PlaylistList extends PlaylistsMixin(LitElement) {
     let items = this.allPlaylists.map(p => html`<playlist-list-item .playlist="${p}" @toggle-select="${this.toggleSelection}" ?selected="${this.isPlaylistSelected(p)}"></playlist-list-item>`);
     return html`
       ${items}
-      <mwc-fab mini icon="add" @click="${this.createPlaylist}"></mwc-fab>
+      <md-fab size="small" @click="${this.createPlaylist}"><mwc-icon slot="icon">add</mwc-icon></md-fab>
     `;
   }
 
@@ -67,10 +68,10 @@ class PlaylistList extends PlaylistsMixin(LitElement) {
           overflow-x: hidden;
           overflow-y: scroll;
         }
-        mwc-fab {
-          bottom: 15px;
+        md-fab {
+          bottom: 14px;
           position: relative;
-          left: 182px;
+          left: 200px;
         }
       `
     ];

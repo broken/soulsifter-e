@@ -2,7 +2,7 @@
   "name": "SoulSifter",
   "version": "1.7.0",
   "description": "DJ & music organization app.",
-  "build": 3428,
+  "build": 3436,
   "main": "main.js",
   "scripts": {
     "fe:build": "vite build",
@@ -27,7 +27,6 @@
   },
   "dependencies": {
     "@material/mwc-circular-progress": "^0.27.0",
-    "@material/mwc-fab": "^0.27.0",
     "@material/mwc-icon": "^0.27.0",
     "@material/mwc-tab": "^0.27.0",
     "@material/mwc-tab-bar": "^0.27.0",
