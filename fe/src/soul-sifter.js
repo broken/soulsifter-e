@@ -94,11 +94,14 @@ class SoulSifter extends AudioMixin(AudioVolumeMixin(SettingsMixin(LitElement)))
         });
       }
       const mySynth = WebMidi.getInputByName('DDJ-SB3');
-      let myChan = mySynth.channels[7];
+      let myChan = mySynth.channels[this.settings.getInt('audio.volumeMidiChannel')];
       myChan.addListener('controlchange', e => {
+        const midiCC = this.settings.getInt('audio.volumeMidiCC');
+        if (e.message.dataBytes[0] != midiCC ||
+            e.message.dataBytes[0] != midiCC + 32) return;
         // console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
         if (this.note == undefined) {
-          if (e.subtype == 'effectcontrol2coarse') {
+          if (e.message.dataBytes[0] == midiCC) {
             this.note = e.rawValue;
           }
         } else {

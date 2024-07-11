@@ -46,6 +46,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <paper-input label="Deck B Y" value="${this.dragAndDropDeckRightY}" id="dragAndDropDeckRightY"></paper-input>
           <paper-input label="D&D Easing" value="${this.dragAndDropEasing}" id="dragAndDropEasing"></paper-input>
           <paper-input label="D&D Wait Time (ms)" value="${this.dragAndDropWaitTimeInMs}" id="dragAndDropWaitTimeInMs"></paper-input>
+          <paper-input label="Midi volume channel" value="${this.audioVolumeMidiChannel}" id="audioVolumeMidiChannel"></paper-input>
+          <paper-input label="Midi volume cc (msb)" value="${this.audioVolumeMidiCC}" id="audioVolumeMidiCC"></paper-input>
           <paper-input label="Midi volume exp scale" value="${this.audioExponentialFactor}" id="audioExponentialFactor"></paper-input>
           <paper-input label="Midi volume linear scale" value="${this.audioLinearFactor}" id="audioLinearFactor"></paper-input>
         </div>
@@ -71,6 +73,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.appTheme = this.settings.getString('app.theme');
     this.audioExponentialFactor = this.settings.getString('audio.exponentialFactor');
     this.audioLinearFactor = this.settings.getString('audio.linearFactor');
+    this.audioVolumeMidiCC = this.settings.getInt('audio.volumeMidiCC');
+    this.audioVolumeMidiChannel = this.settings.getInt('audio.volumeMidiChannel');
     this.musicDir = this.settings.getString('dir.music');
     this.musicVideoDir = this.settings.getString('dir.mv');
     this.stemsDir = this.settings.getString('dir.stems');
@@ -127,6 +131,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('app.theme', this.shadowRoot.getElementById('appTheme').value);
     this.puts('audio.exponentialFactor', this.shadowRoot.getElementById('audioExponentialFactor').value);
     this.puts('audio.linearFactor', this.shadowRoot.getElementById('audioLinearFactor').value);
+    this.puti('audio.volumeMidiCC', Number(this.shadowRoot.getElementById('audioVolumeMidiCC').value));
+    this.puti('audio.volumeMidiChannel', Number(this.shadowRoot.getElementById('audioVolumeMidiChannel').value));
     this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
     this.puts('dir.mv', this.shadowRoot.getElementById('musicVideoDir').value);
     this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);
