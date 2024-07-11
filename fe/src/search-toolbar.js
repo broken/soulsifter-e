@@ -5,7 +5,6 @@ import "@polymer/paper-input/paper-input.js";
 import "@thomasloven/round-slider";
 
 import { AlertsMixin } from "./mixin-alerts.js";
-import { AudioVolumeMixin } from "./mixin-audio-volume.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
@@ -19,7 +18,7 @@ import "./search-info.js";
 import "./search-options.js";
 
 
-class SearchToolbar extends AlertsMixin(AudioVolumeMixin(BpmMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement))))))) {
+class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement)))))) {
   render() {
     let bpmRestrictBtn = this.searchOptions.bpmRestrict ? html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note" class="active"></icon-button>`
                                                         : html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note"></icon-button>`;
@@ -327,12 +326,12 @@ class SearchToolbar extends AlertsMixin(AudioVolumeMixin(BpmMixin(QueryMixin(Sea
   }
 
   volumeChanged(e) {
-    this.changeAudioVolume(e.detail.value / 100);
-  }
-
-  audioVolumeChanged(x) {
-    this.audioVolume = x;
-    this.volume = x * 100;
+    let vol = e.detail.value / 100;
+    let event = new CustomEvent(
+      'audio-set-volume',
+      { bubbles: true, composed: true, detail: { volume: vol }}
+    );
+    this.dispatchEvent(event);
   }
 
   static get styles() {

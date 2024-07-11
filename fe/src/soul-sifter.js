@@ -6,7 +6,6 @@ import "@material/mwc-tab-bar";
 import {WebMidi, Utilities} from "webmidi";
 
 import { AudioMixin } from "./mixin-audio.js";
-import { AudioVolumeMixin } from "./mixin-audio-volume.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import "./alert-list.js";
 import "./genre-edit.js";
@@ -31,7 +30,7 @@ import theme_traktor from './css/theme-traktor.css?inline';
 import greyscalewaveforms from './css/waveforms-greyscale.css?inline';
 
 
-class SoulSifter extends AudioMixin(AudioVolumeMixin(SettingsMixin(LitElement))) {
+class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
   render() {
     return html`
       <alert-list></alert-list>

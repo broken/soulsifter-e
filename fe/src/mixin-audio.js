@@ -4,7 +4,7 @@
  * Only one of these should exist, and it should be placed on the outermost component,
  * so as to receive audio-player events from all other components.
  *
- * It requires the SettingsMixin & AudioVolumeMixin to also be used on the component.
+ * It requires the SettingsMixin to also be used on the component.
  */
 
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
@@ -20,6 +20,7 @@ let audioMixin = (superClass) => class extends superClass {
     this.addEventListener('audio-set-time-pct', this._audioSetTimePctListener);
     this.addEventListener('audio-pause', this._audioPauseListener);
     this.addEventListener('audio-play', this._audioPlayListener);
+    this.addEventListener('audio-set-volume', this._audioSetVolume);
   }
 
   connectedCallback() {
@@ -83,8 +84,8 @@ let audioMixin = (superClass) => class extends superClass {
     this._audioChangeCurrentTimePct(pct);
   }
 
-  audioVolumeChanged(x) {
-    this.audio.volume = x;
+  _audioSetVolume = e => {
+    this.audio.volume = e.detail.volume;
   }
 
   /* private member methods */
