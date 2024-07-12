@@ -40,6 +40,7 @@
   --ss-options-menu-text-color-hover: var(--clr_bold);
   --ss-search-info-text-heading-color: var(--clr_bold);
   --ss-search-info-text-emphasis-color: var(--accent2);
+  --ss-search-toolbar-background-color: var(--bg2);
   --ss-song-list-multi-options-dialog-background-color: black;
   --ss-song-list-multi-options-dialog-text-color: var(--clr);
   --ss-star-rating-unselected-icon-color: var(--clr_disabled);
@@ -57,11 +58,6 @@
   /* paper alert toast */
   --pt_bg: var(--accent3);
   --pt_clr: white;
-  /* paper button */
-  --pb_accent_bg: var(--accent4);
-  --pb_accent_clr: var(--clr_bold);
-  --pb_bg: var(--accent4);
-  --pb_clr: var(--clr_bold);
   /* drawer tabs */
   --dt_bg: var(--bg3);
   --dt_clr: inherit;
@@ -73,8 +69,6 @@
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--accent);
-  /* search toolbar */
-  --st_bg: black;
   /* pitch slider */
   --ps_clr: var(--accent4);
   --ps_bg: var(--clr_bold);
@@ -132,7 +126,6 @@
   --ss-pitch-slider-bg: var(--ps_bg);
   --ss-pitch-slider-clr: var(--ps_clr);
   --ss-playlist-list-item-selected-bg: var(--l_select);
-  --ss-search-toolbar-bg: var(--st_bg);
   --ss-song-list-item-border-bottom: 1px solid var(--sl_border);
   --ss-song-list-item-hover-background-color: var(--sl_hover);
   --ss-song-list-item-artist-color: var(--sl_artist);

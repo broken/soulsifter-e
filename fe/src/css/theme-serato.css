@@ -31,6 +31,7 @@
   --ss-options-menu-background-color-hover: black;
   --ss-search-info-heading-color: #CCC;
   --ss-search-info-emphasis-color: var(--sl_green);
+  --ss-search-toolbar-background-color: black;
   --ss-star-rating-selected-icon-color: #EEE;
 
   /* paper input */
@@ -40,11 +41,6 @@
   /* paper alert toast */
   --pt_bg: var(--sl_brown);
   --pt_clr: #FFF;
-  /* paper button */
-  --pb_accent_bg: var(--sl_brown);
-  --pb_accent_clr: var(--clr_bold);
-  --pb_bg: #555;
-  --pb_clr: var(--clr_bold);
   /* drawer tabs */
   --dt_bg: #1F1F1F;
   --dt_clr: inherit;
@@ -56,8 +52,6 @@
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--sl_blue);
-  /* search toolbar */
-  --st_bg: black;
   /* pitch slider */
   --ps_clr: var(--sl_purple);
   --ps_bg: #999;
