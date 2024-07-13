@@ -47,16 +47,4 @@
   --ss-song-list-item-border-color: #2F2F2F;
   --ss-song-list-item-hover-background-color: rgb(20,20,20);
   --ss-star-rating-selected-icon-color: #EEE;
-
-  /** main **/
-  --dark-primary-color: #303f9f;
-  --default-primary-color: #3f51b5;
-  --light-primary-color: #c5cae9;
-  --text-primary-color: #ffffff;
-  --accent-color: #ff4081;
-  --primary-background-color: var(--bg);
-  --primary-text-color: var(--clr);
-  --secondary-text-color: var(--clr_bold);
-  --disabled-text-color: #bdbdbd;
-  --divider-color: #e0e0e0;
 }
