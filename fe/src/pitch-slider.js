@@ -97,15 +97,13 @@ class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
           align-items: center;
         }
         md-linear-progress {
-          --md-linear-progress-track-height: 5px;
-          --md-linear-progress-active-indicator-height: 5px;
           width: 57px;
-          --md-linear-progress-active-indicator-color: var(--ss-pitch-slider-clr);
-          --md-linear-progress-track-color: var(--ss-pitch-slider-bg);
+          --md-linear-progress-active-indicator-color: var(--ss-pitch-slider-color);
+          --md-linear-progress-track-color: var(--ss-pitch-slider-background-color);
         }
         md-linear-progress.reverse {
-          --md-linear-progress-active-indicator-color: var(--ss-pitch-slider-bg);
-          --md-linear-progress-track-color: var(--ss-pitch-slider-clr);
+          --md-linear-progress-active-indicator-color: var(--ss-pitch-slider-background-color);
+          --md-linear-progress-track-color: var(--ss-pitch-slider-color);
         }
         paper-input {
           margin-left: 12px;

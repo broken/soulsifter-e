@@ -31,9 +31,6 @@
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--accent);
-  /* pitch slider */
-  --ps_clr: var(--accent2);
-  --ps_bg: var(--bg2);
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);

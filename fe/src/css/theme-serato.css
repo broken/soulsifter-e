@@ -33,6 +33,8 @@
   --md-switch-track-color: var(--clr);
   --ss-icon-button-emphasis-color: var(--sl_green);
   --ss-options-menu-background-color-hover: black;
+  --ss-pitch-slider-background-color: var(--clr);
+  --ss-pitch-slider-color: var(--sl_purple);
   --ss-search-info-heading-color: #CCC;
   --ss-search-info-emphasis-color: var(--sl_green);
   --ss-search-toolbar-background-color: black;
@@ -49,9 +51,6 @@
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--sl_blue);
-  /* pitch slider */
-  --ps_clr: var(--sl_purple);
-  --ps_bg: #999;
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);

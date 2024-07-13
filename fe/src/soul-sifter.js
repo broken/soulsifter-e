@@ -128,8 +128,8 @@ class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
           right: 0;
           bottom: 0;
           left: 0;
-          color: var(--ss-primary-clr);
-          background-color: var(--ss-primary-bg);
+          color: var(--ss--primary-text-color);
+          background-color: var(--ss--primary-background-color);
           font-size: 13px;
           user-select: none;
         }
