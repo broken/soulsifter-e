@@ -1,7 +1,7 @@
 import { css, html, LitElement } from "lit";
 
 import "@material/web/progress/linear-progress.js";
-import "@polymer/paper-input/paper-input.js";
+import "@material/web/textfield/filled-text-field.js";
 import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
@@ -16,7 +16,7 @@ class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
     return html`
       <md-linear-progress class="reverse" value="${lowVal}" @click="${this.negativeClickAction}" id="low"></md-linear-progress>
       <md-linear-progress value="${highVal}" @click="${this.positiveClickAction}" id="high"></md-linear-progress>
-      <paper-input value="${this.pitch}" id="val" no-label-float></paper-input>
+      <md-filled-text-field value="${this.pitch}" id="val" readonly></md-filled-text-field>
     `;
   }
 
@@ -97,7 +97,8 @@ class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
           align-items: center;
         }
         md-linear-progress {
-          width: 57px;
+          min-width: 20px;
+          width: 67px;
           --md-linear-progress-active-indicator-color: var(--ss-pitch-slider-color);
           --md-linear-progress-track-color: var(--ss-pitch-slider-background-color);
         }
@@ -105,9 +106,11 @@ class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
           --md-linear-progress-active-indicator-color: var(--ss-pitch-slider-background-color);
           --md-linear-progress-track-color: var(--ss-pitch-slider-color);
         }
-        paper-input {
+        md-filled-text-field {
           margin-left: 12px;
           width: 35px;
+          --md-filled-text-field-bottom-space: 0;
+          --md-filled-text-field-top-space: 0;
         }
       `,
     ];

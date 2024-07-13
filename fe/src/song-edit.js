@@ -2,7 +2,7 @@ import { css, html, LitElement } from "lit";
 
 import "@material/web/button/text-button.js";
 import "@material/web/checkbox/checkbox.js";
-import "@polymer/paper-input/paper-input.js";
+import "@material/web/textfield/filled-text-field.js";
 
 import { AlertsMixin } from "./mixin-alerts.js";
 import { SettingsMixin } from "./mixin-settings.js";
@@ -22,67 +22,109 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
       <div class="mainContainer">
         <abstract-action-page id="abstractActionPage" @cancel="${this.skip}" @accept="${this.save}">
           <div class="fields">
-            <div class="prev">&nbsp;<span>${this.taggedSong.artist}</span></div>
-            <paper-input label="Artist" value="${this.editedSong.artist}" @change="${this.artistChanged}" required floatingLabel id="artist"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.track}</span></div>
-            <paper-input label="Track Num" value="${this.editedSong.track}" floatingLabel id="track"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.title}</span></div>
-            <paper-input label="Title" value="${this.editedSong.title}" @change="${this.titleChanged}" required floatingLabel id="title"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.remixer}</span></div>
-            <paper-input label="Remixer" value="${this.editedSong.remixer}" floatingLabel id="remixer"></paper-input>
-            <paper-input label="Comments" value="${this.editedSong.comments}" floatingLabel id="comments"></paper-input>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.artist}</span></div>
+              <md-filled-text-field label="Artist" value="${this.editedSong.artist}" @change="${this.artistChanged}" required no-asterisk id="artist"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.track}</span></div>
+              <md-filled-text-field label="Track Num" value="${this.editedSong.track}" id="track"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.title}</span></div>
+              <md-filled-text-field label="Title" value="${this.editedSong.title}" @change="${this.titleChanged}" required no-asterisk id="title"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.remixer}</span></div>
+              <md-filled-text-field label="Remixer" value="${this.editedSong.remixer}" id="remixer"></md-filled-text-field>
+            </div>
+            <div>
+              <md-filled-text-field label="Comments" value="${this.editedSong.comments}" id="comments"></md-filled-text-field>
+            </div>
             <div class="row">
               <label><md-checkbox ?checked="${this.editedSong.lowQuality}" id="lowQuality"></md-checkbox>Low Quality</label>
               <label><md-checkbox ?checked="${this.editedSong.album.mixed}" id="album_mixed"></md-checkbox>Mixed</label>
             </div>
           </div>
           <div class="fields">
-            <paper-input label="Curator" value="${this.editedSong.curator}" floatingLabel id="curator"></paper-input>
-            <paper-input label="YouTube ID" value="${this.editedSong.youtubeId}" floatingLabel id="youtube_id"></paper-input>
-            <div id="ratingContainer">
-              <div class="label">Rating</div>
-              <star-rating value="${this.editedSong.rating}" id="rating"></star-rating>
+            <div>
+              <md-filled-text-field label="Curator" value="${this.editedSong.curator}" id="curator"></md-filled-text-field>
             </div>
-            <div class="prev">&nbsp;<span>${this.taggedSong.bpm}</span></div>
-            <div class="input-row">
-              <paper-input label="Key" value="${this.editedSong.tonicKey}" @value-changed="${this.tonicKeyInputChanged}" floatingLabel id="tonicKey"></paper-input>
-              <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockTonicKey}" id="tonic_key_lock"></icon-button>
+            <div>
+              <md-filled-text-field label="YouTube ID" value="${this.editedSong.youtubeId}" id="youtube_id"></md-filled-text-field>
             </div>
-            <div class="input-row">
-              <paper-input label="BPM" value="${this.editedSong.bpm}" @value-changed="${this.bpmInputChanged}" floatingLabel id="bpm"></paper-input>
-              <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
+            <div>
+              <div id="ratingContainer">
+                <div class="label">Rating</div>
+                <star-rating value="${this.editedSong.rating}" id="rating"></star-rating>
+              </div>
             </div>
-            <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.bpm}</span></div>
+              <div class="input-row">
+                <md-filled-text-field label="Key" value="${this.editedSong.tonicKey}" @value-changed="${this.tonicKeyInputChanged}" id="tonicKey"></md-filled-text-field>
+                <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockTonicKey}" id="tonic_key_lock"></icon-button>
+              </div>
+            </div>
+            <div>
+              <div class="input-row">
+                <md-filled-text-field label="BPM" value="${this.editedSong.bpm}" @value-changed="${this.bpmInputChanged}" id="bpm"></md-filled-text-field>
+                <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
+              </div>
+              <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
+            </div>
             <div class="row">
               <label><md-checkbox ?checked="${this.editedSong.trashed}" ?disabled="${this.songIsTrashed}" id="trashed"></md-checkbox>Trash</label>
             </div>
           </div>
           <div class="fields">
-            <div class="prev">&nbsp;<span>${this.taggedSong.album.artist}</span></div>
-            <paper-input label="Album Artist" value="${this.editedSong.album.artist}" @value-changed="${this.albumArtistValChanged}" floatingLabel id="album_artist"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.album.name}</span></div>
-            <paper-input label="Album Name" value="${this.editedSong.album.name}" required floatingLabel id="album_name"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.albumPart.pos}</span></div>
-            <paper-input label="POS" value="${this.editedSong.albumPart.pos}" floatingLabel id="albumpart_pos"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.albumPart.name}</span></div>
-            <paper-input label="Subtitle" value="${this.editedSong.albumPart.name}" floatingLabel id="albumpart_name"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.album.label}</span></div>
-            <paper-input label="Label" value="${this.editedSong.album.label}" floatingLabel id="album_label"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.album.catalogId}</span></div>
-            <paper-input label="Catalog ID" value="${this.editedSong.album.catalogId}" floatingLabel id="album_catalogId"></paper-input>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.album.artist}</span></div>
+              <md-filled-text-field label="Album Artist" value="${this.editedSong.album.artist}" @value-changed="${this.albumArtistValChanged}" id="album_artist"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.album.name}</span></div>
+              <md-filled-text-field label="Album Name" value="${this.editedSong.album.name}" required no-asterisk id="album_name"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.albumPart.pos}</span></div>
+              <md-filled-text-field label="POS" value="${this.editedSong.albumPart.pos}" id="albumpart_pos"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.albumPart.name}</span></div>
+              <md-filled-text-field label="Subtitle" value="${this.editedSong.albumPart.name}" id="albumpart_name"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.album.label}</span></div>
+              <md-filled-text-field label="Label" value="${this.editedSong.album.label}" id="album_label"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.album.catalogId}</span></div>
+              <md-filled-text-field label="Catalog ID" value="${this.editedSong.album.catalogId}" id="album_catalogId"></md-filled-text-field>
+            </div>
           </div>
           <div class="fields">
-            <div class="prev">&nbsp;<span>${this.taggedBasicGenreName}</span></div>
-            <options-menu-paper-input label="Artist Genre" value="${this.basicGenreName}" required id="basicGenreInput">
-              ${basicGenreItems}
-            </options-menu-paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateYear}</span></div>
-            <paper-input label="Release Year" value="${this.editedSong.album.releaseDateYear}" required type="number" min="1600" max="2099" floatingLabel id="album_releaseDateYear"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateMonth}</span></div>
-            <paper-input label="Release Month" value="${this.editedSong.album.releaseDateMonth}" type="number" min="0" max="12" floatingLabel id="album_releaseDateMonth"></paper-input>
-            <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateDay}</span></div>
-            <paper-input label="Release Day" value="${this.editedSong.album.releaseDateDay}" type="number" min="0" max="31" floatingLabel id="album_releaseDateDay"></paper-input>
-            <div id="cover" @click="${this.changeCoverFile}"></div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedBasicGenreName}</span></div>
+              <options-menu-paper-input label="Artist Genre" value="${this.basicGenreName}" required no-asterisk id="basicGenreInput">
+                ${basicGenreItems}
+              </options-menu-paper-input>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateYear}</span></div>
+              <md-filled-text-field label="Release Year" value="${this.editedSong.album.releaseDateYear}" required no-asterisk type="number" min="1600" max="2099" id="album_releaseDateYear"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateMonth}</span></div>
+              <md-filled-text-field label="Release Month" value="${this.editedSong.album.releaseDateMonth}" type="number" min="0" max="12" id="album_releaseDateMonth"></md-filled-text-field>
+            </div>
+            <div>
+              <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateDay}</span></div>
+              <md-filled-text-field label="Release Day" value="${this.editedSong.album.releaseDateDay}" type="number" min="0" max="31" id="album_releaseDateDay"></md-filled-text-field>
+            </div>
+            <div>
+              <div id="cover" @click="${this.changeCoverFile}"></div>
+            </div>
           </div>
           <div class="genres">
             <genre-list id="genreList" .genres="${this.genres}" singleselect></genre-list>
@@ -388,7 +430,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
 
   validate() {
     let valid = true;
-    let inputs = this.shadowRoot.querySelectorAll('paper-input');
+    let inputs = this.shadowRoot.querySelectorAll('md-filled-text-field');
     for (let i = 0; i < inputs.length; ++i) {
       valid &= inputs[i].validate();
       if (!inputs[i].validate()) this.addAlert(inputs[i].label + " input is invalid.");
@@ -586,6 +628,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           right: 0;
           bottom: 0;
           left: 0;
+          z-index: 10;
         }
         :host(.show) {
           display: block;
@@ -599,7 +642,10 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           display: flex;
           flex-direction: column;
           justify-content: center;
-          margin: 10px;
+          margin: 0 10px;
+        }
+        .fields > div {
+          position: relative;
         }
         .genres {
           height: 372px;
@@ -613,26 +659,20 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         }
         .row > label {
           flex-grow: 1;
+          margin: 20px 0;
         }
         md-checkbox {
           margin-right: 10px;
         }
         #bpmBtn {
-          align-self: flex-end;
-          margin-top: -10px;
-          margin-right: -5px;
-          margin-bottom: -26px;
+          position: absolute;
+          bottom: -34px;
+          right: -8px;
         }
 
-        paper-input {
+        md-filled-text-field {
           position: relative;
           width: 240px;
-        }
-        paper-input::shadow .label-is-floating label {
-          text-align: right;
-        }
-        paper-dropdown-menu::shadow paper-input::shadow label {
-          text-align: right;
         }
 
         #ratingContainer {
@@ -653,10 +693,11 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         }
         .prev {
           font-size: 13px;
-          margin-top: 8px;
-          margin-bottom: -23px;
+          top: 14px;
+          right: 1px;
           text-align: right;
           color: #666;  /* TODO pull into theme */
+          position: absolute;
         }
         .metadata {
           display: flex;
@@ -695,6 +736,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           background-color: #333;  /* TODO put into theme */
           height: 124px;
           width: 124px;
+          margin: auto;
+          margin-top: 14px;
         }
 
         .input-row {

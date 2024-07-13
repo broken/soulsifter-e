@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@polymer/paper-input/paper-input.js";
+import "@material/web/textfield/filled-text-field.js";
 
 import "./abstract-action-page.js";
 import "./genre-list.js";
@@ -11,7 +11,7 @@ class GenreEdit extends LitElement {
     return html`
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
         <div class="fields">
-          <paper-input floatingLabel label="Name" value="${this.genre.name}" id="name"></paper-input>
+          <md-filled-text-field label="Name" value="${this.genre.name}" id="name"></md-filled-text-field>
         </div>
         <div class="genres">
           <genre-list id="genreList" .genres="${this.genreParents}" singleselect></genre-list>
@@ -79,6 +79,7 @@ class GenreEdit extends LitElement {
           right: 0;
           bottom: 0;
           left: 0;
+          z-index: 10;
         }
         :host(.show) {
           display: block;

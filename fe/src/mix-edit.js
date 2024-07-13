@@ -1,8 +1,7 @@
 import { css, html, LitElement } from "lit";
 
 import "@material/web/checkbox/checkbox.js";
-import "@polymer/paper-input/paper-input.js";
-import "@polymer/paper-input/paper-textarea.js";
+import "@material/web/textfield/filled-text-field.js";
 
 import "./abstract-action-page.js";
 
@@ -17,8 +16,8 @@ class MixEdit extends LitElement {
           <label><md-checkbox ?checked="${this.mix.addon}" id="addon"></md-checkbox>Is Addon</label>
         </div>
         <div class="fields">
-          <paper-input floatingLabel label="Rating (0 - 99)" value="${this.mix.rating}" id="rating" auto-validate allowed-pattern="[0-9]"></paper-input>
-          <paper-textarea floatingLabel label="Comments" value="${this.mix.comments}" id="comments"></paper-textarea>
+          <md-filled-text-field label="Rating (0 - 99)" value="${this.mix.rating}" id="rating" pattern="[0-9]"></md-filled-text-field>
+          <md-filled-text-field type="textarea" label="Comments" value="${this.mix.comments}" id="comments"></md-filled-text-field>
         </div>
       </abstract-action-page>
     `;
@@ -78,6 +77,7 @@ class MixEdit extends LitElement {
           right: 0;
           bottom: 0;
           left: 0;
+          z-index: 10;
         }
         :host(.show) {
           display: block;

@@ -1,12 +1,12 @@
 import { css, html, LitElement } from "lit";
 
-import "@polymer/paper-input/paper-input.js";
+import "@material/web/textfield/filled-text-field.js";
 
 
 class OptionsMenuPaperInput extends LitElement {
   render() {
     return html`
-      <paper-input id="input" label="${this.label}" value="${this.value}" ?required=${this.required} @focused-changed="${this.focusChanged}" @input="${this.inputChanged}"></paper-input>
+      <md-filled-text-field id="input" label="${this.label}" value="${this.value}" ?required=${this.required} no-asterisk @focus="${this.focusChanged}" @change="${this.focusChanged}" @input="${this.inputChanged}"></md-filled-text-field>
       <div id="selectBox" elevation="3" @click="${this.selected}">
         <slot></slot>
       </div>
@@ -27,14 +27,15 @@ class OptionsMenuPaperInput extends LitElement {
   }
 
   focusChanged(e) {
-    if (e.detail.value) {
+    let input_element = this.shadowRoot.getElementById('input');
+    if (input_element.value) {
       this.shadowRoot.getElementById('selectBox').classList.add('show');
-      this.shadowRoot.getElementById('input').value = '';
+      input_element.value = '';
     } else {
       // Use timeout; otherwise the dropdown closes before the click gets it selected.
       setTimeout(() => {
         this.shadowRoot.getElementById('selectBox').classList.remove('show');
-        if (!this.shadowRoot.getElementById('input').value) this.shadowRoot.getElementById('input').value = this.value;
+        if (!input_element.value) input_element.value = this.value;
       }, 250);
     }
   }
@@ -65,7 +66,7 @@ class OptionsMenuPaperInput extends LitElement {
   inputChanged(e) {
     setTimeout(() => {
       let options = this.shadowRoot.querySelector('slot').assignedNodes();
-      let val = this.shadowRoot.querySelector('paper-input').value;
+      let val = this.shadowRoot.querySelector('md-filled-text-field').value;
       for (let i = 0; i < options.length; ++i) {
         if (options[i].nodeName == 'OPTIONS-MENU-ITEM') {
           if (!val) {
@@ -99,7 +100,7 @@ class OptionsMenuPaperInput extends LitElement {
           display: none;
           opacity: 0;
           transition: opacity 1s;
-          z-index: 1;
+          z-index: 101;
           flex-direction: column;
           height: 172px;
           overflow-y: scroll;
@@ -107,6 +108,9 @@ class OptionsMenuPaperInput extends LitElement {
         #selectBox.show {
           display: flex;
           opacity: 1;
+        }
+        md-filled-text-field {
+          width: 100%;
         }
       `
     ];

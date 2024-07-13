@@ -1,7 +1,7 @@
 import { css, html, LitElement } from "lit";
 
 import "@material/web/dialog/dialog.js";
-import "@polymer/paper-input/paper-input.js";
+import "@material/web/textfield/filled-text-field.js";
 import "@thomasloven/round-slider";
 
 import { WebMidi, Utilities } from "webmidi";
@@ -32,14 +32,14 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     let debugMode = this.settings.getBool('app.debug');
     return html`
       <icon-button @click=${this.requestSearch} icon="search"></icon-button>
-      <paper-input label="search" value="${this.query}" class="flex" no-label-float @input=${this.queryInputChanged} id="queryInput"></paper-input>
+      <md-filled-text-field placeholder="search" value="${this.query}" class="flex" no-label-float @input=${this.queryInputChanged} id="queryInput"></md-filled-text-field>
       <icon-button @click=${this.clearSearchAction} icon="clear" id="clear"></icon-button>
       <icon-button @click=${this.openSearchInfoDialog} icon="info_outline"></icon-button>
       ${bpmRestrictBtn}
       ${keyRestrictBtn}
       ${stemsBtn}
       <icon-button @click=${this.openSearchOptionsDialog} icon="build"></icon-button>
-      <paper-input label="bpm" value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></paper-input>
+      <md-filled-text-field placeholder="bpm" value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></md-filled-text-field>
       <icon-button @click=${this.tapBpm} icon="hearing"></icon-button>
       <icon-button @click=${this.openCreateSongPage} icon="add_circle" id="createSongButton" @drop="${this.dropCreateSongButton}" @dragover="${this.dragOverCreateSongButton}" @dragleave="${this.dragLeaveCreateSongButton}"></icon-button>
       ${debugMode ? html`<icon-button @click=${this.addSongFromUrl} icon="link"></icon-button>` : ''}
@@ -399,6 +399,11 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         }
         icon-button, options-menu {
           padding: 8px;
+        }
+        md-filled-text-field {
+          height: 33px;
+          --md-filled-text-field-top-space: 10px;
+          --md-filled-text-field-bottom-space: 2px;
         }
         #searchInfoDialog {
           max-width: none;

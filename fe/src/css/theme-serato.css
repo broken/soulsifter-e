@@ -25,6 +25,8 @@
   /* component colors */
   --md-fab-container-color: var(--sl_brown);
   --md-fab-icon-color: var(--clr_bold);
+  --md-filled-text-field-focus-active-indicator-color: var(--sl_blue);
+  --md-filled-text-field-focus-label-text-color: var(--sl_blue);
   --md-linear-progress-track-color: var(--clr);
   --md-linear-progress-active-indicator-color: var(--sl_purple);
   --md-switch-handle-color: var(--clr);
@@ -40,10 +42,6 @@
   --ss-search-toolbar-background-color: black;
   --ss-star-rating-selected-icon-color: #EEE;
 
-  /* paper input */
-  --pi_accent: var(--sl_blue);
-  --pi_clr: var(--clr);
-  --pi_err: var(--err);
   /* drawer tabs */
   --dt_bg: #1F1F1F;
   --dt_clr: inherit;

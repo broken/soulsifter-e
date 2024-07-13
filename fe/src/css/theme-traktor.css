@@ -20,10 +20,6 @@
   --ss-options-menu-background-color-hover: var(--accent3);
   --ss-star-rating-selected-icon-color: var(--accent);
 
-  /* paper input */
-  --pi_accent: var(--accent2);
-  --pi_clr: var(--clr);
-  --pi_err: var(--err);
   /* drawer tabs */
   --dt_bg: var(--bg2);
   --dt_clr: var(--inherit);

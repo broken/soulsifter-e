@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "@polymer/paper-input/paper-input.js";
+import "@material/web/textfield/filled-text-field.js";
 
 import "./audio-player.js";
 import "./icon-button.js";
@@ -46,7 +46,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
         <div>${this.song.styles.map(s => s.name).join(', ')}</div>
         <div id="musicVideoThumbnail" draggable="true" @dragstart="${this.dragMusicVideo}" ?hide="${!this.musicVideo}"></div>
         ${debugMode ? html`<div id="musicVideoInput" ?hide="${!!this.musicVideo}">
-            <paper-input label="video url" no-label-float id="videoUrlInput"></paper-input>
+            <md-filled-text-field label="video url" no-label-float id="videoUrlInput"></md-filled-text-field>
             <icon-button @click="${this.associateVideo}" icon="movie"></icon-button>
           </div>` : ''}
       </div>
@@ -277,6 +277,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
           display: flex;
           flex-direction: row;
           align-items: center;
+          height: 38px;
         }
         pitch-slider {
           margin-left: 16px;
@@ -302,6 +303,13 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
           width: 100%;
           height: 144px;
           background-size: cover;
+        }
+        #musicVideoInput > md-filled-text-field {
+          width: 100%;
+          margin-right: 18px;
+        }
+        #musicVideoInput > icon-button {
+          margin-top: auto;
         }
         #musicVideoThumbnail[hide] {
           display: none;

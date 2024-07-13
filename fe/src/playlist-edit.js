@@ -2,7 +2,7 @@ import { css, html, LitElement } from "lit";
 
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/dialog/dialog.js";
-import "@polymer/paper-input/paper-input.js";
+import "@material/web/textfield/filled-text-field.js";
 
 import "./abstract-action-page.js";
 import "./genre-list.js";
@@ -19,9 +19,9 @@ class PlaylistEdit extends LitElement {
         <ss-googleplaymusic id="gpm"></ss-googleplaymusic>
         <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
           <div class="fields">
-            <paper-input floatingLabel label="Name" value="${this.playlist.name}" id="name"></paper-input>
+            <md-filled-text-field label="Name" value="${this.playlist.name}" id="name"></md-filled-text-field>
             <div class="query-container">
-              <paper-input floatingLabel label="Query" value="${this.playlist.query}" id="query"></paper-input>
+              <md-filled-text-field label="Query" value="${this.playlist.query}" id="query"></md-filled-text-field>
               <icon-button @click=${this.openSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
             </div>
             <br>
@@ -131,6 +131,7 @@ class PlaylistEdit extends LitElement {
           right: 0;
           bottom: 0;
           left: 0;
+          z-index: 10;
         }
         :host(.show) {
           display: block;
@@ -168,6 +169,9 @@ class PlaylistEdit extends LitElement {
         }
         md-checkbox {
           margin-right: 10px;
+        }
+        md-filled-text-field {
+          width: 100%;
         }
       `,
     ];

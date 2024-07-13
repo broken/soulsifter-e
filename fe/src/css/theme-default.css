@@ -11,7 +11,7 @@
 
   /* core color palette */
   --bg: #292929;
-  --bg2: #1F1F1F;
+  --bg2: #111;
   --clr: #999999;
   --clr_bold: #CCCCCC;
   --clr_disabled: #666;
@@ -28,12 +28,29 @@
   --md-sys-color-on-secondary-container: color-mix(in srgb, var(--md-sys-color-on-primary), black 20%);  /* filled-tonal-button */
   --md-sys-color-surface-container-high: var(--bg);  /* dialog fab */
   --md-sys-color-surface-container-highest: var(--bg2);  /* linear-progress */
-  --md-sys-color-on-surface-variant: var(--clr);  /* dialog radio */
+  --md-sys-color-on-surface-variant: var(--clr);  /* dialog filled-text-field radio */
   --md-sys-color-outline: var(--clr_bold);  /* outlined-button switch */
 
   /* component colors */
   --ss--primary-background-color: var(--bg);
   --ss--primary-text-color: var(--clr);
+  --md-filled-text-field-bottom-space: 2px;
+  --md-filled-text-field-container-color: #0000;
+  --md-filled-text-field-error-active-indicator-color: var(--err);
+  --md-filled-text-field-error-label-text-color: var(--err);
+  --md-filled-text-field-focus-active-indicator-color: var(--accent2);
+  --md-filled-text-field-focus-active-indicator-height: 1px;
+  --md-filled-text-field-focus-input-text-color: var(--clr_bold);
+  --md-filled-text-field-focus-label-text-color: var(--accent2);
+  --md-filled-text-field-hover-active-indicator-color: var(--clr);
+  --md-filled-text-field-hover-input-text-color: var(--clr_bold);
+  --md-filled-text-field-input-text-color: var(--clr);
+  --md-filled-text-field-label-text-color: var(--clr);
+  --md-filled-text-field-leading-space: 0px;
+  --md-filled-text-field-top-space: 36px;
+  --md-filled-text-field-trailing-space: 0;
+  --md-filled-text-field-with-label-top-space: 20px;
+  --md-filled-text-field-with-label-bottom-space: 2px;
   --md-outlined-button-label-text-color: var(--clr_bold);
   --md-linear-progress-active-indicator-height: 5px;
   --md-linear-progress-track-height: 5px;
@@ -59,10 +76,6 @@
   --ss-star-rating-selected-icon-color: var(--clr_bold);
   --ss-star-rating-trashed-icon-color: var(--err_disabled);
 
-  /* paper input */
-  --pi_accent: var(--accent2);
-  --pi_clr: var(--clr);
-  --pi_err: var(--err);
   /* drawer tabs */
   --dt_bg: var(--bg3);
   --dt_clr: inherit;
@@ -88,12 +101,6 @@
   --sl_energy10: #ff2266;
 
 
-
-  /* paper elements */
-  --paper-input-container-color: var(--pi_clr);
-  --paper-input-container-focus-color: var(--pi_accent);
-  --paper-input-container-invalid-color: var(--pi_err);
-  --paper-input-container-input-color: var(--pi_clr);
 
   /* misc elements */
   --round-slider-path-color: var(--vd_clr);

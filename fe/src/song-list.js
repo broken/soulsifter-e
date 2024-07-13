@@ -10,6 +10,7 @@ import "@material/web/button/filled-button.js";
 import "@material/web/button/filled-tonal-button.js";
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/dialog/dialog.js";
+import "@material/web/textfield/filled-text-field.js";
 // Features of paper-dialog over md-dialog: noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8"
 import "@polymer/paper-dialog/paper-dialog.js";
 
@@ -36,7 +37,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
     const fields = ['artist', 'comments', 'curator']
     let dialogs = fields.map(f => html`
         <md-dialog id="${f}">
-            <paper-input label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" floatingLabel id="${f + '_input'}" slot="content"></paper-input>
+            <md-filled-text-field label="${f.split('_').map(w => w.charAt(0).toUpperCase() + w.slice(1)).join(' ')}" id="${f + '_input'}" slot="content"></md-filled-text-field>
             <div class="editActions" slot="actions">
               <md-filled-tonal-button @click="${this.cancelEdit(f)}">Cancel</md-filled-tonal-button>
               <md-filled-button @click="${this.saveEdit(f)}">Accept</md-filled-button>
@@ -392,6 +393,9 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
         }
         md-dialog > label {
           display: block;
+        }
+        md-filled-text-field {
+          width: 100%;
         }
       `
     ];
