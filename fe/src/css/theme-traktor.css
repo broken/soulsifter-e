@@ -20,10 +20,6 @@
   --ss-options-menu-background-color-hover: var(--accent3);
   --ss-star-rating-selected-icon-color: var(--accent);
 
-  /* drawer tabs */
-  --dt_bg: var(--bg2);
-  --dt_clr: var(--inherit);
-  --dt_bar: var(--accent);
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--accent);

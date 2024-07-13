@@ -152,12 +152,12 @@ class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
           overflow: hidden;
         }
         mwc-tab-bar {
-          background-color: var(--ss-drawer-tab-bg);
+          background-color: var(--ss-drawer-tab-background-color);
           display: flex;
         }
         mwc-tab {
-          --mdc-theme-primary: var(--ss-drawer-tab-active-clr);
-          --mdc-tab-text-label-color-default: var(--ss-drawer-tab-clr);
+          --mdc-theme-primary: var(--ss-drawer-tab-active-color);
+          --mdc-tab-text-label-color-default: var(--ss-drawer-tab-text-color);
           --mdc-tab-horizontal-padding: 0;
         }
         genre-list {

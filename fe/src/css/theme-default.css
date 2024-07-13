@@ -17,7 +17,7 @@
   --clr_disabled: #666;
   --err: #F92772;
   --err_disabled: #833;
-  --accent: #5724E5;  /* accents */
+  --accent: #6436e7;  /* accents */
   --accent2: #1EC8FA;  /* text emphasis */
   --accent3: #6E330A;
 
@@ -59,6 +59,9 @@
   --ss-about-page-text-emphasis-color: var(--accent2);
   --ss-abstract-action-page-background-color: var(--bg);
   --ss-audio-player-button-color: var(--clr_bold);
+  --ss-drawer-tab-active-color: var(--accent);
+  --ss-drawer-tab-background-color: color-mix(in srgb, var(--bg), black 25%);
+  --ss-drawer-tab-text-color: var(--clr);
   --ss-genre-list-item-selected-background-color: var(--accent3);
   --ss-icon-button-emphasis-color: var(--accent2);
   --ss-options-menu-background-color: var(--bg2);
@@ -76,10 +79,6 @@
   --ss-star-rating-selected-icon-color: var(--clr_bold);
   --ss-star-rating-trashed-icon-color: var(--err_disabled);
 
-  /* drawer tabs */
-  --dt_bg: var(--bg3);
-  --dt_clr: inherit;
-  --dt_bar: var(--clr_bold);
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--accent);
@@ -108,9 +107,6 @@
   --round-slider-bar-color: var(--vd_clr_accent);
 
   /* soulsifter elements */
-  --ss-drawer-tab-bg: var(--dt_bg);
-  --ss-drawer-tab-clr: var(--clr);
-  --ss-drawer-tab-active-clr: var(--dt_bar);
   --ss-song-list-item-border-bottom: 1px solid var(--sl_border);
   --ss-song-list-item-hover-background-color: var(--sl_hover);
   --ss-song-list-item-artist-color: var(--sl_artist);
