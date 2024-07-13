@@ -22,22 +22,30 @@
   --accent3: #6E330A;
 
   /* material design system colors */
-  --md-sys-color-primary: var(--accent);  /* md-filled-button md-radio md-switch */
-  --md-sys-color-on-primary: var(--clr_bold);  /* md-filled-button md-switch */
-  --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-primary), black 20%);  /* md-filled-tonal-button */
-  --md-sys-color-on-secondary-container: color-mix(in srgb, var(--md-sys-color-on-primary), black 20%);  /* md-filled-tonal-button */
+  --md-sys-color-primary: var(--accent);  /* filled-button linear-progress radio switch */
+  --md-sys-color-on-primary: var(--clr_bold);  /* filled-button switch */
+  --md-sys-color-secondary-container: color-mix(in srgb, var(--md-sys-color-primary), black 20%);  /* filled-tonal-button */
+  --md-sys-color-on-secondary-container: color-mix(in srgb, var(--md-sys-color-on-primary), black 20%);  /* filled-tonal-button */
   --md-sys-color-surface-container-high: var(--bg);  /* dialog */
-  --md-sys-color-on-surface-variant: var(--clr);  /* dialog md-radio */
-  --md-sys-color-outline: var(--clr_bold);  /* md-outlined-button md-switch */
+  --md-sys-color-surface-container-highest: var(--bg2);  /* linear-progress */
+  --md-sys-color-on-surface-variant: var(--clr);  /* dialog radio */
+  --md-sys-color-outline: var(--clr_bold);  /* outlined-button switch */
 
   /* component colors */
   --md-outlined-button-label-text-color: var(--clr_bold);
+  --md-linear-progress-active-indicator-height: 5px;
+  --md-linear-progress-track-height: 5px;
+  --paper-toast-background-color: var(--accent3);
+  --paper-toast-color: var(--clr_bold);
   --ss-about-page-text-emphasis-color: var(--accent2);
   --ss-abstract-action-page-background-color: var(--bg);
+  --ss-audio-player-button-color: var(--clr_bold);
+  --ss-genre-list-item-selected-background-color: var(--accent3);
   --ss-icon-button-emphasis-color: var(--accent2);
   --ss-options-menu-background-color: var(--bg2);
   --ss-options-menu-background-color-hover: inherit;
   --ss-options-menu-text-color-hover: var(--clr_bold);
+  --ss-playlist-list-item-selected-background-color: var(--accent3);
   --ss-search-info-text-heading-color: var(--clr_bold);
   --ss-search-info-text-emphasis-color: var(--accent2);
   --ss-search-toolbar-background-color: var(--bg2);
@@ -55,27 +63,16 @@
   --pi_accent: var(--accent2);
   --pi_clr: var(--clr);
   --pi_err: var(--err);
-  /* paper alert toast */
-  --pt_bg: var(--accent3);
-  --pt_clr: white;
   /* drawer tabs */
   --dt_bg: var(--bg3);
   --dt_clr: inherit;
   --dt_bar: var(--clr_bold);
-  /* genre/playlist list */
-  --l_select: var(--accent3);
-  --l_fab: var(--accent);
-  --l_fab_clr: black;
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--accent);
   /* pitch slider */
   --ps_clr: var(--accent4);
   --ps_bg: var(--clr_bold);
-  /* audio player */
-  --ap_slider_clr: var(--accent4);
-  --ap_slider_bg: var(--clr_bold);
-  --ap_btn_clr: var(--clr_bold);
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);
@@ -98,17 +95,12 @@
   --ss-primary-clr: var(--ss_clr);
   --ss-secondary-clr: var(--ss_clr_bold);
 
-  /* mdc elements */
-  --mdc-theme-secondary: var(--l_fab);
-  --mdc-theme-on-secondary: var(--l_fab_clr);
 
   /* paper elements */
   --paper-input-container-color: var(--pi_clr);
   --paper-input-container-focus-color: var(--pi_accent);
   --paper-input-container-invalid-color: var(--pi_err);
   --paper-input-container-input-color: var(--pi_clr);
-  --paper-toast-background-color: var(--pt_bg);
-  --paper-toast-color: var(--pt_clr);
 
   /* misc elements */
   --round-slider-path-color: var(--vd_clr);
@@ -116,16 +108,11 @@
   --round-slider-bar-color: var(--vd_clr_accent);
 
   /* soulsifter elements */
-  --ss-audio-player-slider-bg: var(--ap_slider_bg);
-  --ss-audio-player-slider-clr: var(--ap_slider_clr);
-  --ss-audio-player-button-clr: var(--ap_btn_clr);
   --ss-drawer-tab-bg: var(--dt_bg);
   --ss-drawer-tab-clr: var(--clr);
   --ss-drawer-tab-active-clr: var(--dt_bar);
-  --ss-genre-list-item-selected-bg: var(--l_select);
   --ss-pitch-slider-bg: var(--ps_bg);
   --ss-pitch-slider-clr: var(--ps_clr);
-  --ss-playlist-list-item-selected-bg: var(--l_select);
   --ss-song-list-item-border-bottom: 1px solid var(--sl_border);
   --ss-song-list-item-hover-background-color: var(--sl_hover);
   --ss-song-list-item-artist-color: var(--sl_artist);

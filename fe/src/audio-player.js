@@ -130,13 +130,7 @@ class AudioPlayer extends SettingsMixin(LitElement) {
           margin-left: 6px;
         }
         icon-button {
-          color: var(--ss-audio-player-button-clr);
-        }
-        md-linear-progress {
-          --md-linear-progress-track-height: 5px;
-          --md-linear-progress-active-indicator-height: 5px;
-          --md-linear-progress-active-indicator-color: var(--ss-audio-player-slider-clr);
-          --md-linear-progress-track-color: var(--ss-audio-player-slider-bg);
+          color: var(--ss-audio-player-button-color);
         }
       `,
     ];

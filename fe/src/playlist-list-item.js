@@ -128,7 +128,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
           align-items: center;
         }
         .item[selected] {
-          background-color: var(--ss-playlist-list-item-selected-bg);
+          background-color: var(--ss-playlist-list-item-selected-background-color);
         }
         .group {
           display: flex;

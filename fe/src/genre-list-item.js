@@ -121,7 +121,7 @@ class GenreListItem extends LitElement {
           align-items: center;
         }
         .item[selected] {
-          background-color: var(--ss-genre-list-item-selected-bg);
+          background-color: var(--ss-genre-list-item-selected-background-color);
         }
         .item span {
           flex: 1 1 auto;

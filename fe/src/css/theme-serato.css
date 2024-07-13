@@ -23,6 +23,10 @@
   --accent3: var(--sl_brown);
 
   /* component colors */
+  --md-fab-container-color: var(--sl_brown);
+  --md-fab-icon-color: var(--clr_bold);
+  --md-linear-progress-track-color: var(--clr);
+  --md-linear-progress-active-indicator-color: var(--sl_purple);
   --md-switch-handle-color: var(--clr);
   --md-switch-selected-handle-color: var(--sl_blue);
   --md-switch-selected-track-color: var(--sl_blue);
@@ -38,27 +42,16 @@
   --pi_accent: var(--sl_blue);
   --pi_clr: var(--clr);
   --pi_err: var(--err);
-  /* paper alert toast */
-  --pt_bg: var(--sl_brown);
-  --pt_clr: #FFF;
   /* drawer tabs */
   --dt_bg: #1F1F1F;
   --dt_clr: inherit;
   --dt_bar: var(--clr_bold);
-  /* genre/playlist list */
-  --l_select: var(--sl_brown);
-  --l_fab: var(--sl_brown);
-  --l_fab_clr: inherit;
   /* volume dial */
   --vd_clr: var(--clr);
   --vd_clr_accent: var(--sl_blue);
   /* pitch slider */
   --ps_clr: var(--sl_purple);
   --ps_bg: #999;
-  /* audio player */
-  --ap_slider_clr: var(--sl_purple);
-  --ap_slider_bg: #999;
-  --ap_btn_clr: #CCC;
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);
