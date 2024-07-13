@@ -44,24 +44,9 @@
   --ss-search-info-heading-color: #CCC;
   --ss-search-info-emphasis-color: var(--sl_green);
   --ss-search-toolbar-background-color: black;
+  --ss-song-list-item-border-color: #2F2F2F;
+  --ss-song-list-item-hover-background-color: rgb(20,20,20);
   --ss-star-rating-selected-icon-color: #EEE;
-
-  /* song list */
-  --sl_artist: var(--clr);
-  --sl_title: var(--clr_bold);
-  --sl_border: #2F2F2F;
-  --sl_hover: rgb(20,20,20);
-  --sl_energy0: #999;
-  --sl_energy1: #0066ff;
-  --sl_energy2: #00ccff;
-  --sl_energy3: #00ffff;
-  --sl_energy4: #00ffb0;
-  --sl_energy5: #00ff00;
-  --sl_energy6: #99ff00;
-  --sl_energy7: #ffff00;
-  --sl_energy8: #ff9900;
-  --sl_energy9: #ff5500;
-  --sl_energy10: #ff2266;
 
   /** main **/
   --dark-primary-color: #303f9f;
