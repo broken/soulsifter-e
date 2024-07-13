@@ -19,7 +19,7 @@
   --err_disabled: #833;
   --accent: #6436e7;  /* accents */
   --accent2: #1EC8FA;  /* text emphasis */
-  --accent3: #6E330A;
+  --accent3: #6E330A;  /* accented bg */
 
   /* material design system colors */
   --md-sys-color-primary: var(--accent);  /* fab filled-button linear-progress radio switch */
