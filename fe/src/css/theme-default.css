@@ -56,6 +56,9 @@
   --md-linear-progress-track-height: 5px;
   --paper-toast-background-color: var(--accent3);
   --paper-toast-color: var(--clr_bold);
+  --round-slider-bar-color: var(--accent);
+  --round-slider-handle-color: var(--accent);
+  --round-slider-path-color: var(--clr);
   --ss-about-page-text-emphasis-color: var(--accent2);
   --ss-abstract-action-page-background-color: var(--bg);
   --ss-audio-player-button-color: var(--clr_bold);
@@ -79,9 +82,6 @@
   --ss-star-rating-selected-icon-color: var(--clr_bold);
   --ss-star-rating-trashed-icon-color: var(--err_disabled);
 
-  /* volume dial */
-  --vd_clr: var(--clr);
-  --vd_clr_accent: var(--accent);
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);
@@ -99,12 +99,6 @@
   --sl_energy9: #ff5500;
   --sl_energy10: #ff2266;
 
-
-
-  /* misc elements */
-  --round-slider-path-color: var(--vd_clr);
-  --round-slider-handle-color: var(--vd_clr_accent);
-  --round-slider-bar-color: var(--vd_clr_accent);
 
   /* soulsifter elements */
   --ss-song-list-item-border-bottom: 1px solid var(--sl_border);

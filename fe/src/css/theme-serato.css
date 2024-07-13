@@ -33,6 +33,8 @@
   --md-switch-selected-handle-color: var(--sl_blue);
   --md-switch-selected-track-color: var(--sl_blue);
   --md-switch-track-color: var(--clr);
+  --round-slider-bar-color: var(--sl_blue);
+  --round-slider-handle-color: var(--sl_blue);
   --ss-drawer-tab-active-color: var(--clr_bold);
   --ss-drawer-tab-background-color: #1F1F1F;
   --ss-icon-button-emphasis-color: var(--sl_green);
@@ -44,9 +46,6 @@
   --ss-search-toolbar-background-color: black;
   --ss-star-rating-selected-icon-color: #EEE;
 
-  /* volume dial */
-  --vd_clr: var(--clr);
-  --vd_clr_accent: var(--sl_blue);
   /* song list */
   --sl_artist: var(--clr);
   --sl_title: var(--clr_bold);
