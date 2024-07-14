@@ -3,7 +3,7 @@ import { css, html, LitElement } from "lit";
 import "@material/web/textfield/filled-text-field.js";
 
 
-class OptionsMenuPaperInput extends LitElement {
+class OptionsMenuInput extends LitElement {
   render() {
     return html`
       <md-filled-text-field id="input" label="${this.label}" value="${this.value}" ?required=${this.required} no-asterisk @focus="${this.focusChanged}" @change="${this.focusChanged}" @input="${this.inputChanged}"></md-filled-text-field>
@@ -117,4 +117,4 @@ class OptionsMenuPaperInput extends LitElement {
   }
 }
 
-window.customElements.define('options-menu-paper-input', OptionsMenuPaperInput);
+window.customElements.define('options-menu-input', OptionsMenuInput);

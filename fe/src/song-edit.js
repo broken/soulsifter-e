@@ -12,7 +12,7 @@ import "./audio-player.js";
 import "./genre-list.js";
 import "./icon-button.js";
 import "./options-menu-item.js";
-import "./options-menu-paper-input.js";
+import "./options-menu-input.js";
 
 
 class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
@@ -106,9 +106,9 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           <div class="fields">
             <div>
               <div class="prev">&nbsp;<span>${this.taggedBasicGenreName}</span></div>
-              <options-menu-paper-input label="Artist Genre" value="${this.basicGenreName}" required no-asterisk id="basicGenreInput">
+              <options-menu-input label="Artist Genre" value="${this.basicGenreName}" required no-asterisk id="basicGenreInput">
                 ${basicGenreItems}
-              </options-menu-paper-input>
+              </options-menu-input>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateYear}</span></div>
