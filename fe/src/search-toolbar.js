@@ -179,7 +179,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
             let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths } });
             window.dispatchEvent(event);
           } else {
-            window.console.log('Failed to download audio from url ' + url);
+            this.addAlert('Failed to download audio from url ' + url);
           }
         });
       }).catch((err) => {

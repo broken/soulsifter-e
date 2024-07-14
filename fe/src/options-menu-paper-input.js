@@ -28,7 +28,7 @@ class OptionsMenuPaperInput extends LitElement {
 
   focusChanged(e) {
     let input_element = this.shadowRoot.getElementById('input');
-    if (input_element.value) {
+    if (e.currentTarget.id == 'input') {
       this.shadowRoot.getElementById('selectBox').classList.add('show');
       input_element.value = '';
     } else {
