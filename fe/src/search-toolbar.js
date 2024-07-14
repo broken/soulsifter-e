@@ -276,7 +276,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       let myChan = mySynth.channels[this.settings.getInt('audio.volumeMidiChannel')];
       myChan.addListener('controlchange', e => {
         const midiCC = this.settings.getInt('audio.volumeMidiCC');
-        if (e.message.dataBytes[0] != midiCC ||
+        if (e.message.dataBytes[0] != midiCC &&
             e.message.dataBytes[0] != midiCC + 32) return;
         // console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
         if (this.note == undefined) {
@@ -295,6 +295,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
           console.log(`Setting volume to ${y} from value ${value}`);
           let vol = Math.max(Math.min(y, 1), 0);
           this.volume = vol * 100;
+          this.requestUpdate();
           let event = new CustomEvent(
             'audio-set-volume',
             { bubbles: true, composed: true, detail: { volume: vol }}
