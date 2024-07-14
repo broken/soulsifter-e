@@ -17,6 +17,7 @@ import "./options-menu-input.js";
 
 class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   render() {
+    let youtubeIdPattern = String.raw`[^"&?\/\s]{11}`;
     let basicGenreItems = this.basicGenreList.map(g => html`<options-menu-item>${g.name}</options-menu-item>`);
     return html`
       <div class="mainContainer">
@@ -51,7 +52,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
               <md-filled-text-field label="Curator" value="${this.editedSong.curator}" id="curator"></md-filled-text-field>
             </div>
             <div>
-              <md-filled-text-field label="YouTube ID" value="${this.editedSong.youtubeId}" id="youtube_id"></md-filled-text-field>
+              <md-filled-text-field label="YouTube ID" value="${this.editedSong.youtubeId}" id="youtube_id" pattern="${youtubeIdPattern}"></md-filled-text-field>
             </div>
             <div>
               <div id="ratingContainer">
@@ -62,13 +63,13 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.bpm}</span></div>
               <div class="input-row">
-                <md-filled-text-field label="Key" value="${this.editedSong.tonicKey}" @value-changed="${this.tonicKeyInputChanged}" id="tonicKey"></md-filled-text-field>
+                <md-filled-text-field label="Key" value="${this.editedSong.tonicKey}" @value-changed="${this.tonicKeyInputChanged}" id="tonicKey" pattern="[A-G]b?m?"></md-filled-text-field>
                 <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockTonicKey}" id="tonic_key_lock"></icon-button>
               </div>
             </div>
             <div>
               <div class="input-row">
-                <md-filled-text-field label="BPM" value="${this.editedSong.bpm}" @value-changed="${this.bpmInputChanged}" id="bpm"></md-filled-text-field>
+                <md-filled-text-field label="BPM" value="${this.editedSong.bpm}" @value-changed="${this.bpmInputChanged}" id="bpm" pattern="[0-9]*\\.[0-9]*"></md-filled-text-field>
                 <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
               </div>
               <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
@@ -432,8 +433,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     let valid = true;
     let inputs = this.shadowRoot.querySelectorAll('md-filled-text-field');
     for (let i = 0; i < inputs.length; ++i) {
-      valid &= inputs[i].validate();
-      if (!inputs[i].validate()) this.addAlert(inputs[i].label + " input is invalid.");
+      valid &= inputs[i].reportValidity();
+      // if (!inputs[i].checkValidity()) this.addAlert(inputs[i].label + " input is invalid.");
     }
     if (this.shadowRoot.getElementById('basicGenreInput').value == '') {
       valid = false;
