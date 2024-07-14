@@ -325,16 +325,19 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   toggleBpmRestrict(e) {
     this.searchOptions.bpmRestrict = !this.searchOptions.bpmRestrict;
     this.changeSearchOptions(this.searchOptions);
+    this.requestUpdate();
   }
 
   toggleKeyRestrict(e) {
     this.searchOptions.keyRestrict = !this.searchOptions.keyRestrict;
     this.changeSearchOptions(this.searchOptions);
+    this.requestUpdate();
   }
 
   toggleUseStems(e) {
     this.searchOptions.useStems = !this.searchOptions.useStems;
     this.changeSearchOptions(this.searchOptions);
+    this.requestUpdate();
   }
 
   openSettingsPage(e) {
