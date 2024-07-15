@@ -16,7 +16,7 @@ class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
     return html`
       <md-linear-progress class="reverse" value="${lowVal}" @click="${this.negativeClickAction}" id="low"></md-linear-progress>
       <md-linear-progress value="${highVal}" @click="${this.positiveClickAction}" id="high"></md-linear-progress>
-      <md-filled-text-field value="${this.pitch}" id="val" readonly></md-filled-text-field>
+      <md-filled-text-field .value="${this.pitch.toString()}" id="val" readonly></md-filled-text-field>
     `;
   }
 

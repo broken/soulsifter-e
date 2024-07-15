@@ -19,9 +19,9 @@ class PlaylistEdit extends LitElement {
         <ss-googleplaymusic id="gpm"></ss-googleplaymusic>
         <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
           <div class="fields">
-            <md-filled-text-field label="Name" value="${this.playlist.name}" id="name"></md-filled-text-field>
+            <md-filled-text-field label="Name" .value="${this.playlist.name}" id="name"></md-filled-text-field>
             <div class="query-container">
-              <md-filled-text-field label="Query" value="${this.playlist.query}" id="query"></md-filled-text-field>
+              <md-filled-text-field label="Query" .value="${this.playlist.query}" id="query"></md-filled-text-field>
               <icon-button @click=${this.openSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
             </div>
             <br>

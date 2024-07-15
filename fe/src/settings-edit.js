@@ -12,13 +12,13 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     return html`
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
         <div class="fields">
-          <md-filled-text-field label="Music Directory" value="${this.musicDir}" id="musicDir"></md-filled-text-field>
-          <md-filled-text-field label="Music Video Directory" value="${this.musicVideoDir}" id="musicVideoDir"></md-filled-text-field>
-          <md-filled-text-field label="Stems Directory" value="${this.stemsDir}" id="stemsDir"></md-filled-text-field>
-          <md-filled-text-field label="Waveforms Directory" value="${this.waveformsDir}" id="waveformsDir"></md-filled-text-field>
+          <md-filled-text-field label="Music Directory" .value="${this.musicDir}" id="musicDir"></md-filled-text-field>
+          <md-filled-text-field label="Music Video Directory" .value="${this.musicVideoDir}" id="musicVideoDir"></md-filled-text-field>
+          <md-filled-text-field label="Stems Directory" .value="${this.stemsDir}" id="stemsDir"></md-filled-text-field>
+          <md-filled-text-field label="Waveforms Directory" .value="${this.waveformsDir}" id="waveformsDir"></md-filled-text-field>
           <br>
-          <md-filled-text-field label="Default song list limit" value="${this.songListLimit}" allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></md-filled-text-field></label>
-          <md-filled-text-field label="Energy search difference" value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></md-filled-text-field></label>
+          <md-filled-text-field label="Default song list limit" .value="${this.songListLimit}" allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></md-filled-text-field></label>
+          <md-filled-text-field label="Energy search difference" .value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></md-filled-text-field></label>
           <label><md-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect"></md-checkbox>Automatically search after selecting a song</label>
           <label><md-checkbox ?checked="${this.songListShowComments}" id="songListShowComments"></md-checkbox>Show comments in song list</label>
           <label><md-checkbox ?checked="${this.songListShowWaveforms}" id="songListShowWaveforms"></md-checkbox>Show waveforms in song list</label>
@@ -31,38 +31,38 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           <label><md-checkbox ?checked="${this.songListColBpm}" id="songListColBpm"></md-checkbox>Include BPM in song list</label>
         </div>
         <div class="fields">
-          <md-filled-text-field label="Database Name" value="${this.dbName}" id="dbName"></md-filled-text-field>
-          <md-filled-text-field label="Database User" value="${this.dbUser}" id="dbUser"></md-filled-text-field>
-          <md-filled-text-field label="Database Password" value="${this.dbPassword}" id="dbPassword"></md-filled-text-field>
-          <md-filled-text-field label="Database URL" value="${this.dbUrl}" id="dbUrl"></md-filled-text-field>
+          <md-filled-text-field label="Database Name" .value="${this.dbName}" id="dbName"></md-filled-text-field>
+          <md-filled-text-field label="Database User" .value="${this.dbUser}" id="dbUser"></md-filled-text-field>
+          <md-filled-text-field label="Database Password" .value="${this.dbPassword}" id="dbPassword"></md-filled-text-field>
+          <md-filled-text-field label="Database URL" .value="${this.dbUrl}" id="dbUrl"></md-filled-text-field>
           <br>
-          <md-filled-text-field label="Theme" value="${this.appTheme}" id="appTheme"></md-filled-text-field>
+          <md-filled-text-field label="Theme" .value="${this.appTheme}" id="appTheme"></md-filled-text-field>
           <br>
-          <md-filled-text-field label="Preview Time (in secs)" value="${this.songListPreviewTimeInSecs}" id="songListPreviewTimeInSecs"></md-filled-text-field>
+          <md-filled-text-field label="Preview Time (in secs)" .value="${this.songListPreviewTimeInSecs}" id="songListPreviewTimeInSecs"></md-filled-text-field>
           <br>
-          <md-filled-text-field label="Deck A X" value="${this.dragAndDropDeckLeftX}" id="dragAndDropDeckLeftX"></md-filled-text-field>
-          <md-filled-text-field label="Deck A Y" value="${this.dragAndDropDeckLeftY}" id="dragAndDropDeckLeftY"></md-filled-text-field>
-          <md-filled-text-field label="Deck B X" value="${this.dragAndDropDeckRightX}" id="dragAndDropDeckRightX"></md-filled-text-field>
-          <md-filled-text-field label="Deck B Y" value="${this.dragAndDropDeckRightY}" id="dragAndDropDeckRightY"></md-filled-text-field>
-          <md-filled-text-field label="D&D Easing" value="${this.dragAndDropEasing}" id="dragAndDropEasing"></md-filled-text-field>
-          <md-filled-text-field label="D&D Wait Time (ms)" value="${this.dragAndDropWaitTimeInMs}" id="dragAndDropWaitTimeInMs"></md-filled-text-field>
-          <md-filled-text-field label="Midi controller name" value="${this.audioMidiControllerName}" id="audioMidiControllerName"></md-filled-text-field>
-          <md-filled-text-field label="Midi volume channel" value="${this.audioVolumeMidiChannel}" id="audioVolumeMidiChannel"></md-filled-text-field>
-          <md-filled-text-field label="Midi volume cc (msb)" value="${this.audioVolumeMidiCC}" id="audioVolumeMidiCC"></md-filled-text-field>
-          <md-filled-text-field label="Midi volume exp scale" value="${this.audioExponentialFactor}" id="audioExponentialFactor"></md-filled-text-field>
-          <md-filled-text-field label="Midi volume linear scale" value="${this.audioLinearFactor}" id="audioLinearFactor"></md-filled-text-field>
+          <md-filled-text-field label="Deck A X" .value="${this.dragAndDropDeckLeftX}" id="dragAndDropDeckLeftX"></md-filled-text-field>
+          <md-filled-text-field label="Deck A Y" .value="${this.dragAndDropDeckLeftY}" id="dragAndDropDeckLeftY"></md-filled-text-field>
+          <md-filled-text-field label="Deck B X" .value="${this.dragAndDropDeckRightX}" id="dragAndDropDeckRightX"></md-filled-text-field>
+          <md-filled-text-field label="Deck B Y" .value="${this.dragAndDropDeckRightY}" id="dragAndDropDeckRightY"></md-filled-text-field>
+          <md-filled-text-field label="D&D Easing" .value="${this.dragAndDropEasing}" id="dragAndDropEasing"></md-filled-text-field>
+          <md-filled-text-field label="D&D Wait Time (ms)" .value="${this.dragAndDropWaitTimeInMs}" id="dragAndDropWaitTimeInMs"></md-filled-text-field>
+          <md-filled-text-field label="Midi controller name" .value="${this.audioMidiControllerName}" id="audioMidiControllerName"></md-filled-text-field>
+          <md-filled-text-field label="Midi volume channel" .value="${this.audioVolumeMidiChannel}" id="audioVolumeMidiChannel"></md-filled-text-field>
+          <md-filled-text-field label="Midi volume cc (msb)" .value="${this.audioVolumeMidiCC}" id="audioVolumeMidiCC"></md-filled-text-field>
+          <md-filled-text-field label="Midi volume exp scale" .value="${this.audioExponentialFactor}" id="audioExponentialFactor"></md-filled-text-field>
+          <md-filled-text-field label="Midi volume linear scale" .value="${this.audioLinearFactor}" id="audioLinearFactor"></md-filled-text-field>
         </div>
         <div class="fields">
-          <md-filled-text-field label="Google Music Email" value="${this.googleEmail}" id="googleEmail"></md-filled-text-field>
-          <md-filled-text-field label="Google Music App Key" value="${this.googleAppKey}" id="googleAppKey"></md-filled-text-field>
-          <md-filled-text-field label="Android ID" value="${this.googleAndroidId}" id="googleAndroidId"></md-filled-text-field>
+          <md-filled-text-field label="Google Music Email" .value="${this.googleEmail}" id="googleEmail"></md-filled-text-field>
+          <md-filled-text-field label="Google Music App Key" .value="${this.googleAppKey}" id="googleAppKey"></md-filled-text-field>
+          <md-filled-text-field label="Android ID" .value="${this.googleAndroidId}" id="googleAndroidId"></md-filled-text-field>
           <br>
-          <md-filled-text-field label="Google Client ID" value="${this.googleClientId}" id="googleClientId"></md-filled-text-field>
-          <md-filled-text-field label="Google Client Secret" value="${this.googleClientSecret}" id="googleClientSecret"></md-filled-text-field>
-          <md-filled-text-field label="Google OAuth Refresh Token" value="${this.googleOauthRefreshToken}" id="googleOauthRefreshToken"></md-filled-text-field>
+          <md-filled-text-field label="Google Client ID" .value="${this.googleClientId}" id="googleClientId"></md-filled-text-field>
+          <md-filled-text-field label="Google Client Secret".value="${this.googleClientSecret}" id="googleClientSecret"></md-filled-text-field>
+          <md-filled-text-field label="Google OAuth Refresh Token" .value="${this.googleOauthRefreshToken}" id="googleOauthRefreshToken"></md-filled-text-field>
           <br>
-          <md-filled-text-field label="Feedly User ID" value="${this.feedlyUserId}" id="feedlyUserId"></md-filled-text-field>
-          <md-filled-text-field label="Feedly Developer Token" value="${this.feedlyDevToken}" id="feedlyDevToken"></md-filled-text-field>
+          <md-filled-text-field label="Feedly User ID" .value="${this.feedlyUserId}" id="feedlyUserId"></md-filled-text-field>
+          <md-filled-text-field label="Feedly Developer Token" .value="${this.feedlyDevToken}" id="feedlyDevToken"></md-filled-text-field>
         </div>
       </abstract-action-page>
     `;

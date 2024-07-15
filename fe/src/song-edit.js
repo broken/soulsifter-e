@@ -25,22 +25,22 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           <div class="fields">
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.artist}</span></div>
-              <md-filled-text-field label="Artist" value="${this.editedSong.artist}" @change="${this.artistChanged}" required no-asterisk id="artist"></md-filled-text-field>
+              <md-filled-text-field label="Artist" .value="${this.editedSong.artist}" @change="${this.artistChanged}" required no-asterisk id="artist"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.track}</span></div>
-              <md-filled-text-field label="Track Num" value="${this.editedSong.track}" id="track"></md-filled-text-field>
+              <md-filled-text-field label="Track Num" .value="${this.editedSong.track}" id="track"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.title}</span></div>
-              <md-filled-text-field label="Title" value="${this.editedSong.title}" @change="${this.titleChanged}" required no-asterisk id="title"></md-filled-text-field>
+              <md-filled-text-field label="Title" .value="${this.editedSong.title}" @change="${this.titleChanged}" required no-asterisk id="title"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.remixer}</span></div>
-              <md-filled-text-field label="Remixer" value="${this.editedSong.remixer}" id="remixer"></md-filled-text-field>
+              <md-filled-text-field label="Remixer" .value="${this.editedSong.remixer}" id="remixer"></md-filled-text-field>
             </div>
             <div>
-              <md-filled-text-field label="Comments" value="${this.editedSong.comments}" id="comments"></md-filled-text-field>
+              <md-filled-text-field label="Comments" .value="${this.editedSong.comments}" id="comments"></md-filled-text-field>
             </div>
             <div class="row">
               <label><md-checkbox ?checked="${this.editedSong.lowQuality}" id="lowQuality"></md-checkbox>Low Quality</label>
@@ -49,10 +49,10 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           </div>
           <div class="fields">
             <div>
-              <md-filled-text-field label="Curator" value="${this.editedSong.curator}" id="curator"></md-filled-text-field>
+              <md-filled-text-field label="Curator" .value="${this.editedSong.curator}" id="curator"></md-filled-text-field>
             </div>
             <div>
-              <md-filled-text-field label="YouTube ID" value="${this.editedSong.youtubeId}" id="youtube_id" pattern="${youtubeIdPattern}"></md-filled-text-field>
+              <md-filled-text-field label="YouTube ID" .value="${this.editedSong.youtubeId}" id="youtube_id" pattern="${youtubeIdPattern}"></md-filled-text-field>
             </div>
             <div>
               <div id="ratingContainer">
@@ -63,13 +63,13 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.bpm}</span></div>
               <div class="input-row">
-                <md-filled-text-field label="Key" value="${this.editedSong.tonicKey}" @value-changed="${this.tonicKeyInputChanged}" id="tonicKey" pattern="[A-G]b?m?"></md-filled-text-field>
+                <md-filled-text-field label="Key" .value="${this.editedSong.tonicKey}" @value-changed="${this.tonicKeyInputChanged}" id="tonicKey" pattern="[A-G]b?m?"></md-filled-text-field>
                 <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockTonicKey}" id="tonic_key_lock"></icon-button>
               </div>
             </div>
             <div>
               <div class="input-row">
-                <md-filled-text-field label="BPM" value="${this.editedSong.bpm}" @value-changed="${this.bpmInputChanged}" id="bpm" pattern="[0-9]*\\.[0-9]*"></md-filled-text-field>
+                <md-filled-text-field label="BPM" .value="${this.editedSong.bpm}" @value-changed="${this.bpmInputChanged}" id="bpm" pattern="[0-9]*\\.[0-9]*"></md-filled-text-field>
                 <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
               </div>
               <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
@@ -81,27 +81,27 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           <div class="fields">
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.artist}</span></div>
-              <md-filled-text-field label="Album Artist" value="${this.editedSong.album.artist}" @value-changed="${this.albumArtistValChanged}" id="album_artist"></md-filled-text-field>
+              <md-filled-text-field label="Album Artist" .value="${this.editedSong.album.artist}" @value-changed="${this.albumArtistValChanged}" id="album_artist"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.name}</span></div>
-              <md-filled-text-field label="Album Name" value="${this.editedSong.album.name}" required no-asterisk id="album_name"></md-filled-text-field>
+              <md-filled-text-field label="Album Name" .value="${this.editedSong.album.name}" required no-asterisk id="album_name"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.albumPart.pos}</span></div>
-              <md-filled-text-field label="POS" value="${this.editedSong.albumPart.pos}" id="albumpart_pos"></md-filled-text-field>
+              <md-filled-text-field label="POS" .value="${this.editedSong.albumPart.pos}" id="albumpart_pos"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.albumPart.name}</span></div>
-              <md-filled-text-field label="Subtitle" value="${this.editedSong.albumPart.name}" id="albumpart_name"></md-filled-text-field>
+              <md-filled-text-field label="Subtitle" .value="${this.editedSong.albumPart.name}" id="albumpart_name"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.label}</span></div>
-              <md-filled-text-field label="Label" value="${this.editedSong.album.label}" id="album_label"></md-filled-text-field>
+              <md-filled-text-field label="Label" .value="${this.editedSong.album.label}" id="album_label"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.catalogId}</span></div>
-              <md-filled-text-field label="Catalog ID" value="${this.editedSong.album.catalogId}" id="album_catalogId"></md-filled-text-field>
+              <md-filled-text-field label="Catalog ID" .value="${this.editedSong.album.catalogId}" id="album_catalogId"></md-filled-text-field>
             </div>
           </div>
           <div class="fields">
@@ -113,15 +113,15 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateYear}</span></div>
-              <md-filled-text-field label="Release Year" value="${this.editedSong.album.releaseDateYear}" required no-asterisk type="number" min="1600" max="2099" id="album_releaseDateYear"></md-filled-text-field>
+              <md-filled-text-field label="Release Year" .value="${this.editedSong.album.releaseDateYear}" required no-asterisk type="number" min="1600" max="2099" id="album_releaseDateYear"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateMonth}</span></div>
-              <md-filled-text-field label="Release Month" value="${this.editedSong.album.releaseDateMonth}" type="number" min="0" max="12" id="album_releaseDateMonth"></md-filled-text-field>
+              <md-filled-text-field label="Release Month" .value="${this.editedSong.album.releaseDateMonth}" type="number" min="0" max="12" id="album_releaseDateMonth"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.releaseDateDay}</span></div>
-              <md-filled-text-field label="Release Day" value="${this.editedSong.album.releaseDateDay}" type="number" min="0" max="31" id="album_releaseDateDay"></md-filled-text-field>
+              <md-filled-text-field label="Release Day" .value="${this.editedSong.album.releaseDateDay}" type="number" min="0" max="31" id="album_releaseDateDay"></md-filled-text-field>
             </div>
             <div>
               <div id="cover" @click="${this.changeCoverFile}"></div>

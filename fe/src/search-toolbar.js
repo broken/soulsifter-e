@@ -32,14 +32,14 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     let debugMode = this.settings.getBool('app.debug');
     return html`
       <icon-button @click=${this.requestSearch} icon="search"></icon-button>
-      <md-filled-text-field placeholder="search" value="${this.query}" class="flex" no-label-float @input=${this.queryInputChanged} id="queryInput"></md-filled-text-field>
+      <md-filled-text-field placeholder="search" .value="${this.query}" class="flex" no-label-float @input=${this.queryInputChanged} id="queryInput"></md-filled-text-field>
       <icon-button @click=${this.clearSearchAction} icon="clear" id="clear"></icon-button>
       <icon-button @click=${this.openSearchInfoDialog} icon="info_outline"></icon-button>
       ${bpmRestrictBtn}
       ${keyRestrictBtn}
       ${stemsBtn}
       <icon-button @click=${this.openSearchOptionsDialog} icon="build"></icon-button>
-      <md-filled-text-field placeholder="bpm" value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></md-filled-text-field>
+      <md-filled-text-field placeholder="bpm" .value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></md-filled-text-field>
       <icon-button @click=${this.tapBpm} icon="hearing"></icon-button>
       <icon-button @click=${this.openCreateSongPage} icon="add_circle" id="createSongButton" @drop="${this.dropCreateSongButton}" @dragover="${this.dragOverCreateSongButton}" @dragleave="${this.dragLeaveCreateSongButton}"></icon-button>
       ${debugMode ? html`<icon-button @click=${this.addSongFromUrl} icon="link"></icon-button>` : ''}

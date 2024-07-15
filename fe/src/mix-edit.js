@@ -16,8 +16,8 @@ class MixEdit extends LitElement {
           <label><md-checkbox ?checked="${this.mix.addon}" id="addon"></md-checkbox>Is Addon</label>
         </div>
         <div class="fields">
-          <md-filled-text-field label="Rating (0 - 99)" value="${this.mix.rating}" id="rating" pattern="[0-9]"></md-filled-text-field>
-          <md-filled-text-field type="textarea" label="Comments" value="${this.mix.comments}" id="comments"></md-filled-text-field>
+          <md-filled-text-field label="Rating (0 - 99)" .value="${this.mix.rating}" id="rating" pattern="[0-9]"></md-filled-text-field>
+          <md-filled-text-field type="textarea" label="Comments" .value="${this.mix.comments}" id="comments"></md-filled-text-field>
         </div>
       </abstract-action-page>
     `;

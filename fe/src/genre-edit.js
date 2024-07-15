@@ -11,7 +11,7 @@ class GenreEdit extends LitElement {
     return html`
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
         <div class="fields">
-          <md-filled-text-field label="Name" value="${this.genre.name}" id="name"></md-filled-text-field>
+          <md-filled-text-field label="Name" .value="${this.genre.name}" id="name"></md-filled-text-field>
         </div>
         <div class="genres">
           <genre-list id="genreList" .genres="${this.genreParents}" singleselect></genre-list>

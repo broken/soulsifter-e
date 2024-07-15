@@ -6,7 +6,7 @@ import "@material/web/textfield/filled-text-field.js";
 class OptionsMenuInput extends LitElement {
   render() {
     return html`
-      <md-filled-text-field id="input" label="${this.label}" value="${this.value}" ?required=${this.required} no-asterisk @focus="${this.focusChanged}" @change="${this.focusChanged}" @input="${this.inputChanged}"></md-filled-text-field>
+      <md-filled-text-field id="input" label="${this.label}" .value="${this.value}" ?required=${this.required} no-asterisk @focus="${this.focusChanged}" @change="${this.focusChanged}" @input="${this.inputChanged}"></md-filled-text-field>
       <div id="selectBox" elevation="3" @click="${this.selected}">
         <slot></slot>
       </div>
