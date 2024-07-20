@@ -22,6 +22,8 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         ${waveforms}
         <div id="cover" style="${bgImg}"></div>
+        <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
+        <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
           <span> - </span>
@@ -29,8 +31,6 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
           <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${comments}</span>
         </div>
         ${inPlaylist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
-        <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
-        <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
         <div>${this.computeBpmShift(this.song, this.bpm)}</div>
         ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm}</div>` : html``}
@@ -259,12 +259,13 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
           background-color: var(--ss-song-list-item-hover-background-color);
         }
         icon-button {
-          display: none;
+          display: block;
           --mdc-icon-size: 16px;
           padding: 0 3px;
+          visibility: hidden;
         }
         .song-item:hover > icon-button {
-          display: block;
+          visibility: visible;
         }
         .song-item .artist {
           color: var(--ss-song-list-item-artist-color);
