@@ -77,6 +77,9 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Song::getStyles, &Song::setStyles>("styles"),
     InstanceAccessor<&Song::getBpmLock, &Song::setBpmLock>("bpmLock"),
     InstanceAccessor<&Song::getTonicKeyLock, &Song::setTonicKeyLock>("tonicKeyLock"),
+    InstanceAccessor<&Song::getDupeId, &Song::setDupeId>("dupeId"),
+    InstanceAccessor<&Song::getDupe, &Song::setDupe>("dupe"),
+    InstanceAccessor<&Song::getDupeConst>("dupeConst"),
   });
 
   constructor = new Napi::FunctionReference();
@@ -1123,5 +1126,74 @@ void Song::setTonicKeyLock(const Napi::CallbackInfo& info, const Napi::Value &va
   }
   bool a0(value.As<Napi::Boolean>().Value());
   obj->song->setTonicKeyLock(a0);
+}
+
+Napi::Value Song::getDupeId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Song* obj = this;
+  int result =  obj->song->getDupeId();
+
+  return Napi::Number::New(env, result);
+}
+
+void Song::setDupeId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return;
+  }
+  Song* obj = this;
+  if (!value.IsNumber()) {
+    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
+  int32_t a0(value.As<Napi::Number>().Int32Value());
+  obj->song->setDupeId(a0);
+}
+
+Napi::Value Song::getDupe(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Song* obj = this;
+  dogatech::soulsifter::Song* result =  obj->song->getDupe();
+
+  if (result == NULL) {
+    return env.Null();
+  } else {
+    Napi::Object instance = Song::NewInstance(env);
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
+  }
+}
+
+Napi::Value Song::getDupeConst(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Song* obj = this;
+  dogatech::soulsifter::Song* result =  obj->song->getDupeConst();
+
+  if (result == NULL) {
+    return env.Null();
+  } else {
+    Napi::Object instance = Song::NewInstance(env);
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue(result, true);
+    return instance;
+  }
+}
+
+void Song::setDupe(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return;
+  }
+  Song* obj = this;
+  if (!value.IsObject()) {
+    Napi::TypeError::New(env, "TypeError: Object expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
+  dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  dogatech::soulsifter::Song& a0 = *a0tmp;
+  obj->song->setDupe(a0);
 }
 

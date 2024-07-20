@@ -98,6 +98,11 @@ class Song : public Napi::ObjectWrap<Song> {
   void setBpmLock(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getTonicKeyLock(const Napi::CallbackInfo& info);
   void setTonicKeyLock(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getDupeId(const Napi::CallbackInfo& info);
+  void setDupeId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getDupe(const Napi::CallbackInfo& info);
+  Napi::Value getDupeConst(const Napi::CallbackInfo& info);
+  void setDupe(const Napi::CallbackInfo& info, const Napi::Value &value);
 
   static Napi::FunctionReference* constructor;
   dogatech::soulsifter::Song* song;
