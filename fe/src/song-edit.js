@@ -224,7 +224,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     // Check if this song already exists
     if (!this.editedSong.id) {
       try {
-        let query = 'a:="' + this.shadowRoot.getElementById('artist').value + '" t:=' + this.shadowRoot.getElementById('title').value + '"';
+        let query = 'a:="' + this.shadowRoot.getElementById('artist').value + '" t:="' + this.shadowRoot.getElementById('title').value + '"';
         this.songs = ss.SearchUtil.searchSongs(query, 1, 0, "", [], [], [], 0, false, 0, (msg) => { this.addAlert(msg, 10); });
         if (this.songs.length > 0) {
           this.addAlert('Track already exists.');
