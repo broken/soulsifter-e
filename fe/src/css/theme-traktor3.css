@@ -1,15 +1,15 @@
-:host(.traktor) {
+:host(.traktor3) {
   /* core color palette */
-  --bg: rgb(38,38,38);
-  --bg2: rgb(24,24,24);
-  --clr: rgb(175,175,175);
-  --clr_bold: rgb(247,247,247);
-  --clr_disabled: rgb(90,90,90);
-  --err: rgb(227,66,63);
-  --err_disabled: rgb(103,44,29);
-  --accent: rgb(250,114,66);
-  --accent2: rgb(68,139,246);
-  --accent3: rgb(37,59,91);
+  --bg: #282828;
+  --bg2: #141414;
+  --clr: #AFAFAF;
+  --clr_bold: #D2D2D2;
+  --clr_disabled: #3A3A3A;
+  --err: #FF3900;
+  --err_disabled: #833;
+  --accent: #FF8D3B;
+  --accent2: #40D9FF;
+  --accent3: #00425C;
 
   /* component colors */
   --md-checkbox-selected-icon-color: var(--bg);
