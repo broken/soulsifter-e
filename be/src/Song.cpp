@@ -29,6 +29,7 @@
 #include "AlbumPart.h"
 #include "MusicVideo.h"
 #include "Style.h"
+#include "Song.h"
 
 using namespace std;
 
@@ -69,7 +70,9 @@ namespace soulsifter {
     styleIds(),
     styles(),
     bpmLock(false),
-    tonicKeyLock(false) {
+    tonicKeyLock(false),
+    dupeId(0),
+    dupe(NULL) {
     }
 
     Song::Song(const Song& song) :
@@ -104,11 +107,14 @@ namespace soulsifter {
     styleIds(song.getStyleIds()),
     styles(),
     bpmLock(song.getBpmLock()),
-    tonicKeyLock(song.getTonicKeyLock()) {
+    tonicKeyLock(song.getTonicKeyLock()),
+    dupeId(song.getDupeId()),
+    dupe(NULL) {
         if (song.reSong) setRESong(*song.reSong);
         if (song.album) setAlbum(*song.album);
         if (song.albumPart) setAlbumPart(*song.albumPart);
         if (song.musicVideo) setMusicVideo(*song.musicVideo);
+        if (song.dupe) setDupe(*song.dupe);
     }
 
     void Song::operator=(const Song& song) {
@@ -168,6 +174,14 @@ namespace soulsifter {
         deleteVectorPointers(&styles);
         bpmLock = song.getBpmLock();
         tonicKeyLock = song.getTonicKeyLock();
+        dupeId = song.getDupeId();
+        if (!song.getDupeId() && song.dupe) {
+            if (!dupe) dupe = new Song(*song.dupe);
+            else *dupe = *song.dupe;
+        } else {
+            delete dupe;
+            dupe = NULL;
+        }
     }
 
     Song::~Song() {
@@ -180,6 +194,8 @@ namespace soulsifter {
         delete musicVideo;
         musicVideo = NULL;
         while (!styles.empty()) delete styles.back(), styles.pop_back();
+        delete dupe;
+        dupe = NULL;
     }
 
     void Song::clear() {
@@ -219,6 +235,9 @@ namespace soulsifter {
         deleteVectorPointers(&styles);
         bpmLock = false;
         tonicKeyLock = false;
+        dupeId = 0;
+        delete dupe;
+        dupe = NULL;
     }
 
 # pragma mark static methods
@@ -250,6 +269,7 @@ namespace soulsifter {
         song->setMusicVideoId(rs->getInt("musicVideoId"));
         song->setBpmLock(rs->getBoolean("bpmLock"));
         song->setTonicKeyLock(rs->getBoolean("tonicKeyLock"));
+        song->setDupeId(rs->getInt("dupeId"));
         if (!rs->isNull("styleIds")) {
             string csv = rs->getString("styleIds");
             istringstream iss(csv);
@@ -473,8 +493,18 @@ namespace soulsifter {
                 } else if (!musicVideoId && musicVideo) {
                     musicVideoId = musicVideo->getId();
                 }
+                if (dupe && dupe->sync()) {
+                    if (dupe->getId()) {
+                        dupe->update();
+                    } else {
+                        dupe->save();
+                    }
+                    dupeId = dupe->getId();
+                } else if (!dupeId && dupe) {
+                    dupeId = dupe->getId();
+                }
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Songs set artist=?, track=?, title=?, remixer=?, featuring=?, filepath=?, rating=?, dateAdded=?, bpm=?, tonicKey=?, energy=?, comments=?, trashed=?, lowQuality=?, googleSongId=?, youtubeId=?, spotifyId=?, durationInMs=?, curator=?, reSongId=?, albumId=?, albumPartId=?, musicVideoId=?, bpmLock=?, tonicKeyLock=? where id=?");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Songs set artist=?, track=?, title=?, remixer=?, featuring=?, filepath=?, rating=?, dateAdded=?, bpm=?, tonicKey=?, energy=?, comments=?, trashed=?, lowQuality=?, googleSongId=?, youtubeId=?, spotifyId=?, durationInMs=?, curator=?, reSongId=?, albumId=?, albumPartId=?, musicVideoId=?, bpmLock=?, tonicKeyLock=?, dupeId=? where id=?");
                 if (!artist.empty()) ps->setString(1, artist);
                 else ps->setNull(1, sql::DataType::VARCHAR);
                 if (!track.empty()) ps->setString(2, track);
@@ -519,7 +549,9 @@ namespace soulsifter {
                 else ps->setNull(23, sql::DataType::INTEGER);
                 ps->setBoolean(24, bpmLock);
                 ps->setBoolean(25, tonicKeyLock);
-                ps->setInt(26, id);
+                if (dupeId > 0) ps->setInt(26, dupeId);
+                else ps->setNull(26, sql::DataType::INTEGER);
+                ps->setInt(27, id);
                 int result = ps->executeUpdate();
                 if (!styleIds.empty()) {
                     stringstream ss("insert ignore into SongStyles (songId, styleId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
@@ -603,8 +635,18 @@ namespace soulsifter {
                 } else if (!musicVideoId && musicVideo) {
                     musicVideoId = musicVideo->getId();
                 }
+                if (dupe && dupe->sync()) {
+                    if (dupe->getId()) {
+                        dupe->update();
+                    } else {
+                        dupe->save();
+                    }
+                    dupeId = dupe->getId();
+                } else if (!dupeId && dupe) {
+                    dupeId = dupe->getId();
+                }
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Songs (artist, track, title, remixer, featuring, filepath, rating, dateAdded, bpm, tonicKey, energy, comments, trashed, lowQuality, googleSongId, youtubeId, spotifyId, durationInMs, curator, reSongId, albumId, albumPartId, musicVideoId, bpmLock, tonicKeyLock) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Songs (artist, track, title, remixer, featuring, filepath, rating, dateAdded, bpm, tonicKey, energy, comments, trashed, lowQuality, googleSongId, youtubeId, spotifyId, durationInMs, curator, reSongId, albumId, albumPartId, musicVideoId, bpmLock, tonicKeyLock, dupeId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 if (!artist.empty()) ps->setString(1, artist);
                 else ps->setNull(1, sql::DataType::VARCHAR);
                 if (!track.empty()) ps->setString(2, track);
@@ -649,6 +691,8 @@ namespace soulsifter {
                 else ps->setNull(23, sql::DataType::INTEGER);
                 ps->setBoolean(24, bpmLock);
                 ps->setBoolean(25, tonicKeyLock);
+                if (dupeId > 0) ps->setInt(26, dupeId);
+                else ps->setNull(26, sql::DataType::INTEGER);
                 int saved = ps->executeUpdate();
                 if (!saved) {
                     LOG(WARNING) << "Not able to save song";
@@ -703,6 +747,10 @@ namespace soulsifter {
             if (!musicVideoId && musicVideo) {
                 musicVideo->sync();
                 musicVideoId = musicVideo->getId();
+            }
+            if (!dupeId && dupe) {
+                dupe->sync();
+                dupeId = dupe->getId();
             }
         }
         if (!song) song = findByRESongId(getRESongId());
@@ -932,6 +980,15 @@ namespace soulsifter {
                 tonicKeyLock = song->getTonicKeyLock();
             }
         }
+        if (dupeId != song->getDupeId()) {
+            if (dupeId) {
+                LOG(INFO) << "updating song " << id << " dupeId from " << song->getDupeId() << " to " << dupeId;
+                needsUpdate = true;
+            } else {
+                dupeId = song->getDupeId();
+            }
+        }
+        if (dupe) needsUpdate |= dupe->sync();
         return needsUpdate;
     }
 
@@ -1143,6 +1200,35 @@ namespace soulsifter {
 
     bool Song::getTonicKeyLock() const { return tonicKeyLock; }
     void Song::setTonicKeyLock(const bool tonicKeyLock) { this->tonicKeyLock = tonicKeyLock; }
+
+    int Song::getDupeId() const {
+        return (!dupeId && dupe) ? dupe->getId() : dupeId;
+    }
+    void Song::setDupeId(const int dupeId) {
+        this->dupeId = dupeId;
+        delete dupe;
+        dupe = NULL;
+    }
+
+    Song* Song::getDupe() {
+        if (!dupe && dupeId) {
+            dupe = Song::findById(dupeId);
+        }
+        return dupe;
+    }
+    Song* Song::getDupeConst() const {
+        return (!dupe && dupeId) ? Song::findById(dupeId) : dupe;
+    }
+    void Song::setDupe(const Song& dupe) {
+        this->dupeId = dupe.getId();
+        delete this->dupe;
+        this->dupe = new Song(dupe);
+    }
+    void Song::setDupe(Song* dupe) {
+        this->dupeId = dupe->getId();
+        delete this->dupe;
+        this->dupe = dupe;
+    }
 
 }
 }

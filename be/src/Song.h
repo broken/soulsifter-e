@@ -29,6 +29,7 @@ namespace soulsifter {
     class AlbumPart;
     class MusicVideo;
     class Style;
+    class Song;
 
     class Song {
     public:
@@ -131,6 +132,12 @@ namespace soulsifter {
         void setBpmLock(bool bpmLock);
         bool getTonicKeyLock() const;
         void setTonicKeyLock(bool tonicKeyLock);
+        int getDupeId() const;
+        void setDupeId(int dupeId);
+        Song* getDupe();
+        Song* getDupeConst() const;
+        void setDupe(const Song& dupe);
+        void setDupe(Song* dupe);  // takes ownership
 
         friend ResultSetIterator<Song>;
         friend class SearchUtil;
@@ -168,6 +175,8 @@ namespace soulsifter {
         vector<Style*> styles;
         bool bpmLock;
         bool tonicKeyLock;
+        int dupeId;
+        Song* dupe;
 
         static void populateFields(const sql::ResultSet* rs, Song* song);
     };
