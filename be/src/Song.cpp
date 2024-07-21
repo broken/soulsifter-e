@@ -431,6 +431,25 @@ namespace soulsifter {
         LOG(FATAL) << "Unable to complete model operation";
     }
 
+    ResultSetIterator<Song>* Song::findByDupeId(int dupeId) {
+        for (int i = 0; i < 2; ++i) {
+            try {
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("select Songs.*, group_concat(distinct(styles.styleId)) as styleIds from Songs left outer join SongStyles styles on Songs.id = styles.songId where ifnull(dupeId,0) = ifnull(?,0) group by Songs.id");
+                if (dupeId > 0) ps->setInt(1, dupeId);
+                else ps->setNull(1, sql::DataType::INTEGER);
+                sql::ResultSet *rs = ps->executeQuery();
+                ResultSetIterator<Song> *dtrs = new ResultSetIterator<Song>(rs);
+                return dtrs;
+            } catch (sql::SQLException &e) {
+                LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
+                LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
+                bool reconnected = MysqlAccess::getInstance().reconnect();
+                LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+            }
+        }
+        LOG(FATAL) << "Unable to complete model operation";
+    }
+
     ResultSetIterator<Song>* Song::findAll() {
         for (int i = 0; i < 2; ++i) {
             try {

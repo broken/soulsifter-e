@@ -32,6 +32,7 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     StaticMethod<&Song::findByYoutubeId>("findByYoutubeId"),
     StaticMethod<&Song::findBySpotifyId>("findBySpotifyId"),
     StaticMethod<&Song::findByRESongId>("findByRESongId"),
+    StaticMethod<&Song::findByDupeId>("findByDupeId"),
     StaticMethod<&Song::findAll>("findAll"),
     InstanceMethod<&Song::update>("update"),
     InstanceMethod<&Song::save>("save"),
@@ -252,6 +253,32 @@ Napi::Value Song::findByRESongId(const Napi::CallbackInfo& info) {
     r->setWrappedValue(result, true);
     return instance;
   }
+}
+
+Napi::Value Song::findByDupeId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  if (!info[0].IsNumber()) {
+    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  int32_t a0(info[0].As<Napi::Number>().Int32Value());
+  dogatech::ResultSetIterator<dogatech::soulsifter::Song>* result =
+      dogatech::soulsifter::Song::findByDupeId(a0);
+
+  vector<dogatech::soulsifter::Song*>* v = result->toVector();
+  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+  for (int i = 0; i < (int) v->size(); i++) {
+    Napi::Object instance = Song::NewInstance(env);
+    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+    r->setWrappedValue((*v)[i], true);
+    a.Set(i, instance);
+  }
+  delete v;
+  return a;
 }
 
 Napi::Value Song::findAll(const Napi::CallbackInfo& info) {

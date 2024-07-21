@@ -45,6 +45,7 @@ namespace soulsifter {
         static Song* findByYoutubeId(const string& youtubeId);
         static Song* findBySpotifyId(const string& spotifyId);
         static Song* findByRESongId(int reSongId);
+        static ResultSetIterator<Song>* findByDupeId(int dupeId);
         static ResultSetIterator<Song>* findAll();
 
         int update();

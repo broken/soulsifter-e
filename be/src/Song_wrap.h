@@ -22,6 +22,7 @@ class Song : public Napi::ObjectWrap<Song> {
   static Napi::Value findByYoutubeId(const Napi::CallbackInfo& info);
   static Napi::Value findBySpotifyId(const Napi::CallbackInfo& info);
   static Napi::Value findByRESongId(const Napi::CallbackInfo& info);
+  static Napi::Value findByDupeId(const Napi::CallbackInfo& info);
   static Napi::Value findAll(const Napi::CallbackInfo& info);
   Napi::Value update(const Napi::CallbackInfo& info);
   Napi::Value save(const Napi::CallbackInfo& info);
