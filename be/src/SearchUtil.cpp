@@ -110,7 +110,7 @@ struct Atom {
     S_TITLE,
     S_REMIXER,
     S_RATING,
-    S_COMMENT,
+    S_COMMENTS,
     S_CURATOR,
     S_ENERGY,
     S_BPM,
@@ -156,7 +156,7 @@ void splitString(const string& query, vector<string>* atoms) {
 
 bool parse(const string& queryFragment, Atom* atom) {
   atom->clear();
-  boost::regex regex("^(-)?((id|a|artist|t|title|remixer|r|rating|comment|c|curator|e|energy|bpm|trashed|lowq|aid|n|album|m|mixed|l|label|y|year|month|day|q|query|limit|o|order|orderby|orderBy):)?(<|>)?(=)?(.+)$");
+  boost::regex regex("^(-)?((id|a|artist|t|title|remixer|r|rating|comments|c|curator|e|energy|bpm|trashed|lowq|aid|n|album|m|mixed|l|label|y|year|month|day|q|query|limit|o|order|orderby|orderBy):)?(<|>)?(=)?(.+)$");
   boost::smatch match;
   if (!boost::regex_match(queryFragment, match, regex)) {
     return false;
@@ -183,8 +183,8 @@ bool parse(const string& queryFragment, Atom* atom) {
       atom->type = Atom::S_REMIXER;
     } else if (!match[3].compare("r") || !match[3].compare("rating")) {
       atom->type = Atom::S_RATING;
-    } else if (!match[3].compare("comment")) {
-      atom->type = Atom::S_COMMENT;
+    } else if (!match[3].compare("comments")) {
+      atom->type = Atom::S_COMMENTS;
     } else if (!match[3].compare("c") || !match[3].compare("curator")) {
       atom->type = Atom::S_CURATOR;
     } else if (!match[3].compare("e") || !match[3].compare("energy")) {
@@ -285,8 +285,8 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
       ss << "ifnull(s.remixer,'') like '%" << atom.value << "%'";
     } else if (atom.type == Atom::S_RATING) {
       ss << "s.rating " << buildEqualityOperator(atom.props, ">=") << " " << atom.value;
-    } else if (atom.type == Atom::S_COMMENT) {
-      ss << "ifnull(s.comment,'') like '%" << atom.value << "%'";
+    } else if (atom.type == Atom::S_COMMENTS) {
+      ss << "ifnull(s.comments,'') like '%" << atom.value << "%'";
     } else if (atom.type == Atom::S_CURATOR) {
       ss << "ifnull(s.curator,'') like '%" << atom.value << "%'";
     } else if (atom.type == Atom::S_TRASHED) {

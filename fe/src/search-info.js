@@ -15,7 +15,7 @@ class SearchInfo extends LitElement {
           <span class="emphasis">t</span> or <span class="emphasis">title</span> : <br>
           <span class="emphasis">remixer</span> : <br>
           <span class="emphasis">r</span> or <span class="emphasis">rating</span> : <br>
-          <span class="emphasis">comment</span> : <br>
+          <span class="emphasis">comments</span> : <br>
           <span class="emphasis">c</span> or <span class="emphasis">curator</span> : <br>
           <span class="emphasis">e</span> or <span class="emphasis">energy</span> : <br>
           <span class="emphasis">bpm</span> : <br>
@@ -28,7 +28,7 @@ class SearchInfo extends LitElement {
           Song title<br>
           Song remixer<br>
           Minimum song rating<br>
-          Song comment<br>
+          Song comments<br>
           Discovery curator<br>
           Song energy<br>
           Song BPM (single or span)<br>
