@@ -69,6 +69,7 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
           <options-menu-item @click="${this.openEdit('curator')}">curator</options-menu-item>
           <options-menu-item @click="${this.openEdit('add_genres')}">add genres</options-menu-item>
           <options-menu-item @click="${this.openEdit('replace_genres')}">replace genres</options-menu-item>
+          <options-menu-item @click="${this.markDuplicates}">mark as duplicates</options-menu-item>
         </options-menu>
       </paper-dialog>
       ${dialogs}
@@ -263,6 +264,26 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
         return;
       }
     });
+  }
+
+  markDuplicates(e) {
+    const duplicates = [...this.selectedListItems].map(el => el.song);
+    if (duplicates.length <= 1) {
+      this.addAlert('Need to select more than one song to assign duplicates.', 3);
+      return;
+    }
+    if (duplicates.reduce((num, s) => num += !s.trashed, 0) != 1) {
+      this.addAlert('All songs but one should be trashed before assigning duplicates.', 3);
+      return;
+    };
+    const sid = duplicates.reduce((sid, s) => s.trashed ? sid : s.id, 0);
+    const dupes = duplicates.filter(s => s.trashed);
+    dupes.forEach(s => {
+      s.dupeId = sid;
+      s.update();
+      console.log('Set song ' + s.id + ' as a duplicate of song ' + sid);
+    });
+    this.selectedListItems.forEach(el => el.requestUpdate());
   }
 
   updateSongField(cb) {
