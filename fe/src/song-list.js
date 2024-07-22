@@ -276,12 +276,22 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
       this.addAlert('All songs but one should be trashed before assigning duplicates.', 3);
       return;
     };
-    const sid = duplicates.reduce((sid, s) => s.trashed ? sid : s.id, 0);
+    const mainSong = duplicates.filter(s => !s.trashed)[0];
     const dupes = duplicates.filter(s => s.trashed);
     dupes.forEach(s => {
-      s.dupeId = sid;
+      s.dupeId = mainSong.id;
       s.update();
-      console.log('Set song ' + s.id + ' as a duplicate of song ' + sid);
+      if (s.artist != mainSong.artist ||
+          s.title != mainSong.title ||
+          s.rating != mainSong.rating ||
+          (s.bpm && (s.bpm < mainSong.bpm - 3 || s.bpm > mainSong.bpm + 3)) ||
+          (s.tonicKey && s.tonicKey != mainSong.tonicKey) ||
+          (s.durationInMs && (s.durationInMs < mainSong.durationInMs - 1000 || s.durationInMs > mainSong.durationInMs + 1000))) {
+        this.addAlert(`Songs are different: Artist: ${s.artist} != ${mainSong.artist} or Title: ${s.title} != ${mainSong.title} or rating: ${s.rating} != ${mainSong.rating} or Bpm: ${s.bpm} != ${mainSong.bpm} or Key: ${s.tonicKey} != ${mainSong.tonicKey} or duration: ${s.durationInMs} != ${mainSong.durationInMs}`);
+      } else {
+        console.log(`Songs are matched: Artist: ${s.artist} =~ ${mainSong.artist} and Title: ${s.title} =~ ${mainSong.title} and rating: ${s.rating} =~ ${mainSong.rating} and Bpm: ${s.bpm} =~ ${mainSong.bpm} and Key: ${s.tonicKey} =~ ${mainSong.tonicKey} and duration: ${s.durationInMs} =~ ${mainSong.durationInMs}`);
+      }
+      console.log('Set song ' + s.id + ' as a duplicate of song ' + mainSong.id);
     });
     this.selectedListItems.forEach(el => el.requestUpdate());
   }
