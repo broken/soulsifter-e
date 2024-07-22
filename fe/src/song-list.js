@@ -320,39 +320,39 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').value;
         this.updateSongField(s => s.artist = val);
-        this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).close();
       };
     } else if (f == 'comments') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').value;
         this.updateSongField(s => s.comments = val);
-        this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).close();
       };
     } else if (f == 'curator') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').value;
         this.updateSongField(s => s.curator = val);
-        this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).close();
       };
     } else if (f == 'is_mixed') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').checked;
         this.updateSongField(s => s.mixed = val);
-        this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).close();
       };
     } else if (f == 'add_genres') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').genres;
         const keys = val.map(g => g.id);
         this.updateSongField(s => s.styleIds = s.styleIds.concat(keys));
-        this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).close();
       };
     } else if (f == 'replace_genres') {
       return e => {
         const val = this.shadowRoot.getElementById(f + '_input').genres;
         const keys = val.map(g => g.id);
         this.updateSongField(s => s.styleIds = keys);
-        this.shadowRoot.getElementById(f).toggle();
+        this.shadowRoot.getElementById(f).close();
       };
     }
   }
