@@ -193,10 +193,14 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
 
   dragSongToDeckA(e) {
     this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'));
+    e.stopPropagation();
+    setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
   }
 
   dragSongToDeckB(e) {
     this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'));
+    e.stopPropagation();
+    setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
   }
 
   dragSongTo(x, y) {
