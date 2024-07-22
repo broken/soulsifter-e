@@ -21,9 +21,9 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         ${waveforms}
-        <div id="cover" style="${bgImg}"></div>
         <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
         <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
+        <div id="cover" style="${bgImg}"></div>
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
           <span> - </span>
