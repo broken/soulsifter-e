@@ -15,14 +15,16 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     if (this.settings.getBool('songList.showWaveforms')) {
       let wfImg = '-webkit-mask-box-image: url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '")';
       wfImg += ';background-color: ' + this.waveformColorFilter();
-      waveforms = html`<div id="waveform" style="${wfImg}" @click="${this.previewSong}"></div>`;
+      waveforms = html`
+        <div id="waveform" style="${wfImg}" @click="${this.previewSong}"></div>
+        <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
+        <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
+      `;
     }
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         ${waveforms}
-        <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
-        <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
         <div id="cover" style="${bgImg}"></div>
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
