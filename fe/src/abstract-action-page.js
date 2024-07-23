@@ -47,7 +47,7 @@ class AbstractActionPage extends LitElement {
           justify-content: center;
         }
         #abstractActions {
-          margin-bottom: auto;
+          margin-bottom: 10px;
           padding-top: 30px;
           flex-shrink: 0;
         }
