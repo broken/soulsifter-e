@@ -13,8 +13,13 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
     let waveforms = '';
     if (this.settings.getBool('songList.showWaveforms')) {
-      let wfImg = '-webkit-mask-box-image: url("file://' + this.getFullWaveformFilepath(this.song.filepath) + '")';
-      wfImg += ';background-color: ' + this.waveformColorFilter();
+      let wfImg = '-webkit-mask-box-image: url("';
+      if (this.song.trashed) {
+        wfImg += '../resources/no-waveform.webp';
+      } else {
+        wfImg += 'file://' + this.getFullWaveformFilepath(this.song.filepath);
+      }
+      wfImg += '");background-color: ' + this.waveformColorFilter();
       waveforms = html`
         <div id="waveform" style="${wfImg}" @click="${this.previewSong}"></div>
         <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
