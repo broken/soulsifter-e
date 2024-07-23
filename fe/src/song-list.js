@@ -284,12 +284,13 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
       if (s.artist != mainSong.artist ||
           s.title != mainSong.title ||
           s.rating != mainSong.rating ||
+          !s.styleIds.reduce((b, g) => b && mainSong.styleIds.includes(g), true) ||
           (s.bpm && (s.bpm < mainSong.bpm - 3 || s.bpm > mainSong.bpm + 3)) ||
           (s.tonicKey && s.tonicKey != mainSong.tonicKey) ||
           (s.durationInMs && (s.durationInMs < mainSong.durationInMs - 1000 || s.durationInMs > mainSong.durationInMs + 1000))) {
-        this.addAlert(`Songs are different: Artist: ${s.artist} != ${mainSong.artist} or Title: ${s.title} != ${mainSong.title} or rating: ${s.rating} != ${mainSong.rating} or Bpm: ${s.bpm} != ${mainSong.bpm} or Key: ${s.tonicKey} != ${mainSong.tonicKey} or duration: ${s.durationInMs} != ${mainSong.durationInMs}`);
+        this.addAlert(`Songs are different: Artist: ${s.artist} != ${mainSong.artist} or Title: ${s.title} != ${mainSong.title} or rating: ${s.rating} != ${mainSong.rating} or Bpm: ${s.bpm} != ${mainSong.bpm} or Key: ${s.tonicKey} != ${mainSong.tonicKey} or duration: ${s.durationInMs} != ${mainSong.durationInMs} or styles: ${s.styleIds.sort().toString()} != ${mainSong.styleIds.sort().toString()}`);
       } else {
-        console.log(`Songs are matched: Artist: ${s.artist} =~ ${mainSong.artist} and Title: ${s.title} =~ ${mainSong.title} and rating: ${s.rating} =~ ${mainSong.rating} and Bpm: ${s.bpm} =~ ${mainSong.bpm} and Key: ${s.tonicKey} =~ ${mainSong.tonicKey} and duration: ${s.durationInMs} =~ ${mainSong.durationInMs}`);
+        console.log(`Songs are matched: Artist: ${s.artist} =~ ${mainSong.artist} and Title: ${s.title} =~ ${mainSong.title} and rating: ${s.rating} =~ ${mainSong.rating} and Bpm: ${s.bpm} =~ ${mainSong.bpm} and Key: ${s.tonicKey} =~ ${mainSong.tonicKey} and duration: ${s.durationInMs} =~ ${mainSong.durationInMs} and styles: ${s.styleIds.sort().toString()} =~ ${mainSong.styleIds.sort().toString()}`);
       }
       console.log('Set song ' + s.id + ' as a duplicate of song ' + mainSong.id);
     });
