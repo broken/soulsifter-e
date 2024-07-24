@@ -38,6 +38,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
           <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${comments}</span>
         </div>
         ${inPlaylist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
+        ${!!this.song.dupeId ? html`<icon-button icon="flip_to_back" @click="${this.showDupeId}"></icon-button>` : html``}
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
         <div>${this.computeBpmShift(this.song, this.bpm)}</div>
         ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm}</div>` : html``}
@@ -186,6 +187,15 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
       if (!!entry) entry.erase();
     }
     let event = new CustomEvent('search', {
+        bubbles: true,
+        composed: true });
+    this.dispatchEvent(event);
+    e.stopPropagation();
+  }
+
+  showDupeId(e) {//ss-add-alert
+    let event = new CustomEvent('ss-add-alert', {
+        detail: {msg: `Duplicate Song ID :  ${this.song.dupeId}`, timeoutInSeconds: 3},
         bubbles: true,
         composed: true });
     this.dispatchEvent(event);

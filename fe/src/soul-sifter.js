@@ -3,6 +3,7 @@ import { css, html, LitElement, unsafeCSS } from 'lit';
 import "@material/mwc-tab";
 import "@material/mwc-tab-bar";
 
+import { AlertsMixin } from "./mixin-alerts.js";
 import { AudioMixin } from "./mixin-audio.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import "./alert-list.js";
@@ -29,7 +30,7 @@ import theme_traktor3 from './css/theme-traktor3.css?inline';
 import greyscalewaveforms from './css/waveforms-greyscale.css?inline';
 
 
-class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
+class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
   render() {
     return html`
       <alert-list></alert-list>
@@ -80,6 +81,9 @@ class SoulSifter extends AudioMixin(SettingsMixin(LitElement)) {
           this.classList.add(theme.trim());
         });
       }
+    });
+    this.addEventListener('ss-add-alert', e => {
+      this.addAlert(e.detail.msg, e.detail.timeoutInSeconds);
     });
   }
 
