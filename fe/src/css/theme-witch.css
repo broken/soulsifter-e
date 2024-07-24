@@ -1,0 +1,23 @@
+:host(.witch) {
+  /* color-scheme: dark; */
+
+  /* core color palette */
+  --bg: #272D2D;
+  --bg2: #222;
+  --clr: #768;
+  --clr_bold: #98a;
+  --clr_disabled: #424238;
+  --err: #a64a3c;
+  --err_disabled: #5e332d;
+  --accent: #478888;
+  --accent2: #144042  ;
+  --accent3: #435;
+
+  /* component colors */
+  --md-checkbox-selected-icon-color: var(--bg);
+  --md-filled-button-container-color: var(--accent3);
+  --md-filled-tonal-button-container-color: var(--accent3);
+  --md-linear-progress-active-indicator-color: var(--accent2);
+  --ss-options-menu-background-color-hover: var(--accent3);
+  --ss-star-rating-selected-icon-color: var(--accent);
+}

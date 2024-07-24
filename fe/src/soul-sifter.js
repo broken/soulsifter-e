@@ -27,6 +27,7 @@ import theme_default from './css/theme-default.css?inline';
 import theme_serato from './css/theme-serato.css?inline';
 import theme_traktor from './css/theme-traktor.css?inline';
 import theme_traktor3 from './css/theme-traktor3.css?inline';
+import theme_witch from './css/theme-witch.css?inline';
 import greyscalewaveforms from './css/waveforms-greyscale.css?inline';
 
 
@@ -125,6 +126,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
       css`${unsafeCSS(theme_serato)}`,
       css`${unsafeCSS(theme_traktor)}`,
       css`${unsafeCSS(theme_traktor3)}`,
+      css`${unsafeCSS(theme_witch)}`,
       css`${unsafeCSS(greyscalewaveforms)}`,
       css`
         :host {
