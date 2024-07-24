@@ -582,6 +582,12 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.shadowRoot.getElementById('album_releaseDateMonth').value = this.song.album.releaseDateMonth;
     this.shadowRoot.getElementById('album_releaseDateDay').value = this.song.album.releaseDateDay;
     // my styles component works w/o this crap
+
+    // remove previous validation errors, and early warning for new ones
+    let inputs = this.shadowRoot.querySelectorAll('md-filled-text-field');
+    for (let i = 0; i < inputs.length; ++i) {
+      inputs[i].reportValidity();
+    }
   }
 
   syncEdits() {
