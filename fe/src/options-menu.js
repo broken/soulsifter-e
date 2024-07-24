@@ -7,7 +7,7 @@ class OptionsMenu extends LitElement {
   render() {
     return html`
       <icon-button icon="${this.icon}"></icon-button>
-      <div id="menu" elevation="3">
+      <div id="menu" elevation="3" @click=${this.close}>
         <slot></slot>
       </div>
     `;
@@ -22,6 +22,12 @@ class OptionsMenu extends LitElement {
   constructor() {
     super();
     this.icon = "more_vert";
+  }
+
+  close(e) {
+    this.shadowRoot.getElementById('menu').style.display = 'none';
+    setTimeout(() => this.shadowRoot.getElementById('menu').style.display = null, 1);
+    e.stopPropagation();
   }
 
   static get styles() {
