@@ -9,15 +9,17 @@
   --clr_disabled: #424238;
   --err: #a64a3c;
   --err_disabled: #5e332d;
-  --accent: #478888;
-  --accent2: #144042  ;
+  --accent: #144042;
+  --accent2: #144042;
   --accent3: #435;
+
+  --accent4: #478888;
 
   /* component colors */
   --md-checkbox-selected-icon-color: var(--bg);
   --md-filled-button-container-color: var(--accent3);
   --md-filled-tonal-button-container-color: var(--accent3);
-  --md-linear-progress-active-indicator-color: var(--accent2);
+  --ss-drawer-tab-active-color: var(--accent4);
   --ss-options-menu-background-color-hover: var(--accent3);
-  --ss-star-rating-selected-icon-color: var(--accent);
+  --ss-star-rating-selected-icon-color: var(--accent4);
 }
