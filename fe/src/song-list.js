@@ -227,6 +227,38 @@ class SongList extends AlertsMixin(
   }
 
   midiConnected(myChan) {
+    myChan.addListener('noteon', e => {
+      console.log(e);
+      const loadA = 70;
+      const loadB = 71;
+      if (e.message.dataBytes[0] != loadA && e.message.dataBytes[0] != loadB) return;
+
+      let rect = this.lastSelectedListItem.getBoundingClientRect();
+      const chromeOffset = 31;  // TODO setting or compute with mouse listen
+      const ex = '=' + ((rect.left + window.screenX + rect.width / 2) | 0);
+      const ey = '=' + ((rect.top + window.screenY + chromeOffset + rect.height / 2) | 0);
+
+      let x = 0;
+      let y = 0;
+      if (e.message.dataBytes[0] == loadA) {
+        x = this.settings.getString('dragAndDrop.deckLeftX');
+        y = this.settings.getString('dragAndDrop.deckLeftY');
+      } else {
+        x = this.settings.getString('dragAndDrop.deckRightX');
+        y = this.settings.getString('dragAndDrop.deckRightY');
+      }
+
+      const util = require('util');
+      const exec = util.promisify(require('node:child_process').exec);
+      const easing = this.settings.getInt('dragAndDrop.easing');
+      const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
+
+      let dnd = async () => {
+        exec(`cliclick -e ${easing} -r m:${ex},${ey} w:100 dd:. w:10 dm:${x},${y} w:${wait} du:${x},${y} w:50`);
+      }
+      dnd();
+      // setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
+    });
     myChan.addListener('controlchange', e => {
       console.log(e);
       const browse = 64;
