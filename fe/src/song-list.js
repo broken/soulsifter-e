@@ -18,6 +18,7 @@ import "./icon-button.js";
 import { AlertsMixin } from "./mixin-alerts.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { GenresMixin } from "./mixin-genres.js";
+import { MidiMixin } from "./mixin-midi.js";
 import { PlaylistsMixin } from "./mixin-playlists.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
@@ -30,7 +31,22 @@ import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 import { } from "./song-list-item.js";
 
-class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(WaveGenQueueMixin(WaveformUtilMixin(LitElement))))))))))))) {
+class SongList extends AlertsMixin(
+                       BpmMixin(
+                       GenresMixin(
+                       MidiMixin(
+                       PlaylistsMixin(
+                       QueryMixin(
+                       SearchMixin(
+                       SearchOptionsMixin(
+                       SettingsMixin(
+                       SongEditMixin(
+                       SongMixin(
+                       SongTrailMixin(
+                       WaveGenQueueMixin(
+                       WaveformUtilMixin(
+                       LitElement
+)))))))))))))) {
   render() {
     let songListItems = html``;
     songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
@@ -208,6 +224,51 @@ class SongList extends AlertsMixin(BpmMixin(GenresMixin(PlaylistsMixin(QueryMixi
       this.useStems = this.searchOptions.useStems;
       this.shadowRoot.querySelectorAll('song-list-item').forEach(el => el.useStems = this.useStems);
     }
+  }
+
+  midiConnected(myChan) {
+    myChan.addListener('controlchange', e => {
+      console.log(e);
+      const browse = 64;
+      const velRight = 1;
+      const velLeft = 127;
+      if (e.message.dataBytes[0] != browse) return;
+      let items = this.shadowRoot.querySelectorAll('song-list-item');
+      if (!this.lastSelectedListItem) {
+        if (items.length) this.lastSelectedListItem = items[0];
+      } else {
+        this.lastSelectedListItem.removeAttribute('selected');
+        if (e.message.dataBytes[1] == velRight) {
+          let useNext = false;
+          for (let item of items) {
+            if (item == this.lastSelectedListItem) {
+              useNext = true;
+            } else if (useNext) {
+              useNext = false;
+              this.lastSelectedListItem = item;
+              break;
+            }
+          }
+        } else if (e.message.dataBytes[1] == velLeft) {
+          let prevItem = items[0];
+          for (let item of items) {
+            if (item == this.lastSelectedListItem) {
+              this.lastSelectedListItem = prevItem;
+              break;
+            } else {
+              prevItem = item;
+            }
+          }
+        }
+      }
+      this.lastSelectedListItem.setAttribute('selected', '');
+      let event = new CustomEvent('audio-preview-song', {
+          bubbles: true,
+          composed: true,
+          detail: { song: this.lastSelectedListItem.song, pct: 0.25, player: this.lastSelectedListItem }
+      });
+      this.dispatchEvent(event);
+    });
   }
 
   updateEditedSong(id) {

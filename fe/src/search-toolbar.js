@@ -4,10 +4,11 @@ import "@material/web/dialog/dialog.js";
 import "@material/web/textfield/filled-text-field.js";
 import "@thomasloven/round-slider";
 
-import { WebMidi, Utilities } from "webmidi";
+import { Utilities } from "webmidi";
 
 import { AlertsMixin } from "./mixin-alerts.js";
 import { BpmMixin } from "./mixin-bpm.js";
+import { MidiMixin } from "./mixin-midi.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
@@ -20,7 +21,7 @@ import "./search-info.js";
 import "./search-options.js";
 
 
-class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement)))))) {
+class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement))))))) {
   render() {
     let bpmRestrictBtn = this.searchOptions.bpmRestrict ? html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note" class="active"></icon-button>`
                                                         : html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note"></icon-button>`;
@@ -261,50 +262,36 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     window.addEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
   }
 
-  connectToMidiController(e) {
-    WebMidi
-    .enable()
-    .then(() => {
-      if (WebMidi.inputs.length < 1) {
-        console.log('No device detected.');
-      } else {
-        WebMidi.inputs.forEach((device, index) => {
-          console.log(`${index}: ${device.name}`);
-        });
-      }
-      const mySynth = WebMidi.getInputByName(this.settings.getString('audio.midiControllerName'));
-      let myChan = mySynth.channels[this.settings.getInt('audio.volumeMidiChannel')];
-      myChan.addListener('controlchange', e => {
-        const midiCC = this.settings.getInt('audio.volumeMidiCC');
-        if (e.message.dataBytes[0] != midiCC &&
-            e.message.dataBytes[0] != midiCC + 32) return;
-        // console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
-        if (this.note == undefined) {
-          if (e.message.dataBytes[0] == midiCC) {
-            this.note = e.rawValue;
-          }
-        } else {
-          let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
-          this.note = undefined;
-          let exp = Number(this.settings.getString('audio.exponentialFactor'));
-          let linear = Number(this.settings.getString('audio.linearFactor'));
-          // 0.93*x^1/2.5 looks to match the closest curve,
-          // but osx prob has its own curve that we have to compensate for
-          // https://www.desmos.com/calculator/pwfyfk6yb2
-          let y = Math.pow(value, exp) * linear;
-          console.log(`Setting volume to ${y} from value ${value}`);
-          let vol = Math.max(Math.min(y, 1), 0);
-          this.volume = vol * 100;
-          this.requestUpdate();
-          let event = new CustomEvent(
-            'audio-set-volume',
-            { bubbles: true, composed: true, detail: { volume: vol }}
-          );
-          this.dispatchEvent(event);
+  midiConnected(myChan) {
+    myChan.addListener('controlchange', e => {
+      const midiCC = this.settings.getInt('audio.volumeMidiCC');
+      if (e.message.dataBytes[0] != midiCC &&
+          e.message.dataBytes[0] != midiCC + 32) return;
+      // console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
+      if (this.note == undefined) {
+        if (e.message.dataBytes[0] == midiCC) {
+          this.note = e.rawValue;
         }
-      });
-    })
-    .catch(err => this.addAlert('Unable to connect to Midi controller. ' + err));
+      } else {
+        let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
+        this.note = undefined;
+        let exp = Number(this.settings.getString('audio.exponentialFactor'));
+        let linear = Number(this.settings.getString('audio.linearFactor'));
+        // 0.93*x^1/2.5 looks to match the closest curve,
+        // but osx prob has its own curve that we have to compensate for
+        // https://www.desmos.com/calculator/pwfyfk6yb2
+        let y = Math.pow(value, exp) * linear;
+        console.log(`Setting volume to ${y} from value ${value}`);
+        let vol = Math.max(Math.min(y, 1), 0);
+        this.volume = vol * 100;
+        this.requestUpdate();
+        let event = new CustomEvent(
+          'audio-set-volume',
+          { bubbles: true, composed: true, detail: { volume: vol }}
+        );
+        this.dispatchEvent(event);
+      }
+    });
   }
 
   _updateAlertWithMouseCoords = e => {
