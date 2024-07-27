@@ -34,6 +34,11 @@ const createWindow = () => {
     mainWindow.webContents.openDevTools();
   });
 
+  ipcMain.on('ss-focus', (event) => {
+    mainWindow.show();
+    mainWindow.focus();
+  });
+
   // Enable MIDI permissions
   mainWindow.webContents.session.setPermissionRequestHandler((webContents, permission, callback, details) => {
     if (permission === 'midi' || permission === 'midiSysex') {

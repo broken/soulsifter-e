@@ -240,6 +240,8 @@ class SongList extends AlertsMixin(
 
       let x = 0;
       let y = 0;
+
+      ipcRenderer.send('ss-focus');
       if (e.message.dataBytes[0] == loadA) {
         x = this.settings.getString('dragAndDrop.deckLeftX');
         y = this.settings.getString('dragAndDrop.deckLeftY');
