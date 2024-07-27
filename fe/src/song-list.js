@@ -260,7 +260,7 @@ class SongList extends AlertsMixin(
       }
       dnd();
       e.detail = {song: this.lastSelectedListItem.song};
-      setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
+      setTimeout(() => this.selectSong(e), 2000);  // wait to select song until after drag event
     });
     myChan.addListener('controlchange', e => {
       console.log(e);
