@@ -119,7 +119,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
     } else {
       filepath = this.settings.getString('dir.music') + this.song.filepath;
       iconpath = this.settings.getString('dir.music') + this.song.album.coverFilepath;
-      if (this.useStems) {
+      if (this.searchOptions.useStems) {
         let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
         ipcRenderer.invoke('existsfilepath', stemFilepath)
         .then((exists) => {
