@@ -294,6 +294,16 @@ class SongList extends AlertsMixin(
         }
       }
       this.lastSelectedListItem.setAttribute('selected', '');
+      {
+        // scroll so selected is in the middle
+        const thisRect = this.getBoundingClientRect();
+        const selectedRect = this.lastSelectedListItem.getBoundingClientRect();
+        const targetTop = thisRect.height / 2 - selectedRect.height / 2 + thisRect.top;
+        const moveTop = selectedRect.top - targetTop;
+        const newScrollTop = this.scrollTop + moveTop;
+        this.scrollTo({top: newScrollTop, behavior: 'instant'});
+        console.info(`targetTop: ${targetTop}, moveTop ${moveTop}  newScrollTop: ${newScrollTop}, stop ${selectedRect.top} `);
+      }
       let event = new CustomEvent('audio-preview-song', {
           bubbles: true,
           composed: true,
