@@ -113,6 +113,7 @@ class SongList extends AlertsMixin(
     this.useStems = false;
     this.selectedListItems = new Set();
     this.lastSelectedListItem = undefined;
+    this.midiSelectedListItem = undefined;
     // used for setting back original genres after playlist selection
     this.genresBeforePlaylist = [];
   }
@@ -232,8 +233,9 @@ class SongList extends AlertsMixin(
       const loadA = 70;
       const loadB = 71;
       if (e.message.dataBytes[0] != loadA && e.message.dataBytes[0] != loadB) return;
+      if (!this.midiSelectedListItem) return;
 
-      let rect = this.lastSelectedListItem.getBoundingClientRect();
+      let rect = this.midiSelectedListItem.getBoundingClientRect();
       const chromeOffset = 31;  // TODO setting or compute with mouse listen
       const ex = '=' + ((rect.left + window.screenX + rect.width / 2) | 0);
       const ey = '=' + ((rect.top + window.screenY + chromeOffset + rect.height / 2) | 0);
@@ -259,7 +261,7 @@ class SongList extends AlertsMixin(
         exec(`cliclick -e ${easing} -r m:${ex},${ey} w:100 dd:. w:10 dm:${x},${y} w:${wait} du:${x},${y} w:50`);
       }
       dnd();
-      e.detail = {song: this.lastSelectedListItem.song};
+      e.detail = {song: this.midiSelectedListItem.song};
       setTimeout(() => this.selectSong(e), 2000);  // wait to select song until after drag event
     });
     myChan.addListener('controlchange', e => {
@@ -269,26 +271,26 @@ class SongList extends AlertsMixin(
       const velLeft = 127;
       if (e.message.dataBytes[0] != browse) return;
       let items = this.shadowRoot.querySelectorAll('song-list-item');
-      if (!this.lastSelectedListItem) {
-        if (items.length) this.lastSelectedListItem = items[0];
+      if (!this.midiSelectedListItem) {
+        if (items.length) this.midiSelectedListItem = items[0];
       } else {
-        this.lastSelectedListItem.removeAttribute('selected');
+        this.midiSelectedListItem.removeAttribute('selected');
         if (e.message.dataBytes[1] == velRight) {
           let useNext = false;
           for (let item of items) {
-            if (item == this.lastSelectedListItem) {
+            if (item == this.midiSelectedListItem) {
               useNext = true;
             } else if (useNext) {
               useNext = false;
-              this.lastSelectedListItem = item;
+              this.midiSelectedListItem = item;
               break;
             }
           }
         } else if (e.message.dataBytes[1] == velLeft) {
           let prevItem = items[0];
           for (let item of items) {
-            if (item == this.lastSelectedListItem) {
-              this.lastSelectedListItem = prevItem;
+            if (item == this.midiSelectedListItem) {
+              this.midiSelectedListItem = prevItem;
               break;
             } else {
               prevItem = item;
@@ -296,11 +298,11 @@ class SongList extends AlertsMixin(
           }
         }
       }
-      this.lastSelectedListItem.setAttribute('selected', '');
+      this.midiSelectedListItem.setAttribute('selected', '');
       {
         // scroll so selected is in the middle
         const thisRect = this.getBoundingClientRect();
-        const selectedRect = this.lastSelectedListItem.getBoundingClientRect();
+        const selectedRect = this.midiSelectedListItem.getBoundingClientRect();
         const targetTop = thisRect.height / 2 - selectedRect.height / 2 + thisRect.top;
         const moveTop = selectedRect.top - targetTop;
         const newScrollTop = this.scrollTop + moveTop;
@@ -310,7 +312,7 @@ class SongList extends AlertsMixin(
       let event = new CustomEvent('audio-preview-song', {
           bubbles: true,
           composed: true,
-          detail: { song: this.lastSelectedListItem.song, pct: 0.25, player: this.lastSelectedListItem }
+          detail: { song: this.midiSelectedListItem.song, pct: 0.25, player: this.midiSelectedListItem }
       });
       this.dispatchEvent(event);
     });
@@ -323,6 +325,10 @@ class SongList extends AlertsMixin(
   }
 
   search() {
+    if (this.midiSelectedListItem) {
+      this.midiSelectedListItem.removeAttribute('selected');
+      this.midiSelectedListItem = undefined;
+    }
     let playlists = [];
     let orderBy = this.searchOptions.orderBy;
     if (!!this.playlists.length) {
