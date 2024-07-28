@@ -261,8 +261,7 @@ class SongList extends AlertsMixin(
         exec(`cliclick -e ${easing} -r m:${ex},${ey} w:100 dd:. w:10 dm:${x},${y} w:${wait} du:${x},${y} w:50`);
       }
       dnd();
-      e.detail = {song: this.midiSelectedListItem.song};
-      setTimeout(() => this.selectSong(e), 2000);  // wait to select song until after drag event
+      setTimeout(() => this.midiSelectedListItem.selectSong(e), 2000);  // wait to select song until after drag event
     });
     myChan.addListener('controlchange', e => {
       console.log(e);
