@@ -1,4 +1,4 @@
-#include "SoulSifterSettings.h"
+  #include "SoulSifterSettings.h"
 
 #include <cstdlib>
 #include <iostream>
