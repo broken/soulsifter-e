@@ -11,58 +11,74 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   render() {
     return html`
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
-        <div class="fields">
-          <md-filled-text-field label="Music Directory" .value="${this.musicDir}" id="musicDir"></md-filled-text-field>
-          <md-filled-text-field label="Music Video Directory" .value="${this.musicVideoDir}" id="musicVideoDir"></md-filled-text-field>
-          <md-filled-text-field label="Stems Directory" .value="${this.stemsDir}" id="stemsDir"></md-filled-text-field>
-          <md-filled-text-field label="Waveforms Directory" .value="${this.waveformsDir}" id="waveformsDir"></md-filled-text-field>
-          <br>
-          <md-filled-text-field label="Default song list limit" .value="${this.songListLimit}" allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></md-filled-text-field></label>
-          <md-filled-text-field label="Energy search difference" .value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></md-filled-text-field></label>
-          <label><md-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect"></md-checkbox>Automatically search after selecting a song</label>
-          <label><md-checkbox ?checked="${this.songListShowComments}" id="songListShowComments"></md-checkbox>Show comments in song list</label>
-          <label><md-checkbox ?checked="${this.songListShowWaveforms}" id="songListShowWaveforms"></md-checkbox>Show waveforms in song list</label>
-          <label><md-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys"></md-checkbox>Include unknown keys in key searches</label>
-          <label><md-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag"></md-checkbox>Overwrite values when reading ID3 tags</label>
-          <label><md-checkbox ?checked="${this.appDebugMode}" id="appDebugMode"></md-checkbox>Debug mode (requires restart)</label>
-          <label><md-checkbox ?checked="${this.editAutoAdd}" id="editAutoAdd"></md-checkbox>Auto add music (skip edit dialog)</label>
-          <label><md-checkbox ?checked="${this.editAutoPlay}" id="editAutoPlay"></md-checkbox>Auto play music when editting song</label>
-          <br>
-          <label><md-checkbox ?checked="${this.songListColBpm}" id="songListColBpm"></md-checkbox>Include BPM in song list</label>
-        </div>
-        <div class="fields">
-          <md-filled-text-field label="Database Name" .value="${this.dbName}" id="dbName"></md-filled-text-field>
-          <md-filled-text-field label="Database User" .value="${this.dbUser}" id="dbUser"></md-filled-text-field>
-          <md-filled-text-field label="Database Password" .value="${this.dbPassword}" id="dbPassword"></md-filled-text-field>
-          <md-filled-text-field label="Database URL" .value="${this.dbUrl}" id="dbUrl"></md-filled-text-field>
-          <br>
-          <md-filled-text-field label="Theme" .value="${this.appTheme}" id="appTheme"></md-filled-text-field>
-          <br>
-          <md-filled-text-field label="Preview Time (in secs)" .value="${this.songListPreviewTimeInSecs}" id="songListPreviewTimeInSecs"></md-filled-text-field>
-          <br>
-          <md-filled-text-field label="Deck A X" .value="${this.dragAndDropDeckLeftX}" id="dragAndDropDeckLeftX"></md-filled-text-field>
-          <md-filled-text-field label="Deck A Y" .value="${this.dragAndDropDeckLeftY}" id="dragAndDropDeckLeftY"></md-filled-text-field>
-          <md-filled-text-field label="Deck B X" .value="${this.dragAndDropDeckRightX}" id="dragAndDropDeckRightX"></md-filled-text-field>
-          <md-filled-text-field label="Deck B Y" .value="${this.dragAndDropDeckRightY}" id="dragAndDropDeckRightY"></md-filled-text-field>
-          <md-filled-text-field label="D&D Easing" .value="${this.dragAndDropEasing}" id="dragAndDropEasing"></md-filled-text-field>
-          <md-filled-text-field label="D&D Wait Time (ms)" .value="${this.dragAndDropWaitTimeInMs}" id="dragAndDropWaitTimeInMs"></md-filled-text-field>
-          <md-filled-text-field label="Midi controller name" .value="${this.audioMidiControllerName}" id="audioMidiControllerName"></md-filled-text-field>
-          <md-filled-text-field label="Midi volume channel" .value="${this.audioVolumeMidiChannel}" id="audioVolumeMidiChannel"></md-filled-text-field>
-          <md-filled-text-field label="Midi volume cc (msb)" .value="${this.audioVolumeMidiCC}" id="audioVolumeMidiCC"></md-filled-text-field>
-          <md-filled-text-field label="Midi volume exp scale" .value="${this.audioExponentialFactor}" id="audioExponentialFactor"></md-filled-text-field>
-          <md-filled-text-field label="Midi volume linear scale" .value="${this.audioLinearFactor}" id="audioLinearFactor"></md-filled-text-field>
-        </div>
-        <div class="fields">
-          <md-filled-text-field label="Google Music Email" .value="${this.googleEmail}" id="googleEmail"></md-filled-text-field>
-          <md-filled-text-field label="Google Music App Key" .value="${this.googleAppKey}" id="googleAppKey"></md-filled-text-field>
-          <md-filled-text-field label="Android ID" .value="${this.googleAndroidId}" id="googleAndroidId"></md-filled-text-field>
-          <br>
-          <md-filled-text-field label="Google Client ID" .value="${this.googleClientId}" id="googleClientId"></md-filled-text-field>
-          <md-filled-text-field label="Google Client Secret".value="${this.googleClientSecret}" id="googleClientSecret"></md-filled-text-field>
-          <md-filled-text-field label="Google OAuth Refresh Token" .value="${this.googleOauthRefreshToken}" id="googleOauthRefreshToken"></md-filled-text-field>
-          <br>
-          <md-filled-text-field label="Feedly User ID" .value="${this.feedlyUserId}" id="feedlyUserId"></md-filled-text-field>
-          <md-filled-text-field label="Feedly Developer Token" .value="${this.feedlyDevToken}" id="feedlyDevToken"></md-filled-text-field>
+        <div class="outer">
+          <mwc-tab-bar activeIndex="0" dense="true">
+            <mwc-tab @click="${this.mainTabClicked}" label="Main" isFadingIndicator></mwc-tab>
+            <mwc-tab @click="${this.midiTabClicked}" label="Midi" isFadingIndicator></mwc-tab>
+            <mwc-tab @click="${this.poolTabClicked}" label="Pool" isFadingIndicator></mwc-tab>
+          </mwc-tab-bar>
+          <main id="main">
+            <section class="active">
+              <div class="fields">
+                <md-filled-text-field label="Music Directory" .value="${this.musicDir}" id="musicDir"></md-filled-text-field>
+                <md-filled-text-field label="Music Video Directory" .value="${this.musicVideoDir}" id="musicVideoDir"></md-filled-text-field>
+                <md-filled-text-field label="Stems Directory" .value="${this.stemsDir}" id="stemsDir"></md-filled-text-field>
+                <md-filled-text-field label="Waveforms Directory" .value="${this.waveformsDir}" id="waveformsDir"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Default song list limit" .value="${this.songListLimit}" allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></md-filled-text-field></label>
+                <md-filled-text-field label="Energy search difference" .value="${this.energyGap}" allowedPattern="[0-9]" preventInvalidInput id="energyGap"></md-filled-text-field></label>
+                <label><md-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect"></md-checkbox>Automatically search after selecting a song</label>
+                <label><md-checkbox ?checked="${this.songListShowComments}" id="songListShowComments"></md-checkbox>Show comments in song list</label>
+                <label><md-checkbox ?checked="${this.songListShowWaveforms}" id="songListShowWaveforms"></md-checkbox>Show waveforms in song list</label>
+                <label><md-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys"></md-checkbox>Include unknown keys in key searches</label>
+                <label><md-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag"></md-checkbox>Overwrite values when reading ID3 tags</label>
+                <label><md-checkbox ?checked="${this.appDebugMode}" id="appDebugMode"></md-checkbox>Debug mode (requires restart)</label>
+                <label><md-checkbox ?checked="${this.editAutoAdd}" id="editAutoAdd"></md-checkbox>Auto add music (skip edit dialog)</label>
+                <label><md-checkbox ?checked="${this.editAutoPlay}" id="editAutoPlay"></md-checkbox>Auto play music when editting song</label>
+                <br>
+                <label><md-checkbox ?checked="${this.songListColBpm}" id="songListColBpm"></md-checkbox>Include BPM in song list</label>
+              </div>
+              <div class="fields">
+                <md-filled-text-field label="Database Name" .value="${this.dbName}" id="dbName"></md-filled-text-field>
+                <md-filled-text-field label="Database User" .value="${this.dbUser}" id="dbUser"></md-filled-text-field>
+                <md-filled-text-field label="Database Password" .value="${this.dbPassword}" id="dbPassword"></md-filled-text-field>
+                <md-filled-text-field label="Database URL" .value="${this.dbUrl}" id="dbUrl"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Theme" .value="${this.appTheme}" id="appTheme"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Preview Time (in secs)" .value="${this.songListPreviewTimeInSecs}" id="songListPreviewTimeInSecs"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Deck A X" .value="${this.dragAndDropDeckLeftX}" id="dragAndDropDeckLeftX"></md-filled-text-field>
+                <md-filled-text-field label="Deck A Y" .value="${this.dragAndDropDeckLeftY}" id="dragAndDropDeckLeftY"></md-filled-text-field>
+                <md-filled-text-field label="Deck B X" .value="${this.dragAndDropDeckRightX}" id="dragAndDropDeckRightX"></md-filled-text-field>
+                <md-filled-text-field label="Deck B Y" .value="${this.dragAndDropDeckRightY}" id="dragAndDropDeckRightY"></md-filled-text-field>
+                <md-filled-text-field label="D&D Easing" .value="${this.dragAndDropEasing}" id="dragAndDropEasing"></md-filled-text-field>
+                <md-filled-text-field label="D&D Wait Time (ms)" .value="${this.dragAndDropWaitTimeInMs}" id="dragAndDropWaitTimeInMs"></md-filled-text-field>
+              </div>
+              <div class="fields">
+                <md-filled-text-field label="Google Music Email" .value="${this.googleEmail}" id="googleEmail"></md-filled-text-field>
+                <md-filled-text-field label="Google Music App Key" .value="${this.googleAppKey}" id="googleAppKey"></md-filled-text-field>
+                <md-filled-text-field label="Android ID" .value="${this.googleAndroidId}" id="googleAndroidId"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Google Client ID" .value="${this.googleClientId}" id="googleClientId"></md-filled-text-field>
+                <md-filled-text-field label="Google Client Secret".value="${this.googleClientSecret}" id="googleClientSecret"></md-filled-text-field>
+                <md-filled-text-field label="Google OAuth Refresh Token" .value="${this.googleOauthRefreshToken}" id="googleOauthRefreshToken"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Feedly User ID" .value="${this.feedlyUserId}" id="feedlyUserId"></md-filled-text-field>
+                <md-filled-text-field label="Feedly Developer Token" .value="${this.feedlyDevToken}" id="feedlyDevToken"></md-filled-text-field>
+              </div>
+            </section>
+            <section>
+              <div class="fields">
+                <md-filled-text-field label="Midi controller name" .value="${this.audioMidiControllerName}" id="audioMidiControllerName"></md-filled-text-field>
+                <md-filled-text-field label="Midi volume channel" .value="${this.audioVolumeMidiChannel}" id="audioVolumeMidiChannel"></md-filled-text-field>
+                <md-filled-text-field label="Midi volume cc (msb)" .value="${this.audioVolumeMidiCC}" id="audioVolumeMidiCC"></md-filled-text-field>
+                <md-filled-text-field label="Midi volume exp scale" .value="${this.audioExponentialFactor}" id="audioExponentialFactor"></md-filled-text-field>
+                <md-filled-text-field label="Midi volume linear scale" .value="${this.audioLinearFactor}" id="audioLinearFactor"></md-filled-text-field>
+              </div>
+            </section>
+            <section></section>
+          </main>
         </div>
       </abstract-action-page>
     `;
@@ -70,6 +86,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   constructor() {
     super();
+    this.selectedTab = 0;
     this.appDebugMode = this.settings.getBool('app.debug');
     this.appTheme = this.settings.getString('app.theme');
     this.audioExponentialFactor = this.settings.getString('audio.exponentialFactor');
@@ -121,6 +138,24 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   disconnectedCallback() {
     window.removeEventListener('settings-edit', this.settingsEditListener);
     super.disconnectedCallback();
+  }
+
+  tabClicked(tab) {
+    if (this.selectedTab != tab) {
+      let drawer = this.shadowRoot.getElementById('main');
+      drawer.children.item(tab).classList.toggle('active');
+      drawer.children.item(this.selectedTab).classList.toggle('active');
+      this.selectedTab = tab;
+    }
+  }
+  mainTabClicked() {
+    this.tabClicked(0);
+  }
+  midiTabClicked() {
+    this.tabClicked(1);
+  }
+  poolTabClicked() {
+    this.tabClicked(2);
   }
 
   exit() {
@@ -220,6 +255,44 @@ class SettingsEdit extends SettingsMixin(LitElement) {
         }
         :host(.show) {
           display: block;
+        }
+        .outer {
+          margin-top: -22px;
+          width: 100vw;
+          display: flex;
+          flex-direction: column;
+          height: 100%;
+          flex-grow: 0;
+          flex-shrink: 0;
+          min-height: calc(100vh - 102px);
+        }
+        mwc-tab-bar {
+          background-color: var(--ss-drawer-tab-background-color);
+          display: flex;
+        }
+        mwc-tab {
+          --mdc-theme-primary: var(--ss-drawer-tab-active-color);
+          --mdc-tab-text-label-color-default: var(--ss-drawer-tab-text-color);
+          --mdc-tab-horizontal-padding: 0;
+        }
+        main {
+          flex-grow: 1;
+          flex-shrink: 1;
+          flex-basis: auto;
+          overflow: hidden;
+        }
+        section {
+          transition: transform 1s;
+          transform: translate(-100%);
+          align-items: flex-start;
+          justify-content: center;
+          display: none;
+        }
+        section.active {
+          transition: transform 1s;
+          transform: translate(0);
+          display: flex;
+          flex-direction: row;
         }
         .fields {
           display: flex;
