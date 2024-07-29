@@ -249,15 +249,17 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           bottom: 0;
           left: 0;
           z-index: 10;
+          padding-top: 48px;
         }
         :host(.show) {
           display: block;
         }
         abstract-action-page {
-          overflow: hidden;
+          overflow-x: hidden;
+          overflow-y: scroll;
         }
         .outer {
-          margin-top: -22px;
+          /* margin-top: -22px; */
           width: 100vw;
           display: flex;
           flex-direction: column;
@@ -269,6 +271,10 @@ class SettingsEdit extends SettingsMixin(LitElement) {
         mwc-tab-bar {
           background-color: var(--ss-drawer-tab-background-color);
           display: flex;
+          position: absolute;
+          top: 0;
+          left: 0;
+          right: 0;
         }
         mwc-tab {
           --mdc-theme-primary: var(--ss-drawer-tab-active-color);
@@ -279,8 +285,6 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           flex-grow: 1;
           flex-shrink: 1;
           flex-basis: auto;
-          overflow-x: hidden;
-          overflow-y: scroll;
         }
         section {
           transition: transform 1s;
