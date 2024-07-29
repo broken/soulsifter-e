@@ -24,6 +24,7 @@ import "./youtube-client.js"
 import 'material-design-icons/iconfont/material-icons.css';
 import 'typeface-roboto/index.css';
 import theme_default from './css/theme-default.css?inline';
+import theme_rekordbox from './css/theme-rekordbox.css?inline';
 import theme_serato from './css/theme-serato.css?inline';
 import theme_traktor from './css/theme-traktor.css?inline';
 import theme_traktor3 from './css/theme-traktor3.css?inline';
@@ -123,6 +124,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
   static get styles() {
     return [
       css`${unsafeCSS(theme_default)}`,
+      css`${unsafeCSS(theme_rekordbox)}`,
       css`${unsafeCSS(theme_serato)}`,
       css`${unsafeCSS(theme_traktor)}`,
       css`${unsafeCSS(theme_traktor3)}`,

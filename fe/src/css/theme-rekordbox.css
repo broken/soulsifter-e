@@ -1,0 +1,6 @@
+:host(.rekordbox) {
+  --err: #fd5b94;
+  --accent: #b434ff;  /* accents */
+  --accent2: var(--clr_bold);  /* text emphasis */
+  --accent3: #111;  /* accented bg */
+}
