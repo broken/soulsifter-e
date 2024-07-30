@@ -262,38 +262,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
     window.addEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
   }
 
-  midiConnected(myChan) {
-    myChan.addListener('controlchange', e => {
-      const midiCC = this.settings.getInt('audio.volumeMidiCC');
-      if (e.message.dataBytes[0] != midiCC &&
-          e.message.dataBytes[0] != midiCC + 32) return;
-      // console.log(`${e.subtype} [${e.message.dataBytes[0]}]: ${e.rawValue}`);
-      if (this.note == undefined) {
-        if (e.message.dataBytes[0] == midiCC) {
-          this.note = e.rawValue;
-        }
-      } else {
-        let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
-        this.note = undefined;
-        let exp = Number(this.settings.getString('audio.exponentialFactor'));
-        let linear = Number(this.settings.getString('audio.linearFactor'));
-        // 0.93*x^1/2.5 looks to match the closest curve,
-        // but osx prob has its own curve that we have to compensate for
-        // https://www.desmos.com/calculator/pwfyfk6yb2
-        let y = Math.pow(value, exp) * linear;
-        console.log(`Setting volume to ${y} from value ${value}`);
-        let vol = Math.max(Math.min(y, 1), 0);
-        this.volume = vol * 100;
-        this.requestUpdate();
-        let event = new CustomEvent(
-          'audio-set-volume',
-          { bubbles: true, composed: true, detail: { volume: vol }}
-        );
-        this.dispatchEvent(event);
-      }
-    });
-  }
-
   _updateAlertWithMouseCoords = e => {
     this.updateAlert(this.mouseCoordAlertId, undefined, `Mouse coordinates: ${e.screenX}, ${e.screenY}`);
   }
@@ -371,6 +339,41 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
       { bubbles: true, composed: true, detail: { volume: vol }}
     );
     this.dispatchEvent(event);
+  }
+
+  getMidiInputs() {
+    return [
+      [
+        this.settings.getString('midi.pauseAudio'),
+        e => this.dispatchEvent(new CustomEvent('audio-pause', {bubbles: true, composed: true}))
+      ],
+      [
+        this.settings.getString('midi.volume.msb'),  // 13
+        e => this.note = e.rawValue
+      ],
+      [
+        this.settings.getString('midi.volume.lsb'),  // 33
+        e => {
+          let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
+          this.note = undefined;
+          let exp = Number(this.settings.getString('audio.exponentialFactor'));
+          let linear = Number(this.settings.getString('audio.linearFactor'));
+          // 0.93*x^1/2.5 looks to match the closest curve,
+          // but osx prob has its own curve that we have to compensate for
+          // https://www.desmos.com/calculator/pwfyfk6yb2
+          let y = Math.pow(value, exp) * linear;
+          console.log(`Setting volume to ${y} from value ${value}`);
+          let vol = Math.max(Math.min(y, 1), 0);
+          this.volume = vol * 100;
+          this.requestUpdate();
+          let event = new CustomEvent(
+            'audio-set-volume',
+            { bubbles: true, composed: true, detail: { volume: vol }}
+          );
+          this.dispatchEvent(event);
+        }
+      ]
+    ];
   }
 
   static get styles() {

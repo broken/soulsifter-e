@@ -9,6 +9,7 @@ import { SettingsMixin } from "./mixin-settings.js";
 
 class SettingsEdit extends SettingsMixin(LitElement) {
   render() {
+    const rawMidiPattern = "[89A-E,a-e][0-9A-Fa-f] [0-7][0-9A-Fa-f] [x0-7][x0-9A-Fa-f]";
     return html`
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
         <div class="outer">
@@ -54,10 +55,17 @@ class SettingsEdit extends SettingsMixin(LitElement) {
             <section>
               <div class="fields">
                 <md-filled-text-field label="Midi controller name" .value=${this.audioMidiControllerName} id="audioMidiControllerName"></md-filled-text-field>
-                <md-filled-text-field label="Midi volume channel" .value=${this.audioVolumeMidiChannel} id="audioVolumeMidiChannel"></md-filled-text-field>
-                <md-filled-text-field label="Midi volume cc (msb)" .value=${this.audioVolumeMidiCC} id="audioVolumeMidiCC"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Browse" .value=${this.midiBrowse} id="midiBrowse" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field label="Load left deck" .value=${this.midiLoadLeft} id="midiLoadLeft" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field label="Load right deck" .value=${this.midiLoadRight} id="midiLoadRight" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field label="Stop audio" .value=${this.midiPauseAudio} id="midiPauseAudio" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+              </div>
+              <div class="fields">
                 <md-filled-text-field label="Midi volume exp scale" .value=${this.audioExponentialFactor} id="audioExponentialFactor"></md-filled-text-field>
                 <md-filled-text-field label="Midi volume linear scale" .value=${this.audioLinearFactor} id="audioLinearFactor"></md-filled-text-field>
+                <md-filled-text-field label="Volume (msb)" .value=${this.midiVolumeMsb} id="midiVolumeMsb" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field label="Volume (lsb)" .value=${this.midiVolumeLsb} id="midiVolumeLsb" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
               </div>
             </section>
             <section>
@@ -98,8 +106,6 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.audioExponentialFactor = this.settings.getString('audio.exponentialFactor');
     this.audioLinearFactor = this.settings.getString('audio.linearFactor');
     this.audioMidiControllerName = this.settings.getString('audio.midiControllerName');
-    this.audioVolumeMidiCC = this.settings.getInt('audio.volumeMidiCC');
-    this.audioVolumeMidiChannel = this.settings.getInt('audio.volumeMidiChannel');
     this.musicDir = this.settings.getString('dir.music');
     this.musicVideoDir = this.settings.getString('dir.mv');
     this.stemsDir = this.settings.getString('dir.stems');
@@ -124,6 +130,12 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.editAutoPlay = this.settings.getBool('edit.autoPlay');
     this.feedlyDevToken = this.settings.getString('feedly.devToken');
     this.feedlyUserId = this.settings.getString('feedly.userId');
+    this.midiBrowse = this.settings.getString('midi.browse');
+    this.midiLoadLeft = this.settings.getString('midi.loadLeft');
+    this.midiLoadRight = this.settings.getString('midi.loadRight');
+    this.midiPauseAudio = this.settings.getString('midi.pauseAudio');
+    this.midiVolumeLsb = this.settings.getString('midi.volume.lsb');
+    this.midiVolumeMsb = this.settings.getString('midi.volume.msb');
     this.songListColBpm = this.settings.getBool('songList.column.bpm');
     this.songListLimit = this.settings.getInt('songList.limit');
     this.songListPreviewTimeInSecs = this.settings.getInt('songList.previewTimeInSec');
@@ -166,8 +178,6 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('audio.exponentialFactor', this.shadowRoot.getElementById('audioExponentialFactor').value);
     this.puts('audio.linearFactor', this.shadowRoot.getElementById('audioLinearFactor').value);
     this.puts('audio.midiControllerName', this.shadowRoot.getElementById('audioMidiControllerName').value);
-    this.puti('audio.volumeMidiCC', Number(this.shadowRoot.getElementById('audioVolumeMidiCC').value));
-    this.puti('audio.volumeMidiChannel', Number(this.shadowRoot.getElementById('audioVolumeMidiChannel').value));
     this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
     this.puts('dir.mv', this.shadowRoot.getElementById('musicVideoDir').value);
     this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);
@@ -192,6 +202,12 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.putb('edit.autoPlay', this.shadowRoot.getElementById('editAutoPlay').checked);
     this.puts('feedly.devToken', this.shadowRoot.getElementById('feedlyDevToken').value);
     this.puts('feedly.userId', this.shadowRoot.getElementById('feedlyUserId').value);
+    this.puts('midi.browse', this.shadowRoot.getElementById('midiBrowse').value);
+    this.puts('midi.loadLeft', this.shadowRoot.getElementById('midiLoadLeft').value);
+    this.puts('midi.loadRight', this.shadowRoot.getElementById('midiLoadRight').value);
+    this.puts('midi.pauseAudio', this.shadowRoot.getElementById('midiPauseAudio').value);
+    this.puts('midi.volume.lsb', this.shadowRoot.getElementById('midiVolumeLsb').value);
+    this.puts('midi.volume.msb', this.shadowRoot.getElementById('midiVolumeMsb').value);
     this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);
     this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
     this.puti('songList.previewTimeInSec', Number(this.shadowRoot.getElementById('songListPreviewTimeInSecs').value));

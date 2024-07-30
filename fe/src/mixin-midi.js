@@ -36,8 +36,7 @@ let midiMixin = (superClass) => class extends superClass {
         });
       }
       const mySynth = WebMidi.getInputByName(this.settings.getString('audio.midiControllerName'));
-      let myChan = mySynth.channels[this.settings.getInt('audio.volumeMidiChannel')];
-      let event = new CustomEvent('midi-connected', { detail: myChan });
+      let event = new CustomEvent('midi-connected', { detail: mySynth });
       window.dispatchEvent(event);
     })
     .catch(err => this.addAlert('Unable to connect to Midi controller. ' + err));
@@ -47,7 +46,39 @@ let midiMixin = (superClass) => class extends superClass {
     this.midiConnected(e.detail);
   }
 
-  midiConnected(chan) {
+  getMidiInputs() {
+    return [];
+  }
+
+  midiConnected(midiInput) {
+    const typenames = {
+      '8': 'noteoff',
+      '9': 'noteon',
+      'A': 'polyaftertouch',  // right name?
+      'B': 'controlchange',
+      'C': 'programchange',  // right name?
+      'D': 'channelaftertouch',  // right name?
+      'E': 'pitchwheel'  // right name?
+    }
+    let inputsByChannel = this.getMidiInputs().filter(x => !!x[0]).reduce((dict, x) => { (dict[x[0][1]] || (dict[x[0][1]] = [])).push(x); return dict; }, {});
+    for (const chan in inputsByChannel) {
+      let midiChan = midiInput.channels[parseInt(chan, 16) + 1];
+      let inputsByType = Object.values(inputsByChannel[chan]).reduce((dict, x) => { (dict[x[0][0]] || (dict[x[0][0]] = [])).push(x); return dict; }, {});
+      for (const type in inputsByType) {
+        const inputsByNum = Object.values(inputsByType[type]).reduce((dict, x) => {
+          const num = parseInt(x[0].substring(3, 5), 16);
+          (dict[num] || (dict[num] = [])).push(x);
+          return dict;
+        }, {});
+        midiChan.addListener(typenames[type.toUpperCase()], e => {
+          if (e.message.dataBytes[0] in inputsByNum) {
+            inputsByNum[e.message.dataBytes[0]].forEach(x => {
+              if (x[0].substring(6,8) == 'xx' || e.rawValue == parseInt(x[0].substring(6, 8), 16)) x[1](e);
+            });
+          }
+        });
+      }
+    }
   }
 }
 

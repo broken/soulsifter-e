@@ -227,96 +227,6 @@ class SongList extends AlertsMixin(
     }
   }
 
-  midiConnected(myChan) {
-    myChan.addListener('noteon', e => {
-      console.log(e);
-      const loadA = 70;
-      const loadB = 71;
-      if (e.message.dataBytes[0] != loadA && e.message.dataBytes[0] != loadB) return;
-      if (!this.midiSelectedListItem) return;
-
-      let rect = this.midiSelectedListItem.getBoundingClientRect();
-      const chromeOffset = 31;  // TODO setting or compute with mouse listen
-      const ex = '=' + ((rect.left + window.screenX + rect.width / 2) | 0);
-      const ey = '=' + ((rect.top + window.screenY + chromeOffset + rect.height / 2) | 0);
-
-      let x = 0;
-      let y = 0;
-
-      ipcRenderer.send('ss-focus');
-      if (e.message.dataBytes[0] == loadA) {
-        x = this.settings.getString('dragAndDrop.deckLeftX');
-        y = this.settings.getString('dragAndDrop.deckLeftY');
-      } else {
-        x = this.settings.getString('dragAndDrop.deckRightX');
-        y = this.settings.getString('dragAndDrop.deckRightY');
-      }
-
-      const util = require('util');
-      const exec = util.promisify(require('node:child_process').exec);
-      const easing = this.settings.getInt('dragAndDrop.easing');
-      const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
-
-      let dnd = async () => {
-        exec(`cliclick -e ${easing} -r m:${ex},${ey} w:100 dd:. w:10 dm:${x},${y} w:${wait} du:${x},${y} w:50`);
-      }
-      dnd();
-      setTimeout(() => this.midiSelectedListItem.selectSong(e), 2000);  // wait to select song until after drag event
-    });
-    myChan.addListener('controlchange', e => {
-      console.log(e);
-      const browse = 64;
-      const velRight = 1;
-      const velLeft = 127;
-      if (e.message.dataBytes[0] != browse) return;
-      let items = this.shadowRoot.querySelectorAll('song-list-item');
-      if (!this.midiSelectedListItem) {
-        if (items.length) this.midiSelectedListItem = items[0];
-      } else {
-        this.midiSelectedListItem.removeAttribute('selected');
-        if (e.message.dataBytes[1] == velRight) {
-          let useNext = false;
-          for (let item of items) {
-            if (item == this.midiSelectedListItem) {
-              useNext = true;
-            } else if (useNext) {
-              useNext = false;
-              this.midiSelectedListItem = item;
-              break;
-            }
-          }
-        } else if (e.message.dataBytes[1] == velLeft) {
-          let prevItem = items[0];
-          for (let item of items) {
-            if (item == this.midiSelectedListItem) {
-              this.midiSelectedListItem = prevItem;
-              break;
-            } else {
-              prevItem = item;
-            }
-          }
-        }
-      }
-      this.midiSelectedListItem.setAttribute('selected', '');
-      {
-        // scroll so selected is in the middle
-        const thisRect = this.getBoundingClientRect();
-        const selectedRect = this.midiSelectedListItem.getBoundingClientRect();
-        const targetTop = thisRect.height / 2 - selectedRect.height / 2 + thisRect.top;
-        const moveTop = selectedRect.top - targetTop;
-        const newScrollTop = this.scrollTop + moveTop;
-        this.scrollTo({top: newScrollTop, behavior: 'instant'});
-        console.info(`targetTop: ${targetTop}, moveTop ${moveTop}  newScrollTop: ${newScrollTop}, stop ${selectedRect.top} `);
-      }
-      let event = new CustomEvent('audio-preview-song', {
-          bubbles: true,
-          composed: true,
-          detail: { song: this.midiSelectedListItem.song, pct: 0.25, player: this.midiSelectedListItem }
-      });
-      this.dispatchEvent(event);
-    });
-  }
-
   updateEditedSong(id) {
     this.shadowRoot.querySelectorAll('song-list-item').forEach(el => {
       if (el.song.id == id) el.song = ss.Song.findById(id);
@@ -498,6 +408,94 @@ class SongList extends AlertsMixin(
         this.changeSong(result);
       }
     }
+  }
+
+  dragSongTo(x, y) {
+    if (!this.midiSelectedListItem) return;
+
+    let rect = this.midiSelectedListItem.getBoundingClientRect();
+    const chromeOffset = 31;  // TODO setting or compute with mouse listen
+    const ex = '=' + ((rect.left + window.screenX + rect.width / 2) | 0);
+    const ey = '=' + ((rect.top + window.screenY + chromeOffset + rect.height / 2) | 0);
+
+    ipcRenderer.send('ss-focus');
+
+    const util = require('util');
+    const exec = util.promisify(require('node:child_process').exec);
+    const easing = this.settings.getInt('dragAndDrop.easing');
+    const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
+
+    let dnd = async () => {
+      exec(`cliclick -e ${easing} -r m:${ex},${ey} w:100 dd:. w:10 dm:${x},${y} w:${wait} du:${x},${y} w:50`);
+    }
+    dnd();
+    setTimeout(() => this.midiSelectedListItem.selectSong({}), 2000);  // wait to select song until after drag event
+  }
+
+  getMidiInputs() {
+    return [
+      [
+        this.settings.getString('midi.loadLeft'),  // 70
+        e => this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'))
+      ],
+      [
+        this.settings.getString('midi.loadRight'),  // 71
+        e => this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'))
+      ],
+      [
+        this.settings.getString('midi.browse'),  // 64
+        e => {
+          console.log(e);
+          const velRight = 1;
+          const velLeft = 127;
+          let items = this.shadowRoot.querySelectorAll('song-list-item');
+          if (!this.midiSelectedListItem) {
+            if (items.length) this.midiSelectedListItem = items[0];
+          } else {
+            this.midiSelectedListItem.removeAttribute('selected');
+            if (e.message.dataBytes[1] == velRight) {
+              let useNext = false;
+              for (let item of items) {
+                if (item == this.midiSelectedListItem) {
+                  useNext = true;
+                } else if (useNext) {
+                  useNext = false;
+                  this.midiSelectedListItem = item;
+                  break;
+                }
+              }
+            } else if (e.message.dataBytes[1] == velLeft) {
+              let prevItem = items[0];
+              for (let item of items) {
+                if (item == this.midiSelectedListItem) {
+                  this.midiSelectedListItem = prevItem;
+                  break;
+                } else {
+                  prevItem = item;
+                }
+              }
+            }
+          }
+          this.midiSelectedListItem.setAttribute('selected', '');
+          {
+            // scroll so selected is in the middle
+            const thisRect = this.getBoundingClientRect();
+            const selectedRect = this.midiSelectedListItem.getBoundingClientRect();
+            const targetTop = thisRect.height / 2 - selectedRect.height / 2 + thisRect.top;
+            const moveTop = selectedRect.top - targetTop;
+            const newScrollTop = this.scrollTop + moveTop;
+            this.scrollTo({top: newScrollTop, behavior: 'instant'});
+            console.info(`targetTop: ${targetTop}, moveTop ${moveTop}  newScrollTop: ${newScrollTop}, stop ${selectedRect.top} `);
+          }
+          let event = new CustomEvent('audio-preview-song', {
+              bubbles: true,
+              composed: true,
+              detail: { song: this.midiSelectedListItem.song, pct: 0.25, player: this.midiSelectedListItem }
+          });
+          this.dispatchEvent(event);
+        }
+      ]
+    ];
   }
 
   static get styles() {

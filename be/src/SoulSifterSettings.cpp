@@ -21,8 +21,6 @@ namespace soulsifter {
     //ptree.put("audio.exponentialFactor", "0.25");
     //ptree.put("audio.linearFactor", "1.125");
     //ptree.put("audio.midiControllerName", "DDJ-SB3");
-    //ptree.put("audio.volumeMidiCC", 13);
-    //ptree.put("audio.volumeMidiChannel", 7);
     //ptree.put("dir.music", "");
     //ptree.put("dir.mv", "");
     //ptree.put("dir.staging", "");
@@ -51,6 +49,12 @@ namespace soulsifter {
     //ptree.put("google.appKey", "");
     //ptree.put("google.email", "");
     //ptree.put("google.androidId", "");
+    //ptree.put("midi.browse", "");
+    //ptree.put("midi.loadLeft", "");
+    //ptree.put("midi.loadRight", "");
+    //ptree.put("midi.pauseAudio", "");
+    //ptree.put("midi.volume.lsb", "");
+    //ptree.put("midi.volume.msb", "");
     ptree.put("search.energyGap", 1);
     ptree.put("search.includeUnknownKeys", true);
     ptree.put("songList.column.bpm", false);
