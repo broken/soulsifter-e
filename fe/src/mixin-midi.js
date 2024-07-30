@@ -35,7 +35,7 @@ let midiMixin = (superClass) => class extends superClass {
           console.log(`${index}: ${device.name}`);
         });
       }
-      const mySynth = WebMidi.getInputByName(this.settings.getString('audio.midiControllerName'));
+      const mySynth = WebMidi.getInputByName(this.settings.getString('midi.controllerName'));
       let event = new CustomEvent('midi-connected', { detail: mySynth });
       window.dispatchEvent(event);
     })

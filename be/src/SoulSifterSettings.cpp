@@ -18,9 +18,6 @@ namespace soulsifter {
     // first set defaults
     ptree.put("app.debug", false);
     //ptree.put("app.theme", "");
-    //ptree.put("audio.exponentialFactor", "0.25");
-    //ptree.put("audio.linearFactor", "1.125");
-    //ptree.put("audio.midiControllerName", "DDJ-SB3");
     //ptree.put("dir.music", "");
     //ptree.put("dir.mv", "");
     //ptree.put("dir.staging", "");
@@ -50,9 +47,12 @@ namespace soulsifter {
     //ptree.put("google.email", "");
     //ptree.put("google.androidId", "");
     //ptree.put("midi.browse", "");
+    //ptree.put("midi.controllerName", "");
     //ptree.put("midi.loadLeft", "");
     //ptree.put("midi.loadRight", "");
     //ptree.put("midi.pauseAudio", "");
+    ptree.put("midi.volume.exponentialFactor", "0.25");
+    ptree.put("midi.volume.linearFactor", "1.125");
     //ptree.put("midi.volume.lsb", "");
     //ptree.put("midi.volume.msb", "");
     ptree.put("search.energyGap", 1);

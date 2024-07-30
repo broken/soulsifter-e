@@ -356,8 +356,8 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
         e => {
           let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
           this.note = undefined;
-          let exp = Number(this.settings.getString('audio.exponentialFactor'));
-          let linear = Number(this.settings.getString('audio.linearFactor'));
+          let exp = Number(this.settings.getString('midi.volume.exponentialFactor'));
+          let linear = Number(this.settings.getString('midi.volume.linearFactor'));
           // 0.93*x^1/2.5 looks to match the closest curve,
           // but osx prob has its own curve that we have to compensate for
           // https://www.desmos.com/calculator/pwfyfk6yb2
