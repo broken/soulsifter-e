@@ -306,6 +306,9 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         .song-item:hover .fade-out:after {
           background: var(--ss-song-list-item-hover-fade-out);
         }
+        :host([selected]) .song-item .fade-out:after {
+          background: var(--ss-song-list-item-hover-fade-out);
+        }
 
         #cover {
           background-position: center center;
