@@ -20,7 +20,7 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false
     }
-  })
+  });
 
   // and load the index.html of the app.
   mainWindow.loadFile('build/index.html')
@@ -65,7 +65,7 @@ const createWindow = () => {
         if (!playlists[i].youtubeId) continue;
         progress = i / playlists.length || 0.01;
         // this.updateAlert(alertId, progress, 'Syncing playlist ' + playlists[i].name);
-        await yt._updatePlaylistEntries(playlists[i]);
+        await yt._updatePlaylistEntries(event, playlists[i]);
       }
       // this.updateAlert(alertId, 1, 'Completed syncing playlists.', 20);
     }).catch(err => {
@@ -85,7 +85,7 @@ const createWindow = () => {
         playlist.youtubeId = response.data.id;
         playlist.update();
       }
-      await yt._updatePlaylistEntries(playlist);
+      await yt._updatePlaylistEntries(event, playlist);
     }).catch(err => {
       mainWindow.webContents.send('addalert', {'a': 'Unable to create YouTube playlist ' + playlist.name});
       // this.addAlert('Unable to create YouTube playlist ' + playlist.name);
@@ -301,8 +301,10 @@ class YoutubeClientMain {
     return Promise.resolve();
   }
 
-  async _updatePlaylistEntries(playlist) {
+  async _updatePlaylistEntries(event, playlist, alertId = undefined) {
     let entries, songs;
+
+    updateAlert(event, alertId, -1, `Syncing playlist ${playlist.name} (${playlist.id}). Finding tracks.`);
     if (!playlist.query) {
       entries = ss.PlaylistEntry.findByPlaylistId(playlist.id);
       songs = entries.sort(function(a, b) { return a.position - b.position; })
@@ -341,18 +343,22 @@ class YoutubeClientMain {
     let x = items.filter(item => !songs.find(s => s.youtubeId == item.videoId));
     songs = songs.filter(song => !items.find(i => song.youtubeId == i.videoId));
     items = x;
+    let count = items.length + songs.length;
 
     // remove items
     for (let i = 0; i < items.length; ++i) {
+      updateAlert(event, alertId, i/count, `Syncing playlist ${playlist.name} (${playlist.id}). Removing songs from playlist.`);
       await this._removePlaylistEntry(items[i].id);
       await this.sleep();
     }
 
     // add songs
     for (let i = 0; i < songs.length; ++i) {
+      updateAlert(event, alertId, (i+items.length)/count, `Syncing playlist ${playlist.name} (${playlist.id}). Adding songs to playlist.`);
       await this._addSongToPlaylist(songs[i], playlist);
       await this.sleep();
     }
+    updateAlert(event, alertId, 1, `Finished syncing playlist ${playlist.name} (${playlist.id}).`, 15);
   }
 
   _createPlaylist(playlist) {
@@ -466,12 +472,12 @@ class YoutubeClientMain {
 };
 let yt = new YoutubeClientMain();
 
-ipcMain.on('yt-updatePlaylistEntries', async (event, playlistId) => {
+ipcMain.on('yt-updatePlaylistEntries', async (event, playlistId, alertId) => {
   yt.auth().then(async () => {
     let playlist = ss.Playlist.findById(playlistId);
-    await yt._updatePlaylistEntries(playlist);
+    await yt._updatePlaylistEntries(event, playlist, alertId);
   }).catch(err => {
-    console.error('Unable to update playlist entries for playlist ' + playlistId);
+    updateAlert(event, alertId, 1, `Failed to sync playlist ${playlistId}. ${err}.`);
     console.error(err);
   });
 });
@@ -495,6 +501,15 @@ ipcMain.on('yt-addPlaylistEntry', async (event, entryId) => {
     console.error(err);
   });
 });
+
+const updateAlert = (event, id, progress = undefined, a = undefined, timeoutInSeconds = 0) => {
+  event.sender.send('updatealert', {
+    'id': id,
+    'progress': progress,
+    'a': a,
+    'timeoutInSeconds': timeoutInSeconds
+  });
+};
 
 // Quit when all windows are closed, except on macOS. There, it's common
 // for applications and their menu bar to stay active until the user quits

@@ -80,7 +80,8 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
   }
 
   youtubeSyncAction(e) {
-    window.yt.updatePlaylistEntries(this.playlist.id);
+    const aid = this.addAlert(`Syncing playlist ${this.playlist.name} (${this.playlist.id}).`, 0, -1);
+    window.yt.updatePlaylistEntries(this.playlist.id, aid);
   }
 
   handleDragLeave(e) {

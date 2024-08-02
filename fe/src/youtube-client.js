@@ -21,8 +21,8 @@ class YoutubeClient extends AlertsMixin(Object) {  // TODO show errors
     ipcRenderer.send('yt-syncPlaylists');
   }
 
-  updatePlaylistEntries(playlistId) {
-    ipcRenderer.send('yt-updatePlaylistEntries', playlistId);
+  updatePlaylistEntries(playlistId, alertId) {
+    ipcRenderer.send('yt-updatePlaylistEntries', playlistId, alertId);
   }
 
 };
