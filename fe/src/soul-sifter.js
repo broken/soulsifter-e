@@ -3,7 +3,7 @@ import { css, html, LitElement, unsafeCSS } from 'lit';
 import "@material/mwc-tab";
 import "@material/mwc-tab-bar";
 
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { AudioMixin } from "./mixin-audio.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import "./alert-list.js";
@@ -97,6 +97,18 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
         this.classList.add(theme.trim());
       });
     }
+    ipcRenderer.on('addalert', (e, data) => {
+      this.addAlert(data.a, data.timeoutInSeconds, data.progress);
+    });
+    ipcRenderer.on('updatealert', (e, data) => {
+      this.updateAlert(data.id, data.progress, data.a, data.timeoutInSeconds);
+    });
+  }
+
+  disconnectedCallback() {
+    ipcRenderer.removeAllListeners('addalert');
+    ipcRenderer.removeAllListeners('updatealert');
+    super.disconnectedCallback();
   }
 
   tabClicked(tab) {

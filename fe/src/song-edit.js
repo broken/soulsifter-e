@@ -4,7 +4,7 @@ import "@material/web/button/text-button.js";
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/textfield/filled-text-field.js";
 
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { SongEditMixin } from "./mixin-song-edit.js";
 import "./abstract-action-page.js";

@@ -2,12 +2,12 @@ import { css, html, LitElement } from "lit";
 
 import "@polymer/paper-toast";
 
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsSubMixin } from "./mixin-alerts-sub.js";
 import "./alert-list-item.js";
 import "./icon-button.js";
 
 
-class AlertList extends AlertsMixin(LitElement) {
+class AlertList extends AlertsSubMixin(LitElement) {
   render() {
     return html`
       <paper-toast id="toast" class="fit-bottom" duration="0">
@@ -18,24 +18,7 @@ class AlertList extends AlertsMixin(LitElement) {
     `;
   }
 
-  connectedCallback() {
-    super.connectedCallback();
-    ipcRenderer.on('addalert', (e, data) => {
-      this.addAlert(data.a, data.timeoutInSeconds, data.progress);
-    });
-    ipcRenderer.on('updatealert', (e, data) => {
-      this.updateAlert(data.id, data.progress, data.a, data.timeoutInSeconds);
-    });
-  }
-
-  disconnectedCallback() {
-    ipcRenderer.removeAllListeners('addalert');
-    ipcRenderer.removeAllListeners('updatealert');
-    super.disconnectedCallback();
-  }
-
-  alertsChanged(x) {
-    this.alerts = x;
+  alertsChanged() {
     if (this.alerts.length > 0) {
       setTimeout(() => { this.shadowRoot.getElementById('toast').open(); }, 10);
     } else {

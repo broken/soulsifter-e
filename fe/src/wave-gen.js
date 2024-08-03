@@ -2,7 +2,7 @@ import { css, html, LitElement } from "lit";
 
 import WaveSurfer from 'wavesurfer.js';
 
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";

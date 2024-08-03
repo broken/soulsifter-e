@@ -4,11 +4,12 @@ import "@material/web/button/outlined-button.js";
 import "@material/mwc-circular-progress";
 import "@polymer/paper-toast";
 
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
+import { AlertsSubMixin } from "./mixin-alerts-sub.js";
 import "./icon-button.js";
 
 
-class AlertListItem extends AlertsMixin(LitElement) {
+class AlertListItem extends AlertsMixin(AlertsSubMixin(LitElement)) {
   render() {
     return html`
       <div class="msg">
@@ -34,8 +35,7 @@ class AlertListItem extends AlertsMixin(LitElement) {
     this.rmAlert(this.alert.id);
   }
 
-  alertsChanged(x) {
-    this.alerts = x;
+  alertsChanged() {
     this.requestUpdate();
   }
 

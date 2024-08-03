@@ -1,4 +1,4 @@
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
 
 class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
 

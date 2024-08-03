@@ -15,7 +15,7 @@ import "@material/web/textfield/filled-text-field.js";
 import "@polymer/paper-dialog/paper-dialog.js";
 
 import "./icon-button.js";
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { GenresMixin } from "./mixin-genres.js";
 import { MidiMixin } from "./mixin-midi.js";

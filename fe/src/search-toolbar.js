@@ -6,7 +6,7 @@ import "@thomasloven/round-slider";
 
 import { Utilities } from "webmidi";
 
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { MidiMixin } from "./mixin-midi.js";
 import { QueryMixin } from "./mixin-query.js";
@@ -258,22 +258,27 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
   }
 
   openMouseCoordsAlert(e) {
-    this.mouseCoordAlertId = this.addAlert('Mouse coordinates:');
-    window.addEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
+    if (!this.mouseCoordAlertId) {
+      window.addEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
+    }
+    this.mouseCoordAlertId = this.addAlert('Mouse coordinates:', 0, 0, () => {
+        console.info('Removing mouse listener.');
+        window.removeEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
+        this.rmAlert(this.mouseCoordAlertId);
+        this.mouseCoordAlertId = undefined;
+    });
   }
 
   _updateAlertWithMouseCoords = e => {
     this.updateAlert(this.mouseCoordAlertId, undefined, `Mouse coordinates: ${e.screenX}, ${e.screenY}`);
   }
 
-  alertsChanged(x) {
-    this.alerts = x;
+  alertsChanged() {
     if (!!this.mouseCoordAlertId) {
-      const idx = this.alerts.findIndex(a => a.id == this.mouseCoordAlertId);
-      if (idx == -1) {
-        window.removeEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
-        this.mouseCoordAlertId = undefined;
-      }
+      console.info('Removing mouse listener.');
+      window.removeEventListener('mousemove', this._updateAlertWithMouseCoords, { passive: true });
+      this.rmAlert(this.mouseCoordAlertId);
+      this.mouseCoordAlertId = undefined;
     }
   }
 

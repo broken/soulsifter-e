@@ -4,7 +4,7 @@ import "@material/mwc-icon";
 
 import "./options-menu.js";
 import "./options-menu-item.js";
-import { AlertsMixin } from "./mixin-alerts.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
 
 
 class PlaylistListItem extends AlertsMixin(LitElement) {
