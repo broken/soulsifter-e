@@ -8,6 +8,7 @@
 #include <g3log/logworker.hpp>
 #include "Album_wrap.h"
 #include "AlbumPart_wrap.h"
+#include "AlertsChannel_wrap.h"
 #include "AudioAnalyzer_wrap.h"
 #include "BasicGenre_wrap.h"
 #include "Mix_wrap.h"
@@ -54,6 +55,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   Style::Init(env, exports);
 
   // services
+  AlertsChannel::Init(env, exports);
   AudioAnalyzer::Init(env, exports);
   MusicService::Init(env, exports);
   MusicVideoService::Init(env, exports);

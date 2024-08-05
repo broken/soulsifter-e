@@ -59,6 +59,8 @@
         "src/MysqlAccess.cpp",
         "src/ResultSetIterator.h",
         # util
+        "src/AlertsChannel.cpp",
+        "src/AlertsChannel_wrap.cpp",
         "src/DTVectorUtil.h",
         "src/DTQueueUtil.h",
         "src/JobQueue.h",
