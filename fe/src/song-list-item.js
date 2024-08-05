@@ -227,7 +227,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
 
     let dnd = async () => {
-      exec(`cliclick -e ${easing} -r m:. dd:. w:10 dm:${x},${y} w:${wait} du:${x},${y} w:50`);
+      exec(`cliclick -e ${easing} -r m:. w:10 dd:. w:10 dm:${x},${y} w:${wait} du:${x},${y} w:50`);
     }
     dnd();
   }
