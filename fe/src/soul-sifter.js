@@ -103,6 +103,10 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
     ipcRenderer.on('updatealert', (e, data) => {
       this.updateAlert(data.id, data.progress, data.a, data.timeoutInSeconds);
     });
+    this.alertsChannel = new ss.AlertsChannel();
+    this.alertsChannel.registerChannelEndpoint(a => {
+      this.addAlert(a);
+    });
   }
 
   disconnectedCallback() {
