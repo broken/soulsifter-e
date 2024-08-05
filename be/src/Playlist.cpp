@@ -22,6 +22,7 @@
 #include <jdbc/cppconn/warning.h>
 #include <g3log/g3log.hpp>
 
+#include "AlertsChannel.h"
 #include "MysqlAccess.h"
 #include "DTVectorUtil.h"
 #include "Style.h"
@@ -120,9 +121,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     Playlist* Playlist::findByName(const string& name) {
@@ -145,9 +146,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     Playlist* Playlist::findBySpotifyId(const string& spotifyId) {
@@ -170,9 +171,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     ResultSetIterator<Playlist>* Playlist::findAll() {
@@ -187,9 +188,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
 # pragma mark persistence
@@ -245,9 +246,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     int Playlist::save() {
@@ -296,9 +297,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     bool Playlist::sync() {
@@ -383,9 +384,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
 

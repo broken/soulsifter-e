@@ -22,6 +22,7 @@
 #include <jdbc/cppconn/warning.h>
 #include <g3log/g3log.hpp>
 
+#include "AlertsChannel.h"
 #include "MysqlAccess.h"
 #include "DTVectorUtil.h"
 
@@ -236,9 +237,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     RESong* RESong::findBySongid(const string& songid) {
@@ -261,9 +262,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     ResultSetIterator<RESong>* RESong::findAll() {
@@ -278,9 +279,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
 # pragma mark persistence
@@ -360,9 +361,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     int RESong::save() {
@@ -454,9 +455,9 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
-        LOG(FATAL) << "Unable to complete model operation";
     }
 
     bool RESong::sync() {
