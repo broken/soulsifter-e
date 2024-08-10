@@ -5,11 +5,10 @@ import "@material/mwc-circular-progress";
 import "@polymer/paper-toast";
 
 import { AlertsMixin } from "./mixin-alerts-pub.js";
-import { AlertsSubMixin } from "./mixin-alerts-sub.js";
 import "./icon-button.js";
 
 
-class AlertListItem extends AlertsMixin(AlertsSubMixin(LitElement)) {
+class AlertListItem extends AlertsMixin(LitElement) {
   render() {
     return html`
       <div class="msg">
@@ -33,10 +32,6 @@ class AlertListItem extends AlertsMixin(AlertsSubMixin(LitElement)) {
 
   delAlert(e) {
     this.rmAlert(this.alert.id);
-  }
-
-  alertsChanged() {
-    this.requestUpdate();
   }
 
   resolve(e) {

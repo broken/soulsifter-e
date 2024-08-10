@@ -25,6 +25,7 @@ class AlertList extends AlertsSubMixin(LitElement) {
       this.shadowRoot.getElementById('toast').close();
     }
     this.requestUpdate();
+    this.shadowRoot.querySelectorAll('alert-list-item').forEach(el => el.requestUpdate());
   }
 }
 
