@@ -12,7 +12,7 @@ class AlertList extends AlertsSubMixin(LitElement) {
     return html`
       <paper-toast id="toast" class="fit-bottom" duration="0">
         ${this.alerts.map(alert => html`
-          <alert-list-item .alert="${alert}" .alerts="${this.alerts}"></alert-list-item>
+          <alert-list-item .alert="${alert}"></alert-list-item>
         `)}
       </paper-toast>
     `;
