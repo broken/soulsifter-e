@@ -47,9 +47,12 @@ void AlertsChannel::registerChannelEndpoint(const Napi::CallbackInfo& info) {
     Napi::TypeError::New(env, "TypeError: Function expected (for info[0])").ThrowAsJavaScriptException();
     return;
   }
-  Napi::Function a0Fn = info[0].As<Napi::Function>();
-  auto a0 = [&env, &a0Fn](const std::string& p0) {
-    a0Fn.Call(env.Global(), {Napi::String::New(env, p0)});
+  Napi::ThreadSafeFunction a0Fn = Napi::ThreadSafeFunction::New(env, info[0].As<Napi::Function>(), "Callback", 0, 1);
+  auto a0 = [a0Fn](const std::string& p0) {
+    auto callback = [p0](Napi::Env env, Napi::Function jsCallback) {
+      jsCallback.Call({Napi::String::New(env, p0)});
+    };
+    a0Fn.BlockingCall(callback);
   };
   obj->alertschannel->registerChannelEndpoint(a0);
 }
