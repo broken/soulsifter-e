@@ -6,6 +6,7 @@ const { google } = require('googleapis');
 const ss = require('soulsifter');
 
 const isDev = process.env.IS_DEV === 'true';
+let alertsChannel = new ss.AlertsChannel();
 
 const createWindow = () => {
   // Create the browser window.
@@ -20,6 +21,11 @@ const createWindow = () => {
       nodeIntegration: true,
       contextIsolation: false
     }
+  });
+
+  // add alert callback for main context
+  alertsChannel.registerChannelEndpoint(s =>  {
+    mainWindow.webContents.send('addalert', {'a': s});
   });
 
   // and load the index.html of the app.
