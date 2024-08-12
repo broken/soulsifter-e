@@ -49,7 +49,14 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Database Password" .value=${this.dbPassword} id="dbPassword"></md-filled-text-field>
                 <md-filled-text-field label="Database URL" .value=${this.dbUrl} id="dbUrl"></md-filled-text-field>
                 <br>
-                <md-filled-text-field label="Theme" .value=${this.appTheme} id="appTheme"></md-filled-text-field>
+                <options-menu-input label="Theme" value="${this.appTheme}" id="appTheme">
+                  <options-menu-item>default</options-menu-item>
+                  <options-menu-item>rekordbox</options-menu-item>
+                  <options-menu-item>serato</options-menu-item>
+                  <options-menu-item>traktor</options-menu-item>
+                  <options-menu-item>traktor3</options-menu-item>
+                  <options-menu-item>witch</options-menu-item>
+                </options-menu-input>
               </div>
             </section>
             <section>
