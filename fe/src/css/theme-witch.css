@@ -21,5 +21,19 @@
   --md-filled-tonal-button-container-color: var(--accent3);
   --ss-drawer-tab-active-color: var(--accent4);
   --ss-options-menu-background-color-hover: var(--accent3);
+  --ss-song-list-item-comments-warn: rgb(169 67 67);
+  --ss-song-list-item-waveform-0: #4a4a4a;
+  --ss-song-list-item-waveform-1: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-2: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-3: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-4: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-5: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-6: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-7: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-8: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-9: var(--ss-song-list-item-waveform-0);
+  --ss-song-list-item-waveform-10: var(--ss-song-list-item-waveform-10);
+  --ss-song-list-item-waveform-background-image: linear-gradient(#f007, #6660, #6660);
+  --ss-song-list-item-waveform-color-filter: brightness(0.4) saturate(1);
   --ss-star-rating-selected-icon-color: var(--accent4);
 }
