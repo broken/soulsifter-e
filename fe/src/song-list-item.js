@@ -13,7 +13,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
     let waveforms = '';
     if (this.settings.getBool('songList.showWaveforms')) {
-      let wfImg = '-webkit-mask-box-image: url("';
+      let wfImg = 'mask-image:url("';
       if (this.song.trashed) {
         wfImg += '../resources/no-waveform.webp';
       } else {
@@ -318,9 +318,9 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         }
 
         #waveform {
-          background-position: center center;
-          background-size: contain;
-          background-repeat: no-repeat;
+          mask-position: center center;
+          mask-size: contain;
+          mask-repeat: no-repeat;
           background-color: var(--ss-song-list-item-artist-color);
           filter: brightness(0.5) saturate(2);
           height: 24px;
