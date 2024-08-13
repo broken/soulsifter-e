@@ -78,7 +78,9 @@
   --ss-search-toolbar-background-color: var(--bg2);
   --ss-song-list-item-artist-color: var(--clr);
   --ss-song-list-item-border-bottom: 1px solid var(--ss-song-list-item-border-color);
-  --ss-song-list-item-border-color: color-mix(in srgb, var(--bg), white 3%);;
+  --ss-song-list-item-border-color: color-mix(in srgb, var(--bg), white 3%);
+  --ss-song-list-item-comments: #888;
+  --ss-song-list-item-comments-warn: #D88;
   --ss-song-list-item-energy-0: #999;
   --ss-song-list-item-energy-1: #0066ff;
   --ss-song-list-item-energy-2: #00ccff;
@@ -105,6 +107,8 @@
   --ss-song-list-item-waveform-8: var(--ss-song-list-item-energy-8);
   --ss-song-list-item-waveform-9: var(--ss-song-list-item-energy-9);
   --ss-song-list-item-waveform-10: var(--ss-song-list-item-energy-10);
+  --ss-song-list-item-waveform-background-image: none;
+  --ss-song-list-item-waveform-color-filter: brightness(0.5) saturate(2);
   --ss-song-list-multi-options-dialog-background-color: black;
   --ss-song-list-multi-options-dialog-text-color: var(--clr);
   --ss-star-rating-unselected-icon-color: var(--clr_disabled);

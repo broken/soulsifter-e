@@ -293,12 +293,12 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
           color: var(--ss-song-list-item-title-color);
         }
         .song-item .comments {
-          color: #888;
+          color: var(--ss-song-list-item-comments);
           max-width: 48px;
           display: inline-block;
         }
         .song-item .warn {
-          color: #D88;
+          color: var(--ss-song-list-item-comments-warn);
         }
         .song-item .fade-out:after {
           background: var(--ss-song-list-item-fade-out);
@@ -322,7 +322,8 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
           mask-size: contain;
           mask-repeat: no-repeat;
           background-color: var(--ss-song-list-item-artist-color);
-          filter: brightness(0.5) saturate(2);
+          background-image: var(--ss-song-list-item-waveform-background-image);
+          filter: var(--ss-song-list-item-waveform-color-filter);
           height: 24px;
           width: 200px;
           padding: 0 3px;
