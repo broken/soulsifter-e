@@ -1,0 +1,23 @@
+:host(.honey) {
+  color-scheme: light;
+
+  /* core color palette */
+  --bg: #f9f9f9;
+  --bg2: #eee;
+  --clr: #555;
+  --clr_bold: #9c7101  ;
+  --clr_disabled: #777;
+  --err: #f55;
+  --err_disabled: #b33;
+  --accent: salmon;
+  --accent2: #9c7101;
+  --accent3: #f2d485;
+
+  /* component colors */
+  --md-checkbox-selected-icon-color: var(--bg);
+  --ss-drawer-tab-background-color: #f0e2d4;
+  --ss-song-list-item-border-color: rgba(0,0,0,0.08);
+  --ss-song-list-item-waveform-0: #ead7a0;
+  --ss-song-list-item-waveform-color-filter: brightness(0.9) saturate(0.8);
+  --ss-star-rating-selected-icon-color: var(--accent);
+}

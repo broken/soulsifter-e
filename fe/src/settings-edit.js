@@ -51,9 +51,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <br>
                 <options-menu-input label="Theme" value="${this.appTheme}" id="appTheme">
                   <options-menu-item>default</options-menu-item>
+                  <options-menu-item>honey</options-menu-item>
                   <options-menu-item>rekordbox</options-menu-item>
                   <options-menu-item>serato</options-menu-item>
-                  <options-menu-item>snow</options-menu-item>
                   <options-menu-item>traktor</options-menu-item>
                   <options-menu-item>traktor3</options-menu-item>
                   <options-menu-item>witch</options-menu-item>
