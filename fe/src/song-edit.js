@@ -136,6 +136,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           <icon-button @click=${this.prevSong} icon="chevron_left"></icon-button>
           <icon-button @click=${this.nextSong} icon="chevron_right"></icon-button>
           <div style="user-select:text">${this.editedSong.id}</div>
+          <div style="user-select:text">(${this.editedSong.albumId})</div>
           <div @click="${this.changeSongFile}" style="user-select:text">${this.editedSong.filepath}</div>
         </div>
       </div>
