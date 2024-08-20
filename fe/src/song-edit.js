@@ -282,8 +282,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     }
 
     if (this.editedSong.id) {
-      this.notifySongEdited(this.editedSong.id);
       this.editedSong.update();
+      this.notifySongEdited(this.editedSong.id);
       // ss.TagService.writeId3v2Tag(this.editedSong);
       if (!this.songIsTrashed && this.editedSong.trashed) this.newSongManager.trashMusicFile(this.editedSong);
     } else {
