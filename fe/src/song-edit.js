@@ -63,13 +63,13 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.bpm}</span></div>
               <div class="input-row">
-                <md-filled-text-field label="Key" .value="${this.editedSong.tonicKey}" @value-changed="${this.tonicKeyInputChanged}" id="tonicKey" pattern="[A-G]b?m?"></md-filled-text-field>
+                <md-filled-text-field label="Key" .value="${this.editedSong.tonicKey}" @change="${this.tonicKeyInputChanged}" id="tonicKey" pattern="[A-G]b?m?"></md-filled-text-field>
                 <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockTonicKey}" id="tonic_key_lock"></icon-button>
               </div>
             </div>
             <div>
               <div class="input-row">
-                <md-filled-text-field label="BPM" .value="${this.editedSong.bpm}" @value-changed="${this.bpmInputChanged}" id="bpm" pattern="[0-9]*\\.[0-9]*"></md-filled-text-field>
+                <md-filled-text-field label="BPM" .value="${this.editedSong.bpm}" @change="${this.bpmInputChanged}" id="bpm" pattern="[0-9]*\\.[0-9]*"></md-filled-text-field>
                 <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
               </div>
               <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
@@ -81,7 +81,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           <div class="fields">
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.artist}</span></div>
-              <md-filled-text-field label="Album Artist" .value="${this.editedSong.album.artist}" @value-changed="${this.albumArtistValChanged}" id="album_artist"></md-filled-text-field>
+              <md-filled-text-field label="Album Artist" .value="${this.editedSong.album.artist}" @change="${this.albumArtistValChanged}" id="album_artist"></md-filled-text-field>
             </div>
             <div>
               <div class="prev">&nbsp;<span>${this.taggedSong.album.name}</span></div>
