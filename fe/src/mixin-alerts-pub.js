@@ -27,6 +27,7 @@ let alertsMixin = (superClass) => class extends superClass {
 
   unhideAlerts() {
     let event = new CustomEvent('unhide-alerts');
+    window.dispatchEvent(event);
   }
 }
 
