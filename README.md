@@ -16,6 +16,7 @@ Presteps:
     * example: [mysqld]
       secure_file_priv=/Users/dogatech/Music/db
       sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_AUTO_CREATE_USER,NO_ENGINE_SUBSTITUTION"
+      local_infile=ON
   * create music database with user ss, password pw, read & write creds to music db.
     * create database music;
     * create user 'ss'@'localhost' identified by 'pw';
