@@ -325,7 +325,7 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
       if (min_bpm > 0 && max_bpm > 0) {
         ss << "(s.bpm between " << min_bpm << " and " << max_bpm;
         if (max_bpm > 120) ss << " or s.bpm between " << min_bpm / 2 << " and " << max_bpm / 2;
-        if (min_bpm <= 90) ss << " or s.bpm between " << min_bpm * 2 << " and " << max_bpm * 2;
+        if (min_bpm <= 100) ss << " or s.bpm between " << min_bpm * 2 << " and " << max_bpm * 2;
         ss << ")";
       }
     } else if (atom.type == Atom::LIMIT) {
