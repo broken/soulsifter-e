@@ -57,6 +57,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
         <options-menu-item @click="${this.syncYouTubePlaylists}">Sync YouTube Playlists</options-menu-item>
         <options-menu-item @click="${this.showHiddenAlerts}">Show hidden alerts</options-menu-item>
         <options-menu-item @click="${this.openMouseCoordsAlert}">Show Mouse Coordinates</options-menu-item>
+        <options-menu-item @click="${this.openCommonMultiplesAlert}">Show Common Multiples</options-menu-item>
         <options-menu-item @click="${this.connectToMidiController}">Connect to Midi controller</options-menu-item>
         <options-menu-item @click="${this.openAboutPageDialog}">About</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
@@ -271,6 +272,23 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
 
   _updateAlertWithMouseCoords = e => {
     this.updateAlert(this.mouseCoordAlertId, undefined, `Mouse coordinates: ${e.screenX}, ${e.screenY}`);
+  }
+
+  openCommonMultiplesAlert(e) {
+    if (!this.commonMultiplesAlertId) {
+      let x = this.bpm;
+      this.commonMultiplesAlertId = this.addAlert(`Common multiples: x2: ${x * 2} , x1/2: ${x / 2} , x4/3 (3/4 loop up): ${(x * 4 / 3).toFixed(2)} , x2/3 (3 beat loop down): ${(x * 2 / 3).toFixed(2)}`, 0, 0, () => {
+          this.rmAlert(this.commonMultiplesAlertId);
+          this.commonMultiplesAlertId = undefined;
+      });
+    }
+  }
+
+  bpmChanged(x) {
+    this.bpm = x;
+    if (this.commonMultiplesAlertId) {
+      this.updateAlert(this.commonMultiplesAlertId, undefined, `Common multiples: x2: ${x * 2} , x1/2: ${x / 2} , x4/3 (3/4 loop up): ${(x * 4 / 3).toFixed(2)} , x2/3 (3 beat loop down): ${(x * 2 / 3).toFixed(2)}`);
+    }
   }
 
   alertsChanged() {
