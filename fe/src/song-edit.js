@@ -69,7 +69,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             </div>
             <div>
               <div class="input-row">
-                <md-filled-text-field label="BPM" .value="${this.editedSong.bpm}" @change="${this.bpmInputChanged}" id="bpm" pattern="[0-9]*\\.[0-9]*"></md-filled-text-field>
+                <md-filled-text-field label="BPM" .value="${this.editedSong.bpm}" @change="${this.bpmInputChanged}" id="bpm" pattern="[0-9]*(\\.[0-9]*)?"></md-filled-text-field>
                 <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
               </div>
               <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
