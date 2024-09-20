@@ -33,7 +33,7 @@ Presteps:
 * (to build) install npm modules
   * global: node-gyp
   * locally with npm install
-* required libs (brew install): mysql-connector-c++ (-DWITH_JDBC=ON; brew install --build-from-source ./mysql-connector-c++.rb), libtag, mad, boost, ffmpeg, g3log (1.3.4 (<=c++14)), cliclick
+* required libs (brew install): mysql-connector-c++ (no brew; just download & copy in right locations), libtag, mad, boost, ffmpeg, g3log (1.3.4 (<=c++14)), cliclick
   * sudo launchctl config user path /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 * It can read MixedInKey values from id3 tags. Settings:
   * Update custom "initial key" tag
