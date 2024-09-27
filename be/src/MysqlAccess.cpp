@@ -116,7 +116,10 @@ bool MysqlAccess::disconnect() {
 bool MysqlAccess::reconnect() {
     try {
         LOG(INFO) << "Reconnecing a" << (connection->isValid() ? " valid" : "n invalid") << " connection.";
+        const std::string database(SoulSifterSettings::getInstance().get<std::string>("db.name"));
         connection->reconnect();
+        connection->setAutoCommit(1);
+        connection->setSchema(database);
         for (const std::pair<std::string, sql::PreparedStatement*>& entry : preparedStatements) {
             delete entry.second;
         }
