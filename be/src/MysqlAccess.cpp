@@ -120,9 +120,6 @@ bool MysqlAccess::reconnect() {
         connection->reconnect();
         connection->setAutoCommit(1);
         connection->setSchema(database);
-        for (const std::pair<std::string, sql::PreparedStatement*>& entry : preparedStatements) {
-            delete entry.second;
-        }
         preparedStatements.clear();
     } catch (sql::SQLException &e) {
         LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
