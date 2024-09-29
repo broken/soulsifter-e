@@ -43,7 +43,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
           <pitch-slider></pitch-slider>
         </div>
         <audio-player id="audio" .song="${this.song}" @song-ended="${this.songEnded}"></audio-player>
-        ${this.mix.comments ? html`<div>${this.mix.comments}<br><br></div>` : ''}
+        ${this.mix && this.mix.comments ? html`<div>${this.mix.comments}<br><br></div>` : ''}
         <div>${this.song.styles.map(s => s.name).join(', ')}</div>
         <div id="musicVideoThumbnail" draggable="true" @dragstart="${this.dragMusicVideo}" ?hide="${!this.musicVideo}"></div>
         ${debugMode ? html`<div id="musicVideoInput" ?hide="${!!this.musicVideo}">
@@ -71,7 +71,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
     this.saveSongTrailListener = (e) => this.saveSongTrail(e);
     this.song = new ss.Song();
     this.song.album = new ss.Album();
-    this.mix = new ss.Mix();
+    this.mix = undefined;
     this.autoplay = false;
   }
 
@@ -112,8 +112,6 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
     if (this.songTrail.length >= 2) {
       let len = this.songTrail.length;
       this.mix = ss.Mix.findByOutSongIdAndInSongId(this.songTrail[len - 2].songId, this.songTrail[len - 1].songId);
-    } else {
-      this.mix = new ss.Mix();
     }
   }
 
