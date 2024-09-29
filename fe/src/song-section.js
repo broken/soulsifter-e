@@ -43,6 +43,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
           <pitch-slider></pitch-slider>
         </div>
         <audio-player id="audio" .song="${this.song}" @song-ended="${this.songEnded}"></audio-player>
+        ${this.mix.comments ? html`<div>${this.mix.comments}<br><br></div>` : ''}
         <div>${this.song.styles.map(s => s.name).join(', ')}</div>
         <div id="musicVideoThumbnail" draggable="true" @dragstart="${this.dragMusicVideo}" ?hide="${!this.musicVideo}"></div>
         ${debugMode ? html`<div id="musicVideoInput" ?hide="${!!this.musicVideo}">
@@ -70,6 +71,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
     this.saveSongTrailListener = (e) => this.saveSongTrail(e);
     this.song = new ss.Song();
     this.song.album = new ss.Album();
+    this.mix = new ss.Mix();
     this.autoplay = false;
   }
 
@@ -106,6 +108,12 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
     if (this.autoplay) {
       this.autoplay = false;
       setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
+    }
+    if (this.songTrail.length >= 2) {
+      let len = this.songTrail.length;
+      this.mix = ss.Mix.findByOutSongIdAndInSongId(this.songTrail[len - 2].songId, this.songTrail[len - 1].songId);
+    } else {
+      this.mix = new ss.Mix();
     }
   }
 
@@ -209,7 +217,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
       console.warn('Cannot create a mix without more songs.');
       return;
     }
-    var mix = new ss.Mix();
+    var mix = this.mix;
     mix.outSongId = this.songTrail[len - 2].songId;
     mix.inSongId = this.songTrail[len - 1].songId;
     let event = new CustomEvent('mix-edit', { detail: mix });
