@@ -277,7 +277,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
   openCommonMultiplesAlert(e) {
     if (!this.commonMultiplesAlertId) {
       let x = this.bpm;
-      this.commonMultiplesAlertId = this.addAlert(`Common multiples: x2: ${x * 2} , x1/2: ${x / 2} , x4/3 (3/4 loop up): ${(x * 4 / 3).toFixed(2)} , x2/3 (3 beat loop down): ${(x * 2 / 3).toFixed(2)}`, 0, 0, () => {
+      this.commonMultiplesAlertId = this.addAlert(`Common multiples:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2: ${x * 2} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x1/2: ${x / 2} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x4/3 (3/4 loop up): ${(x * 4 / 3).toFixed(2)} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2/3 (3 beat loop down): ${(x * 2 / 3).toFixed(2)}`, 0, 0, () => {
           this.rmAlert(this.commonMultiplesAlertId);
           this.commonMultiplesAlertId = undefined;
       });
@@ -287,7 +287,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
   bpmChanged(x) {
     this.bpm = x;
     if (this.commonMultiplesAlertId) {
-      this.updateAlert(this.commonMultiplesAlertId, undefined, `Common multiples: x2: ${x * 2} , x1/2: ${x / 2} , x4/3 (3/4 loop up): ${(x * 4 / 3).toFixed(2)} , x2/3 (3 beat loop down): ${(x * 2 / 3).toFixed(2)}`);
+      this.updateAlert(this.commonMultiplesAlertId, undefined, `Common multiples:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2: ${x * 2} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x1/2: ${x / 2} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x4/3 (3/4 loop up): ${(x * 4 / 3).toFixed(2)} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2/3 (3 beat loop down): ${(x * 2 / 3).toFixed(2)}`);
     }
   }
 
