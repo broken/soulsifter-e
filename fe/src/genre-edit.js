@@ -12,6 +12,7 @@ class GenreEdit extends LitElement {
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
         <div class="fields">
           <md-filled-text-field label="Name" .value="${this.genre.name}" id="name"></md-filled-text-field>
+          <md-filled-text-field label="Description" .value="${this.genre.description}" id="description" type="textarea" rows="5"></md-filled-text-field>
         </div>
         <div class="genres">
           <genre-list id="genreList" .genres="${this.genreParents}" singleselect></genre-list>
@@ -35,6 +36,8 @@ class GenreEdit extends LitElement {
       if (e.detail) {
         this.genre = e.detail;
         this.genreParents = this.genre.parents;
+        // needed to erase previous descriptions when copying in a genre that doesn't have one
+        this.shadowRoot.getElementById('description').value = this.genre.description;
       }
       this.classList.add('show');
     };
@@ -56,6 +59,7 @@ class GenreEdit extends LitElement {
 
   save(e) {
     this.genre.name = this.shadowRoot.getElementById('name').value;
+    this.genre.description = this.shadowRoot.getElementById('description').value;
     let genreParentIds = this.genreParents.map(function(g) { return g.id; });
     this.genre.parentIds = genreParentIds;
     if (this.genre.id) {
@@ -89,6 +93,13 @@ class GenreEdit extends LitElement {
           padding-right: 60px;
           overflow-y: scroll;
           height: 440px;
+        }
+        .fields {
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          margin: 0 10px;
+          width: 360px;
         }
       `,
     ];
