@@ -31,6 +31,7 @@ Napi::Object Style::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Style::getName, &Style::setName>("name"),
     InstanceAccessor<&Style::getREId, &Style::setREId>("rEId"),
     InstanceAccessor<&Style::getRELabel, &Style::setRELabel>("rELabel"),
+    InstanceAccessor<&Style::getDescription, &Style::setDescription>("description"),
     InstanceAccessor<&Style::getChildIds, &Style::setChildIds>("childIds"),
     InstanceAccessor<&Style::getChildren, &Style::setChildren>("children"),
     InstanceAccessor<&Style::getParentIds, &Style::setParentIds>("parentIds"),
@@ -261,6 +262,29 @@ void Style::setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value)
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
   obj->style->setRELabel(a0);
+}
+
+Napi::Value Style::getDescription(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Style* obj = this;
+  const string result =  obj->style->getDescription();
+
+  return Napi::String::New(env, result);
+}
+
+void Style::setDescription(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return;
+  }
+  Style* obj = this;
+  if (!value.IsString()) {
+    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
+  std::string a0(value.As<Napi::String>().Utf8Value());
+  obj->style->setDescription(a0);
 }
 
 Napi::Value Style::getChildIds(const Napi::CallbackInfo& info) {

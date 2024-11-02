@@ -39,6 +39,7 @@ namespace soulsifter {
     name(),
     reId(0),
     reLabel(),
+    description(),
     childIds(),
     children(),
     parentIds(),
@@ -50,6 +51,7 @@ namespace soulsifter {
     name(style.getName()),
     reId(style.getREId()),
     reLabel(style.getRELabel()),
+    description(style.getDescription()),
     childIds(style.getChildIds()),
     children(),
     parentIds(style.getParentIds()),
@@ -61,6 +63,7 @@ namespace soulsifter {
         name = style.getName();
         reId = style.getREId();
         reLabel = style.getRELabel();
+        description = style.getDescription();
         childIds = style.getChildIds();
         deleteVectorPointers(&children);
         parentIds = style.getParentIds();
@@ -77,6 +80,7 @@ namespace soulsifter {
         name.clear();
         reId = 0;
         reLabel.clear();
+        description.clear();
         childIds.clear();
         deleteVectorPointers(&children);
         parentIds.clear();
@@ -90,6 +94,7 @@ namespace soulsifter {
         style->setName(rs->getString("name"));
         style->setREId(rs->getInt("reId"));
         style->setRELabel(rs->getString("reLabel"));
+        style->setDescription(rs->getString("description"));
         if (!rs->isNull("childIds")) {
             string csv = rs->getString("childIds");
             istringstream iss(csv);
@@ -182,14 +187,16 @@ namespace soulsifter {
         for (int i = 0; i < 2; ++i) {
             try {
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Styles set name=?, reId=?, reLabel=? where id=?");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Styles set name=?, reId=?, reLabel=?, description=? where id=?");
                 if (!name.empty()) ps->setString(1, name);
                 else ps->setNull(1, sql::DataType::VARCHAR);
                 if (reId > 0) ps->setInt(2, reId);
                 else ps->setNull(2, sql::DataType::INTEGER);
                 if (!reLabel.empty()) ps->setString(3, reLabel);
                 else ps->setNull(3, sql::DataType::VARCHAR);
-                ps->setInt(4, id);
+                if (!description.empty()) ps->setString(4, description);
+                else ps->setNull(4, sql::DataType::VARCHAR);
+                ps->setInt(5, id);
                 int result = ps->executeUpdate();
                 if (!childIds.empty()) {
                     stringstream ss("insert ignore into StyleChildren (parentId, childId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
@@ -262,13 +269,15 @@ namespace soulsifter {
         for (int i = 0; i < 2; ++i) {
             try {
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Styles (name, reId, reLabel) values (?, ?, ?)");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Styles (name, reId, reLabel, description) values (?, ?, ?, ?)");
                 if (!name.empty()) ps->setString(1, name);
                 else ps->setNull(1, sql::DataType::VARCHAR);
                 if (reId > 0) ps->setInt(2, reId);
                 else ps->setNull(2, sql::DataType::INTEGER);
                 if (!reLabel.empty()) ps->setString(3, reLabel);
                 else ps->setNull(3, sql::DataType::VARCHAR);
+                if (!description.empty()) ps->setString(4, description);
+                else ps->setNull(4, sql::DataType::VARCHAR);
                 int saved = ps->executeUpdate();
                 if (!saved) {
                     LOG(WARNING) << "Not able to save style";
@@ -361,6 +370,14 @@ namespace soulsifter {
                 reLabel = style->getRELabel();
             }
         }
+        if (description.compare(style->getDescription())  && (!boost::regex_match(description, match1, decimal) || !boost::regex_match(style->getDescription(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
+            if (!description.empty()) {
+                LOG(INFO) << "updating style " << id << " description from " << style->getDescription() << " to " << description;
+                needsUpdate = true;
+            } else {
+                description = style->getDescription();
+            }
+        }
         if (!equivalentVectors<int>(childIds, style->getChildIds())) {
             if (!containsVector<int>(childIds, style->getChildIds())) {
                 LOG(INFO) << "updating style " << id << " childIds";
@@ -392,6 +409,9 @@ namespace soulsifter {
 
     const string& Style::getRELabel() const { return reLabel; }
     void Style::setRELabel(const string& reLabel) { this->reLabel = reLabel; }
+
+    const string& Style::getDescription() const { return description; }
+    void Style::setDescription(const string& description) { this->description = description; }
 
     const vector<int>& Style::getChildIds() const { return childIds; }
     void Style::setChildIds(const vector<int>& childIds) {

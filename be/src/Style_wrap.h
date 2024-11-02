@@ -33,6 +33,8 @@ class Style : public Napi::ObjectWrap<Style> {
   void setREId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getRELabel(const Napi::CallbackInfo& info);
   void setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getDescription(const Napi::CallbackInfo& info);
+  void setDescription(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getChildIds(const Napi::CallbackInfo& info);
   void setChildIds(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getChildren(const Napi::CallbackInfo& info);

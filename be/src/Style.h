@@ -58,6 +58,8 @@ namespace soulsifter {
         void setREId(int reId);
         const string& getRELabel() const;
         void setRELabel(const string& reLabel);
+        const string& getDescription() const;
+        void setDescription(const string& description);
         const vector<int>& getChildIds() const;
         void setChildIds(const vector<int>& childIds);
         const vector<Style*>& getChildren();
@@ -75,6 +77,7 @@ namespace soulsifter {
         string name;
         int reId;
         string reLabel;
+        string description;
         vector<int> childIds;
         vector<Style*> children;
         vector<int> parentIds;

@@ -947,6 +947,7 @@ styleFields = [
   [:string, "name", 0],
   [:int, "reId", Attrib::KEY2],
   [:string, "reLabel", 0],
+  [:string, "description", 0],
   ["vector<int>", "childIds", Attrib::ID],
   ["vector<Style*>", "children", 0],
   ["vector<int>", "parentIds", Attrib::ID],
