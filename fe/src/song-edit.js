@@ -219,22 +219,26 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     window.dispatchEvent(event);
   }
 
-  save() {
-    // TODO throw exception
-    if (!this.validate()) return;
+  checkIfSongExists() {
     // Check if this song already exists
     if (!this.editedSong.id) {
       try {
         let query = 'a:="' + this.shadowRoot.getElementById('artist').value + '" t:="' + this.shadowRoot.getElementById('title').value + '"';
-        this.songs = ss.SearchUtil.searchSongs(query, 1, 0, "", [], [], [], 0, false, 0, (msg) => { this.addAlert(msg, 10); });
-        if (this.songs.length > 0) {
-          this.addAlert('Track already exists.');
+        let songs = ss.SearchUtil.searchSongs(query, 1, 0, "", [], [], [], 0, false, 0, (msg) => { this.addAlert(msg, 5); });
+        if (songs.length > 0) {
+          this.addAlert('Track with same artist & title already exists. (' + songs[0].artist +  ' - ' + songs[0].title + ')');
           // TODO get confirmation before adding
         }
       } catch(e) {
         console.error(e);
       }
     }
+  }
+
+  save() {
+    // TODO throw exception
+    if (!this.validate()) return;
+    this.checkIfSongExists();
     // Check if this song should move the album folder
     let moveAlbum = false;
     if (this.editedSong.id) {
@@ -339,6 +343,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.forceEdits();
     if (this.settings.getBool('edit.autoAdd')) this.save();
     else if (this.settings.getBool('edit.autoPlay')) setTimeout(() => this.shadowRoot.getElementById('audio').play(), 1);
+    this.checkIfSongExists();
   }
 
   filepathsChanged() {
@@ -466,6 +471,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
       artist = artist.replace(/\s*\(.*\)$/g, '');
       this.shadowRoot.getElementById('album_artist').value = artist;
     }
+    this.checkIfSongExists();
   }
 
   titleChanged(e) {
@@ -475,6 +481,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
          (!this.taggedSong.album.name && this.taggedSong.title.toUpperCase() == this.song.album.name.toUpperCase()))) {
       this.shadowRoot.getElementById('album_name').value = title;
     }
+    this.checkIfSongExists();
   }
 
   changeCoverFile() {
