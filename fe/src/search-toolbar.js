@@ -172,10 +172,15 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
   addSongFromUrl(e) {
     ipcRenderer.invoke('getclipboard')
     .then((url) => {
+      let autoOpen = false;
       let alertId = this.addAlert('Processing ' + url, undefined, -1);
+      this.updateAlert(alertId, undefined, undefined, undefined, () => {
+        this.updateAlert(alertId, undefined, '[Auto-Open] Processing ' + url, undefined, () => {});
+        autoOpen = true;
+      });
       let p = ss.MusicVideoService.downloadAudioAsync(url);
       p.then((filepaths) => {
-        this.updateAlert(alertId, 1, 'Completed ' + url, undefined, () => {
+        let openFn = () => {
           this.rmAlert(alertId);
           if (filepaths.length > 0) {
             let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths } });
@@ -183,7 +188,12 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
           } else {
             this.addAlert('Failed to download audio from url ' + url);
           }
-        });
+        };
+        if (autoOpen) {
+          openFn();
+        } else {
+          this.updateAlert(alertId, 1, 'Completed ' + url, undefined, openFn);
+        }
       }).catch((err) => {
         this.updateAlert(alertId, undefined, "Failed processing " + url + "\n" + err);
       });
