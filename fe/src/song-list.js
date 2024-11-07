@@ -239,29 +239,29 @@ class SongList extends AlertsMixin(
       this.midiSelectedListItem = undefined;
     }
     let playlists = [];
+    let genres = this.genres;
     let orderBy = this.searchOptions.orderBy;
     if (!!this.playlists.length) {
-      this.genres = [];
+      genres = [];
       for (let i = 0; i < this.playlists.length; ++i) {
         if (!this.playlists[i].query) {
           playlists.push(this.playlists[i]);
           orderBy = /* playlist */ 5;
         } else {
           this.query += this.playlists[i].query + " ";
-          this.genres.concat(this.playlists[i].styles);
+          genres = genres.concat(this.playlists[i].styles);
         }
       }
     }
     this.entries = [];
-    let genreIds = this.genres.map(g => g.id);
-    let p = {q: this.query, genres: genreIds.join(',')};
+    let p = {q: this.query};
     let omitSongs = [];
     p.bpm = this.searchOptions.bpmRestrict && !!this.bpm ? Number(this.bpm) : 0;
     p.keys = this.searchOptions.keyRestrict && !!this.song ? this.song.tonicKey : '';
     p.energy = this.searchOptions.energyRestrict && !!this.song ? Number(this.song.energy) : 0;
     p.q += !this.searchOptions.trashedRestrict ? '' : (p.q.length ? ' ' : '') + 'trashed:0';
     omitSongs = !this.searchOptions.repeatRestrict ? [] : this.songTrail.map(e => e.song);
-    this.songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, this.genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, (msg) => { this.addAlert(msg, 5); });
+    this.songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, (msg) => { this.addAlert(msg, 5); });
     this.generateMissingWaveforms();
   }
 
