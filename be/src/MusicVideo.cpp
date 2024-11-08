@@ -170,39 +170,7 @@ namespace soulsifter {
     }
 
     bool MusicVideo::sync() {
-        MusicVideo* musicVideo = findById(id);
-        if (!musicVideo) return true;
-
-        // check fields
-        bool needsUpdate = false;
-        boost::regex decimal("(-?\\d+)\\.?\\d*");
-        boost::smatch match1;
-        boost::smatch match2;
-        if (id != musicVideo->getId()) {
-            if (id) {
-                LOG(INFO) << "updating musicVideo " << id << " id from " << musicVideo->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = musicVideo->getId();
-            }
-        }
-        if (filePath.compare(musicVideo->getFilePath())  && (!boost::regex_match(filePath, match1, decimal) || !boost::regex_match(musicVideo->getFilePath(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!filePath.empty()) {
-                LOG(INFO) << "updating musicVideo " << id << " filePath from " << musicVideo->getFilePath() << " to " << filePath;
-                needsUpdate = true;
-            } else {
-                filePath = musicVideo->getFilePath();
-            }
-        }
-        if (thumbnailFilePath.compare(musicVideo->getThumbnailFilePath())  && (!boost::regex_match(thumbnailFilePath, match1, decimal) || !boost::regex_match(musicVideo->getThumbnailFilePath(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!thumbnailFilePath.empty()) {
-                LOG(INFO) << "updating musicVideo " << id << " thumbnailFilePath from " << musicVideo->getThumbnailFilePath() << " to " << thumbnailFilePath;
-                needsUpdate = true;
-            } else {
-                thumbnailFilePath = musicVideo->getThumbnailFilePath();
-            }
-        }
-        return needsUpdate;
+        return true;
     }
 
 

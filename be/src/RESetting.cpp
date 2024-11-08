@@ -197,40 +197,7 @@ namespace soulsifter {
     }
 
     bool RESetting::sync() {
-        RESetting* reSetting = findById(id);
-        if (!reSetting) reSetting = findByName(getName());
-        if (!reSetting) return true;
-
-        // check fields
-        bool needsUpdate = false;
-        boost::regex decimal("(-?\\d+)\\.?\\d*");
-        boost::smatch match1;
-        boost::smatch match2;
-        if (id != reSetting->getId()) {
-            if (id) {
-                LOG(INFO) << "updating reSetting " << id << " id from " << reSetting->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = reSetting->getId();
-            }
-        }
-        if (name.compare(reSetting->getName())  && (!boost::regex_match(name, match1, decimal) || !boost::regex_match(reSetting->getName(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!name.empty()) {
-                LOG(INFO) << "updating reSetting " << id << " name from " << reSetting->getName() << " to " << name;
-                needsUpdate = true;
-            } else {
-                name = reSetting->getName();
-            }
-        }
-        if (value.compare(reSetting->getValue())  && (!boost::regex_match(value, match1, decimal) || !boost::regex_match(reSetting->getValue(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!value.empty()) {
-                LOG(INFO) << "updating reSetting " << id << " value from " << reSetting->getValue() << " to " << value;
-                needsUpdate = true;
-            } else {
-                value = reSetting->getValue();
-            }
-        }
-        return needsUpdate;
+        return true;
     }
 
 

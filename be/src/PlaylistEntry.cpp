@@ -316,60 +316,7 @@ namespace soulsifter {
     }
 
     bool PlaylistEntry::sync() {
-        PlaylistEntry* playlistEntry = findById(id);
-        if (!playlistEntry) {
-            if (!playlistId && playlist) {
-                playlist->sync();
-                playlistId = playlist->getId();
-            }
-            if (!songId && song) {
-                song->sync();
-                songId = song->getId();
-            }
-        }
-        if (!playlistEntry) playlistEntry = findByPlaylistIdAndSongId(getPlaylistId(), getSongId());
-        if (!playlistEntry) return true;
-
-        // check fields
-        bool needsUpdate = false;
-        boost::regex decimal("(-?\\d+)\\.?\\d*");
-        boost::smatch match1;
-        boost::smatch match2;
-        if (id != playlistEntry->getId()) {
-            if (id) {
-                LOG(INFO) << "updating playlistEntry " << id << " id from " << playlistEntry->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = playlistEntry->getId();
-            }
-        }
-        if (playlistId != playlistEntry->getPlaylistId()) {
-            if (playlistId) {
-                LOG(INFO) << "updating playlistEntry " << id << " playlistId from " << playlistEntry->getPlaylistId() << " to " << playlistId;
-                needsUpdate = true;
-            } else {
-                playlistId = playlistEntry->getPlaylistId();
-            }
-        }
-        if (playlist) needsUpdate |= playlist->sync();
-        if (songId != playlistEntry->getSongId()) {
-            if (songId) {
-                LOG(INFO) << "updating playlistEntry " << id << " songId from " << playlistEntry->getSongId() << " to " << songId;
-                needsUpdate = true;
-            } else {
-                songId = playlistEntry->getSongId();
-            }
-        }
-        if (song) needsUpdate |= song->sync();
-        if (position != playlistEntry->getPosition()) {
-            if (position) {
-                LOG(INFO) << "updating playlistEntry " << id << " position from " << playlistEntry->getPosition() << " to " << position;
-                needsUpdate = true;
-            } else {
-                position = playlistEntry->getPosition();
-            }
-        }
-        return needsUpdate;
+        return true;
     }
 
     int PlaylistEntry::erase() {

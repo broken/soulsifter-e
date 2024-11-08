@@ -197,40 +197,7 @@ namespace soulsifter {
     }
 
     bool REAlbumCover::sync() {
-        REAlbumCover* reAlbumCover = findById(id);
-        if (!reAlbumCover) reAlbumCover = findByREId(getREId());
-        if (!reAlbumCover) return true;
-
-        // check fields
-        bool needsUpdate = false;
-        boost::regex decimal("(-?\\d+)\\.?\\d*");
-        boost::smatch match1;
-        boost::smatch match2;
-        if (id != reAlbumCover->getId()) {
-            if (id) {
-                LOG(INFO) << "updating reAlbumCover " << id << " id from " << reAlbumCover->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = reAlbumCover->getId();
-            }
-        }
-        if (reId.compare(reAlbumCover->getREId())  && (!boost::regex_match(reId, match1, decimal) || !boost::regex_match(reAlbumCover->getREId(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!reId.empty()) {
-                LOG(INFO) << "updating reAlbumCover " << id << " reId from " << reAlbumCover->getREId() << " to " << reId;
-                needsUpdate = true;
-            } else {
-                reId = reAlbumCover->getREId();
-            }
-        }
-        if (thumbnail.compare(reAlbumCover->getThumbnail())  && (!boost::regex_match(thumbnail, match1, decimal) || !boost::regex_match(reAlbumCover->getThumbnail(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!thumbnail.empty()) {
-                LOG(INFO) << "updating reAlbumCover " << id << " thumbnail from " << reAlbumCover->getThumbnail() << " to " << thumbnail;
-                needsUpdate = true;
-            } else {
-                thumbnail = reAlbumCover->getThumbnail();
-            }
-        }
-        return needsUpdate;
+        return true;
     }
 
 
