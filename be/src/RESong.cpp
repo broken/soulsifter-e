@@ -240,6 +240,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     RESong* RESong::findBySongid(const string& songid) {
@@ -265,6 +266,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<RESong>* RESong::findAll() {
@@ -282,6 +284,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
 # pragma mark persistence
@@ -364,6 +367,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     int RESong::save() {
@@ -458,6 +462,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     bool RESong::sync() {

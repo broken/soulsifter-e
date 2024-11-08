@@ -91,6 +91,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     REAlbumCover* REAlbumCover::findByREId(const string& reId) {
@@ -117,6 +118,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<REAlbumCover>* REAlbumCover::findAll() {
@@ -134,6 +136,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
 # pragma mark persistence
@@ -158,6 +161,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     int REAlbumCover::save() {
@@ -189,6 +193,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     bool REAlbumCover::sync() {

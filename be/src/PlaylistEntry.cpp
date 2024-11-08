@@ -126,6 +126,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     PlaylistEntry* PlaylistEntry::findByPlaylistIdAndSongId(int playlistId, int songId) {
@@ -154,6 +155,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<PlaylistEntry>* PlaylistEntry::findByPlaylistId(int playlistId) {
@@ -173,6 +175,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<PlaylistEntry>* PlaylistEntry::findBySongId(int songId) {
@@ -192,6 +195,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<PlaylistEntry>* PlaylistEntry::findAll() {
@@ -209,6 +213,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
 # pragma mark persistence
@@ -254,6 +259,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     int PlaylistEntry::save() {
@@ -306,6 +312,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     bool PlaylistEntry::sync() {
@@ -383,6 +390,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
 

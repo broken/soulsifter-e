@@ -304,6 +304,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     Song* Song::findByFilepath(const string& filepath) {
@@ -329,6 +330,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     Song* Song::findByGoogleSongId(const string& googleSongId) {
@@ -354,6 +356,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     Song* Song::findByYoutubeId(const string& youtubeId) {
@@ -379,6 +382,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     Song* Song::findBySpotifyId(const string& spotifyId) {
@@ -404,6 +408,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     Song* Song::findByRESongId(int reSongId) {
@@ -430,6 +435,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<Song>* Song::findByDupeId(int dupeId) {
@@ -449,6 +455,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<Song>* Song::findAll() {
@@ -466,6 +473,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
 # pragma mark persistence
@@ -610,6 +618,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     int Song::save() {
@@ -747,6 +756,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     bool Song::sync() {

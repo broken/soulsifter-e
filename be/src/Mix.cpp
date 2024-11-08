@@ -140,6 +140,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     Mix* Mix::findByOutSongIdAndInSongId(int outSongId, int inSongId) {
@@ -168,6 +169,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<Mix>* Mix::findByOutSongId(int outSongId) {
@@ -187,6 +189,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<Mix>* Mix::findByInSongId(int inSongId) {
@@ -206,6 +209,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
     ResultSetIterator<Mix>* Mix::findAll() {
@@ -223,6 +227,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return NULL;
     }
 
 # pragma mark persistence
@@ -274,6 +279,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     int Mix::save() {
@@ -332,6 +338,7 @@ namespace soulsifter {
                 if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
             }
         }
+        return 0;
     }
 
     bool Mix::sync() {

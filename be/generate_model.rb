@@ -307,6 +307,7 @@ def cFindFunction(name, f, fields)
   str << "                ps->set#{cap(f[$type].to_s)}(1, #{f[$name]});\n                sql::ResultSet *rs = ps->executeQuery();\n                #{cap(name)} *#{name} = NULL;\n                if (rs->next()) {\n                    #{name} = new #{cap(name)}();\n                    populateFields(rs, #{name});\n                }\n                rs->close();\n                delete rs;\n\n"
   str << "                return #{name};\n"
   str << sqlCatchBlock()
+  str << "        return NULL;\n"
   str << "    }\n\n"
 end
 
@@ -374,6 +375,7 @@ def cSecondaryKeysFindFunction(name, secondaryKeys, fields)
   end
   str << "                sql::ResultSet *rs = ps->executeQuery();\n                #{cap(name)} *#{name} = NULL;\n                if (rs->next()) {\n                    #{name} = new #{cap(name)}();\n                    populateFields(rs, #{name});\n                }\n                rs->close();\n                delete rs;\n\n                return #{name};\n"
   str << sqlCatchBlock()
+  str << "        return NULL;\n"
   str << "    }\n\n"
 end
 
@@ -387,6 +389,7 @@ def cSecondaryFindFunctions(name, multifindFields,  fields)
     str << "#{groupBy(name,fields)}\");\n" << setField(f, 1, "                ")
     str << "                sql::ResultSet *rs = ps->executeQuery();\n                ResultSetIterator<#{cap(name)}> *dtrs = new ResultSetIterator<#{cap(name)}>(rs);\n                return dtrs;\n"
     str << sqlCatchBlock()
+    str << "        return NULL;\n"
     str << "    }\n\n"
   end
   return str
@@ -401,6 +404,7 @@ def cFindAllFunction(name, fields)
   str << sqlTryBlock()
   str << "                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement(\"select #{selectStar(name, fields)} from #{fromTable(name, fields)}#{groupBy(name,fields)}\");\n                sql::ResultSet *rs = ps->executeQuery();\n                ResultSetIterator<#{cap(name)}> *dtrs = new ResultSetIterator<#{cap(name)}>(rs);\n                return dtrs;\n"
   str << sqlCatchBlock()
+  str << "        return NULL;\n"
   str << "    }\n"
 end
 
@@ -506,6 +510,7 @@ def cUpdateFunction(name, fields)
   end
   str << "                return result;\n"
   str << sqlCatchBlock()
+  str << "        return 0;\n"
   str << "    }\n\n"
 end
 
@@ -558,6 +563,7 @@ def cSaveFunction(name, fields, attribs)
   end
   str << "                    return saved;\n                }\n"
   str << sqlCatchBlock()
+  str << "        return 0;\n"
   str << "    }\n\n"
 end
 
@@ -579,6 +585,7 @@ def cEraseFunction(name, fields)
   str << "                }\n"
   str << "                return erased;\n"
   str << sqlCatchBlock()
+  str << "        return 0;\n"
   str << "    }\n\n"
 end
 
