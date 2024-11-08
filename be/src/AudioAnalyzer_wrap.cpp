@@ -86,7 +86,7 @@ class AnalyzeBpmAsyncWorker : public Napi::AsyncWorker {
     deferred->Resolve(wrapped_result);
   }
 
-  void OnError() {
+  void OnError(const Napi::Error& e) {
     Napi::Env env = Env();
     Napi::HandleScope scope(env);
     deferred->Reject(Napi::TypeError::New(env, "Failed to process async function analyzeBpmAsync").Value());
