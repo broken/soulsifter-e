@@ -33,8 +33,6 @@ namespace soulsifter {
     remixer(song->getRemix()),
     featuring(song->getFeaturing()),
     filepath(song->getFilename()),
-    reSongId(song->getId()),
-    reSong(new RESong(*song)),
     rating(song->getRating()),
     dateAdded(timeFromString(song->getDateAdded())),
     bpm(song->getBpmStart()),
@@ -47,6 +45,8 @@ namespace soulsifter {
     spotifyId(),
     durationInMs(0),
     curator(),
+    reSongId(song->getId()),
+    reSong(NULL),
     albumId(0),
     album(NULL),
     albumPartId(0),
@@ -55,7 +55,9 @@ namespace soulsifter {
     musicVideo(NULL),
     styles(),
     bpmLock(false),
-    tonicKeyLock(false) {
+    tonicKeyLock(false),
+    dupeId(0),
+    dupe(NULL) {
 
         // styles
         vector<Style*>* allStyles;

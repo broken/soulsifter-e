@@ -69,7 +69,7 @@ preparedStatements() {
 
 MysqlAccess::~MysqlAccess() {
     disconnect();
-    for (const std::pair<std::string, sql::PreparedStatement*>& entry : preparedStatements) {
+    for (const std::pair<const std::string, sql::PreparedStatement*>& entry : preparedStatements) {
         delete entry.second;
     }
 }

@@ -312,7 +312,7 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
     } else if (atom.type == Atom::S_BPM) {
       // can be a single number or a range
       size_t pos;
-      int min_bpm, max_bpm = 0;
+      int min_bpm = 0, max_bpm = 0;
       if ((pos = atom.value.find("-")) != string::npos) {
         min_bpm = atoi(atom.value.substr(0, pos).c_str());
         max_bpm = atoi(atom.value.substr(pos + 1, atom.value.length()).c_str());
