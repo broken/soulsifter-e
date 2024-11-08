@@ -122,7 +122,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
         }
         .item {
           height: 30px;
-          padding-left: 40px;
+          padding-left: 16px;
           flex: 1 1 auto;
           display: flex;
           flex-direction: row;
