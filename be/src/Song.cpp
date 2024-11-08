@@ -583,24 +583,24 @@ namespace soulsifter {
                 int result = ps->executeUpdate();
                 if (!styleIds.empty()) {
                     stringstream ss("insert ignore into SongStyles (songId, styleId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
-                    for (int i = 1; i < styleIds.size(); ++i) {
+                    for (size_t i = 1; i < styleIds.size(); ++i) {
                         ss << ", (?, ?)";
                     }
                     ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
-                    for (int i = 0; i < styleIds.size(); ++i) {
+                    for (size_t i = 0; i < styleIds.size(); ++i) {
                         ps->setInt(i * 2 + 1, id);
                         ps->setInt(i * 2 + 2, styleIds[i]);
                     }
                     ps->executeUpdate();
                     ss.str(std::string());
                     ss << "delete ignore from SongStyles where songId = ? and styleId not in (?";
-                    for (int i = 1; i < styleIds.size(); ++i) {
+                    for (size_t i = 1; i < styleIds.size(); ++i) {
                         ss << ", ?";
                     }
                     ss << ")";
                     ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
                     ps->setInt(1, id);
-                    for (int i = 0; i < styleIds.size(); ++i) {
+                    for (size_t i = 0; i < styleIds.size(); ++i) {
                         ps->setInt(i + 2, styleIds[i]);
                     }
                     ps->executeUpdate();
@@ -734,11 +734,11 @@ namespace soulsifter {
                     }
                     if (!styleIds.empty()) {
                         stringstream ss("insert ignore into SongStyles (songId, styleId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
-                        for (int i = 1; i < styleIds.size(); ++i) {
+                        for (size_t i = 1; i < styleIds.size(); ++i) {
                             ss << ", (?, ?)";
                         }
                         ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
-                        for (int i = 0; i < styleIds.size(); ++i) {
+                        for (size_t i = 0; i < styleIds.size(); ++i) {
                             ps->setInt(i * 2 + 1, id);
                             ps->setInt(i * 2 + 2, styleIds[i]);
                         }

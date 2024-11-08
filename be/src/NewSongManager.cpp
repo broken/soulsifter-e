@@ -127,7 +127,7 @@ bool NewSongManager::nextSong(Song* updatedSong, Song* originalSong) {
     return nextSong(updatedSong, originalSong);  // should never return true
   }
 
-  for (int i = 0; i < filesToTrash.size(); ++i) {
+  for (size_t i = 0; i < filesToTrash.size(); ++i) {
     if (!boost::filesystem::remove(filesToTrash[i])) {
       LOG(WARNING) << "Unable to delete file at " << filesToTrash[i];
     }
@@ -184,4 +184,3 @@ string NewSongManager::coverImagePath() const {
 
 }  // namespace soulsifter
 }  // namespace dogatech
-

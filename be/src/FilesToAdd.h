@@ -18,31 +18,31 @@ using namespace std;
 
 namespace dogatech {
   namespace soulsifter {
-  
+
     class FilesToAdd {
     public:
       FilesToAdd();
       ~FilesToAdd();
-      
+
       void clear();
-    
+
       void addFile(const string& path);
-      
+
       bool pullSong(string** song);
       bool pullFile(string** path);
-      
+
       const string* coverPath() const;
       void switchCover();
-    
+
     private:
       queue<string*> songs;
       vector<string*> images;
       queue<string*> misc;
-      int coverIndex;
+      size_t coverIndex;
       // we use this to save the cover path after the file has been pulled
       string* cover;
     };
-  
+
   }  // namespace soulsifter
 }  // namespace dogatech
 

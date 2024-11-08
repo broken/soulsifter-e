@@ -203,24 +203,24 @@ namespace soulsifter {
                 int result = ps->executeUpdate();
                 if (!childIds.empty()) {
                     stringstream ss("insert ignore into StyleChildren (parentId, childId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
-                    for (int i = 1; i < childIds.size(); ++i) {
+                    for (size_t i = 1; i < childIds.size(); ++i) {
                         ss << ", (?, ?)";
                     }
                     ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
-                    for (int i = 0; i < childIds.size(); ++i) {
+                    for (size_t i = 0; i < childIds.size(); ++i) {
                         ps->setInt(i * 2 + 1, id);
                         ps->setInt(i * 2 + 2, childIds[i]);
                     }
                     ps->executeUpdate();
                     ss.str(std::string());
                     ss << "delete ignore from StyleChildren where parentId = ? and childId not in (?";
-                    for (int i = 1; i < childIds.size(); ++i) {
+                    for (size_t i = 1; i < childIds.size(); ++i) {
                         ss << ", ?";
                     }
                     ss << ")";
                     ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
                     ps->setInt(1, id);
-                    for (int i = 0; i < childIds.size(); ++i) {
+                    for (size_t i = 0; i < childIds.size(); ++i) {
                         ps->setInt(i + 2, childIds[i]);
                     }
                     ps->executeUpdate();
@@ -231,24 +231,24 @@ namespace soulsifter {
                 }
                 if (!parentIds.empty()) {
                     stringstream ss("insert ignore into StyleChildren (childId, parentId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
-                    for (int i = 1; i < parentIds.size(); ++i) {
+                    for (size_t i = 1; i < parentIds.size(); ++i) {
                         ss << ", (?, ?)";
                     }
                     ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
-                    for (int i = 0; i < parentIds.size(); ++i) {
+                    for (size_t i = 0; i < parentIds.size(); ++i) {
                         ps->setInt(i * 2 + 1, id);
                         ps->setInt(i * 2 + 2, parentIds[i]);
                     }
                     ps->executeUpdate();
                     ss.str(std::string());
                     ss << "delete ignore from StyleChildren where childId = ? and parentId not in (?";
-                    for (int i = 1; i < parentIds.size(); ++i) {
+                    for (size_t i = 1; i < parentIds.size(); ++i) {
                         ss << ", ?";
                     }
                     ss << ")";
                     ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
                     ps->setInt(1, id);
-                    for (int i = 0; i < parentIds.size(); ++i) {
+                    for (size_t i = 0; i < parentIds.size(); ++i) {
                         ps->setInt(i + 2, parentIds[i]);
                     }
                     ps->executeUpdate();
@@ -294,11 +294,11 @@ namespace soulsifter {
                     }
                     if (!childIds.empty()) {
                         stringstream ss("insert ignore into StyleChildren (parentId, childId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
-                        for (int i = 1; i < childIds.size(); ++i) {
+                        for (size_t i = 1; i < childIds.size(); ++i) {
                             ss << ", (?, ?)";
                         }
                         ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
-                        for (int i = 0; i < childIds.size(); ++i) {
+                        for (size_t i = 0; i < childIds.size(); ++i) {
                             ps->setInt(i * 2 + 1, id);
                             ps->setInt(i * 2 + 2, childIds[i]);
                         }
@@ -308,11 +308,11 @@ namespace soulsifter {
                     }
                     if (!parentIds.empty()) {
                         stringstream ss("insert ignore into StyleChildren (childId, parentId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
-                        for (int i = 1; i < parentIds.size(); ++i) {
+                        for (size_t i = 1; i < parentIds.size(); ++i) {
                             ss << ", (?, ?)";
                         }
                         ps = MysqlAccess::getInstance().getPreparedStatement(ss.str());
-                        for (int i = 0; i < parentIds.size(); ++i) {
+                        for (size_t i = 0; i < parentIds.size(); ++i) {
                             ps->setInt(i * 2 + 1, id);
                             ps->setInt(i * 2 + 2, parentIds[i]);
                         }
