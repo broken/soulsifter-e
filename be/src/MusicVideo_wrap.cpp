@@ -51,7 +51,6 @@ MusicVideo::MusicVideo(const Napi::CallbackInfo& info) : Napi::ObjectWrap<MusicV
 }
 
 void MusicVideo::clear(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
   MusicVideo* obj = this;
   obj->musicvideo->clear();
 }

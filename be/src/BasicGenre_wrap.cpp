@@ -53,7 +53,6 @@ BasicGenre::BasicGenre(const Napi::CallbackInfo& info) : Napi::ObjectWrap<BasicG
 }
 
 void BasicGenre::clear(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
   BasicGenre* obj = this;
   obj->basicgenre->clear();
 }

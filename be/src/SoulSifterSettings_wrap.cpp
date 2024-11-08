@@ -44,7 +44,6 @@ SoulSifterSettings::SoulSifterSettings(const Napi::CallbackInfo& info) : Napi::O
 }
 
 void SoulSifterSettings::save(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
   SoulSifterSettings* obj = this;
   obj->soulsiftersettings->save();
 }

@@ -117,7 +117,6 @@ Napi::Value AudioAnalyzer::analyzeBpmAsync(const Napi::CallbackInfo& info) {
 }
 
 void AudioAnalyzer::analyzeBpms(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
 
       dogatech::soulsifter::AudioAnalyzer::analyzeBpms();
 }
@@ -140,7 +139,6 @@ Napi::Value AudioAnalyzer::analyzeDuration(const Napi::CallbackInfo& info) {
 }
 
 void AudioAnalyzer::analyzeDurations(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
 
       dogatech::soulsifter::AudioAnalyzer::analyzeDurations();
 }

@@ -61,7 +61,6 @@ Style::Style(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Style>(info), st
 }
 
 void Style::clear(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
   Style* obj = this;
   obj->style->clear();
 }

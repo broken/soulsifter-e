@@ -64,7 +64,6 @@ PlaylistEntry::PlaylistEntry(const Napi::CallbackInfo& info) : Napi::ObjectWrap<
 }
 
 void PlaylistEntry::clear(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
   PlaylistEntry* obj = this;
   obj->playlistentry->clear();
 }

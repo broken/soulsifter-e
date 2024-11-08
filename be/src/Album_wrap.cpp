@@ -68,7 +68,6 @@ Album::Album(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Album>(info), al
 }
 
 void Album::clear(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
   Album* obj = this;
   obj->album->clear();
 }
