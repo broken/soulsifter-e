@@ -44,7 +44,7 @@ namespace soulsifter {
 
         friend class RapidEvolutionDatabaseSongsSongHandler;
 
-        static const int maxREId();
+        static int maxREId();
         void setStylesBitmaskFromDb();
 
         int getId() const;

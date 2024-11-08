@@ -21,7 +21,7 @@
 namespace dogatech {
 namespace soulsifter {
 
-    const int RESong::maxREId() {
+    int RESong::maxREId() {
         sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("select max(id) from RESongs");
         sql::ResultSet *rs = ps->executeQuery();
         int max = 0;

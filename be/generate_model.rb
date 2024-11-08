@@ -908,7 +908,7 @@ reSongFields = [
   [:string, "stylesBitmask", Attrib::TRANSIENT],
 ]
 reSongAttribs = Attrib::SAVEID
-reSongCustomMethods = "        friend class RapidEvolutionDatabaseSongsSongHandler;\n\n        static const int maxREId();\n        void setStylesBitmaskFromDb();\n\n"
+reSongCustomMethods = "        friend class RapidEvolutionDatabaseSongsSongHandler;\n\n        static int maxREId();\n        void setStylesBitmaskFromDb();\n\n"
 reSongCustomHeaders = ""
 songFields = [
   [:int, "id", Attrib::FIND],

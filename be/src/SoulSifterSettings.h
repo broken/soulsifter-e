@@ -29,7 +29,7 @@ namespace soulsifter {
         void save();
 
         template <typename T>
-        const T get(const std::string& label) const;
+        T get(const std::string& label) const;
 
         template <typename T>
         void put(const std::string& label, const T& value);
