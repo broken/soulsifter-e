@@ -11,7 +11,9 @@ class PlaylistList extends PlaylistsMixin(LitElement) {
   render() {
     let items = this.allPlaylists.map(p => html`<playlist-list-item .playlist="${p}" @toggle-select="${this.toggleSelection}" ?selected="${this.isPlaylistSelected(p)}"></playlist-list-item>`);
     return html`
-      ${items}
+      <div class="list">
+        ${items}
+      </div>
       <md-fab size="small" @click="${this.createPlaylist}"><mwc-icon slot="icon">add</mwc-icon></md-fab>
     `;
   }
@@ -66,11 +68,14 @@ class PlaylistList extends PlaylistsMixin(LitElement) {
           padding: 0 0 20px 0;
           height: 100%;
           overflow-x: hidden;
+        }
+        .list {
+          height: 100%;
           overflow-y: scroll;
         }
         md-fab {
-          bottom: 14px;
-          position: relative;
+          bottom: 34px;
+          position: absolute;
           left: 200px;
         }
       `
