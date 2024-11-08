@@ -42,6 +42,7 @@ namespace soulsifter {
             }
         }
         LOG(FATAL) << "Unable to complete model operation";
+        return 0;
     }
 
 }
