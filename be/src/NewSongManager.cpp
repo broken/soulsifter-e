@@ -174,6 +174,7 @@ void NewSongManager::trashMusicFile(Song* song) {
   }
 
   song->setTrashed(true);
+  song->setYoutubeId("");
   song->setFilepath(song->getFilepath() + ".txt");
   song->update();
 }
