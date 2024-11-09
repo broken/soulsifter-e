@@ -290,8 +290,11 @@ class YoutubeClientMain {
         return Promise.resolve();
       }
       song.youtubeId = response.data.items[0].id.videoId;
-      song.update();
       await this.sleep();
+      if (!song.update()) {
+        console.warn('Unable to update song ' + song.id + ' : ' + song.artist + ' - ' + song.title + ' with YouTube ID ' + song.youtubeId);
+        return;
+      }
     }
     await this._addPlaylistItem(playlist.youtubeId, song.youtubeId);
   }
