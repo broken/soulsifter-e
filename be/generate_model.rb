@@ -413,8 +413,65 @@ def hSyncFunction()
 end
 
 def cSyncFunction(name, fields, secondaryKeys)
-  str = "    bool #{cap(name)}::sync() {\n"
-  str << "        return true;\n    }\n\n"
+  str = "    bool #{cap(name)}::sync() {\n        #{cap(name)}* #{name} = findById(id);\n"
+  if (!fields.select{|f| f[$attrib] & Attrib::PTR > 0}.empty?)
+    str << "        if (!#{name}) {\n"
+    fields.select{|f| f[$attrib] & Attrib::PTR > 0}.each do |f|
+      str << "            if (!#{f[$name]}Id && #{f[$name]}) {\n                #{f[$name]}->sync();\n                #{f[$name]}Id = #{f[$name]}->getId();\n            }\n"
+    end
+    str << "        }\n"
+  end
+  if (!secondaryKeys.empty?)
+    str << "        if (!#{name}) #{name} = findBy"
+    secondaryKeys.each_with_index do |f,idx|
+      if (idx > 0)
+        str << "And"
+      end
+      str << "#{cap(f[$name])}"
+    end
+    str << "("
+    secondaryKeys.each_with_index do |f,idx|
+      if (idx > 0)
+        str << ", "
+      end
+      str << "get#{cap(f[$name])}()"
+    end
+    str << ");\n"
+  end
+  str << "        if (!#{name}) return true;\n\n"
+  str << "        // check fields\n        bool needsUpdate = false;\n"
+  str << "        boost::regex decimal(\"(-?\\\\d+)\\\\.?\\\\d*\");\n        boost::smatch match1;\n        boost::smatch match2;\n"
+  fields.each do |f|
+    if (f[$attrib] & Attrib::TRANSIENT > 0)
+      next
+    elsif ([:int, :bool].include?(f[$type]))
+      str << "        if (#{f[$name]} != #{name}->get#{cap(f[$name])}()) {\n            if (#{f[$name]}) {\n"
+      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n                needsUpdate = true;\n            } else {\n"
+      str << "                #{f[$name]} = #{name}->get#{cap(f[$name])}();\n            }\n        }\n"
+    elsif ([:time_t].include?(f[$type]))
+      str << "        if (#{f[$name]} != #{name}->get#{cap(f[$name])}()) {\n            if (!#{name}->get#{cap(f[$name])}()) {\n"
+      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n                needsUpdate = true;\n            } else {\n"
+      str << "                #{f[$name]} = #{name}->get#{cap(f[$name])}();\n            }\n        }\n"
+    elsif (f[$type] == :string)
+      str << "        if (#{f[$name]}.compare(#{name}->get#{cap(f[$name])}())  && (!boost::regex_match(#{f[$name]}, match1, decimal) || !boost::regex_match(#{name}->get#{cap(f[$name])}(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {\n"
+      str << "            if (!#{f[$name]}.empty()) {\n"
+      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n                needsUpdate = true;\n            } else {\n"
+      str << "                #{f[$name]} = #{name}->get#{cap(f[$name])}();\n            }\n        }\n"
+    elsif (isVector(f[$type]) && f[$attrib] & Attrib::ID > 0)
+      str << "        if (!equivalentVectors<int>(#{f[$name]}, #{name}->get#{cap(f[$name])}())) {\n            if (!containsVector<int>(#{f[$name]}, #{name}->get#{cap(f[$name])}())) {\n"
+      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]}\";\n                needsUpdate = true;\n            }\n"
+      str << "            appendUniqueVector<int>(#{name}->get#{cap(f[$name])}(), &#{f[$name]});\n        }\n"
+    elsif (isSet(f[$type]))
+      str << "        if (!equivalentSets<#{getSetGeneric(f[$type])}>(#{f[$name]}, #{name}->#{f[$name]})) {\n            if (!containsSet<#{getSetGeneric(f[$type])}>(#{f[$name]}, #{name}->#{f[$name]})) {\n"
+      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]}\";\n                needsUpdate = true;\n            }\n"
+      str << "            #{f[$name]}.insert(#{name}->#{f[$name]}.begin(), #{name}->#{f[$name]}.end());\n        }\n"
+    elsif (f[$attrib] & Attrib::PTR > 0)
+      str << "        if (#{f[$name]}) needsUpdate |= #{f[$name]}->sync();\n"
+    else
+      next
+    end
+  end
+  str << "        return needsUpdate;\n    }\n\n"
 end
 
 def hUpdateFunction()

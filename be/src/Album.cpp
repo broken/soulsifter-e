@@ -370,7 +370,111 @@ namespace soulsifter {
     }
 
     bool Album::sync() {
-        return true;
+        Album* album = findById(id);
+        if (!album) {
+            if (!basicGenreId && basicGenre) {
+                basicGenre->sync();
+                basicGenreId = basicGenre->getId();
+            }
+        }
+        if (!album) album = findByNameAndArtist(getName(), getArtist());
+        if (!album) return true;
+
+        // check fields
+        bool needsUpdate = false;
+        boost::regex decimal("(-?\\d+)\\.?\\d*");
+        boost::smatch match1;
+        boost::smatch match2;
+        if (id != album->getId()) {
+            if (id) {
+                LOG(INFO) << "updating album " << id << " id from " << album->getId() << " to " << id;
+                needsUpdate = true;
+            } else {
+                id = album->getId();
+            }
+        }
+        if (name.compare(album->getName())  && (!boost::regex_match(name, match1, decimal) || !boost::regex_match(album->getName(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
+            if (!name.empty()) {
+                LOG(INFO) << "updating album " << id << " name from " << album->getName() << " to " << name;
+                needsUpdate = true;
+            } else {
+                name = album->getName();
+            }
+        }
+        if (artist.compare(album->getArtist())  && (!boost::regex_match(artist, match1, decimal) || !boost::regex_match(album->getArtist(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
+            if (!artist.empty()) {
+                LOG(INFO) << "updating album " << id << " artist from " << album->getArtist() << " to " << artist;
+                needsUpdate = true;
+            } else {
+                artist = album->getArtist();
+            }
+        }
+        if (coverFilepath.compare(album->getCoverFilepath())  && (!boost::regex_match(coverFilepath, match1, decimal) || !boost::regex_match(album->getCoverFilepath(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
+            if (!coverFilepath.empty()) {
+                LOG(INFO) << "updating album " << id << " coverFilepath from " << album->getCoverFilepath() << " to " << coverFilepath;
+                needsUpdate = true;
+            } else {
+                coverFilepath = album->getCoverFilepath();
+            }
+        }
+        if (mixed != album->getMixed()) {
+            if (mixed) {
+                LOG(INFO) << "updating album " << id << " mixed from " << album->getMixed() << " to " << mixed;
+                needsUpdate = true;
+            } else {
+                mixed = album->getMixed();
+            }
+        }
+        if (label.compare(album->getLabel())  && (!boost::regex_match(label, match1, decimal) || !boost::regex_match(album->getLabel(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
+            if (!label.empty()) {
+                LOG(INFO) << "updating album " << id << " label from " << album->getLabel() << " to " << label;
+                needsUpdate = true;
+            } else {
+                label = album->getLabel();
+            }
+        }
+        if (catalogId.compare(album->getCatalogId())  && (!boost::regex_match(catalogId, match1, decimal) || !boost::regex_match(album->getCatalogId(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
+            if (!catalogId.empty()) {
+                LOG(INFO) << "updating album " << id << " catalogId from " << album->getCatalogId() << " to " << catalogId;
+                needsUpdate = true;
+            } else {
+                catalogId = album->getCatalogId();
+            }
+        }
+        if (releaseDateYear != album->getReleaseDateYear()) {
+            if (releaseDateYear) {
+                LOG(INFO) << "updating album " << id << " releaseDateYear from " << album->getReleaseDateYear() << " to " << releaseDateYear;
+                needsUpdate = true;
+            } else {
+                releaseDateYear = album->getReleaseDateYear();
+            }
+        }
+        if (releaseDateMonth != album->getReleaseDateMonth()) {
+            if (releaseDateMonth) {
+                LOG(INFO) << "updating album " << id << " releaseDateMonth from " << album->getReleaseDateMonth() << " to " << releaseDateMonth;
+                needsUpdate = true;
+            } else {
+                releaseDateMonth = album->getReleaseDateMonth();
+            }
+        }
+        if (releaseDateDay != album->getReleaseDateDay()) {
+            if (releaseDateDay) {
+                LOG(INFO) << "updating album " << id << " releaseDateDay from " << album->getReleaseDateDay() << " to " << releaseDateDay;
+                needsUpdate = true;
+            } else {
+                releaseDateDay = album->getReleaseDateDay();
+            }
+        }
+        if (basicGenreId != album->getBasicGenreId()) {
+            if (basicGenreId) {
+                LOG(INFO) << "updating album " << id << " basicGenreId from " << album->getBasicGenreId() << " to " << basicGenreId;
+                needsUpdate = true;
+            } else {
+                basicGenreId = album->getBasicGenreId();
+            }
+        }
+        if (basicGenre) needsUpdate |= basicGenre->sync();
+        return needsUpdate;
     }
 
 
