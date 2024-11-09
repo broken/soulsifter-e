@@ -21,6 +21,7 @@ class SearchInfo extends LitElement {
           <span class="emphasis">bpm</span> : <br>
           <span class="emphasis">trashed</span> : <br>
           <span class="emphasis">lowq</span> : <br>
+          <span class="emphasis">yt</span> or <span class="emphasis">youtube</span> : <br>
         </div>
         <div class="flex">
           Internal song ID<br>
@@ -34,6 +35,7 @@ class SearchInfo extends LitElement {
           Song BPM (single or span)<br>
           Has song been deleted<br>
           Is song low quality<br>
+          YouTube ID<br>
         </div>
         <div class="right flex">
           <span class="emphasis">aid</span> : <br>
