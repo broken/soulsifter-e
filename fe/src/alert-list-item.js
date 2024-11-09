@@ -58,6 +58,7 @@ class AlertListItem extends AlertsMixin(LitElement) {
         .msg {
           display: flex;
           flex-direction: row;
+          user-select: text;
         }
       `
     ];
