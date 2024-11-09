@@ -162,7 +162,8 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
   }
 
   syncYouTubePlaylists(e) {
-    window.yt.syncPlaylists();
+    const aid = this.addAlert(`Syncing playlists.`, 0, -1);
+    window.yt.syncPlaylists(aid);
   }
 
   showHiddenAlerts(e) {

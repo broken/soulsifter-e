@@ -62,23 +62,20 @@ const createWindow = () => {
     return false;
   });
 
-  ipcMain.on('yt-syncPlaylists', async (event) => {
+  ipcMain.on('yt-syncPlaylists', async (event, alertId) => {
     yt.auth().then(async () => {
-      // let alertId = this.addAlert('Syncing playlists.', 0, -1); TODO
       let progress = 0;
-      // TODO add an alert for time.
       let playlists = ss.Playlist.findAll();
+      playlists = playlists.filter(p => !!p.youtubeId);
       for (let i = 0; i < playlists.length; ++i) {
-        if (!playlists[i].youtubeId) continue;
         progress = i / playlists.length || 0.01;
-        // this.updateAlert(alertId, progress, 'Syncing playlist ' + playlists[i].name);
-        await yt._updatePlaylistEntries(event, playlists[i]);
+        updateAlert(event, alertId, progress, 'Syncing playlist ' + playlists[i].name);
+        await yt._updatePlaylistEntries(event, playlists[i], alertId, {'min': progress, 'max': ((i + 1) / playlists.length)});
       }
-      // this.updateAlert(alertId, 1, 'Completed syncing playlists.', 20);
+      updateAlert(event, alertId, 1, 'Completed syncing playlists.', 20);
     }).catch(err => {
       console.error('Failed to sync playlists: ' + err);
-      mainWindow.webContents.send('addalert', {'progress': progress, 'a': 'Failed to sync playlists. ' + err});
-      // this.updateAlert(alertId, progress, 'Failed to sync playlists. ' + err);
+      updateAlert(event, alertId, undefined, 'Failed to sync playlists. ' + err);
       console.error(err);
     });
   });
@@ -311,10 +308,10 @@ class YoutubeClientMain {
     return Promise.resolve();
   }
 
-  async _updatePlaylistEntries(event, playlist, alertId = undefined) {
+  async _updatePlaylistEntries(event, playlist, alertId = undefined, range = {'min': 0, 'max': 1}) {
     let entries, songs;
 
-    updateAlert(event, alertId, -1, `Syncing playlist ${playlist.name} (${playlist.id}). Finding tracks.`);
+    updateAlert(event, alertId, range.min, `Syncing playlist ${playlist.name} (${playlist.id}). Finding tracks.`);
     if (!playlist.query) {
       entries = ss.PlaylistEntry.findByPlaylistId(playlist.id);
       songs = entries.sort(function(a, b) { return a.position - b.position; })
@@ -354,10 +351,11 @@ class YoutubeClientMain {
     songs = songs.filter(song => !items.find(i => song.youtubeId == i.videoId));
     items = x;
     let count = items.length + songs.length;
+    let scale = range.max - range.min;
 
     // remove items
     for (let i = 0; i < items.length; ++i) {
-      updateAlert(event, alertId, i/count, `Syncing playlist ${playlist.name} (${playlist.id}). Removing songs from playlist.`);
+      updateAlert(event, alertId, i/count*scale+range.min, `Syncing playlist ${playlist.name} (${playlist.id}). Removing songs from playlist.`);
       await this._removePlaylistEntry(items[i].id);
       await this.sleep();
     }
@@ -365,7 +363,7 @@ class YoutubeClientMain {
     // add songs
     for (let i = 0; i < songs.length; ++i) {
       try {
-        updateAlert(event, alertId, (i+items.length)/count, `Syncing playlist ${playlist.name} (${playlist.id}). Adding songs to playlist.`);
+        updateAlert(event, alertId, (i+items.length)/count*scale+range.min, `Syncing playlist ${playlist.name} (${playlist.id}). Adding songs to playlist.`);
         await this._addSongToPlaylist(songs[i], playlist);
         await this.sleep();
       } catch (err) {
@@ -373,7 +371,7 @@ class YoutubeClientMain {
         throw err;
       }
     }
-    updateAlert(event, alertId, 1, `Finished syncing playlist ${playlist.name} (${playlist.id}).`, 15);
+    updateAlert(event, alertId, range.max, `Finished syncing playlist ${playlist.name} (${playlist.id}).`, 15);
   }
 
   _createPlaylist(playlist) {

@@ -1,10 +1,5 @@
-import { AlertsMixin } from "./mixin-alerts-pub.js";
+class YoutubeClient extends Object {
 
-class YoutubeClient extends AlertsMixin(Object) {  // TODO show errors
-
-  /**
-   * Add a new playlist, save the playlist id, and add the songs.
-   */
   createPlaylist(playlistId) {
     ipcRenderer.send('yt-createPlaylist', playlistId);
   }
@@ -17,8 +12,8 @@ class YoutubeClient extends AlertsMixin(Object) {  // TODO show errors
     ipcRenderer.send('yt-deletePlaylist', ytPlaylistId);
   }
 
-  syncPlaylists() {
-    ipcRenderer.send('yt-syncPlaylists');
+  syncPlaylists(alertId) {
+    ipcRenderer.send('yt-syncPlaylists', alertId);
   }
 
   updatePlaylistEntries(playlistId, alertId) {
