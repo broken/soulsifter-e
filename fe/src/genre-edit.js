@@ -34,7 +34,7 @@ class GenreEdit extends LitElement {
     this.genreParents = [];
     this.openPageListener = (e) => {
       if (e.detail) {
-        this.genre = e.detail;
+        this.genre = ss.Style.findById(e.detail.id);
         this.genreParents = this.genre.parents;
         // needed to erase previous descriptions when copying in a genre that doesn't have one
         this.shadowRoot.getElementById('description').value = this.genre.description;

@@ -62,7 +62,7 @@ class PlaylistEdit extends LitElement {
     this.genres = [];
     this.openPageListener = (e) => {
       if (e.detail) {
-        this.playlist = e.detail;
+        this.playlist = ss.Playlist.findById(e.detail.id);
         this.fromSongTrail = false;
         this.spotifySync = !!this.playlist.spotifyId;
         this.youtubeSync = !!this.playlist.youtubeId;

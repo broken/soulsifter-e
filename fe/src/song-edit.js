@@ -166,7 +166,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this._openPageListener = (e) => {
       this.videoUrl = undefined;
       if (e.detail.song) {
-        this.song = e.detail.song;
+        this.song = ss.Song.findById(e.detail.song.id);
         this.taggedSong = new ss.Song(this.song);
         this.sterilizeSong(this.taggedSong);
         this.filepaths = [];
