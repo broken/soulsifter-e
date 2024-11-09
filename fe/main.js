@@ -7,10 +7,11 @@ const ss = require('soulsifter');
 
 const isDev = process.env.IS_DEV === 'true';
 let alertsChannel = new ss.AlertsChannel();
+let mainWindow = undefined;
 
 const createWindow = () => {
   // Create the browser window.
-  const mainWindow = new BrowserWindow({
+  mainWindow = new BrowserWindow({
     width: 1680,
     height: 530,
     x: 0,
@@ -363,9 +364,14 @@ class YoutubeClientMain {
 
     // add songs
     for (let i = 0; i < songs.length; ++i) {
-      updateAlert(event, alertId, (i+items.length)/count, `Syncing playlist ${playlist.name} (${playlist.id}). Adding songs to playlist.`);
-      await this._addSongToPlaylist(songs[i], playlist);
-      await this.sleep();
+      try {
+        updateAlert(event, alertId, (i+items.length)/count, `Syncing playlist ${playlist.name} (${playlist.id}). Adding songs to playlist.`);
+        await this._addSongToPlaylist(songs[i], playlist);
+        await this.sleep();
+      } catch (err) {
+        mainWindow.webContents.send('addalert', {'a': 'Failed adding song ' + songs[i].id + ' to playlist. ' + err});
+        throw err;
+      }
     }
     updateAlert(event, alertId, 1, `Finished syncing playlist ${playlist.name} (${playlist.id}).`, 15);
   }
