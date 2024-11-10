@@ -43,7 +43,6 @@ public:
 
     // paths
     static std::string cleanDirName(const std::string& name);
-    static std::string cleanDirName(const std::string& name, const bool keepPathSeparator);
     string getCopyToPath();
     bool moveSong(Song* song);
     bool moveImage(const string& filepath);
