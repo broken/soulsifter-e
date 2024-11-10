@@ -344,58 +344,30 @@ namespace soulsifter {
         boost::smatch match1;
         boost::smatch match2;
         if (id != style->getId()) {
-            if (id) {
-                LOG(INFO) << "updating style " << id << " id from " << style->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = style->getId();
-            }
+            id = style->getId();
         }
         if (name.compare(style->getName())  && (!boost::regex_match(name, match1, decimal) || !boost::regex_match(style->getName(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!name.empty()) {
-                LOG(INFO) << "updating style " << id << " name from " << style->getName() << " to " << name;
-                needsUpdate = true;
-            } else {
-                name = style->getName();
-            }
+            LOG(INFO) << "updating style " << id << " name from " << style->getName() << " to " << name;
+            needsUpdate = true;
         }
         if (reId != style->getREId()) {
-            if (reId) {
-                LOG(INFO) << "updating style " << id << " reId from " << style->getREId() << " to " << reId;
-                needsUpdate = true;
-            } else {
-                reId = style->getREId();
-            }
+            reId = style->getREId();
         }
         if (reLabel.compare(style->getRELabel())  && (!boost::regex_match(reLabel, match1, decimal) || !boost::regex_match(style->getRELabel(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!reLabel.empty()) {
-                LOG(INFO) << "updating style " << id << " reLabel from " << style->getRELabel() << " to " << reLabel;
-                needsUpdate = true;
-            } else {
-                reLabel = style->getRELabel();
-            }
+            LOG(INFO) << "updating style " << id << " reLabel from " << style->getRELabel() << " to " << reLabel;
+            needsUpdate = true;
         }
         if (description.compare(style->getDescription())  && (!boost::regex_match(description, match1, decimal) || !boost::regex_match(style->getDescription(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!description.empty()) {
-                LOG(INFO) << "updating style " << id << " description from " << style->getDescription() << " to " << description;
-                needsUpdate = true;
-            } else {
-                description = style->getDescription();
-            }
+            LOG(INFO) << "updating style " << id << " description from " << style->getDescription() << " to " << description;
+            needsUpdate = true;
         }
         if (!equivalentVectors<int>(childIds, style->getChildIds())) {
-            if (!containsVector<int>(childIds, style->getChildIds())) {
-                LOG(INFO) << "updating style " << id << " childIds";
-                needsUpdate = true;
-            }
-            appendUniqueVector<int>(style->getChildIds(), &childIds);
+            LOG(INFO) << "updating style " << id << " childIds";
+            needsUpdate = true;
         }
         if (!equivalentVectors<int>(parentIds, style->getParentIds())) {
-            if (!containsVector<int>(parentIds, style->getParentIds())) {
-                LOG(INFO) << "updating style " << id << " parentIds";
-                needsUpdate = true;
-            }
-            appendUniqueVector<int>(style->getParentIds(), &parentIds);
+            LOG(INFO) << "updating style " << id << " parentIds";
+            needsUpdate = true;
         }
         return needsUpdate;
     }

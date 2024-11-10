@@ -299,36 +299,18 @@ namespace soulsifter {
         boost::smatch match1;
         boost::smatch match2;
         if (id != albumPart->getId()) {
-            if (id) {
-                LOG(INFO) << "updating albumPart " << id << " id from " << albumPart->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = albumPart->getId();
-            }
+            id = albumPart->getId();
         }
         if (pos.compare(albumPart->getPos())  && (!boost::regex_match(pos, match1, decimal) || !boost::regex_match(albumPart->getPos(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!pos.empty()) {
-                LOG(INFO) << "updating albumPart " << id << " pos from " << albumPart->getPos() << " to " << pos;
-                needsUpdate = true;
-            } else {
-                pos = albumPart->getPos();
-            }
+            LOG(INFO) << "updating albumPart " << id << " pos from " << albumPart->getPos() << " to " << pos;
+            needsUpdate = true;
         }
         if (name.compare(albumPart->getName())  && (!boost::regex_match(name, match1, decimal) || !boost::regex_match(albumPart->getName(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!name.empty()) {
-                LOG(INFO) << "updating albumPart " << id << " name from " << albumPart->getName() << " to " << name;
-                needsUpdate = true;
-            } else {
-                name = albumPart->getName();
-            }
+            LOG(INFO) << "updating albumPart " << id << " name from " << albumPart->getName() << " to " << name;
+            needsUpdate = true;
         }
         if (albumId != albumPart->getAlbumId()) {
-            if (albumId) {
-                LOG(INFO) << "updating albumPart " << id << " albumId from " << albumPart->getAlbumId() << " to " << albumId;
-                needsUpdate = true;
-            } else {
-                albumId = albumPart->getAlbumId();
-            }
+            albumId = albumPart->getAlbumId();
         }
         if (album) needsUpdate |= album->sync();
         return needsUpdate;

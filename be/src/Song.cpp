@@ -792,231 +792,111 @@ namespace soulsifter {
         boost::smatch match1;
         boost::smatch match2;
         if (id != song->getId()) {
-            if (id) {
-                LOG(INFO) << "updating song " << id << " id from " << song->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = song->getId();
-            }
+            id = song->getId();
         }
         if (artist.compare(song->getArtist())  && (!boost::regex_match(artist, match1, decimal) || !boost::regex_match(song->getArtist(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!artist.empty()) {
-                LOG(INFO) << "updating song " << id << " artist from " << song->getArtist() << " to " << artist;
-                needsUpdate = true;
-            } else {
-                artist = song->getArtist();
-            }
+            LOG(INFO) << "updating song " << id << " artist from " << song->getArtist() << " to " << artist;
+            needsUpdate = true;
         }
         if (track.compare(song->getTrack())  && (!boost::regex_match(track, match1, decimal) || !boost::regex_match(song->getTrack(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!track.empty()) {
-                LOG(INFO) << "updating song " << id << " track from " << song->getTrack() << " to " << track;
-                needsUpdate = true;
-            } else {
-                track = song->getTrack();
-            }
+            LOG(INFO) << "updating song " << id << " track from " << song->getTrack() << " to " << track;
+            needsUpdate = true;
         }
         if (title.compare(song->getTitle())  && (!boost::regex_match(title, match1, decimal) || !boost::regex_match(song->getTitle(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!title.empty()) {
-                LOG(INFO) << "updating song " << id << " title from " << song->getTitle() << " to " << title;
-                needsUpdate = true;
-            } else {
-                title = song->getTitle();
-            }
+            LOG(INFO) << "updating song " << id << " title from " << song->getTitle() << " to " << title;
+            needsUpdate = true;
         }
         if (remixer.compare(song->getRemixer())  && (!boost::regex_match(remixer, match1, decimal) || !boost::regex_match(song->getRemixer(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!remixer.empty()) {
-                LOG(INFO) << "updating song " << id << " remixer from " << song->getRemixer() << " to " << remixer;
-                needsUpdate = true;
-            } else {
-                remixer = song->getRemixer();
-            }
+            LOG(INFO) << "updating song " << id << " remixer from " << song->getRemixer() << " to " << remixer;
+            needsUpdate = true;
         }
         if (featuring.compare(song->getFeaturing())  && (!boost::regex_match(featuring, match1, decimal) || !boost::regex_match(song->getFeaturing(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!featuring.empty()) {
-                LOG(INFO) << "updating song " << id << " featuring from " << song->getFeaturing() << " to " << featuring;
-                needsUpdate = true;
-            } else {
-                featuring = song->getFeaturing();
-            }
+            LOG(INFO) << "updating song " << id << " featuring from " << song->getFeaturing() << " to " << featuring;
+            needsUpdate = true;
         }
         if (filepath.compare(song->getFilepath())  && (!boost::regex_match(filepath, match1, decimal) || !boost::regex_match(song->getFilepath(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!filepath.empty()) {
-                LOG(INFO) << "updating song " << id << " filepath from " << song->getFilepath() << " to " << filepath;
-                needsUpdate = true;
-            } else {
-                filepath = song->getFilepath();
-            }
+            LOG(INFO) << "updating song " << id << " filepath from " << song->getFilepath() << " to " << filepath;
+            needsUpdate = true;
         }
         if (rating != song->getRating()) {
-            if (rating) {
-                LOG(INFO) << "updating song " << id << " rating from " << song->getRating() << " to " << rating;
-                needsUpdate = true;
-            } else {
-                rating = song->getRating();
-            }
+            rating = song->getRating();
         }
         if (dateAdded != song->getDateAdded()) {
-            if (!song->getDateAdded()) {
-                LOG(INFO) << "updating song " << id << " dateAdded from " << song->getDateAdded() << " to " << dateAdded;
-                needsUpdate = true;
-            } else {
-                dateAdded = song->getDateAdded();
-            }
+            LOG(INFO) << "updating song " << id << " dateAdded from " << song->getDateAdded() << " to " << dateAdded;
+            needsUpdate = true;
         }
         if (bpm.compare(song->getBpm())  && (!boost::regex_match(bpm, match1, decimal) || !boost::regex_match(song->getBpm(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!bpm.empty()) {
-                LOG(INFO) << "updating song " << id << " bpm from " << song->getBpm() << " to " << bpm;
-                needsUpdate = true;
-            } else {
-                bpm = song->getBpm();
-            }
+            LOG(INFO) << "updating song " << id << " bpm from " << song->getBpm() << " to " << bpm;
+            needsUpdate = true;
         }
         if (tonicKey.compare(song->getTonicKey())  && (!boost::regex_match(tonicKey, match1, decimal) || !boost::regex_match(song->getTonicKey(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!tonicKey.empty()) {
-                LOG(INFO) << "updating song " << id << " tonicKey from " << song->getTonicKey() << " to " << tonicKey;
-                needsUpdate = true;
-            } else {
-                tonicKey = song->getTonicKey();
-            }
+            LOG(INFO) << "updating song " << id << " tonicKey from " << song->getTonicKey() << " to " << tonicKey;
+            needsUpdate = true;
         }
         if (energy != song->getEnergy()) {
-            if (energy) {
-                LOG(INFO) << "updating song " << id << " energy from " << song->getEnergy() << " to " << energy;
-                needsUpdate = true;
-            } else {
-                energy = song->getEnergy();
-            }
+            energy = song->getEnergy();
         }
         if (comments.compare(song->getComments())  && (!boost::regex_match(comments, match1, decimal) || !boost::regex_match(song->getComments(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!comments.empty()) {
-                LOG(INFO) << "updating song " << id << " comments from " << song->getComments() << " to " << comments;
-                needsUpdate = true;
-            } else {
-                comments = song->getComments();
-            }
+            LOG(INFO) << "updating song " << id << " comments from " << song->getComments() << " to " << comments;
+            needsUpdate = true;
         }
         if (trashed != song->getTrashed()) {
-            if (trashed) {
-                LOG(INFO) << "updating song " << id << " trashed from " << song->getTrashed() << " to " << trashed;
-                needsUpdate = true;
-            } else {
-                trashed = song->getTrashed();
-            }
+            LOG(INFO) << "updating song " << id << " trashed from " << song->getTrashed() << " to " << trashed;
+            needsUpdate = true;
         }
         if (lowQuality != song->getLowQuality()) {
-            if (lowQuality) {
-                LOG(INFO) << "updating song " << id << " lowQuality from " << song->getLowQuality() << " to " << lowQuality;
-                needsUpdate = true;
-            } else {
-                lowQuality = song->getLowQuality();
-            }
+            LOG(INFO) << "updating song " << id << " lowQuality from " << song->getLowQuality() << " to " << lowQuality;
+            needsUpdate = true;
         }
         if (googleSongId.compare(song->getGoogleSongId())  && (!boost::regex_match(googleSongId, match1, decimal) || !boost::regex_match(song->getGoogleSongId(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!googleSongId.empty()) {
-                LOG(INFO) << "updating song " << id << " googleSongId from " << song->getGoogleSongId() << " to " << googleSongId;
-                needsUpdate = true;
-            } else {
-                googleSongId = song->getGoogleSongId();
-            }
+            LOG(INFO) << "updating song " << id << " googleSongId from " << song->getGoogleSongId() << " to " << googleSongId;
+            needsUpdate = true;
         }
         if (youtubeId.compare(song->getYoutubeId())  && (!boost::regex_match(youtubeId, match1, decimal) || !boost::regex_match(song->getYoutubeId(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!youtubeId.empty()) {
-                LOG(INFO) << "updating song " << id << " youtubeId from " << song->getYoutubeId() << " to " << youtubeId;
-                needsUpdate = true;
-            } else {
-                youtubeId = song->getYoutubeId();
-            }
+            LOG(INFO) << "updating song " << id << " youtubeId from " << song->getYoutubeId() << " to " << youtubeId;
+            needsUpdate = true;
         }
         if (spotifyId.compare(song->getSpotifyId())  && (!boost::regex_match(spotifyId, match1, decimal) || !boost::regex_match(song->getSpotifyId(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!spotifyId.empty()) {
-                LOG(INFO) << "updating song " << id << " spotifyId from " << song->getSpotifyId() << " to " << spotifyId;
-                needsUpdate = true;
-            } else {
-                spotifyId = song->getSpotifyId();
-            }
+            LOG(INFO) << "updating song " << id << " spotifyId from " << song->getSpotifyId() << " to " << spotifyId;
+            needsUpdate = true;
         }
         if (durationInMs != song->getDurationInMs()) {
-            if (durationInMs) {
-                LOG(INFO) << "updating song " << id << " durationInMs from " << song->getDurationInMs() << " to " << durationInMs;
-                needsUpdate = true;
-            } else {
-                durationInMs = song->getDurationInMs();
-            }
+            durationInMs = song->getDurationInMs();
         }
         if (curator.compare(song->getCurator())  && (!boost::regex_match(curator, match1, decimal) || !boost::regex_match(song->getCurator(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!curator.empty()) {
-                LOG(INFO) << "updating song " << id << " curator from " << song->getCurator() << " to " << curator;
-                needsUpdate = true;
-            } else {
-                curator = song->getCurator();
-            }
+            LOG(INFO) << "updating song " << id << " curator from " << song->getCurator() << " to " << curator;
+            needsUpdate = true;
         }
         if (reSongId != song->getRESongId()) {
-            if (reSongId) {
-                LOG(INFO) << "updating song " << id << " reSongId from " << song->getRESongId() << " to " << reSongId;
-                needsUpdate = true;
-            } else {
-                reSongId = song->getRESongId();
-            }
+            reSongId = song->getRESongId();
         }
         if (reSong) needsUpdate |= reSong->sync();
         if (albumId != song->getAlbumId()) {
-            if (albumId) {
-                LOG(INFO) << "updating song " << id << " albumId from " << song->getAlbumId() << " to " << albumId;
-                needsUpdate = true;
-            } else {
-                albumId = song->getAlbumId();
-            }
+            albumId = song->getAlbumId();
         }
         if (album) needsUpdate |= album->sync();
         if (albumPartId != song->getAlbumPartId()) {
-            if (albumPartId) {
-                LOG(INFO) << "updating song " << id << " albumPartId from " << song->getAlbumPartId() << " to " << albumPartId;
-                needsUpdate = true;
-            } else {
-                albumPartId = song->getAlbumPartId();
-            }
+            albumPartId = song->getAlbumPartId();
         }
         if (albumPart) needsUpdate |= albumPart->sync();
         if (musicVideoId != song->getMusicVideoId()) {
-            if (musicVideoId) {
-                LOG(INFO) << "updating song " << id << " musicVideoId from " << song->getMusicVideoId() << " to " << musicVideoId;
-                needsUpdate = true;
-            } else {
-                musicVideoId = song->getMusicVideoId();
-            }
+            musicVideoId = song->getMusicVideoId();
         }
         if (musicVideo) needsUpdate |= musicVideo->sync();
         if (!equivalentVectors<int>(styleIds, song->getStyleIds())) {
-            if (!containsVector<int>(styleIds, song->getStyleIds())) {
-                LOG(INFO) << "updating song " << id << " styleIds";
-                needsUpdate = true;
-            }
-            appendUniqueVector<int>(song->getStyleIds(), &styleIds);
+            LOG(INFO) << "updating song " << id << " styleIds";
+            needsUpdate = true;
         }
         if (bpmLock != song->getBpmLock()) {
-            if (bpmLock) {
-                LOG(INFO) << "updating song " << id << " bpmLock from " << song->getBpmLock() << " to " << bpmLock;
-                needsUpdate = true;
-            } else {
-                bpmLock = song->getBpmLock();
-            }
+            LOG(INFO) << "updating song " << id << " bpmLock from " << song->getBpmLock() << " to " << bpmLock;
+            needsUpdate = true;
         }
         if (tonicKeyLock != song->getTonicKeyLock()) {
-            if (tonicKeyLock) {
-                LOG(INFO) << "updating song " << id << " tonicKeyLock from " << song->getTonicKeyLock() << " to " << tonicKeyLock;
-                needsUpdate = true;
-            } else {
-                tonicKeyLock = song->getTonicKeyLock();
-            }
+            LOG(INFO) << "updating song " << id << " tonicKeyLock from " << song->getTonicKeyLock() << " to " << tonicKeyLock;
+            needsUpdate = true;
         }
         if (dupeId != song->getDupeId()) {
-            if (dupeId) {
-                LOG(INFO) << "updating song " << id << " dupeId from " << song->getDupeId() << " to " << dupeId;
-                needsUpdate = true;
-            } else {
-                dupeId = song->getDupeId();
-            }
+            dupeId = song->getDupeId();
         }
         if (dupe) needsUpdate |= dupe->sync();
         return needsUpdate;

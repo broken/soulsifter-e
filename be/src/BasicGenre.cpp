@@ -198,20 +198,11 @@ namespace soulsifter {
         boost::smatch match1;
         boost::smatch match2;
         if (id != basicGenre->getId()) {
-            if (id) {
-                LOG(INFO) << "updating basicGenre " << id << " id from " << basicGenre->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = basicGenre->getId();
-            }
+            id = basicGenre->getId();
         }
         if (name.compare(basicGenre->getName())  && (!boost::regex_match(name, match1, decimal) || !boost::regex_match(basicGenre->getName(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!name.empty()) {
-                LOG(INFO) << "updating basicGenre " << id << " name from " << basicGenre->getName() << " to " << name;
-                needsUpdate = true;
-            } else {
-                name = basicGenre->getName();
-            }
+            LOG(INFO) << "updating basicGenre " << id << " name from " << basicGenre->getName() << " to " << name;
+            needsUpdate = true;
         }
         return needsUpdate;
     }

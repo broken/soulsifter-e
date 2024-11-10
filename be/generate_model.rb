@@ -444,27 +444,29 @@ def cSyncFunction(name, fields, secondaryKeys)
   fields.each do |f|
     if (f[$attrib] & Attrib::TRANSIENT > 0)
       next
+    elsif ([:int].include?(f[$type]) and f[$attrib] & Attrib::ID)
+      str << "        if (#{f[$name]} != #{name}->get#{cap(f[$name])}()) {\n"
+      str << "            #{f[$name]} = #{name}->get#{cap(f[$name])}();\n        }\n"
     elsif ([:int, :bool].include?(f[$type]))
-      str << "        if (#{f[$name]} != #{name}->get#{cap(f[$name])}()) {\n            if (#{f[$name]}) {\n"
-      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n                needsUpdate = true;\n            } else {\n"
-      str << "                #{f[$name]} = #{name}->get#{cap(f[$name])}();\n            }\n        }\n"
+      str << "        if (#{f[$name]} != #{name}->get#{cap(f[$name])}()) {\n"
+      str << "            LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n            needsUpdate = true;\n"
+      str << "        }\n"
     elsif ([:time_t].include?(f[$type]))
-      str << "        if (#{f[$name]} != #{name}->get#{cap(f[$name])}()) {\n            if (!#{name}->get#{cap(f[$name])}()) {\n"
-      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n                needsUpdate = true;\n            } else {\n"
-      str << "                #{f[$name]} = #{name}->get#{cap(f[$name])}();\n            }\n        }\n"
+      str << "        if (#{f[$name]} != #{name}->get#{cap(f[$name])}()) {\n"
+      str << "            LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n            needsUpdate = true;\n"
+      str << "        }\n"
     elsif (f[$type] == :string)
       str << "        if (#{f[$name]}.compare(#{name}->get#{cap(f[$name])}())  && (!boost::regex_match(#{f[$name]}, match1, decimal) || !boost::regex_match(#{name}->get#{cap(f[$name])}(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {\n"
-      str << "            if (!#{f[$name]}.empty()) {\n"
-      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n                needsUpdate = true;\n            } else {\n"
-      str << "                #{f[$name]} = #{name}->get#{cap(f[$name])}();\n            }\n        }\n"
+      str << "            LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]} from \" << #{name}->get#{cap(f[$name])}() << \" to \" << #{f[$name]};\n            needsUpdate = true;\n"
+      str << "        }\n"
     elsif (isVector(f[$type]) && f[$attrib] & Attrib::ID > 0)
-      str << "        if (!equivalentVectors<int>(#{f[$name]}, #{name}->get#{cap(f[$name])}())) {\n            if (!containsVector<int>(#{f[$name]}, #{name}->get#{cap(f[$name])}())) {\n"
-      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]}\";\n                needsUpdate = true;\n            }\n"
-      str << "            appendUniqueVector<int>(#{name}->get#{cap(f[$name])}(), &#{f[$name]});\n        }\n"
+      str << "        if (!equivalentVectors<int>(#{f[$name]}, #{name}->get#{cap(f[$name])}())) {\n"
+      str << "            LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]}\";\n            needsUpdate = true;\n"
+      str << "        }\n"
     elsif (isSet(f[$type]))
-      str << "        if (!equivalentSets<#{getSetGeneric(f[$type])}>(#{f[$name]}, #{name}->#{f[$name]})) {\n            if (!containsSet<#{getSetGeneric(f[$type])}>(#{f[$name]}, #{name}->#{f[$name]})) {\n"
-      str << "                LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]}\";\n                needsUpdate = true;\n            }\n"
-      str << "            #{f[$name]}.insert(#{name}->#{f[$name]}.begin(), #{name}->#{f[$name]}.end());\n        }\n"
+      str << "        if (!equivalentSets<#{getSetGeneric(f[$type])}>(#{f[$name]}, #{name}->#{f[$name]})) {\n"
+      str << "            LOG(INFO) << \"updating #{name} \" << id << \" #{f[$name]}\";\n            needsUpdate = true;\n"
+      str << "        }\n"
     elsif (f[$attrib] & Attrib::PTR > 0)
       str << "        if (#{f[$name]}) needsUpdate |= #{f[$name]}->sync();\n"
     else

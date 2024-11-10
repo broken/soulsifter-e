@@ -318,59 +318,31 @@ namespace soulsifter {
         boost::smatch match1;
         boost::smatch match2;
         if (id != playlist->getId()) {
-            if (id) {
-                LOG(INFO) << "updating playlist " << id << " id from " << playlist->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = playlist->getId();
-            }
+            id = playlist->getId();
         }
         if (name.compare(playlist->getName())  && (!boost::regex_match(name, match1, decimal) || !boost::regex_match(playlist->getName(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!name.empty()) {
-                LOG(INFO) << "updating playlist " << id << " name from " << playlist->getName() << " to " << name;
-                needsUpdate = true;
-            } else {
-                name = playlist->getName();
-            }
+            LOG(INFO) << "updating playlist " << id << " name from " << playlist->getName() << " to " << name;
+            needsUpdate = true;
         }
         if (query.compare(playlist->getQuery())  && (!boost::regex_match(query, match1, decimal) || !boost::regex_match(playlist->getQuery(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!query.empty()) {
-                LOG(INFO) << "updating playlist " << id << " query from " << playlist->getQuery() << " to " << query;
-                needsUpdate = true;
-            } else {
-                query = playlist->getQuery();
-            }
+            LOG(INFO) << "updating playlist " << id << " query from " << playlist->getQuery() << " to " << query;
+            needsUpdate = true;
         }
         if (gmusicId.compare(playlist->getGmusicId())  && (!boost::regex_match(gmusicId, match1, decimal) || !boost::regex_match(playlist->getGmusicId(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!gmusicId.empty()) {
-                LOG(INFO) << "updating playlist " << id << " gmusicId from " << playlist->getGmusicId() << " to " << gmusicId;
-                needsUpdate = true;
-            } else {
-                gmusicId = playlist->getGmusicId();
-            }
+            LOG(INFO) << "updating playlist " << id << " gmusicId from " << playlist->getGmusicId() << " to " << gmusicId;
+            needsUpdate = true;
         }
         if (youtubeId.compare(playlist->getYoutubeId())  && (!boost::regex_match(youtubeId, match1, decimal) || !boost::regex_match(playlist->getYoutubeId(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!youtubeId.empty()) {
-                LOG(INFO) << "updating playlist " << id << " youtubeId from " << playlist->getYoutubeId() << " to " << youtubeId;
-                needsUpdate = true;
-            } else {
-                youtubeId = playlist->getYoutubeId();
-            }
+            LOG(INFO) << "updating playlist " << id << " youtubeId from " << playlist->getYoutubeId() << " to " << youtubeId;
+            needsUpdate = true;
         }
         if (spotifyId.compare(playlist->getSpotifyId())  && (!boost::regex_match(spotifyId, match1, decimal) || !boost::regex_match(playlist->getSpotifyId(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!spotifyId.empty()) {
-                LOG(INFO) << "updating playlist " << id << " spotifyId from " << playlist->getSpotifyId() << " to " << spotifyId;
-                needsUpdate = true;
-            } else {
-                spotifyId = playlist->getSpotifyId();
-            }
+            LOG(INFO) << "updating playlist " << id << " spotifyId from " << playlist->getSpotifyId() << " to " << spotifyId;
+            needsUpdate = true;
         }
         if (!equivalentVectors<int>(styleIds, playlist->getStyleIds())) {
-            if (!containsVector<int>(styleIds, playlist->getStyleIds())) {
-                LOG(INFO) << "updating playlist " << id << " styleIds";
-                needsUpdate = true;
-            }
-            appendUniqueVector<int>(playlist->getStyleIds(), &styleIds);
+            LOG(INFO) << "updating playlist " << id << " styleIds";
+            needsUpdate = true;
         }
         return needsUpdate;
     }

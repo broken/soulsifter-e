@@ -207,28 +207,15 @@ namespace soulsifter {
         boost::smatch match1;
         boost::smatch match2;
         if (id != reXml->getId()) {
-            if (id) {
-                LOG(INFO) << "updating reXml " << id << " id from " << reXml->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = reXml->getId();
-            }
+            id = reXml->getId();
         }
         if (name.compare(reXml->getName())  && (!boost::regex_match(name, match1, decimal) || !boost::regex_match(reXml->getName(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!name.empty()) {
-                LOG(INFO) << "updating reXml " << id << " name from " << reXml->getName() << " to " << name;
-                needsUpdate = true;
-            } else {
-                name = reXml->getName();
-            }
+            LOG(INFO) << "updating reXml " << id << " name from " << reXml->getName() << " to " << name;
+            needsUpdate = true;
         }
         if (xml.compare(reXml->getXml())  && (!boost::regex_match(xml, match1, decimal) || !boost::regex_match(reXml->getXml(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!xml.empty()) {
-                LOG(INFO) << "updating reXml " << id << " xml from " << reXml->getXml() << " to " << xml;
-                needsUpdate = true;
-            } else {
-                xml = reXml->getXml();
-            }
+            LOG(INFO) << "updating reXml " << id << " xml from " << reXml->getXml() << " to " << xml;
+            needsUpdate = true;
         }
         return needsUpdate;
     }

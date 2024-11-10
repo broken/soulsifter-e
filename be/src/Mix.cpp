@@ -362,62 +362,30 @@ namespace soulsifter {
         boost::smatch match1;
         boost::smatch match2;
         if (id != mix->getId()) {
-            if (id) {
-                LOG(INFO) << "updating mix " << id << " id from " << mix->getId() << " to " << id;
-                needsUpdate = true;
-            } else {
-                id = mix->getId();
-            }
+            id = mix->getId();
         }
         if (outSongId != mix->getOutSongId()) {
-            if (outSongId) {
-                LOG(INFO) << "updating mix " << id << " outSongId from " << mix->getOutSongId() << " to " << outSongId;
-                needsUpdate = true;
-            } else {
-                outSongId = mix->getOutSongId();
-            }
+            outSongId = mix->getOutSongId();
         }
         if (outSong) needsUpdate |= outSong->sync();
         if (inSongId != mix->getInSongId()) {
-            if (inSongId) {
-                LOG(INFO) << "updating mix " << id << " inSongId from " << mix->getInSongId() << " to " << inSongId;
-                needsUpdate = true;
-            } else {
-                inSongId = mix->getInSongId();
-            }
+            inSongId = mix->getInSongId();
         }
         if (inSong) needsUpdate |= inSong->sync();
         if (bpmDiff.compare(mix->getBpmDiff())  && (!boost::regex_match(bpmDiff, match1, decimal) || !boost::regex_match(mix->getBpmDiff(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!bpmDiff.empty()) {
-                LOG(INFO) << "updating mix " << id << " bpmDiff from " << mix->getBpmDiff() << " to " << bpmDiff;
-                needsUpdate = true;
-            } else {
-                bpmDiff = mix->getBpmDiff();
-            }
+            LOG(INFO) << "updating mix " << id << " bpmDiff from " << mix->getBpmDiff() << " to " << bpmDiff;
+            needsUpdate = true;
         }
         if (rating != mix->getRating()) {
-            if (rating) {
-                LOG(INFO) << "updating mix " << id << " rating from " << mix->getRating() << " to " << rating;
-                needsUpdate = true;
-            } else {
-                rating = mix->getRating();
-            }
+            rating = mix->getRating();
         }
         if (comments.compare(mix->getComments())  && (!boost::regex_match(comments, match1, decimal) || !boost::regex_match(mix->getComments(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            if (!comments.empty()) {
-                LOG(INFO) << "updating mix " << id << " comments from " << mix->getComments() << " to " << comments;
-                needsUpdate = true;
-            } else {
-                comments = mix->getComments();
-            }
+            LOG(INFO) << "updating mix " << id << " comments from " << mix->getComments() << " to " << comments;
+            needsUpdate = true;
         }
         if (addon != mix->getAddon()) {
-            if (addon) {
-                LOG(INFO) << "updating mix " << id << " addon from " << mix->getAddon() << " to " << addon;
-                needsUpdate = true;
-            } else {
-                addon = mix->getAddon();
-            }
+            LOG(INFO) << "updating mix " << id << " addon from " << mix->getAddon() << " to " << addon;
+            needsUpdate = true;
         }
         return needsUpdate;
     }
