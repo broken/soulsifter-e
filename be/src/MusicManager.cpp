@@ -476,10 +476,9 @@ std::string MusicManager::cleanDirName(const std::string& s) {
   boost::regex prefixSpacesRegex("^[ ]*");
   boost::regex suffixSpacesRegex("[ ]*$");
   name = boost::regex_replace(name, charsToRemoveRegex, "");
+  name.erase(remove_if(name.begin(), name.end(), [](auto c) { return !isascii(c); }), name.end());  // remove nonascii characters
   name = boost::regex_replace(name, prefixSpacesRegex, "");
   name = boost::regex_replace(name, suffixSpacesRegex, "");
-  // remove nonascii characters
-  name.erase(remove_if(name.begin(), name.end(), [](auto c) { return !isascii(c); }), name.end());
   return name;
 }
 
