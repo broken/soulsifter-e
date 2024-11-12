@@ -36,6 +36,7 @@ public:
                                     int energy = 0,
                                     const bool musicVideoMode = false,
                                     int orderBy = DATE_ADDED,
+                                    int offset = 0,
                                     std::function<void(string)> errorCallback = {});
 };
 

@@ -365,7 +365,7 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
   return ss.str();
 }
 
-string buildOptionPredicate(const int bpm, const string& key, const vector<Style*>& styles, const vector<Song*>& songsToOmit, const vector<Playlist*>& playlists, const int limit, const int energy, const int orderBy) {
+string buildOptionPredicate(const int bpm, const string& key, const vector<Style*>& styles, const vector<Song*>& songsToOmit, const vector<Playlist*>& playlists, const int limit, const int energy, const int orderBy, const int offset) {
   stringstream ss;
   if (CamelotKeys::rmap.find(key) != CamelotKeys::rmap.end()) {
     // assume key lock always on for now
@@ -539,6 +539,7 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
     ss << "s.id desc";
   }
   ss << " limit " << limit;
+  ss << " offset " << offset;
   return ss.str();
 }
 
@@ -554,6 +555,7 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
                                        int energy,
                                        const bool musicVideoMode,
                                        int orderBy,
+                                       int offset,
                                        std::function<void(string)> errorCallback) {
   LOG(INFO) << "q:" << query << ", bpm:" << bpm << ", key:" << key << ", styles:" << ", limit:" << limit;
   vector<Song*>* songs = new vector<Song*>();
@@ -567,7 +569,7 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from Songs s inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
   try {
     ss << buildQueryPredicate(query, &limit, &energy, &orderBy);
-    ss << buildOptionPredicate(bpm, key, styles, songsToOmit, playlists, limit, energy, orderBy);
+    ss << buildOptionPredicate(bpm, key, styles, songsToOmit, playlists, limit, energy, orderBy, offset);
   } catch (boost::exception &e) {
     LOG(WARNING) << "ERROR: Error parsing query. " << boost::diagnostic_information(e);
     if (errorCallback) errorCallback(boost::diagnostic_information(e));

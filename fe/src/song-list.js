@@ -77,6 +77,7 @@ class SongList extends AlertsMixin(
           </md-dialog>`));
     return html`
       ${songListItems}
+      <div id="end"></div>
       <paper-dialog id="multiOptionsDialog" noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8">
         <options-menu icon="edit" topright>
           <options-menu-item @click="${this.openEdit('artist')}">artist</options-menu-item>
@@ -108,7 +109,8 @@ class SongList extends AlertsMixin(
     this.genres = [];
     this.entries = [];
     this.songTrail = [];
-    this.search();
+    this.songs = [];
+    this.offset = 0;
     this.mvRestrict = false;
     this.useStems = false;
     this.selectedListItems = new Set();
@@ -128,6 +130,23 @@ class SongList extends AlertsMixin(
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.keydownHandler.bind(this));
     window.removeEventListener('song-list-pos', this.getNextOrPrevSong.bind(this));
+  }
+
+  firstUpdated() {
+    this.search();
+
+    // initialize the observer for infinite scroll
+    const options = {
+        root: this.shadowRoot.host,
+        rootMargin: "0px 0px 400px 0px"
+    };
+    const callback = (entries /* IntersectionObserverEntry[] */) => {
+      const [element] = entries;
+      if (!element.isIntersecting) return;
+      if (!this.query.match(/\b(l|limit):/)) this.search(true);
+    };
+    this.observer = new IntersectionObserver(callback, options);
+    this.observer.observe(this.shadowRoot.getElementById('end'));
   }
 
   keydownHandler(e) {
@@ -233,7 +252,7 @@ class SongList extends AlertsMixin(
     });
   }
 
-  search() {
+  search(pageMore=false) {
     if (this.midiSelectedListItem) {
       this.midiSelectedListItem.removeAttribute('selected');
       this.midiSelectedListItem = undefined;
@@ -256,12 +275,15 @@ class SongList extends AlertsMixin(
     this.entries = [];
     let p = {q: this.query};
     let omitSongs = [];
+    this.offset = pageMore ? this.offset + this.settings.getInt('songList.limit') : 0;
     p.bpm = this.searchOptions.bpmRestrict && !!this.bpm ? Number(this.bpm) : 0;
     p.keys = this.searchOptions.keyRestrict && !!this.song ? this.song.tonicKey : '';
     p.energy = this.searchOptions.energyRestrict && !!this.song ? Number(this.song.energy) : 0;
     p.q += !this.searchOptions.trashedRestrict ? '' : (p.q.length ? ' ' : '') + 'trashed:0';
     omitSongs = !this.searchOptions.repeatRestrict ? [] : this.songTrail.map(e => e.song);
-    this.songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, (msg) => { this.addAlert(msg, 5); });
+    let songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, this.offset, (msg) => { this.addAlert(msg, 5); });
+    if (pageMore) this.songs.push(...songs);
+    else this.songs = songs;
     this.generateMissingWaveforms();
   }
 
@@ -536,6 +558,10 @@ class SongList extends AlertsMixin(
           display: block;
         }
         md-filled-text-field {
+          width: 100%;
+        }
+        #end {
+          height: 10px;
           width: 100%;
         }
       `
