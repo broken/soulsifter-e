@@ -151,7 +151,8 @@ struct Atom {
 void splitString(const string& query, vector<string>* atoms) {
   boost::tokenizer<boost::escaped_list_separator<char> > tokenizer(query, boost::escaped_list_separator<char>('\\', ' ', '\"'));
   for (boost::tokenizer<boost::escaped_list_separator<char> >::iterator it = tokenizer.begin(); it != tokenizer.end(); ++it) {
-    atoms->push_back(*it);
+    if (it->compare("-"))  // ignore single dash to make it easier searching for songs that are copied & pasted in
+      atoms->push_back(*it);
   }
 }
 
