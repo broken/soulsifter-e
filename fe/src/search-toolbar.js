@@ -120,11 +120,12 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
 
   dropCreateSongButton(e) {
     e.preventDefault();
+    const { webUtils } = require('electron');
     this.shadowRoot.getElementById('createSongButton').icon = 'add_circle';
     var files = e.dataTransfer.files;
     var filepaths = new Array();
     for (var i = 0; i < files.length; ++i) {
-      filepaths.push(files[i].path);
+      filepaths.push(webUtils.getPathForFile(files[i]));
     }
     let event = new CustomEvent('song-edit', { detail: { filepaths: filepaths } });
     window.dispatchEvent(event);
