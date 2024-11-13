@@ -470,6 +470,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
          (!this.taggedSong.album.artist && this.taggedSong.artist.toUpperCase() == this.song.album.artist.toUpperCase()))) {
       artist = artist.replace(/\s*\(.*\)$/g, '');
       this.shadowRoot.getElementById('album_artist').value = artist;
+      this.albumArtistValChanged(e);
     }
     this.checkIfSongExists();
   }
