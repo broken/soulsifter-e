@@ -327,6 +327,7 @@ class YoutubeClientMain {
                                         /* energy */ 0,
                                         /* musicVideoMode */ false,
                                         /* orderBy */ 0,
+                                        /* offset */ 0,
                                         /* errorCallack */ (msg) => { console.error(msg); });
     }
 

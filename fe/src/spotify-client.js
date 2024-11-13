@@ -140,7 +140,7 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
       return;
     }
     if (!!playlist.query) {
-      let songs = ss.SearchUtil.searchSongs(playlist.query, 200, 0, '', playlist.styles, [], [], 0, false, 0,
+      let songs = ss.SearchUtil.searchSongs(playlist.query, 200, 0, '', playlist.styles, [], [], 0, false, 0, 0,
           (msg) => { this.addAlert(msg, 5); });
       let i = 0;
       try {
