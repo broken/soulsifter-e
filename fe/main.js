@@ -372,7 +372,7 @@ class YoutubeClientMain {
         throw err;
       }
     }
-    updateAlert(event, alertId, range.max, `Finished syncing playlist ${playlist.name} (${playlist.id}).`, 15);
+    updateAlert(event, alertId, range.max, `Finished syncing playlist ${playlist.name} (${playlist.id}).`);
   }
 
   _createPlaylist(playlist) {
@@ -490,6 +490,7 @@ ipcMain.on('yt-updatePlaylistEntries', async (event, playlistId, alertId) => {
   yt.auth().then(async () => {
     let playlist = ss.Playlist.findById(playlistId);
     await yt._updatePlaylistEntries(event, playlist, alertId);
+    updateAlert(event, alertId, 1, `Finished syncing playlist ${playlist.name} (${playlist.id}).`, 15);
   }).catch(err => {
     updateAlert(event, alertId, 1, `Failed to sync playlist ${playlistId}. ${err}.`);
     console.error(err);
