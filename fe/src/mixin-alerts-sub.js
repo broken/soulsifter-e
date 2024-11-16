@@ -47,9 +47,13 @@ let alertsSubMixin = (superClass) => class extends superClass {
 
   _updateAlert(e) {
     let idx = this.alerts.findIndex(a => a.id == e.detail.id);
-    if (!!e.detail.a) this.alerts[idx].msg = e.detail.a;
-    if (!!e.detail.progress) this.alerts[idx].progress = e.detail.progress;
-    if (!!e.detail.callback) this.alerts[idx].callback = e.detail.callback;
+    if (idx != -1) {
+      if (!!e.detail.a) this.alerts[idx].msg = e.detail.a;
+      if (!!e.detail.progress) this.alerts[idx].progress = e.detail.progress;
+      if (!!e.detail.callback) this.alerts[idx].callback = e.detail.callback;
+    } else {
+      this._addAlert(e);
+    }
     this.alertsChanged();
   }
 
