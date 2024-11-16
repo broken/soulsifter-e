@@ -819,7 +819,8 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (rating != song->getRating()) {
-            rating = song->getRating();
+            LOG(INFO) << "updating song " << id << " rating from " << song->getRating() << " to " << rating;
+            needsUpdate = true;
         }
         if (dateAdded != song->getDateAdded()) {
             LOG(INFO) << "updating song " << id << " dateAdded from " << song->getDateAdded() << " to " << dateAdded;
@@ -834,7 +835,8 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (energy != song->getEnergy()) {
-            energy = song->getEnergy();
+            LOG(INFO) << "updating song " << id << " energy from " << song->getEnergy() << " to " << energy;
+            needsUpdate = true;
         }
         if (comments.compare(song->getComments())  && (!boost::regex_match(comments, match1, decimal) || !boost::regex_match(song->getComments(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating song " << id << " comments from " << song->getComments() << " to " << comments;
@@ -861,26 +863,31 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (durationInMs != song->getDurationInMs()) {
-            durationInMs = song->getDurationInMs();
+            LOG(INFO) << "updating song " << id << " durationInMs from " << song->getDurationInMs() << " to " << durationInMs;
+            needsUpdate = true;
         }
         if (curator.compare(song->getCurator())  && (!boost::regex_match(curator, match1, decimal) || !boost::regex_match(song->getCurator(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating song " << id << " curator from " << song->getCurator() << " to " << curator;
             needsUpdate = true;
         }
         if (reSongId != song->getRESongId()) {
-            reSongId = song->getRESongId();
+            LOG(INFO) << "updating song " << id << " reSongId from " << song->getRESongId() << " to " << reSongId;
+            needsUpdate = true;
         }
         if (reSong) needsUpdate |= reSong->sync();
         if (albumId != song->getAlbumId()) {
-            albumId = song->getAlbumId();
+            LOG(INFO) << "updating song " << id << " albumId from " << song->getAlbumId() << " to " << albumId;
+            needsUpdate = true;
         }
         if (album) needsUpdate |= album->sync();
         if (albumPartId != song->getAlbumPartId()) {
-            albumPartId = song->getAlbumPartId();
+            LOG(INFO) << "updating song " << id << " albumPartId from " << song->getAlbumPartId() << " to " << albumPartId;
+            needsUpdate = true;
         }
         if (albumPart) needsUpdate |= albumPart->sync();
         if (musicVideoId != song->getMusicVideoId()) {
-            musicVideoId = song->getMusicVideoId();
+            LOG(INFO) << "updating song " << id << " musicVideoId from " << song->getMusicVideoId() << " to " << musicVideoId;
+            needsUpdate = true;
         }
         if (musicVideo) needsUpdate |= musicVideo->sync();
         if (!equivalentVectors<int>(styleIds, song->getStyleIds())) {
@@ -896,7 +903,8 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (dupeId != song->getDupeId()) {
-            dupeId = song->getDupeId();
+            LOG(INFO) << "updating song " << id << " dupeId from " << song->getDupeId() << " to " << dupeId;
+            needsUpdate = true;
         }
         if (dupe) needsUpdate |= dupe->sync();
         return needsUpdate;

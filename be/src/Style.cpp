@@ -351,7 +351,8 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (reId != style->getREId()) {
-            reId = style->getREId();
+            LOG(INFO) << "updating style " << id << " reId from " << style->getREId() << " to " << reId;
+            needsUpdate = true;
         }
         if (reLabel.compare(style->getRELabel())  && (!boost::regex_match(reLabel, match1, decimal) || !boost::regex_match(style->getRELabel(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating style " << id << " reLabel from " << style->getRELabel() << " to " << reLabel;

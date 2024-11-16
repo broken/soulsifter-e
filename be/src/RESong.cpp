@@ -534,17 +534,20 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (keyAccuracy != reSong->getKeyAccuracy()) {
-            keyAccuracy = reSong->getKeyAccuracy();
+            LOG(INFO) << "updating reSong " << id << " keyAccuracy from " << reSong->getKeyAccuracy() << " to " << keyAccuracy;
+            needsUpdate = true;
         }
         if (bpmStart.compare(reSong->getBpmStart())  && (!boost::regex_match(bpmStart, match1, decimal) || !boost::regex_match(reSong->getBpmStart(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating reSong " << id << " bpmStart from " << reSong->getBpmStart() << " to " << bpmStart;
             needsUpdate = true;
         }
         if (bpmAccuracy != reSong->getBpmAccuracy()) {
-            bpmAccuracy = reSong->getBpmAccuracy();
+            LOG(INFO) << "updating reSong " << id << " bpmAccuracy from " << reSong->getBpmAccuracy() << " to " << bpmAccuracy;
+            needsUpdate = true;
         }
         if (rating != reSong->getRating()) {
-            rating = reSong->getRating();
+            LOG(INFO) << "updating reSong " << id << " rating from " << reSong->getRating() << " to " << rating;
+            needsUpdate = true;
         }
         if (dateAdded.compare(reSong->getDateAdded())  && (!boost::regex_match(dateAdded, match1, decimal) || !boost::regex_match(reSong->getDateAdded(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating reSong " << id << " dateAdded from " << reSong->getDateAdded() << " to " << dateAdded;
@@ -563,7 +566,8 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (numPlays != reSong->getNumPlays()) {
-            numPlays = reSong->getNumPlays();
+            LOG(INFO) << "updating reSong " << id << " numPlays from " << reSong->getNumPlays() << " to " << numPlays;
+            needsUpdate = true;
         }
         if (comments.compare(reSong->getComments())  && (!boost::regex_match(comments, match1, decimal) || !boost::regex_match(reSong->getComments(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating reSong " << id << " comments from " << reSong->getComments() << " to " << comments;
@@ -590,7 +594,8 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (beatIntensity != reSong->getBeatIntensity()) {
-            beatIntensity = reSong->getBeatIntensity();
+            LOG(INFO) << "updating reSong " << id << " beatIntensity from " << reSong->getBeatIntensity() << " to " << beatIntensity;
+            needsUpdate = true;
         }
         if (replayGain.compare(reSong->getReplayGain())  && (!boost::regex_match(replayGain, match1, decimal) || !boost::regex_match(reSong->getReplayGain(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating reSong " << id << " replayGain from " << reSong->getReplayGain() << " to " << replayGain;

@@ -310,7 +310,8 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (albumId != albumPart->getAlbumId()) {
-            albumId = albumPart->getAlbumId();
+            LOG(INFO) << "updating albumPart " << id << " albumId from " << albumPart->getAlbumId() << " to " << albumId;
+            needsUpdate = true;
         }
         if (album) needsUpdate |= album->sync();
         return needsUpdate;

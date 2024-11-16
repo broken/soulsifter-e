@@ -365,11 +365,13 @@ namespace soulsifter {
             id = mix->getId();
         }
         if (outSongId != mix->getOutSongId()) {
-            outSongId = mix->getOutSongId();
+            LOG(INFO) << "updating mix " << id << " outSongId from " << mix->getOutSongId() << " to " << outSongId;
+            needsUpdate = true;
         }
         if (outSong) needsUpdate |= outSong->sync();
         if (inSongId != mix->getInSongId()) {
-            inSongId = mix->getInSongId();
+            LOG(INFO) << "updating mix " << id << " inSongId from " << mix->getInSongId() << " to " << inSongId;
+            needsUpdate = true;
         }
         if (inSong) needsUpdate |= inSong->sync();
         if (bpmDiff.compare(mix->getBpmDiff())  && (!boost::regex_match(bpmDiff, match1, decimal) || !boost::regex_match(mix->getBpmDiff(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
@@ -377,7 +379,8 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (rating != mix->getRating()) {
-            rating = mix->getRating();
+            LOG(INFO) << "updating mix " << id << " rating from " << mix->getRating() << " to " << rating;
+            needsUpdate = true;
         }
         if (comments.compare(mix->getComments())  && (!boost::regex_match(comments, match1, decimal) || !boost::regex_match(mix->getComments(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating mix " << id << " comments from " << mix->getComments() << " to " << comments;

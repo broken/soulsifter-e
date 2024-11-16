@@ -444,7 +444,7 @@ def cSyncFunction(name, fields, secondaryKeys)
   fields.each do |f|
     if (f[$attrib] & Attrib::TRANSIENT > 0)
       next
-    elsif ([:int].include?(f[$type]) and f[$attrib] & Attrib::ID)
+    elsif ([:int].include?(f[$type]) and f[$name] == "id")
       str << "        if (#{f[$name]} != #{name}->get#{cap(f[$name])}()) {\n"
       str << "            #{f[$name]} = #{name}->get#{cap(f[$name])}();\n        }\n"
     elsif ([:int, :bool].include?(f[$type]))

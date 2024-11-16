@@ -413,16 +413,20 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (releaseDateYear != album->getReleaseDateYear()) {
-            releaseDateYear = album->getReleaseDateYear();
+            LOG(INFO) << "updating album " << id << " releaseDateYear from " << album->getReleaseDateYear() << " to " << releaseDateYear;
+            needsUpdate = true;
         }
         if (releaseDateMonth != album->getReleaseDateMonth()) {
-            releaseDateMonth = album->getReleaseDateMonth();
+            LOG(INFO) << "updating album " << id << " releaseDateMonth from " << album->getReleaseDateMonth() << " to " << releaseDateMonth;
+            needsUpdate = true;
         }
         if (releaseDateDay != album->getReleaseDateDay()) {
-            releaseDateDay = album->getReleaseDateDay();
+            LOG(INFO) << "updating album " << id << " releaseDateDay from " << album->getReleaseDateDay() << " to " << releaseDateDay;
+            needsUpdate = true;
         }
         if (basicGenreId != album->getBasicGenreId()) {
-            basicGenreId = album->getBasicGenreId();
+            LOG(INFO) << "updating album " << id << " basicGenreId from " << album->getBasicGenreId() << " to " << basicGenreId;
+            needsUpdate = true;
         }
         if (basicGenre) needsUpdate |= basicGenre->sync();
         return needsUpdate;

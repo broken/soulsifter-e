@@ -339,15 +339,18 @@ namespace soulsifter {
             id = playlistEntry->getId();
         }
         if (playlistId != playlistEntry->getPlaylistId()) {
-            playlistId = playlistEntry->getPlaylistId();
+            LOG(INFO) << "updating playlistEntry " << id << " playlistId from " << playlistEntry->getPlaylistId() << " to " << playlistId;
+            needsUpdate = true;
         }
         if (playlist) needsUpdate |= playlist->sync();
         if (songId != playlistEntry->getSongId()) {
-            songId = playlistEntry->getSongId();
+            LOG(INFO) << "updating playlistEntry " << id << " songId from " << playlistEntry->getSongId() << " to " << songId;
+            needsUpdate = true;
         }
         if (song) needsUpdate |= song->sync();
         if (position != playlistEntry->getPosition()) {
-            position = playlistEntry->getPosition();
+            LOG(INFO) << "updating playlistEntry " << id << " position from " << playlistEntry->getPosition() << " to " << position;
+            needsUpdate = true;
         }
         return needsUpdate;
     }
