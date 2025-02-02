@@ -215,7 +215,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
       console.warn('Cannot create a mix without more songs.');
       return;
     }
-    var mix = this.mix;
+    var mix = this.mix || new ss.Mix();
     mix.outSongId = this.songTrail[len - 2].songId;
     mix.inSongId = this.songTrail[len - 1].songId;
     let event = new CustomEvent('mix-edit', { detail: mix });
