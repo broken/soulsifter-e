@@ -12,9 +12,10 @@ class GenreListItem extends LitElement {
         html`<genre-list-item .genre="${g}" @expand-parents="${this.expand}" ?hidden="${!this.opened}" ?singleselect="${this.singleSelect}" ?optionsmenu="${this.optionsMenu}"></genre-list-item>`);
     let button = subgenres.length ? html`<icon-button icon=${icon} @click="${this.toggleExpansion}"></icon-button>` : html`<icon-button></icon-button>`;
     let menu = !this.optionsMenu ? html`` : html`<options-menu><options-menu-item @click="${this.editAction}">Edit genre</options-menu-item></options-menu>`;
+    let description = this.genre.description || 'n/a';
     return html`
       <div class="itemContainer">
-        <div class="item" ?selected="${this.selected}">
+        <div class="item" ?selected="${this.selected}" title="${description}">
           ${button}
           <span @click="${this.toggleSelect}">${this.genre.name}</span>
           ${menu}
