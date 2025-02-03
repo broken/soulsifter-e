@@ -13,11 +13,11 @@ class MixEdit extends LitElement {
         <div class="fields">
           <div class="song">&nbsp;<span>Out: ${this.mix.outSong.artist} - ${this.mix.outSong.title}</span></div>
           <div class="song">&nbsp;<span>In: ${this.mix.inSong.artist} - ${this.mix.inSong.title}</span></div>
-          <label><md-checkbox ?checked="${this.mix.addon}" id="addon"></md-checkbox>Is Addon</label>
-        </div>
-        <div class="fields">
-          <md-filled-text-field label="Rating (0 - 99)" .value="${this.mix.rating}" id="rating" pattern="[0-9]"></md-filled-text-field>
-          <md-filled-text-field type="textarea" label="Comments" .value="${this.mix.comments}" id="comments"></md-filled-text-field>
+          <div class="row">
+            <md-filled-text-field label="Rating (0 - 99)" .value="${this.mix.rating}" id="rating" pattern="[0-9]"></md-filled-text-field>
+            <label><md-checkbox ?checked="${this.mix.addon}" id="addon"></md-checkbox>Is Addon</label>
+          </div>
+          <md-filled-text-field type="textarea" label="Comments" .value="${this.mix.comments}" id="comments" rows="10"></md-filled-text-field>
         </div>
       </abstract-action-page>
     `;
@@ -93,6 +93,16 @@ class MixEdit extends LitElement {
         }
         md-checkbox {
           margin-right: 10px;
+        }
+        .row {
+          display: flex;
+          flex-direction: row;
+          margin: 10px 0;
+          justify-content: space-between;
+        }
+        .row > label {
+          flex-grow: 1;
+          margin: 20px 0;
         }
       `,
     ];
