@@ -37,6 +37,9 @@ class MixEdit extends LitElement {
     this.openPageListener = (e) => {
       this.mix = e.detail;
       this.classList.add('show');
+      // forceEdits
+      this.shadowRoot.getElementById('comments').value = '';
+      this.shadowRoot.getElementById('rating').value = '';
     };
   }
 
