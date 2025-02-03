@@ -43,7 +43,7 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
           <pitch-slider></pitch-slider>
         </div>
         <audio-player id="audio" .song="${this.song}" @song-ended="${this.songEnded}"></audio-player>
-        ${this.mix && this.mix.comments ? html`<div>${this.mix.comments}<br><br></div>` : ''}
+        ${this.mix && this.mix.comments ? html`<div style="white-space: pre-wrap; word-wrap: break-word;">${this.mix.comments}<br><br></div>` : ''}
         <div>${this.song.styles.map(s => s.name).join(', ')}</div>
         <div id="musicVideoThumbnail" draggable="true" @dragstart="${this.dragMusicVideo}" ?hide="${!this.musicVideo}"></div>
         ${debugMode ? html`<div id="musicVideoInput" ?hide="${!!this.musicVideo}">
