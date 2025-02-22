@@ -66,9 +66,9 @@
         "src/JobQueue.h",
         "src/StdoutFileSink.h",
       ],
-      "cflags!": [
-        "-fno-exceptions",
-        # "-frtti",
+      "cflags": [
+        "-fexceptions",
+        "-frtti",
         # '-std=c++17',
         # '-fno-strict-aliasing',
         # '-fno-common',
@@ -76,9 +76,9 @@
         # '-dynamic',
         # '-Wall',
       ],
-      "cflags_cc!": [
-        "-fno-exceptions",
-        # "-frtti",
+      "cflags_cc": [
+        "-fexceptions",
+        "-frtti",
         # '-std=c++17',
         # '-fno-strict-aliasing',
         # '-fno-common',
@@ -86,28 +86,44 @@
         # '-dynamic',
         # '-Wall',
       ],
-      "link_settings": {
-        "libraries": [
-          "/usr/local/lib/libboost_date_time-mt.dylib",
-          "/usr/local/lib/libboost_filesystem-mt.dylib",
-          "/usr/local/lib/libboost_regex-mt.dylib",
-          "/usr/local/lib/libboost_system-mt.dylib",
-          "/usr/local/lib/libboost_thread-mt.dylib",
-          "/usr/local/lib/libg3log.2.dylib",
-          "/usr/local/lib/libmad.dylib",
-          "/usr/local/lib/libmysqlclient.24.dylib",
-          "/usr/local/lib/libmysqlcppconn.10.dylib",
-          "/usr/local/lib/libtag.1.dylib",
-        ],
-      },
       'conditions': [
         ['OS=="mac"', {
           'xcode_settings': {
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
             'GCC_ENABLE_CPP_RTTI': 'YES',
             'MACOSX_DEPLOYMENT_TARGET': '12.0',
+          },
+          'link_settings': {
+            'libraries': [
+              '/usr/local/lib/libboost_date_time-mt.dylib',
+              '/usr/local/lib/libboost_filesystem-mt.dylib',
+              '/usr/local/lib/libboost_regex-mt.dylib',
+              '/usr/local/lib/libboost_system-mt.dylib',
+              '/usr/local/lib/libboost_thread-mt.dylib',
+              '/usr/local/lib/libg3log.2.dylib',
+              '/usr/local/lib/libmad.dylib',
+              '/usr/local/lib/libmysqlclient.24.dylib',
+              '/usr/local/lib/libmysqlcppconn.10.dylib',
+              '/usr/local/lib/libtag.1.dylib',
+            ]
           }
-        }]
+        }],
+        ['OS=="linux"', {
+          'link_settings': {
+            'libraries': [
+              '/usr/lib/x86_64-linux-gnu/libboost_date_time.so',
+              '/usr/lib/x86_64-linux-gnu/libboost_filesystem.so',
+              '/usr/lib/x86_64-linux-gnu/libboost_regex.so',
+              '/usr/lib/x86_64-linux-gnu/libboost_system.so',
+              '/usr/lib/x86_64-linux-gnu/libboost_thread.so',
+              '/usr/local/lib/libg3log.so.2',
+              '/usr/lib/x86_64-linux-gnu/libmad.so.0',
+              '/usr/lib/x86_64-linux-gnu/libmysqlclient.so.24',
+              '/usr/lib/x86_64-linux-gnu/libmysqlcppconn.so.10',
+              '/usr/lib/x86_64-linux-gnu/libtag.so.1',
+            ]
+          }
+        }],
       ],
       "include_dirs": [
         "/Users/dogatech/.node-gyp/12.1.0/include/node",

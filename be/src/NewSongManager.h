@@ -56,7 +56,7 @@ private:
   // Files to processs.
   FilesToAdd* filesToAdd;
   // Files and directories to delete when finished.
-  vector<const boost::filesystem::path> filesToTrash;
+  vector<boost::filesystem::path> filesToTrash;
 
   /**
    * This takes a list of files or directories, and recursively adds them to

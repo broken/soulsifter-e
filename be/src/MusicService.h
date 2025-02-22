@@ -1,6 +1,7 @@
 #ifndef __soul_sifter__MusicService__
 #define __soul_sifter__MusicService__
 
+#include <functional>
 #include <string>
 
 using namespace std;
