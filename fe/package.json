@@ -12,6 +12,7 @@
     "fe:package": "electron-forge package",
     "fe:packagedebug": "DEBUG=electron-forge:* electron-forge package",
     "fe:start": "npm run fe:build && electron .",
+    "fe:startleakcheck": "npm run fe:build && valgrind --leak-check=full --gen-suppressions=all --log-file=/Users/dogatech/valgrind_suppression.sse.txt electron .",
     "fe:startforge": "electron-forge start",
     "fe:test": "echo \"Error: no test specified\" && exit 1"
   },
