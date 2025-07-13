@@ -8,8 +8,10 @@
 
 #include "MysqlAccess.h"
 
+#include <chrono>
 #include <map>
 #include <string>
+#include <thread>
 
 #include <boost/date_time.hpp>
 #include <boost/regex.hpp>
@@ -116,6 +118,7 @@ bool MysqlAccess::disconnect() {
 bool MysqlAccess::reconnect() {
     try {
         LOG(INFO) << "Reconnecing a" << (connection->isValid() ? " valid" : "n invalid") << " connection.";
+        std::this_thread::sleep_for(std::chrono::milliseconds(250));
         const std::string database(SoulSifterSettings::getInstance().get<std::string>("db.name"));
         connection->reconnect();
         connection->setAutoCommit(1);
