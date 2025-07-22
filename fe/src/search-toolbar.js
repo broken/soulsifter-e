@@ -291,17 +291,33 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
       this.rmAlert(this.commonMultiplesAlertId);
       this.commonMultiplesAlertId = undefined;
     }
-    let x = this.bpm;
-    this.commonMultiplesAlertId = this.addAlert(`Common multiples:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2: ${x * 2} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x1/2: ${x / 2} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x4/3 (3/4 loop up): ${(x * 4 / 3).toFixed(2)} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2/3 (3 beat loop down): ${(x * 2 / 3).toFixed(2)}`, 0, 0, () => {
+    const x = this.bpm;
+    this.commonMultiplesAlertId = this.addAlert(this._getBpmMultiples(x), 0, 0, () => {
         this.rmAlert(this.commonMultiplesAlertId);
         this.commonMultiplesAlertId = undefined;
     });
   }
 
+  _getBpmMultiples(x) {
+    return html`Common multiples:
+\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2:
+<a href="#" @click=${() => this.changeBpm(x * 2)}>${x * 2}</a>
+<icon-button @click=${() => this.changeBpm((x / 2).toFixed(2))} icon="undo"></icon-button> ,
+\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x1/2:
+<a href="#" @click=${() => this.changeBpm((x / 2).toFixed(2))}>${(x / 2).toFixed(2)}</a>
+<icon-button @click=${() => this.changeBpm(x * 2)} icon="undo"></icon-button> ,
+\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x4/3 (3/4 loop up):
+<a href="#" @click=${() => this.changeBpm((x * 4 / 3).toFixed(2))}>${(x * 4 / 3).toFixed(2)}</a>
+<icon-button @click=${() => this.changeBpm((x * 3 / 4).toFixed(2))} icon="undo"></icon-button> ,
+\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2/3 (3 beat loop down):
+<a href="#" @click=${() => this.changeBpm((x * 2 / 3).toFixed(2))}>${(x * 2 / 3).toFixed(2)}</a>
+<icon-button @click=${() => this.changeBpm((x * 3 / 2).toFixed(2))} icon="undo"></icon-button>`;
+  }
+
   bpmChanged(x) {
     this.bpm = x;
     if (this.commonMultiplesAlertId) {
-      this.updateAlert(this.commonMultiplesAlertId, undefined, `Common multiples:\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2: ${x * 2} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x1/2: ${x / 2} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x4/3 (3/4 loop up): ${(x * 4 / 3).toFixed(2)} ,\u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2/3 (3 beat loop down): ${(x * 2 / 3).toFixed(2)}`);
+      this.updateAlert(this.commonMultiplesAlertId, undefined, this._getBpmMultiples(x));
     }
   }
 

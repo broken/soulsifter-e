@@ -60,6 +60,10 @@ class AlertListItem extends AlertsMixin(LitElement) {
           flex-direction: row;
           user-select: text;
         }
+        a:link {
+          color: var(--accent);
+          text-decoration: none;
+        }
       `
     ];
   }
