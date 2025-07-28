@@ -118,12 +118,11 @@ bool MysqlAccess::disconnect() {
 bool MysqlAccess::reconnect() {
     try {
         LOG(INFO) << "Reconnecing a" << (connection->isValid() ? " valid" : "n invalid") << " connection.";
-        std::this_thread::sleep_for(std::chrono::seconds(2));
-        const std::string database(SoulSifterSettings::getInstance().get<std::string>("db.name"));
-        connection->reconnect();
-        connection->setAutoCommit(1);
-        connection->setSchema(database);
+        disconnect();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
         preparedStatements.clear();
+        connect();
+        std::this_thread::sleep_for(std::chrono::seconds(1));
     } catch (sql::SQLException &e) {
         LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
         LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
