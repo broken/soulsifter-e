@@ -11,7 +11,7 @@ class MixListItem extends LitElement {
     let normalizedValue = this.mix.rating - (once ? 0 : 50);
     let rating = Math.round(normalizedValue / 5);
     return html`
-      <song-list-item .song="${this.mix.inSong}"></song-list-item>
+      <song-list-item .song="${this.mix.inSong}" ?mvRestrict="${this.mvRestrict}" ?useStems="${this.useStems}"></song-list-item>
       <div class="info">
         <star-rating value="${rating}" readonly max="10" ?once="${once}"></star-rating>
         <div class="comments">${this.mix.comments}</div>
@@ -23,6 +23,8 @@ class MixListItem extends LitElement {
   static get properties() {
     return {
       mix: { type: Object },
+      mvRestrict: { type: Boolean },
+      useStems: { type: Boolean },
     };
   }
 
