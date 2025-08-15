@@ -253,7 +253,7 @@ class SongList extends AlertsMixin(
   }
 
   search(pageMore=false) {
-    if (this.midiSelectedListItem) {
+    if (this.midiSelectedListItem && !pageMore) {
       this.midiSelectedListItem.removeAttribute('selected');
       this.midiSelectedListItem = undefined;
     }
