@@ -18,6 +18,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
             <mwc-tab @click="${() => this.tabClicked(1)}" label="Midi" isFadingIndicator></mwc-tab>
             <mwc-tab @click="${() => this.tabClicked(2)}" label="Subscriptions" isFadingIndicator></mwc-tab>
             <mwc-tab @click="${() => this.tabClicked(3)}" label="Auto Drag & Drop" isFadingIndicator></mwc-tab>
+            <mwc-tab @click="${() => this.tabClicked(4)}" label="Song List Fields" isFadingIndicator></mwc-tab>
           </mwc-tab-bar>
           <main id="main">
             <section active>
@@ -35,10 +36,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Energy search difference" .value=${this.energyGap} allowedPattern="[0-9]" preventInvalidInput id="energyGap"></md-filled-text-field></label>
                 <md-filled-text-field label="Preview Time (in secs)" .value=${this.songListPreviewTimeInSecs} id="songListPreviewTimeInSecs"></md-filled-text-field>
                 <label><md-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect"></md-checkbox>Automatically search after selecting a song</label>
-                <label><md-checkbox ?checked="${this.songListShowComments}" id="songListShowComments"></md-checkbox>Show comments in song list</label>
-                <label><md-checkbox ?checked="${this.songListShowWaveforms}" id="songListShowWaveforms"></md-checkbox>Show waveforms in song list</label>
                 <label><md-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys"></md-checkbox>Include unknown keys in key searches</label>
-                <label><md-checkbox ?checked="${this.songListColBpm}" id="songListColBpm"></md-checkbox>Include BPM in song list</label>
                 <br>
                 <label><md-checkbox ?checked="${this.editAutoAdd}" id="editAutoAdd"></md-checkbox>Auto add music (skip edit dialog)</label>
                 <label><md-checkbox ?checked="${this.editAutoPlay}" id="editAutoPlay"></md-checkbox>Auto play music when editting song</label>
@@ -100,6 +98,25 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="D&D Wait Time (ms)" .value=${this.dragAndDropWaitTimeInMs} id="dragAndDropWaitTimeInMs"></md-filled-text-field>
               </div>
             </section>
+            <section>
+              <div class="fields">
+                <label><md-checkbox ?checked="${this.songListColComments}" id="songListColComments" @change=${this.refreshSongListItem}></md-checkbox>Comments</label>
+                <label><md-checkbox ?checked="${this.songListColDuration}" id="songListColDuration" @change=${this.refreshSongListItem}></md-checkbox>Duration</label>
+                <label><md-checkbox ?checked="${this.songListColDateAdded}" id="songListColDateAdded" @change=${this.refreshSongListItem}></md-checkbox>Date Added</label>
+                <label><md-checkbox ?checked="${this.songListColReleaseDate}" id="songListColReleaseDate" @change=${this.refreshSongListItem}></md-checkbox>Release Date</label>
+              </div>
+              <div class="fields">
+                <label><md-checkbox ?checked="${this.songListColRating}" id="songListColRating" @change=${this.refreshSongListItem}></md-checkbox>Rating</label>
+                <label><md-checkbox ?checked="${this.songListColBpm}" id="songListColBpm" @change=${this.refreshSongListItem}></md-checkbox>BPM</label>
+                <label><md-checkbox ?checked="${this.songListColBpmShift}" id="songListColBpmShift" @change=${this.refreshSongListItem}></md-checkbox>BPM Shift</label>
+                <label><md-checkbox ?checked="${this.songListColEnergy}" id="songListColEnergy" @change=${this.refreshSongListItem}></md-checkbox>Energy</label>
+              </div>
+              <div class="fields">
+                <label><md-checkbox ?checked="${this.songListColCover}" id="songListColCover" @change=${this.refreshSongListItem}></md-checkbox>Cover</label>
+                <label><md-checkbox ?checked="${this.songListColWaveform}" id="songListColWaveform" @change=${this.refreshSongListItem}></md-checkbox>Waveform</label>
+              </div>
+              <song-list-item id="songListItem" .song="${this.song}" bpm="104"></song-list-item>
+            </section>
           </main>
         </div>
       </abstract-action-page>
@@ -145,15 +162,48 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.midiVolumeLsb = this.settings.getString('midi.volume.lsb');
     this.midiVolumeMsb = this.settings.getString('midi.volume.msb');
     this.songListColBpm = this.settings.getBool('songList.column.bpm');
+    this.songListColBpmShift = this.settings.getBool('songList.column.bpmShift');
+    this.songListColComments = this.settings.getBool('songList.column.comments');
+    this.songListColCover = this.settings.getBool('songList.column.cover');
+    this.songListColDateAdded = this.settings.getBool('songList.column.dateAdded');
+    this.songListColDuration = this.settings.getBool('songList.column.duration');
+    this.songListColEnergy = this.settings.getBool('songList.column.energy');
+    this.songListColRating = this.settings.getBool('songList.column.rating');
+    this.songListColReleaseDate = this.settings.getBool('songList.column.releaseDate');
+    this.songListColWaveform = this.settings.getBool('songList.column.waveform');
     this.songListLimit = this.settings.getInt('songList.limit');
     this.songListPreviewTimeInSecs = this.settings.getInt('songList.previewTimeInSec');
     this.songListSearchOnSelect = this.settings.getBool('songList.searchOnSelect');
-    this.songListShowComments = this.settings.getBool('songList.showComments');
-    this.songListShowWaveforms = this.settings.getBool('songList.showWaveforms');
     this.energyGap = this.settings.getInt('search.energyGap');
     this.includeUnknownKeys = this.settings.getBool('search.includeUnknownKeys');
     this.overwriteSongFromTag = this.settings.getBool('tag.readOverwrite');
     this.settingsEditListener = (e) => this.classList.add('show');
+    this.song = new ss.Song();
+    this.song.id = 69;
+    this.song.track = '01';
+    this.song.title = 'title';
+    this.song.artist = 'artist';
+    this.song.remixer = 'remixer';
+    this.song.filepath = '/tmp/filepath/song.mp3';
+    this.song.rating = 4;
+    this.song.dateAdded = Date.now();
+    this.song.bpm = '101';
+    this.song.tonicKey = 'F';
+    this.song.energy = 7;
+    this.song.comments = 'comments';
+    this.song.trashed = true;
+    this.song.lowQuality = false;
+    this.song.durationInMs = 420000;
+    this.song.curator = 'curator';
+    this.song.album = new ss.Album();
+    this.song.album.name = 'album name';
+    this.song.album.artist = 'album artist';
+    this.song.album.mixed = false;
+    this.song.album.label = 'label';
+    this.song.album.catalogId = 'catId';
+    this.song.album.releaseDateYear = 2025;
+    this.song.album.releaseDateMonth = 1;
+    this.song.album.releaseDateDay = 1;
   }
 
   connectedCallback() {
@@ -164,6 +214,32 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   disconnectedCallback() {
     window.removeEventListener('settings-edit', this.settingsEditListener);
     super.disconnectedCallback();
+  }
+
+  refreshSongListItem() {
+    class MockSettings {
+      constructor(data) {
+        this.data = data;
+      }
+      getString(x) { return ''; }
+      getInt(x) { return 0; }
+      getBool(x) { return this.data[x] || false; }
+    }
+    let data = {};
+    data['songList.column.bpm'] = this.shadowRoot.getElementById('songListColBpm').checked;
+    data['songList.column.bpmShift'] = this.shadowRoot.getElementById('songListColBpmShift').checked;
+    data['songList.column.comments'] = this.shadowRoot.getElementById('songListColComments').checked;
+    data['songList.column.cover'] = this.shadowRoot.getElementById('songListColCover').checked;
+    data['songList.column.dateAdded'] = this.shadowRoot.getElementById('songListColDateAdded').checked;
+    data['songList.column.duration'] = this.shadowRoot.getElementById('songListColDuration').checked;
+    data['songList.column.energy'] = this.shadowRoot.getElementById('songListColEnergy').checked;
+    data['songList.column.rating'] = this.shadowRoot.getElementById('songListColRating').checked;
+    data['songList.column.releaseDate'] = this.shadowRoot.getElementById('songListColReleaseDate').checked;
+    data['songList.column.waveform'] = this.shadowRoot.getElementById('songListColWaveform').checked;
+
+    let el = this.shadowRoot.getElementById('songListItem');
+    el.settings = new MockSettings(data);
+    el.requestUpdate();
   }
 
   tabClicked(tab) {
@@ -217,11 +293,18 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('midi.volume.lsb', this.shadowRoot.getElementById('midiVolumeLsb').value);
     this.puts('midi.volume.msb', this.shadowRoot.getElementById('midiVolumeMsb').value);
     this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);
+    this.putb('songList.column.bpmShift', this.shadowRoot.getElementById('songListColBpmShift').checked);
+    this.putb('songList.column.comments', this.shadowRoot.getElementById('songListColComments').checked);
+    this.putb('songList.column.cover', this.shadowRoot.getElementById('songListColCover').checked);
+    this.putb('songList.column.dateAdded', this.shadowRoot.getElementById('songListColDateAdded').checked);
+    this.putb('songList.column.duration', this.shadowRoot.getElementById('songListColDuration').checked);
+    this.putb('songList.column.energy', this.shadowRoot.getElementById('songListColEnergy').checked);
+    this.putb('songList.column.rating', this.shadowRoot.getElementById('songListColRating').checked);
+    this.putb('songList.column.releaseDate', this.shadowRoot.getElementById('songListColReleaseDate').checked);
+    this.putb('songList.column.waveform', this.shadowRoot.getElementById('songListColWaveform').checked);
     this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
     this.puti('songList.previewTimeInSec', Number(this.shadowRoot.getElementById('songListPreviewTimeInSecs').value));
     this.putb('songList.searchOnSelect', this.shadowRoot.getElementById('songListSearchOnSelect').checked);
-    this.putb('songList.showComments', this.shadowRoot.getElementById('songListShowComments').checked);
-    this.putb('songList.showWaveforms', this.shadowRoot.getElementById('songListShowWaveforms').checked);
     this.puti('search.energyGap', Number(this.shadowRoot.getElementById('energyGap').value));
     this.putb('search.includeUnknownKeys', this.shadowRoot.getElementById('includeUnknownKeys').checked);
     this.putb('tag.readOverwrite', this.shadowRoot.getElementById('overwriteSongFromTag').checked);
@@ -329,8 +412,17 @@ class SettingsEdit extends SettingsMixin(LitElement) {
           justify-content: center;
           margin: 0 100px;
         }
+        label {
+          margin-top: 20px;
+        }
         md-checkbox {
           margin-right: 10px;
+        }
+        song-list-item {
+          width: 80%;
+          margin: auto;
+          position: absolute;
+          top: 220px;
         }
       `,
     ];

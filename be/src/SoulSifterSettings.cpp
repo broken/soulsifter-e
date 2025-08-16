@@ -57,12 +57,19 @@ namespace soulsifter {
     //ptree.put("midi.volume.msb", "");
     ptree.put("search.energyGap", 1);
     ptree.put("search.includeUnknownKeys", true);
-    ptree.put("songList.column.bpm", false);
+    ptree.put("songList.column.bpm", true);
+    ptree.put("songList.column.bpmShift", true);
+    ptree.put("songList.column.comments", true);
+    ptree.put("songList.column.cover", true);
+    ptree.put("songList.column.dateAdded", true);
+    ptree.put("songList.column.duration", true);
+    ptree.put("songList.column.energy", true);
+    ptree.put("songList.column.rating", true);
+    ptree.put("songList.column.releaseDate", true);
+    ptree.put("songList.column.waveform", true);
     ptree.put("songList.limit", 128);
     ptree.put("songList.previewTimeInSec", 10);
     ptree.put("songList.searchOnSelect", false);
-    ptree.put("songList.showComments", false);
-    ptree.put("songList.showWaveforms", false);
     //ptree.put("tag.readOverwrite", "");
 
     // TODO settings file stored in other OS place

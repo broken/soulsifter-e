@@ -1,4 +1,4 @@
-import { css, html, LitElement } from "lit";
+import { css, html, LitElement, unsafeCSS } from "lit";
 
 import "./icon-button.js";
 import { SettingsMixin } from "./mixin-settings.js";
@@ -8,11 +8,11 @@ import { } from "./star-rating.js";
 
 class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
   render() {
-    let comments = !this.settings.getBool('songList.showComments') ? '' :
+    let comments = !this.settings.getBool('songList.column.comments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
     let waveforms = '';
-    if (this.settings.getBool('songList.showWaveforms')) {
+    if (this.settings.getBool('songList.column.waveform')) {
       let wfImg = 'mask-image:url("';
       if (this.song.trashed) {
         wfImg += '../resources/no-waveform.webp';
@@ -30,7 +30,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         ${waveforms}
-        <div id="cover" style="${bgImg}"></div>
+        ${this.settings.getBool('songList.column.cover') ? html`<div id="cover" style="${bgImg}"></div>` : html``}
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
           <span> - </span>
@@ -40,12 +40,13 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         ${inPlaylist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
         ${!!this.song.dupeId ? html`<icon-button icon="flip_to_back" @click="${this.showDupeId}"></icon-button>` : html``}
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
-        <div>${this.computeBpmShift(this.song, this.bpm)}</div>
-        ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm}</div>` : html``}
-        <div class="energy-${this.song.energy}">${this.song.energy}</div>
-        <div>${this.computeDuration(this.song)}</div>
-        <star-rating value="${this.song.rating}" class="${this.trashedClass(this.song.trashed)}" readonly></star-rating>
-        <time class="added">${this.computeLocaleDateString(this.song)}</time>
+        ${this.settings.getBool('songList.column.bpmShift') ? html`<div>${this.computeBpmShift(this.song, this.bpm)}</div>` : html``}
+        ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm || '_'}</div>` : html``}
+        ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${this.song.energy}">${this.song.energy}</div>` : html``}
+        ${this.settings.getBool('songList.column.duration') ? html`<div>${this.computeDuration(this.song)}</div>` : html``}
+        ${this.settings.getBool('songList.column.rating') ? html`<star-rating value="${this.song.rating}" class="${this.trashedClass(this.song.trashed)}" readonly></star-rating>` : html``}
+        ${this.settings.getBool('songList.column.releaseDate') ? html`<time class="released">${new Date(this.song.album.releaseDateYear, this.song.album.releaseDateMonth - 1, this.song.album.releaseDateDay).toLocaleDateString()}</time>` : html``}
+        ${this.settings.getBool('songList.column.dateAdded') ? html`<time class="added">${this.computeLocaleDateString(this.song)}</time>` : html``}
       </div>
     `;
   }
@@ -77,7 +78,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
   computeBpmShift(song, bpm) {
     if (!bpm) return '';
     let songBpm = !!song ? song.bpm : undefined;
-    if (!songBpm) return 'n/a';
+    if (!songBpm) return '_';
     if (Math.abs(songBpm - bpm) > Math.abs(songBpm/2 - bpm)) songBpm = songBpm / 2;
     else if (Math.abs(songBpm - bpm) > Math.abs(songBpm * 2 - bpm)) songBpm = songBpm * 2;
     return ((bpm / songBpm - 1) * 100).toFixed(2);
