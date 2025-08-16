@@ -39,7 +39,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         </div>
         ${inPlaylist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
         ${!!this.song.dupeId ? html`<icon-button icon="flip_to_back" @click="${this.showDupeId}"></icon-button>` : html``}
-        <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
+        <icon-button class="edit" icon="edit" @click="${this.openEditSongPage}"></icon-button>
         ${this.settings.getBool('songList.column.bpmShift') ? html`<div>${this.computeBpmShift(this.song, this.bpm)}</div>` : html``}
         ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm || ''}</div>` : html``}
         ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${this.song.energy}">${this.song.energy || ''}</div>` : html``}
@@ -287,6 +287,13 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         }
         .song-item:hover > icon-button {
           visibility: visible;
+        }
+        .song-item > .edit {
+          visibility: visible;
+          display: none;
+        }
+        .song-item:hover > .edit {
+          display: block;
         }
         .song-item .artist {
           color: var(--ss-song-list-item-artist-color);
