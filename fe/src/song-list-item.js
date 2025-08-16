@@ -41,9 +41,9 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         ${!!this.song.dupeId ? html`<icon-button icon="flip_to_back" @click="${this.showDupeId}"></icon-button>` : html``}
         <icon-button icon="edit" @click="${this.openEditSongPage}"></icon-button>
         ${this.settings.getBool('songList.column.bpmShift') ? html`<div>${this.computeBpmShift(this.song, this.bpm)}</div>` : html``}
-        ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm || '_'}</div>` : html``}
-        ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${this.song.energy}">${this.song.energy}</div>` : html``}
-        ${this.settings.getBool('songList.column.duration') ? html`<div>${this.computeDuration(this.song)}</div>` : html``}
+        ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm || ''}</div>` : html``}
+        ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${this.song.energy}">${this.song.energy || ''}</div>` : html``}
+        ${this.settings.getBool('songList.column.duration') ? html`<div>${this.computeDuration(this.song) || ''}</div>` : html``}
         ${this.settings.getBool('songList.column.rating') ? html`<star-rating value="${this.song.rating}" class="${this.trashedClass(this.song.trashed)}" readonly></star-rating>` : html``}
         ${this.settings.getBool('songList.column.releaseDate') ? html`<time class="released">${new Date(this.song.album.releaseDateYear, this.song.album.releaseDateMonth - 1, this.song.album.releaseDateDay).toLocaleDateString()}</time>` : html``}
         ${this.settings.getBool('songList.column.dateAdded') ? html`<time class="added">${this.computeLocaleDateString(this.song)}</time>` : html``}
@@ -78,7 +78,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
   computeBpmShift(song, bpm) {
     if (!bpm) return '';
     let songBpm = !!song ? song.bpm : undefined;
-    if (!songBpm) return '_';
+    if (!songBpm) return '';
     if (Math.abs(songBpm - bpm) > Math.abs(songBpm/2 - bpm)) songBpm = songBpm / 2;
     else if (Math.abs(songBpm - bpm) > Math.abs(songBpm * 2 - bpm)) songBpm = songBpm * 2;
     return ((bpm / songBpm - 1) * 100).toFixed(2);
@@ -385,6 +385,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
 
         time {
           text-align: right;
+          min-width: 64px;
           width: 64px;
         }
       `,
