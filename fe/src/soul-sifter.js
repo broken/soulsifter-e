@@ -174,6 +174,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
         }
         main {
           flex: 1 1 auto;
+          max-width: calc(100% - var(--sidebar-width));
         }
         #sections {
           flex: 1 1 auto;

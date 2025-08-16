@@ -274,6 +274,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         }
         .song-item div {
           margin: 3px;
+          flex-shrink: 0;
         }
         .song-item:hover {
           background-color: var(--ss-song-list-item-hover-background-color);
@@ -295,7 +296,6 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
         }
         .song-item .comments {
           color: var(--ss-song-list-item-comments);
-          max-width: 48px;
           display: inline-block;
         }
         .song-item .warn {
@@ -330,11 +330,13 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
           padding: 0 3px;
         }
 
-        .key {
+        .song-item .key {
           position: relative;
           overflow: hidden;
           white-space: nowrap;
           flex: 1 1 auto;
+          min-width: 0;
+          flex-shrink: 1;
         }
 
         .energy-0 {
