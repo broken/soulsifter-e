@@ -114,6 +114,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
               <div class="fields">
                 <label><md-checkbox ?checked="${this.songListColCover}" id="songListColCover" @change=${this.refreshSongListItem}></md-checkbox>Cover</label>
                 <label><md-checkbox ?checked="${this.songListColWaveform}" id="songListColWaveform" @change=${this.refreshSongListItem}></md-checkbox>Waveform</label>
+                <label><md-checkbox ?checked="${this.songListColSendButtons}" id="songListColSendButtons" @change=${this.refreshSongListItem}></md-checkbox>Auto Drag & Drop Buttons</label>
               </div>
               <song-list-item id="songListItem" .song="${this.song}" bpm="104"></song-list-item>
             </section>
@@ -170,6 +171,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.songListColEnergy = this.settings.getBool('songList.column.energy');
     this.songListColRating = this.settings.getBool('songList.column.rating');
     this.songListColReleaseDate = this.settings.getBool('songList.column.releaseDate');
+    this.songListColSendButtons = this.settings.getBool('songList.column.sendButtons');
     this.songListColWaveform = this.settings.getBool('songList.column.waveform');
     this.songListLimit = this.settings.getInt('songList.limit');
     this.songListPreviewTimeInSecs = this.settings.getInt('songList.previewTimeInSec');
@@ -235,6 +237,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     data['songList.column.energy'] = this.shadowRoot.getElementById('songListColEnergy').checked;
     data['songList.column.rating'] = this.shadowRoot.getElementById('songListColRating').checked;
     data['songList.column.releaseDate'] = this.shadowRoot.getElementById('songListColReleaseDate').checked;
+    data['songList.column.sendButtons'] = this.shadowRoot.getElementById('songListColSendButtons').checked;
     data['songList.column.waveform'] = this.shadowRoot.getElementById('songListColWaveform').checked;
 
     let el = this.shadowRoot.getElementById('songListItem');
@@ -301,6 +304,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.putb('songList.column.energy', this.shadowRoot.getElementById('songListColEnergy').checked);
     this.putb('songList.column.rating', this.shadowRoot.getElementById('songListColRating').checked);
     this.putb('songList.column.releaseDate', this.shadowRoot.getElementById('songListColReleaseDate').checked);
+    this.putb('songList.column.sendButtons', this.shadowRoot.getElementById('songListColSendButtons').checked);
     this.putb('songList.column.waveform', this.shadowRoot.getElementById('songListColWaveform').checked);
     this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
     this.puti('songList.previewTimeInSec', Number(this.shadowRoot.getElementById('songListPreviewTimeInSecs').value));

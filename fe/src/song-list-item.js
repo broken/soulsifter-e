@@ -22,14 +22,17 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
       wfImg += '");background-color: ' + this.waveformColorFilter();
       waveforms = html`
         <div id="waveform" style="${wfImg}" @click="${this.previewSong}"></div>
-        <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
-        <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
       `;
     }
+    let sendButtons = html`
+      <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
+      <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
+    `;
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         ${waveforms}
+        ${this.settings.getBool('songList.column.sendButtons') ? sendButtons : html``}
         ${this.settings.getBool('songList.column.cover') ? html`<div id="cover" style="${bgImg}"></div>` : html``}
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>

@@ -64,6 +64,7 @@ namespace soulsifter {
     ptree.put("songList.column.dateAdded", true);
     ptree.put("songList.column.duration", true);
     ptree.put("songList.column.energy", true);
+    ptree.put("songList.column.sendButtons", false);
     ptree.put("songList.column.rating", true);
     ptree.put("songList.column.releaseDate", true);
     ptree.put("songList.column.waveform", true);
