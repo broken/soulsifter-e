@@ -42,6 +42,10 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
           <md-switch id="useStems" @change="${this.checkedChanged}"></md-switch>
           <label for="useStems">Use stems when available</label>
         </div>
+        <div class="option">
+          <md-switch id="mixedRestrict" @change="${this.checkedChanged}"></md-switch>
+          <label for="mixedRestrict">Mixed restrict</label>
+        </div>
         <br>
         <div class="option">
           <label>Order by:</label>
@@ -75,6 +79,7 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
         mvRestrict: this.shadowRoot.getElementById('mvRestrict').selected,
         dynamicGenres: this.shadowRoot.getElementById('dynamicGenres').selected,
         useStems: this.shadowRoot.getElementById('useStems').selected,
+        mixedRestrict: this.shadowRoot.getElementById('mixedRestrict').selected,
         orderBy: this.orderBy,
     };
     this.changeSearchOptions(this.searchOptions);
@@ -119,6 +124,7 @@ class SearchOptions extends SearchOptionsMixin(LitElement) {
     this.shadowRoot.getElementById('mvRestrict').selected =  this.searchOptions.mvRestrict;
     this.shadowRoot.getElementById('dynamicGenres').selected =  this.searchOptions.dynamicGenres;
     this.shadowRoot.getElementById('useStems').selected =  this.searchOptions.useStems;
+    this.shadowRoot.getElementById('mixedRestrict').selected = this.searchOptions.mixedRestrict;
     this.orderByChanged(this.searchOptions.orderBy);
   }
 

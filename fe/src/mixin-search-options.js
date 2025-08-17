@@ -15,6 +15,7 @@ let searchOptionsMixin = (superClass) => class extends superClass {
       keyRestrict: false,
       trashedRestrict: false,
       repeatRestrict: false,
+      mixedRestrict: false,
       mvRestrict: false,
       dynamicGenres: false,
       orderBy: 0,
