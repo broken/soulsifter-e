@@ -510,10 +510,11 @@ class SongList extends AlertsMixin(
             this.scrollTo({top: newScrollTop, behavior: 'instant'});
             console.info(`targetTop: ${targetTop}, moveTop ${moveTop}  newScrollTop: ${newScrollTop}, stop ${selectedRect.top} `);
           }
+          const startPct = this.settings.getInt('songList.previewStartPercent') / 100;
           let event = new CustomEvent('audio-preview-song', {
               bubbles: true,
               composed: true,
-              detail: { song: this.midiSelectedListItem.song, pct: 0.25, player: this.midiSelectedListItem }
+              detail: { song: this.midiSelectedListItem.song, pct: startPct, player: this.midiSelectedListItem }
           });
           this.dispatchEvent(event);
         }

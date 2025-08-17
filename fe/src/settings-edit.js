@@ -72,6 +72,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Midi volume linear scale" .value=${this.midiVolumeLinearFactor} id="midiVolumeLinearFactor"></md-filled-text-field>
                 <md-filled-text-field label="Volume (msb)" .value=${this.midiVolumeMsb} id="midiVolumeMsb" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
                 <md-filled-text-field label="Volume (lsb)" .value=${this.midiVolumeLsb} id="midiVolumeLsb" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Preview Start Time (in %)" .value=${this.songListPreviewStartPercent} id="songListPreviewStartPercent"></md-filled-text-field>
               </div>
             </section>
             <section>
@@ -174,6 +176,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.songListColSendButtons = this.settings.getBool('songList.column.sendButtons');
     this.songListColWaveform = this.settings.getBool('songList.column.waveform');
     this.songListLimit = this.settings.getInt('songList.limit');
+    this.songListPreviewStartPercent = this.settings.getInt('songList.previewStartPercent');
     this.songListPreviewTimeInSecs = this.settings.getInt('songList.previewTimeInSec');
     this.songListSearchOnSelect = this.settings.getBool('songList.searchOnSelect');
     this.energyGap = this.settings.getInt('search.energyGap');
@@ -307,6 +310,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.putb('songList.column.sendButtons', this.shadowRoot.getElementById('songListColSendButtons').checked);
     this.putb('songList.column.waveform', this.shadowRoot.getElementById('songListColWaveform').checked);
     this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
+    this.puti('songList.previewStartPercent', Number(this.shadowRoot.getElementById('songListPreviewStartPercent').value));
     this.puti('songList.previewTimeInSec', Number(this.shadowRoot.getElementById('songListPreviewTimeInSecs').value));
     this.putb('songList.searchOnSelect', this.shadowRoot.getElementById('songListSearchOnSelect').checked);
     this.puti('search.energyGap', Number(this.shadowRoot.getElementById('energyGap').value));
