@@ -18,6 +18,7 @@ import "./settings-edit.js";
 import "./song-edit.js";
 import "./song-list.js";
 import "./song-section.js";
+import "./virtualdj-client.js"
 import "./wave-gen.js"
 import "./youtube-client.js"
 

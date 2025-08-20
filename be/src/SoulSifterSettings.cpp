@@ -73,6 +73,9 @@ namespace soulsifter {
     ptree.put("songList.previewTimeInSec", 10);
     ptree.put("songList.searchOnSelect", false);
     //ptree.put("tag.readOverwrite", "");
+    ptree.put("virtualdj.active", false);
+    ptree.put("virtualdj.ip", "127.0.0.1");
+    ptree.put("virtualdj.port", 80);
 
     // TODO settings file stored in other OS place
     filename.append(getenv("HOME"));

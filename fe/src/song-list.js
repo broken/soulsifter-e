@@ -455,15 +455,33 @@ class SongList extends AlertsMixin(
     setTimeout(() => this.midiSelectedListItem.selectSong({}), 2000);  // wait to select song until after drag event
   }
 
+  sendToVirtualDj(deck) {
+    if (!this.midiSelectedListItem) return;
+    window.vdj.send(`deck ${deck} load "${this.settings.getString('dir.music')}/${this.midiSelectedListItem.song.filepath}"`);
+    this.midiSelectedListItem.selectSong({});
+  }
+
   getMidiInputs() {
     return [
       [
         this.settings.getString('midi.loadLeft'),  // 70
-        e => this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'))
+        e => {
+          if (this.settings.getBool('virtualdj.active')) {
+            this.sendToVirtualDj('left');
+          } else {
+            this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'));
+          }
+        }
       ],
       [
         this.settings.getString('midi.loadRight'),  // 71
-        e => this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'))
+        e => {
+          if (this.settings.getBool('virtualdj.active')) {
+            this.sendToVirtualDj('right');
+          } else {
+            this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'))
+          }
+        }
       ],
       [
         this.settings.getString('midi.browse'),  // 64

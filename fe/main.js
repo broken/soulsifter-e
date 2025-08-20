@@ -517,6 +517,16 @@ ipcMain.on('yt-addPlaylistEntry', async (event, entryId) => {
   });
 });
 
+ipcMain.on('vdj-send', async (event, ip, port, cmd) => {
+  try {
+    const response = await fetch(`http://${ip}:${port}/execute`, { method: 'POST', headers: {'Content-Type': 'text/plain'}, body: cmd});
+    await response.text();
+  } catch (err) {
+    mainWindow.webContents.send('addalert', {'a': `Failed to send song to VirtualDJ ${ip}:${port}. ${err}.`});
+    console.error(err);
+  }
+});
+
 const updateAlert = (event, id, progress = undefined, a = undefined, timeoutInSeconds = 0) => {
   event.sender.send('updatealert', {
     'id': id,

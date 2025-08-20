@@ -25,8 +25,8 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
       `;
     }
     let sendButtons = html`
-      <icon-button icon="send" @click="${this.dragSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
-      <icon-button icon="send" @click="${this.dragSongToDeckB}"></icon-button>
+      <icon-button icon="send" @click="${this.sendSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
+      <icon-button icon="send" @click="${this.sendSongToDeckB}"></icon-button>
     `;
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
@@ -212,16 +212,24 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     e.stopPropagation();
   }
 
-  dragSongToDeckA(e) {
-    this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'));
-    e.stopPropagation();
-    setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
+  sendSongToDeckA(e) {
+    if (this.settings.getBool('virtualdj.active')) {
+      window.vdj.send(`deck left load "${this.settings.getString('dir.music')}/${this.song.filepath}"`);
+    } else {
+      this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'));
+      e.stopPropagation();
+      setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
+    }
   }
 
-  dragSongToDeckB(e) {
-    this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'));
-    e.stopPropagation();
-    setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
+  sendSongToDeckB(e) {
+    if (this.settings.getBool('virtualdj.active')) {
+      window.vdj.send(`deck right load "${this.settings.getString('dir.music')}/${this.song.filepath}"`);
+    } else {
+      this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'));
+      e.stopPropagation();
+      setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
+    }
   }
 
   dragSongTo(x, y) {

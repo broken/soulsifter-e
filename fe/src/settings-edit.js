@@ -17,7 +17,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
             <mwc-tab @click="${() => this.tabClicked(0)}" label="Main" isFadingIndicator></mwc-tab>
             <mwc-tab @click="${() => this.tabClicked(1)}" label="Midi" isFadingIndicator></mwc-tab>
             <mwc-tab @click="${() => this.tabClicked(2)}" label="Subscriptions" isFadingIndicator></mwc-tab>
-            <mwc-tab @click="${() => this.tabClicked(3)}" label="Auto Drag & Drop" isFadingIndicator></mwc-tab>
+            <mwc-tab @click="${() => this.tabClicked(3)}" label="DVS Integration" isFadingIndicator></mwc-tab>
             <mwc-tab @click="${() => this.tabClicked(4)}" label="Song List Fields" isFadingIndicator></mwc-tab>
           </mwc-tab-bar>
           <main id="main">
@@ -91,6 +91,11 @@ class SettingsEdit extends SettingsMixin(LitElement) {
               </div>
             </section>
             <section>
+              <div class="fields">
+                <label><md-checkbox ?checked="${this.virtualdjActive}" id="virtualdjActive"></md-checkbox>Activate VirtualDJ Integration</label>
+                <md-filled-text-field label="VirtualDJ IP" .value=${this.virtualdjIp} id="virtualdjIp"></md-filled-text-field>
+                <md-filled-text-field label="VirtualDJ Port" .value=${this.virtualdjPort} id="virtualdjPort"></md-filled-text-field>
+              </div>
               <div class="fields">
                 <md-filled-text-field label="Deck A X" .value=${this.dragAndDropDeckLeftX} id="dragAndDropDeckLeftX"></md-filled-text-field>
                 <md-filled-text-field label="Deck A Y" .value=${this.dragAndDropDeckLeftY} id="dragAndDropDeckLeftY"></md-filled-text-field>
@@ -182,6 +187,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.energyGap = this.settings.getInt('search.energyGap');
     this.includeUnknownKeys = this.settings.getBool('search.includeUnknownKeys');
     this.overwriteSongFromTag = this.settings.getBool('tag.readOverwrite');
+    this.virtualdjActive = this.settings.getBool('virtualdj.active');
+    this.virtualdjIp = this.settings.getString('virtualdj.ip');
+    this.virtualdjPort = this.settings.getInt('virtualdj.port');
     this.settingsEditListener = (e) => this.classList.add('show');
     this.song = new ss.Song();
     this.song.id = 69;
@@ -316,6 +324,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puti('search.energyGap', Number(this.shadowRoot.getElementById('energyGap').value));
     this.putb('search.includeUnknownKeys', this.shadowRoot.getElementById('includeUnknownKeys').checked);
     this.putb('tag.readOverwrite', this.shadowRoot.getElementById('overwriteSongFromTag').checked);
+    this.putb('virtualdj.active', this.shadowRoot.getElementById('virtualdjActive').checked);
+    this.puts('virtualdj.ip', this.shadowRoot.getElementById('virtualdjIp').value);
+    this.puti('virtualdj.port', Number(this.shadowRoot.getElementById('virtualdjPort').value));
     this.settings.save();
     this.exit();
   }
