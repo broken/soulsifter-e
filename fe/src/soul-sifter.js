@@ -40,28 +40,28 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
     return html`
       <alert-list></alert-list>
       <wave-gen></wave-gen>
-      <aside>
-        <mwc-tab-bar activeIndex="1" dense="true">
-          <mwc-tab @click="${this.songTabClicked}" label="Song" isFadingIndicator></mwc-tab>
-          <mwc-tab @click="${this.genresTabClicked}" label="Genres" isFadingIndicator></mwc-tab>
-          <mwc-tab @click="${this.playlistsTabClicked}" label="Playlists" isFadingIndicator></mwc-tab>
-        </mwc-tab-bar>
-        <div id="sections">
-          <song-section></song-section>
-          <genre-list main class="active"></genre-list>
-          <playlist-list></playlist-list>
-        </div>
-      </aside>
-      <main>
-        <search-toolbar></search-toolbar>
-        <mix-list @select-song="${this.selectSong}"></mix-list>
-        <div class="list-seperator"></div>
-        <song-list id="sl"></song-list>
-      </main>
-      <div style="width: 260px">
-        <vdj-waveform deck="1"></vdj-waveform>
-        <!-- <vdj-waveform deck="2"></vdj-waveform> -->
+      <div id="content">
+        <aside>
+          <mwc-tab-bar activeIndex="1" dense="true">
+            <mwc-tab @click="${this.songTabClicked}" label="Song" isFadingIndicator></mwc-tab>
+            <mwc-tab @click="${this.genresTabClicked}" label="Genres" isFadingIndicator></mwc-tab>
+            <mwc-tab @click="${this.playlistsTabClicked}" label="Playlists" isFadingIndicator></mwc-tab>
+          </mwc-tab-bar>
+          <div id="sections">
+            <song-section></song-section>
+            <genre-list main class="active"></genre-list>
+            <playlist-list></playlist-list>
+          </div>
+        </aside>
+        <main>
+          <search-toolbar></search-toolbar>
+          <mix-list @select-song="${this.selectSong}"></mix-list>
+          <div class="list-seperator"></div>
+          <song-list id="sl"></song-list>
+        </main>
       </div>
+      <vdj-waveform deck="1"></vdj-waveform>
+      <!-- <vdj-waveform deck="2"></vdj-waveform> -->
       <genre-edit></genre-edit>
       <mix-edit></mix-edit>
       <playlist-edit></playlist-edit>
@@ -156,7 +156,9 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
       css`${unsafeCSS(greyscalewaveforms)}`,
       css`
         :host {
+          --vdj-waveform-height: 200px;
           display: flex;
+          flex-direction: column;
           position: absolute;
           top: 0;
           right: 0;
@@ -166,6 +168,12 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
           background-color: var(--ss--primary-background-color);
           font-size: 13px;
           user-select: none;
+        }
+        #content {
+          display: flex;
+          flex-direction: row;
+          height: calc(100% - var(--vdj-waveform-height));
+          width: 100%;
         }
         main, aside {
           display: flex;
@@ -181,6 +189,9 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
         main {
           flex: 1 1 auto;
           max-width: calc(100% - var(--sidebar-width));
+        }
+        vdj-waveform {
+          height: var(--vdj-waveform-height);
         }
         #sections {
           flex: 1 1 auto;

@@ -67,6 +67,10 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
   connectedCallback() {
     super.connectedCallback();
+    if (this.settings.getBool('virtualdj.active'))
+      this.style.setProperty('--vdj-waveform-display', 'flex');
+    else
+      this.style.setProperty('--vdj-waveform-display', 'none');
     ipcRenderer.on(`vdj-filepath-${this.deck}`, (e, data) => {
       console.log('vdj-filepath: ' + data);
       if (data) {
@@ -250,12 +254,13 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     return [
       css`
         :host {
-          display: block;
+          display: var(--vdj-waveform-display);
+          flex-direction: column;
           width: 100%;
           height: 320px;
           position: relative;
           background: #000;
-          border: 1px solid #333;
+          border-top: 1px solid #333;
           border-radius: 4px;
           overflow: hidden;
         }
