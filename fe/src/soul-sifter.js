@@ -58,9 +58,9 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
         <div class="list-seperator"></div>
         <song-list id="sl"></song-list>
       </main>
-      <div style="width: 220px">
+      <div style="width: 260px">
         <vdj-waveform deck="1"></vdj-waveform>
-        <vdj-waveform deck="2"></vdj-waveform>
+        <!-- <vdj-waveform deck="2"></vdj-waveform> -->
       </div>
       <genre-edit></genre-edit>
       <mix-edit></mix-edit>

@@ -22,6 +22,8 @@ namespace soulsifter {
     //ptree.put("dir.mv", "");
     //ptree.put("dir.staging", "");
     //ptree.put("dir.stems", "");
+    //ptree.put("dir.vdjStems", "");
+    //ptree.put("dir.vdjStemWaveforms", "");
     //ptree.put("dir.waveforms", "");
     ptree.put("dir.tmp", "/tmp");
     ptree.put("db.url", "localhost");

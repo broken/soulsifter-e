@@ -27,6 +27,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Music Video Directory" .value=${this.musicVideoDir} id="musicVideoDir"></md-filled-text-field>
                 <md-filled-text-field label="Stems Directory" .value=${this.stemsDir} id="stemsDir"></md-filled-text-field>
                 <md-filled-text-field label="Waveforms Directory" .value=${this.waveformsDir} id="waveformsDir"></md-filled-text-field>
+                <md-filled-text-field label="VirtualDJ Stems Directory" .value=${this.vdjStemsDir} id="vdjStemsDir"></md-filled-text-field>
+                <md-filled-text-field label="VirtualDJ Stem Waveforms Directory" .value=${this.vdjStemWaveformsDir} id="vdjStemWaveformsDir"></md-filled-text-field>
                 <br>
                 <label><md-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag"></md-checkbox>Overwrite values when reading ID3 tags</label>
                 <label><md-checkbox ?checked="${this.appDebugMode}" id="appDebugMode"></md-checkbox>Debug mode (requires restart)</label>
@@ -139,6 +141,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.musicDir = this.settings.getString('dir.music');
     this.musicVideoDir = this.settings.getString('dir.mv');
     this.stemsDir = this.settings.getString('dir.stems');
+    this.vdjStemsDir = this.settings.getString('dir.vdjStems');
+    this.vdjStemWaveformsDir = this.settings.getString('dir.vdjStemWaveforms');
     this.waveformsDir = this.settings.getString('dir.waveforms');
     this.googleAndroidId = this.settings.getString('google.androidId');
     this.googleAppKey = this.settings.getString('google.appKey');
@@ -276,6 +280,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
     this.puts('dir.mv', this.shadowRoot.getElementById('musicVideoDir').value);
     this.puts('dir.stems', this.shadowRoot.getElementById('stemsDir').value);
+    this.puts('dir.vdjStems', this.shadowRoot.getElementById('vdjStemsDir').value);
+    this.puts('dir.vdjStemWaveforms', this.shadowRoot.getElementById('vdjStemWaveformsDir').value);
     this.puts('dir.waveforms', this.shadowRoot.getElementById('waveformsDir').value);
     this.puts('google.androidId', this.shadowRoot.getElementById('googleAndroidId').value);
     this.puts('google.appKey', this.shadowRoot.getElementById('googleAppKey').value);
@@ -333,7 +339,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   validate() {
     // Ensure that directory paths end in a slash
-    ['musicDir', 'musicVideoDir', 'stemsDir', 'waveformsDir'].map(label => {
+    ['musicDir', 'musicVideoDir', 'stemsDir', 'vdjStemWaveformsDir', 'waveformsDir'].map(label => {
       let el = this.shadowRoot.getElementById(label);
       el.value = el.value.replace(/(\/)?$/, '/');
     })
