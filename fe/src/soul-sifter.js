@@ -18,6 +18,7 @@ import "./settings-edit.js";
 import "./song-edit.js";
 import "./song-list.js";
 import "./song-section.js";
+import "./vdj-waveform.js"
 import "./virtualdj-client.js"
 import "./wave-gen.js"
 import "./youtube-client.js"
@@ -57,6 +58,10 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
         <div class="list-seperator"></div>
         <song-list id="sl"></song-list>
       </main>
+      <div style="width: 220px">
+        <vdj-waveform deck="1"></vdj-waveform>
+        <vdj-waveform deck="2"></vdj-waveform>
+      </div>
       <genre-edit></genre-edit>
       <mix-edit></mix-edit>
       <playlist-edit></playlist-edit>

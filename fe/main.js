@@ -517,12 +517,26 @@ ipcMain.on('yt-addPlaylistEntry', async (event, entryId) => {
   });
 });
 
-ipcMain.on('vdj-send', async (event, ip, port, cmd) => {
+ipcMain.on('vdj-send', async (event, ip, port, cmd, callback=undefined) => {
   try {
     const response = await fetch(`http://${ip}:${port}/execute`, { method: 'POST', headers: {'Content-Type': 'text/plain'}, body: cmd});
-    await response.text();
+    const result = await response.text();
+    if (callback)
+      mainWindow.webContents.send(callback, result);
   } catch (err) {
-    mainWindow.webContents.send('addalert', {'a': `Failed to send song to VirtualDJ ${ip}:${port}. ${err}.`});
+    mainWindow.webContents.send('addalert', {'a': `Failed to execute command "${cmd}" to VirtualDJ ${ip}:${port}. ${err}.`});
+    console.error(err);
+  }
+});
+
+ipcMain.on('vdj-query', async (event, ip, port, cmd, callback=undefined) => {
+  try {
+    const response = await fetch(`http://${ip}:${port}/query`, { method: 'POST', headers: {'Content-Type': 'text/plain'}, body: cmd});
+    const result = await response.text();
+    if (callback)
+      mainWindow.webContents.send(callback, result);
+  } catch (err) {
+    mainWindow.webContents.send('addalert', {'a': `Failed query "${cmd}" to VirtualDJ ${ip}:${port}. ${err}.`});
     console.error(err);
   }
 });

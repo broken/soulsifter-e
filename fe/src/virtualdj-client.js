@@ -5,12 +5,23 @@ class VirtualDjClient extends Object {
     this.settings = new ss.SoulSifterSettings();
   }
 
-  send(command) {
+  send(command, callback=undefined) {
     ipcRenderer.send(
         'vdj-send',
         this.settings.getString('virtualdj.ip'),
         this.settings.getInt('virtualdj.port'),
-        command
+        command,
+        callback
+    );
+  }
+
+  query(command, callback=undefined) {
+    ipcRenderer.send(
+        'vdj-query',
+        this.settings.getString('virtualdj.ip'),
+        this.settings.getInt('virtualdj.port'),
+        command,
+        callback
     );
   }
 
