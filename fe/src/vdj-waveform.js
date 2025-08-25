@@ -140,7 +140,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.updateWaveform();
     this.updateInterval = setInterval(() => {
       this.updatePlaybackInfo();
-    }, 5000);  // Update 10 times per second for smooth animation
+    }, 1000);  // Update syncing animation
   }
 
   stopUpdating() {
@@ -266,13 +266,16 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           const container = d3.select(this.shadowRoot.getElementById(`waveform-canvas-${i}`));
           const x = d3.scaleLinear();
           const y = d3.scaleLinear();
-          const offsetX = 100;
 
           const min = channel.min_array();
           const max = channel.max_array();
+          // Set the desired width and height for the SVG container
+          const svgWidth = 2000;
+          const svgHeight = 80; // Increased height for a larger waveform
+          const verticalOffset = svgHeight / 2; // Center the waveform vertically
 
-          x.domain([0, waveform.length]).rangeRound([0, 2000]);
-          y.domain([d3.min(min), d3.max(max)]).rangeRound([offsetX, -offsetX]);
+          x.domain([0, waveform.length]).rangeRound([0, svgWidth]);
+          y.domain([d3.min(min), d3.max(max)]).rangeRound([verticalOffset, -verticalOffset]);
 
           const area = d3.area()
             .x((d, i) => x(i))
@@ -284,7 +287,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
             .style('height', '40px')
             .datum(max)
             .append('path')
-            .attr('transform', () => `translate(0, ${offsetX})`)
+            .attr('transform', () => `translate(0, ${verticalOffset})`)
             .attr('d', area)
             .attr('stroke', this.getStemColor(i-1));
 
