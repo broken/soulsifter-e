@@ -2,7 +2,7 @@ import { css, html, LitElement, unsafeCSS } from "lit";
 
 import crc32 from 'crc-32';
 import WaveformData from 'waveform-data';
-
+import * as d3 from 'd3';
 
 import "./icon-button.js";
 import { AlertsMixin } from "./mixin-alerts-pub.js";
@@ -10,17 +10,17 @@ import { SettingsMixin } from "./mixin-settings.js";
 
 class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   render() {
-    const waveformOffset = this.getWaveformOffsetPercentage();
+    const waveformOffset = this.getWaveformOffsetPercentage() * 2000;
     return html`
       <div class="waveform-container" @click="${this.handleClick}">
         <div class="deck-label">Deck ${this.deck}</div>
         ${this.trackLoaded ? html`
-          <div class="waveform-wrapper" style="--waveform-offset: ${waveformOffset}%">
-            <canvas id="waveform-canvas-1" class="waveform loaded"></canvas>
-            <canvas id="waveform-canvas-2" class="waveform loaded"></canvas>
-            <canvas id="waveform-canvas-3" class="waveform loaded"></canvas>
-            <canvas id="waveform-canvas-4" class="waveform loaded"></canvas>
-            <canvas id="waveform-canvas-5" class="waveform loaded"></canvas>
+          <div class="waveform-wrapper" style="--waveform-offset: ${waveformOffset}px">
+            <div id="waveform-canvas-1" class="waveform loaded"></div>
+            <div id="waveform-canvas-2" class="waveform loaded"></div>
+            <div id="waveform-canvas-3" class="waveform loaded"></div>
+            <div id="waveform-canvas-4" class="waveform loaded"></div>
+            <div id="waveform-canvas-5" class="waveform loaded"></div>
           </div>
           <div class="progress-indicator"></div>
           <div class="time-display">
@@ -140,7 +140,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.updateWaveform();
     this.updateInterval = setInterval(() => {
       this.updatePlaybackInfo();
-    }, 500);  // Update 10 times per second for smooth animation
+    }, 5000);  // Update 10 times per second for smooth animation
   }
 
   stopUpdating() {
@@ -192,7 +192,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   getWaveformOffsetPercentage() {
     if (this.duration === 0) return 0;
     // Calculate how much to offset the waveform (negative value to move it left)
-    return -Math.min((this.currentTime / this.duration) * 100, 100);
+    return -Math.min((this.currentTime / this.duration) , 1);
   }
 
   getStemColor(index) {
@@ -262,86 +262,32 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           const waveformData =  waveform.toJSON();
 
 
-          const canvas = this.shadowRoot.getElementById(`waveform-canvas-${i}`);
-          const ctx = canvas.getContext('2d');
-          // const waveform = WaveformData.create(waveformData);
+          const channel = waveform.channel(0);
+          const container = d3.select(this.shadowRoot.getElementById(`waveform-canvas-${i}`));
+          const x = d3.scaleLinear();
+          const y = d3.scaleLinear();
+          const offsetX = 100;
 
-          // Clear the canvas
-          ctx.clearRect(0, 0, canvas.width, canvas.height);
+          const min = channel.min_array();
+          const max = channel.max_array();
 
-          // Draw the waveform
-          const channel = waveform.channel(0); // Get the first channel
-          const scaleY = (amplitude, height) => {
-            const range = 256;
-            const offset = 128;
+          x.domain([0, waveform.length]).rangeRound([0, 2000]);
+          y.domain([d3.min(min), d3.max(max)]).rangeRound([offsetX, -offsetX]);
 
-            return height - ((amplitude + offset) * height) / range;
-          }
+          const area = d3.area()
+            .x((d, i) => x(i))
+            .y0((d, i) => y(min[i]))
+            .y1((d, i) => y(d));
 
-          ctx.beginPath();
+          const graph = container.append('svg')
+            .style('width', '2000px')
+            .style('height', '40px')
+            .datum(max)
+            .append('path')
+            .attr('transform', () => `translate(0, ${offsetX})`)
+            .attr('d', area)
+            .attr('stroke', this.getStemColor(i-1));
 
-          // Loop forwards, drawing the upper half of the waveform
-          for (let x = 0; x < waveform.length; x++) {
-            const val = channel.max_sample(x);
-
-            ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
-          }
-
-          // Loop backwards, drawing the lower half of the waveform
-          for (let x = waveform.length - 1; x >= 0; x--) {
-            const val = channel.min_sample(x);
-
-            ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
-          }
-
-          ctx.strokeStyle = '#007bff';
-          // ctx.lineWidth = 1;
-          ctx.closePath();
-          ctx.stroke();
-          ctx.fill();
-
-          // Send the processed waveform data back to the renderer
-        //   event.sender.send('waveform-data', waveform.toJSON());
-        // } catch (error) {
-        //   console.error('Error processing audio file:', error);
-        //   mainWindow.webContents.send('addalert', {'a': `Failed wavefjorm creation. ${error}`});
-        // }
-        // const waveform = await new Promise((resolve, reject) => {
-        //   WaveformData.createFromAudio(audioBuffer, {
-        //     samplingRate: 100, // Adjust sampling rate for detail vs. file size
-        //   }, (err, waveform) => {
-        //     if (err) {
-        //       return reject(err);
-        //     }
-        //     resolve(waveform);
-        //   });
-        // });
-        // const canvas = document.getElementById(`waveform-canvas-${i}`);
-        // const ctx = canvas.getContext('2d');
-        // ctx.clearRect(0, 0, canvas.width, canvas.height);
-        // const channel = waveform.channel(0); // Get the first channel
-        // const scaleY = (val) => (val * canvas.height / 2) + canvas.height / 2;
-        // ctx.beginPath();
-        // ctx.moveTo(0, scaleY(channel.min_sample(0)));
-
-        // for (let i = 0; i < channel.length; i++) {
-        //     // Draw the top half of the waveform
-        //     ctx.lineTo(i, scaleY(channel.min_sample(i)));
-        //     ctx.lineTo(i, scaleY(channel.max_sample(i)));
-        // }
-
-        // ctx.strokeStyle = '#007bff';
-        // ctx.lineWidth = 1;
-        // ctx.stroke();
-
-        // let wfDirPath = this.path.dirname(waveformFilepath);
-        // try  {
-        //   await this.fs.access(wfDirPath, this.fs.F_OK);
-        // } catch(err) {
-        //   await this.fs.mkdir(wfDirPath, { recursive: true });
-        // }
-        // await this.fs.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
-        // console.log('File written successfully to ' + waveformFilepath);
       }
     } catch(err) {
       this.addAlert('WaveformData failed creating waveform for ' + filepath + ' : ' + err, 8);
@@ -379,7 +325,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           background: linear-gradient(90deg, #1a1a2e, #16213e, #1a1a2e);
         }
         .waveform-wrapper {
-          width: 10000px;
+          left: 50%;
+          width: 100%;
           height: 100%;
           position: relative;
           transform: translateX(var(--waveform-offset, 0%));
