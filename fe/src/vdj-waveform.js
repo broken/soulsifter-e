@@ -15,7 +15,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       <div class="waveform-container" @click="${this.handleClick}">
         <div class="deck-label">Deck ${this.deck}</div>
         ${this.trackLoaded ? html`
-          <div class="waveform-wrapper" style="--waveform-offset: ${waveformOffset}px">
+          <div class="waveform-wrapper ${this.isPlaying ? 'playing' : 'paused'}"
+               style="--waveform-offset: ${waveformOffset}px; --transition-duration: ${this.transitionDuration}s; --animation-duration: ${this.animationDuration}s;">
             <div id="waveform-canvas-1" class="waveform loaded"></div>
             <div id="waveform-canvas-2" class="waveform loaded"></div>
             <div id="waveform-canvas-3" class="waveform loaded"></div>
@@ -24,7 +25,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           </div>
           <div class="progress-indicator"></div>
           <div class="time-display">
-            ${this.formatTime(this.currentTime)} / ${this.formatTime(this.duration)}
+            ${this.formatTime(this.displayTime)} / ${this.formatTime(this.duration)}
           </div>
         ` : html`
           <div class="no-track">
@@ -40,9 +41,14 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       deck: { type: String },
       waveformUrl: { type: String },
       currentTime: { type: Number },
+      displayTime: { type: Number },
       duration: { type: Number },
       isPlaying: { type: Boolean },
-      trackLoaded: { type: Boolean }
+      trackLoaded: { type: Boolean },
+      bpm: { type: Number },
+      absoluteBpm: { type: Number },
+      transitionDuration: { type: Number },
+      animationDuration: { type: Number }
     };
   }
 
@@ -55,11 +61,22 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.exec = util.promisify(require('child_process').exec);
     this.waveformUrl = '';
     this.currentTime = 0;
+    this.displayTime = 0;
     this.duration = 0;
     this.isPlaying = false;
     this.trackLoaded = false;
     this.updateInterval = null;
+    this.displayTimeInterval = null;
     this.stemNames = ['vocal', 'hihat', 'bass', 'instruments', 'kick'];
+
+    // BPM and smooth animation properties
+    this.bpm = 0;
+    this.absoluteBpm = 0;
+    this.playbackRate = 1;
+    this.transitionDuration = 0.1; // Duration for position updates
+    this.animationDuration = 2; // Duration for continuous movement when playing
+    this.lastSyncTime = 0;
+    this.lastSyncTimestamp = 0;
   }
 
   connectedCallback() {
@@ -68,38 +85,59 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       this.style.setProperty('--vdj-waveform-display', 'flex');
     else
       this.style.setProperty('--vdj-waveform-display', 'none');
+
     ipcRenderer.on(`vdj-filepath-${this.deck}`, (e, data) => {
       console.log('vdj-filepath: ' + data);
       if (data) {
         if (data !== this.currentFilepath) {
           this.currentFilepath = data;
-          // In a real implementation, you would convert the filepath to a waveform image URL
-          // For demo purposes, we'll use a placeholder pattern
           this.generateWaveformPattern();
           window.vdj.query(`deck ${this.deck} get_time total `, `vdj-duration-${this.deck}`);
           this.trackLoaded = true;
+          // Get BPM data when track loads
+          this.updateBpmData();
         }
       } else {
         this.trackLoaded = false;
       }
     });
+
     ipcRenderer.on(`vdj-time-${this.deck}`, (e, data) => {
       console.log('time: ' + data);
-      this.currentTime = parseInt(data) || 0;
+      const newTime = parseInt(data) || 0;
+      this.updateTimeSync(newTime);
     });
+
     ipcRenderer.on(`vdj-duration-${this.deck}`, (e, data) => {
       console.log('duration: ' + data);
       this.duration = parseInt(data) || 0;
     });
+
     ipcRenderer.on(`vdj-isplaying-${this.deck}`, (e, data) => {
       console.log('playing: ' + data);
-      if (data === 'yes') {
-        this.isPlaying = true;
-      } else {
-        this.isPlaying = false;
+      const wasPlaying = this.isPlaying;
+      this.isPlaying = data === 'yes';
+
+      if (this.isPlaying !== wasPlaying) {
+        this.handlePlayStateChange();
       }
     });
+
+    // BPM data listeners
+    ipcRenderer.on(`vdj-bpm-${this.deck}`, (e, data) => {
+      console.log('bpm: ' + data);
+      this.bpm = parseFloat(data) || 0;
+      this.updatePlaybackRate();
+    });
+
+    ipcRenderer.on(`vdj-absolute-bpm-${this.deck}`, (e, data) => {
+      console.log('absolute-bpm: ' + data);
+      this.absoluteBpm = parseFloat(data) || 0;
+      this.updatePlaybackRate();
+    });
+
     this.startUpdating();
+
     // Listen for the processed waveform data from the main process
     ipcRenderer.on('waveform-data', (event, waveformData) => {
         const canvas = this.shadowRoot.getElementById('waveform-canvas-1');
@@ -131,16 +169,79 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   disconnectedCallback() {
     super.disconnectedCallback();
     this.stopUpdating();
+    this.stopDisplayTimeUpdate();
   }
 
-    firstUpdated() {
+  firstUpdated() {
+  }
+
+  updateTimeSync(newTime) {
+    this.currentTime = newTime;
+    this.displayTime = newTime;
+    this.lastSyncTime = newTime;
+    this.lastSyncTimestamp = Date.now();
+
+    // Force a quick transition to sync position
+    this.transitionDuration = 0.1;
+    this.requestUpdate();
+  }
+
+  updatePlaybackRate() {
+    if (this.absoluteBpm > 0 && this.bpm > 0) {
+      this.playbackRate = this.bpm / this.absoluteBpm;
+      // Update animation duration based on playback rate
+      this.animationDuration = 2 / this.playbackRate; // Adjust base duration by playback rate
+      console.log(`Playback rate: ${this.playbackRate} (BPM: ${this.bpm}/${this.absoluteBpm})`);
+      this.requestUpdate();
     }
+  }
+
+  handlePlayStateChange() {
+    if (this.isPlaying) {
+      this.startDisplayTimeUpdate();
+      // Set longer transition for smooth movement
+      this.transitionDuration = this.animationDuration;
+    } else {
+      this.stopDisplayTimeUpdate();
+      // Quick transition when paused
+      this.transitionDuration = 0.1;
+    }
+    this.requestUpdate();
+  }
+
+  startDisplayTimeUpdate() {
+    this.stopDisplayTimeUpdate();
+    this.displayTimeInterval = setInterval(() => {
+      const now = Date.now();
+      const elapsedMs = now - this.lastSyncTimestamp;
+      const expectedProgress = elapsedMs * this.playbackRate;
+      this.displayTime = Math.min(this.lastSyncTime + expectedProgress, this.duration);
+      this.requestUpdate();
+    }, 50); // Update display time every 50ms for smooth time display
+  }
+
+  stopDisplayTimeUpdate() {
+    if (this.displayTimeInterval) {
+      clearInterval(this.displayTimeInterval);
+      this.displayTimeInterval = null;
+    }
+  }
+
+  updateBpmData() {
+    try {
+      window.vdj.query(`deck ${this.deck} get_bpm`, `vdj-bpm-${this.deck}`);
+      window.vdj.query(`deck ${this.deck} get_bpm absolute`, `vdj-absolute-bpm-${this.deck}`);
+    } catch (error) {
+      console.warn('Failed to get BPM data:', error);
+    }
+  }
 
   startUpdating() {
     this.updateWaveform();
     this.updateInterval = setInterval(() => {
       this.updatePlaybackInfo();
-    }, 1000);  // Update syncing animation
+      this.updateBpmData(); // Update BPM data periodically
+    }, 5000);  // Reduced frequency to every 2 seconds
   }
 
   stopUpdating() {
@@ -191,8 +292,10 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
   getWaveformOffsetPercentage() {
     if (this.duration === 0) return 0;
+    // Use displayTime for smooth animation
+    const timeToUse = this.displayTime || this.currentTime;
     // Calculate how much to offset the waveform (negative value to move it left)
-    return -Math.min((this.currentTime / this.duration) , 1);
+    return -Math.min((timeToUse / this.duration), 1);
   }
 
   getStemColor(index) {
@@ -333,7 +436,12 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           height: 100%;
           position: relative;
           transform: translateX(var(--waveform-offset, 0%));
-          transition: transform 0.1s linear;
+        }
+        .waveform-wrapper.paused {
+          transition: transform var(--transition-duration, 0.1)s ease-out;
+        }
+        .waveform-wrapper.playing {
+          transition: transform var(--transition-duration, 2)s linear;
         }
         .waveform {
           width: 100%;
