@@ -10,17 +10,19 @@ import { SettingsMixin } from "./mixin-settings.js";
 
 class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   render() {
-    const progressPosition = this.getProgressPercentage();
+    const waveformOffset = this.getWaveformOffsetPercentage();
     return html`
       <div class="waveform-container" @click="${this.handleClick}">
         <div class="deck-label">Deck ${this.deck}</div>
         ${this.trackLoaded ? html`
-          <canvas id="waveform-canvas-1" class="waveform loaded"></canvas>
-          <canvas id="waveform-canvas-2" class="waveform loaded"></canvas>
-          <canvas id="waveform-canvas-3" class="waveform loaded"></canvas>
-          <canvas id="waveform-canvas-4" class="waveform loaded"></canvas>
-          <canvas id="waveform-canvas-5" class="waveform loaded"></canvas>
-          <div class="progress-indicator" style="--progress-position: ${progressPosition}%"></div>
+          <div class="waveform-wrapper" style="--waveform-offset: ${waveformOffset}%">
+            <canvas id="waveform-canvas-1" class="waveform loaded"></canvas>
+            <canvas id="waveform-canvas-2" class="waveform loaded"></canvas>
+            <canvas id="waveform-canvas-3" class="waveform loaded"></canvas>
+            <canvas id="waveform-canvas-4" class="waveform loaded"></canvas>
+            <canvas id="waveform-canvas-5" class="waveform loaded"></canvas>
+          </div>
+          <div class="progress-indicator"></div>
           <div class="time-display">
             ${this.formatTime(this.currentTime)} / ${this.formatTime(this.duration)}
           </div>
@@ -138,7 +140,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.updateWaveform();
     this.updateInterval = setInterval(() => {
       this.updatePlaybackInfo();
-    }, 60000);  // Update 10 times per second for smooth animation
+    }, 500);  // Update 10 times per second for smooth animation
   }
 
   stopUpdating() {
@@ -187,9 +189,10 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
   }
 
-  getProgressPercentage() {
+  getWaveformOffsetPercentage() {
     if (this.duration === 0) return 0;
-    return Math.min((this.currentTime / this.duration) * 100, 100);
+    // Calculate how much to offset the waveform (negative value to move it left)
+    return -Math.min((this.currentTime / this.duration) * 100, 100);
   }
 
   getStemColor(index) {
@@ -362,7 +365,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           background: #000;
           border-top: 1px solid #333;
           border-radius: 4px;
-          overflow: scroll;
+          overflow: hidden;
         }
         .outside {
           position: absolute;
@@ -375,8 +378,15 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           position: relative;
           background: linear-gradient(90deg, #1a1a2e, #16213e, #1a1a2e);
         }
+        .waveform-wrapper {
+          width: 10000px;
+          height: 100%;
+          position: relative;
+          transform: translateX(var(--waveform-offset, 0%));
+          transition: transform 0.1s linear;
+        }
         .waveform {
-          width: 2000px;
+          width: 100%;
           height: 40px;
           /* background: linear-gradient(45deg, #00d4ff, #ff0080, #00ff88);
           mask-image: var(--waveform-mask);
@@ -392,13 +402,12 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         .progress-indicator {
           position: absolute;
           top: 0;
-          left: 0;
+          left: 50%;
           width: 2px;
           height: 100%;
           background: #fff;
           box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-          left: var(--progress-position, 0%);
-          transition: transform 0.1s linear;
+          transform: translateX(-50%);
           z-index: 10;
         }
         .time-display {
