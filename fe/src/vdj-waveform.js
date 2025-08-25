@@ -53,6 +53,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   constructor() {
     super();
     this.fs = require('fs/promises');
+    this.os = require('os');
     this.path = require('path');
     const util = require('util');
     this.exec = util.promisify(require('child_process').exec);
@@ -225,7 +226,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       }
       let fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(filepath)) + this.path.basename(filepath) + '.vdjstems';
       await this.fs.access(fullFilepath, this.fs.F_OK | this.fs.R_OK);
-      await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy /tmp/1.m4a -map 0:a:1 -c copy /tmp/2.m4a -map 0:a:2 -c copy /tmp/3.m4a -map 0:a:3 -c copy /tmp/4.m4a -map 0:a:4 -c copy /tmp/5.m4a`);
+      const tmpPath = await this.fs.mkdtemp(this.path.join(this.os.tmpdir(), 'ss-stems-'));
+      await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/1.m4a -map 0:a:1 -c copy ${tmpPath}/2.m4a -map 0:a:2 -c copy ${tmpPath}/3.m4a -map 0:a:3 -c copy ${tmpPath}/4.m4a -map 0:a:4 -c copy ${tmpPath}/5.m4a`);
       for (let i = 1; i <= 5; i++) {
         let waveformFilepath = this.getVdjStemWaveformFilepath(originalSubpath, i);
         let wavesurfer = this.stemWavesurfers[i - 1];
