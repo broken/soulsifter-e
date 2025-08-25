@@ -241,7 +241,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.updateInterval = setInterval(() => {
       this.updatePlaybackInfo();
       this.updateBpmData(); // Update BPM data periodically
-    }, 5000);  // Reduced frequency to every 2 seconds
+    }, 60000);  // Sync frequency
   }
 
   stopUpdating() {
@@ -324,80 +324,148 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     if (!filepath) return;
     try {
       const originalSubpath = filepath.replace(this.settings.getString('dir.music'), '');
-      const exists = await ipcRenderer.invoke('existsfilepath', this.getVdjStemWaveformFilepath(originalSubpath, 5));
-      // if (exists) {
-      //   return;
-      // }
+
+      // Check if all waveform cache files exist
+      const cacheFilesExist = await this.checkWaveformCache(originalSubpath);
+      if (cacheFilesExist) {
+        console.log('Loading cached waveforms for', filepath);
+        await this.loadCachedWaveforms(originalSubpath);
+        return;
+      }
+
+      console.log('Processing new waveforms for', filepath);
       let fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(filepath)) + this.path.basename(filepath) + '.vdjstems';
-      // await this.fs.access(fullFilepath, this.fs.F_OK | this.fs.R_OK);
+
       const tmpPath = await this.fs.mkdtemp(this.path.join(this.os.tmpdir(), 'ss-stems-'));
       await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/1.m4a -map 0:a:1 -c copy ${tmpPath}/2.m4a -map 0:a:2 -c copy ${tmpPath}/3.m4a -map 0:a:3 -c copy ${tmpPath}/4.m4a -map 0:a:4 -c copy ${tmpPath}/5.m4a`);
+
       for (let i = 1; i <= 5; i++) {
-        let waveformFilepath = this.getVdjStemWaveformFilepath(originalSubpath, i);
-        // const audioBuffer = this.fs.readFileSync(`${tmpPath}/${i}.m4a`);
-        // ipcRenderer.send('process-audio', `${tmpPath}/${i}.m4a`);
-        // try {
+        const audioContext = new AudioContext();
+        const response = await fetch(`file://${tmpPath}/${i}.m4a`)
+        const buffer = await response.arrayBuffer();
+        const options = {
+          audio_context: audioContext,
+          array_buffer: buffer,
+          scale: 128
+        };
 
-          const audioContext = new AudioContext();
-
-          const response = await fetch(`file://${tmpPath}/${i}.m4a`)
-          const buffer = await response.arrayBuffer();
-          const options = {
-            audio_context: audioContext,
-            array_buffer: buffer,
-            scale: 128
-          };
-          // buffer = await audioCtx.decodeAudioData(await response.arrayBuffer());
-
-          // Use waveform-data to parse the audio buffer
-          const waveform = await new Promise((resolve, reject) => {
-            WaveformData.createFromAudio(options, (err, waveform_arg) => {
-              if (err) {
-                return reject(err);
-              }
-              resolve(waveform_arg);
-            });
+        // Use waveform-data to parse the audio buffer
+        const waveform = await new Promise((resolve, reject) => {
+          WaveformData.createFromAudio(options, (err, waveform_arg) => {
+            if (err) {
+              return reject(err);
+            }
+            resolve(waveform_arg);
           });
+        });
 
-          console.log(`Waveform has ${waveform.channels} channels`);
-          console.log(`Waveform has length ${waveform.length} points`);
+        console.log(`Waveform has ${waveform.channels} channels`);
+        console.log(`Waveform has length ${waveform.length} points`);
 
-          const waveformData =  waveform.toJSON();
+        // Save waveform data to cache
+        await this.saveWaveformCache(originalSubpath, i, waveform.toJSON());
 
-
-          const channel = waveform.channel(0);
-          const container = d3.select(this.shadowRoot.getElementById(`waveform-canvas-${i}`));
-          const x = d3.scaleLinear();
-          const y = d3.scaleLinear();
-
-          const min = channel.min_array();
-          const max = channel.max_array();
-          // Set the desired width and height for the SVG container
-          const svgWidth = 2000;
-          const svgHeight = 80; // Increased height for a larger waveform
-          const verticalOffset = svgHeight / 2; // Center the waveform vertically
-
-          x.domain([0, waveform.length]).rangeRound([0, svgWidth]);
-          y.domain([d3.min(min), d3.max(max)]).rangeRound([verticalOffset, -verticalOffset]);
-
-          const area = d3.area()
-            .x((d, i) => x(i))
-            .y0((d, i) => y(min[i]))
-            .y1((d, i) => y(d));
-
-          const graph = container.append('svg')
-            .style('width', '2000px')
-            .style('height', '40px')
-            .datum(max)
-            .append('path')
-            .attr('transform', () => `translate(0, ${verticalOffset})`)
-            .attr('d', area)
-            .attr('stroke', this.getStemColor(i-1));
-
+        // Render the waveform
+        this.renderWaveform(waveform, i);
       }
+
+      // Clean up temp directory
+      await this.exec(`rm -rf "${tmpPath}"`);
+
     } catch(err) {
       this.addAlert('WaveformData failed creating waveform for ' + filepath + ' : ' + err, 8);
     }
+  }
+
+  async checkWaveformCache(originalSubpath) {
+    try {
+      for (let i = 1; i <= 5; i++) {
+        const cacheFile = this.getWaveformCacheFilepath(originalSubpath, i);
+        const exists = await ipcRenderer.invoke('existsfilepath', cacheFile);
+        if (!exists) {
+          return false;
+        }
+      }
+      return true;
+    } catch (error) {
+      console.warn('Error checking waveform cache:', error);
+      return false;
+    }
+  }
+
+  async loadCachedWaveforms(originalSubpath) {
+    try {
+      for (let i = 1; i <= 5; i++) {
+        const cacheFile = this.getWaveformCacheFilepath(originalSubpath, i);
+        const waveformData = JSON.parse(await this.fs.readFile(cacheFile, 'utf8'));
+        const waveform = WaveformData.create(waveformData);
+        this.renderWaveform(waveform, i);
+      }
+    } catch (error) {
+      console.warn('Error loading cached waveforms:', error);
+      // If cache loading fails, fall back to regeneration
+      throw error;
+    }
+  }
+
+  async saveWaveformCache(originalSubpath, stemIndex, waveformData) {
+    try {
+      const cacheFile = this.getWaveformCacheFilepath(originalSubpath, stemIndex);
+      const cacheDir = this.path.dirname(cacheFile);
+
+      // Ensure cache directory exists
+      // TODO await ipcRenderer.invoke('ensuredirectory', cacheDir);
+
+      // Save waveform data as JSON
+      await this.fs.writeFile(cacheFile, JSON.stringify(waveformData, null, 2), 'utf8');
+      console.log(`Saved waveform cache: ${cacheFile}`);
+    } catch (error) {
+      console.warn('Error saving waveform cache:', error);
+      // Non-fatal error, continue without caching
+    }
+  }
+
+  renderWaveform(waveform, stemIndex) {
+    const channel = waveform.channel(0);
+    const container = d3.select(this.shadowRoot.getElementById(`waveform-canvas-${stemIndex}`));
+
+    // Clear any existing content
+    container.selectAll('*').remove();
+
+    const x = d3.scaleLinear();
+    const y = d3.scaleLinear();
+
+    const min = channel.min_array();
+    const max = channel.max_array();
+
+    // Set the desired width and height for the SVG container
+    const svgWidth = 2000;
+    const svgHeight = 80; // Increased height for a larger waveform
+    const verticalOffset = svgHeight / 2; // Center the waveform vertically
+
+    x.domain([0, waveform.length]).rangeRound([0, svgWidth]);
+    y.domain([d3.min(min), d3.max(max)]).rangeRound([verticalOffset, -verticalOffset]);
+
+    const area = d3.area()
+      .x((d, i) => x(i))
+      .y0((d, i) => y(min[i]))
+      .y1((d, i) => y(d));
+
+    const graph = container.append('svg')
+      .style('width', '2000px')
+      .style('height', '40px')
+      .datum(max)
+      .append('path')
+      .attr('transform', () => `translate(0, ${verticalOffset})`)
+      .attr('d', area)
+      .attr('stroke', this.getStemColor(stemIndex - 1));
+  }
+
+  getWaveformCacheFilepath(songFilepath, stemIndex) {
+    // Remove leading slash if present
+    songFilepath = songFilepath.replace(/^\//, '');
+    const cacheDir = this.settings.getString('dir.vdjStemWaveforms') || (this.settings.getString('dir.cache') + '/waveforms');
+    return this.path.join(cacheDir, songFilepath.replace(/\.[^.]+$/, `_stem${stemIndex}_waveform.json`));
   }
 
   getVdjStemWaveformFilepath(songFilepath, stemIndex) {
