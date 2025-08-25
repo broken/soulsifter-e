@@ -1,7 +1,8 @@
 import { css, html, LitElement, unsafeCSS } from "lit";
 
 import crc32 from 'crc-32';
-import WaveSurfer from 'wavesurfer.js';
+import WaveformData from 'waveform-data';
+
 
 import "./icon-button.js";
 import { AlertsMixin } from "./mixin-alerts-pub.js";
@@ -11,21 +12,14 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   render() {
     const progressPosition = this.getProgressPercentage();
     return html`
-      <div class="outside">
-        <div id="wavesurfer-1" style="width: 200px"></div>
-        <div id="wavesurfer-2" style="width: 200px"></div>
-        <div id="wavesurfer-3" style="width: 200px"></div>
-        <div id="wavesurfer-4" style="width: 200px"></div>
-        <div id="wavesurfer-5" style="width: 200px"></div>
-      </div>
       <div class="waveform-container" @click="${this.handleClick}">
         <div class="deck-label">Deck ${this.deck}</div>
         ${this.trackLoaded ? html`
-          <div class="waveform loaded" style="${this.waveformUrl1} || ''"></div>
-          <div class="waveform loaded" style="${this.waveformUrl2} || ''"></div>
-          <div class="waveform loaded" style="${this.waveformUrl3} || ''"></div>
-          <div class="waveform loaded" style="${this.waveformUrl4} || ''"></div>
-          <div class="waveform loaded" style="${this.waveformUrl5} || ''"></div>
+          <canvas id="waveform-canvas-1" class="waveform loaded"></canvas>
+          <canvas id="waveform-canvas-2" class="waveform loaded"></canvas>
+          <canvas id="waveform-canvas-3" class="waveform loaded"></canvas>
+          <canvas id="waveform-canvas-4" class="waveform loaded"></canvas>
+          <canvas id="waveform-canvas-5" class="waveform loaded"></canvas>
           <div class="progress-indicator" style="--progress-position: ${progressPosition}%"></div>
           <div class="time-display">
             ${this.formatTime(this.currentTime)} / ${this.formatTime(this.duration)}
@@ -104,6 +98,32 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       }
     });
     this.startUpdating();
+    // Listen for the processed waveform data from the main process
+    ipcRenderer.on('waveform-data', (event, waveformData) => {
+        const canvas = this.shadowRoot.getElementById('waveform-canvas-1');
+        const ctx = canvas.getContext('2d');
+        const waveform = WaveformData.create(waveformData);
+
+        // Clear the canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw the waveform
+        const channel = waveform.channel(0); // Get the first channel
+        const scaleY = (val) => (val * canvas.height / 2) + canvas.height / 2;
+
+        ctx.beginPath();
+        ctx.moveTo(0, scaleY(channel.min_sample(0)));
+
+        for (let i = 0; i < channel.length; i++) {
+            // Draw the top half of the waveform
+            ctx.lineTo(i, scaleY(channel.min_sample(i)));
+            ctx.lineTo(i, scaleY(channel.max_sample(i)));
+        }
+
+        ctx.strokeStyle = '#007bff';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+    });
   }
 
   disconnectedCallback() {
@@ -112,28 +132,6 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   }
 
     firstUpdated() {
-      this.stemWavesurfers = [];
-      for (let i = 1; i <= 5; i++) {
-        const wavesurfer = WaveSurfer.create({
-          container: this.shadowRoot.getElementById(`wavesurfer-${i}`),
-          waveColor: this.getStemColor(i),
-          progressColor: this.getStemProgressColor(i),
-          cursorColor: '#ffffff',
-          barWidth: 2,
-          barRadius: 3,
-          responsive: true,
-          height: 128,
-          normalize: true,
-          backend: 'WebAudio',
-          // For stem separation, you'd need to implement channel splitting
-          // This is a simplified version that loads the full file
-          splitChannels: false
-        });
-        wavesurfer.on('error', (msg) => {
-          this.addAlert('Wavesurfer audio error: ' + msg);
-        });
-        this.stemWavesurfers.push(wavesurfer);
-      }
     }
 
   startUpdating() {
@@ -221,29 +219,129 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     try {
       const originalSubpath = filepath.replace(this.settings.getString('dir.music'), '');
       const exists = await ipcRenderer.invoke('existsfilepath', this.getVdjStemWaveformFilepath(originalSubpath, 5));
-      if (exists) {
-        return;
-      }
+      // if (exists) {
+      //   return;
+      // }
       let fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(filepath)) + this.path.basename(filepath) + '.vdjstems';
-      await this.fs.access(fullFilepath, this.fs.F_OK | this.fs.R_OK);
+      // await this.fs.access(fullFilepath, this.fs.F_OK | this.fs.R_OK);
       const tmpPath = await this.fs.mkdtemp(this.path.join(this.os.tmpdir(), 'ss-stems-'));
       await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/1.m4a -map 0:a:1 -c copy ${tmpPath}/2.m4a -map 0:a:2 -c copy ${tmpPath}/3.m4a -map 0:a:3 -c copy ${tmpPath}/4.m4a -map 0:a:4 -c copy ${tmpPath}/5.m4a`);
       for (let i = 1; i <= 5; i++) {
         let waveformFilepath = this.getVdjStemWaveformFilepath(originalSubpath, i);
-        let wavesurfer = this.stemWavesurfers[i - 1];
-        await wavesurfer.load(`/tmp/${i}.m4a`);
-        let img = await wavesurfer.exportImage('image/webp', 1, 'blob');  // svg?
-        let wfDirPath = this.path.dirname(waveformFilepath);
-        try  {
-          await this.fs.access(wfDirPath, this.fs.F_OK);
-        } catch(err) {
-          await this.fs.mkdir(wfDirPath, { recursive: true });
-        }
-        await this.fs.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
-        console.log('File written successfully to ' + waveformFilepath);
+        // const audioBuffer = this.fs.readFileSync(`${tmpPath}/${i}.m4a`);
+        // ipcRenderer.send('process-audio', `${tmpPath}/${i}.m4a`);
+        // try {
+
+          const audioContext = new AudioContext();
+
+          const response = await fetch(`file://${tmpPath}/${i}.m4a`)
+          const buffer = await response.arrayBuffer();
+          const options = {
+            audio_context: audioContext,
+            array_buffer: buffer,
+            scale: 128
+          };
+          // buffer = await audioCtx.decodeAudioData(await response.arrayBuffer());
+
+          // Use waveform-data to parse the audio buffer
+          const waveform = await new Promise((resolve, reject) => {
+            WaveformData.createFromAudio(options, (err, waveform_arg) => {
+              if (err) {
+                return reject(err);
+              }
+              resolve(waveform_arg);
+            });
+          });
+
+          console.log(`Waveform has ${waveform.channels} channels`);
+          console.log(`Waveform has length ${waveform.length} points`);
+
+          const waveformData =  waveform.toJSON();
+
+
+          const canvas = this.shadowRoot.getElementById(`waveform-canvas-${i}`);
+          const ctx = canvas.getContext('2d');
+          // const waveform = WaveformData.create(waveformData);
+
+          // Clear the canvas
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+          // Draw the waveform
+          const channel = waveform.channel(0); // Get the first channel
+          const scaleY = (amplitude, height) => {
+            const range = 256;
+            const offset = 128;
+
+            return height - ((amplitude + offset) * height) / range;
+          }
+
+          ctx.beginPath();
+
+          // Loop forwards, drawing the upper half of the waveform
+          for (let x = 0; x < waveform.length; x++) {
+            const val = channel.max_sample(x);
+
+            ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
+          }
+
+          // Loop backwards, drawing the lower half of the waveform
+          for (let x = waveform.length - 1; x >= 0; x--) {
+            const val = channel.min_sample(x);
+
+            ctx.lineTo(x + 0.5, scaleY(val, canvas.height) + 0.5);
+          }
+
+          ctx.strokeStyle = '#007bff';
+          // ctx.lineWidth = 1;
+          ctx.closePath();
+          ctx.stroke();
+          ctx.fill();
+
+          // Send the processed waveform data back to the renderer
+        //   event.sender.send('waveform-data', waveform.toJSON());
+        // } catch (error) {
+        //   console.error('Error processing audio file:', error);
+        //   mainWindow.webContents.send('addalert', {'a': `Failed wavefjorm creation. ${error}`});
+        // }
+        // const waveform = await new Promise((resolve, reject) => {
+        //   WaveformData.createFromAudio(audioBuffer, {
+        //     samplingRate: 100, // Adjust sampling rate for detail vs. file size
+        //   }, (err, waveform) => {
+        //     if (err) {
+        //       return reject(err);
+        //     }
+        //     resolve(waveform);
+        //   });
+        // });
+        // const canvas = document.getElementById(`waveform-canvas-${i}`);
+        // const ctx = canvas.getContext('2d');
+        // ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // const channel = waveform.channel(0); // Get the first channel
+        // const scaleY = (val) => (val * canvas.height / 2) + canvas.height / 2;
+        // ctx.beginPath();
+        // ctx.moveTo(0, scaleY(channel.min_sample(0)));
+
+        // for (let i = 0; i < channel.length; i++) {
+        //     // Draw the top half of the waveform
+        //     ctx.lineTo(i, scaleY(channel.min_sample(i)));
+        //     ctx.lineTo(i, scaleY(channel.max_sample(i)));
+        // }
+
+        // ctx.strokeStyle = '#007bff';
+        // ctx.lineWidth = 1;
+        // ctx.stroke();
+
+        // let wfDirPath = this.path.dirname(waveformFilepath);
+        // try  {
+        //   await this.fs.access(wfDirPath, this.fs.F_OK);
+        // } catch(err) {
+        //   await this.fs.mkdir(wfDirPath, { recursive: true });
+        // }
+        // await this.fs.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
+        // console.log('File written successfully to ' + waveformFilepath);
       }
     } catch(err) {
-      this.addAlert('Wavesurfer failed creating waveform for ' + filepath + ' : ' + err, 8);
+      this.addAlert('WaveformData failed creating waveform for ' + filepath + ' : ' + err, 8);
     }
   }
 
@@ -264,7 +362,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           background: #000;
           border-top: 1px solid #333;
           border-radius: 4px;
-          overflow: hidden;
+          overflow: scroll;
         }
         .outside {
           position: absolute;
@@ -278,15 +376,15 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           background: linear-gradient(90deg, #1a1a2e, #16213e, #1a1a2e);
         }
         .waveform {
-          width: 200px;
-          height: 48px;
-          background: linear-gradient(45deg, #00d4ff, #ff0080, #00ff88);
+          width: 2000px;
+          height: 40px;
+          /* background: linear-gradient(45deg, #00d4ff, #ff0080, #00ff88);
           mask-image: var(--waveform-mask);
           mask-size: cover;
           mask-position: center;
           mask-repeat: no-repeat;
           opacity: 0.8;
-          transition: opacity 0.3s ease;
+          transition: opacity 0.3s ease; */
         }
         .waveform.loaded {
           opacity: 1;
