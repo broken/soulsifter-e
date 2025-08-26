@@ -15,13 +15,12 @@ class VirtualDjClient extends Object {
     );
   }
 
-  query(command, callback=undefined) {
-    ipcRenderer.send(
+  async query(command) {
+    return ipcRenderer.invoke(
         'vdj-query',
         this.settings.getString('virtualdj.ip'),
         this.settings.getInt('virtualdj.port'),
-        command,
-        callback
+        command
     );
   }
 

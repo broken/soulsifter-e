@@ -529,16 +529,9 @@ ipcMain.on('vdj-send', async (event, ip, port, cmd, callback=undefined) => {
   }
 });
 
-ipcMain.on('vdj-query', async (event, ip, port, cmd, callback=undefined) => {
-  try {
-    const response = await fetch(`http://${ip}:${port}/query`, { method: 'POST', headers: {'Content-Type': 'text/plain'}, body: cmd});
-    const result = await response.text();
-    if (callback)
-      mainWindow.webContents.send(callback, result);
-  } catch (err) {
-    mainWindow.webContents.send('addalert', {'a': `Failed query "${cmd}" to VirtualDJ ${ip}:${port}. ${err}.`});
-    console.error(err);
-  }
+ipcMain.handle('vdj-query', async (event, ip, port, cmd) => {
+  const response = await fetch(`http://${ip}:${port}/query`, { method: 'POST', headers: {'Content-Type': 'text/plain'}, body: cmd});
+  return await response.text();
 });
 
 const updateAlert = (event, id, progress = undefined, a = undefined, timeoutInSeconds = 0) => {

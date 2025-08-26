@@ -86,56 +86,6 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     else
       this.style.setProperty('--vdj-waveform-display', 'none');
 
-    ipcRenderer.on(`vdj-filepath-${this.deck}`, (e, data) => {
-      console.log('vdj-filepath: ' + data);
-      if (data) {
-        if (data !== this.currentFilepath) {
-          this.currentFilepath = data;
-          this.generateWaveformPattern();
-          window.vdj.query(`deck ${this.deck} get_time total `, `vdj-duration-${this.deck}`);
-          this.trackLoaded = true;
-          // Get BPM data when track loads
-          this.updateBpmData();
-        }
-      } else {
-        this.trackLoaded = false;
-      }
-    });
-
-    ipcRenderer.on(`vdj-time-${this.deck}`, (e, data) => {
-      console.log('time: ' + data);
-      const newTime = parseInt(data) || 0;
-      this.updateTimeSync(newTime);
-    });
-
-    ipcRenderer.on(`vdj-duration-${this.deck}`, (e, data) => {
-      console.log('duration: ' + data);
-      this.duration = parseInt(data) || 0;
-    });
-
-    ipcRenderer.on(`vdj-isplaying-${this.deck}`, (e, data) => {
-      console.log('playing: ' + data);
-      const wasPlaying = this.isPlaying;
-      this.isPlaying = data === 'yes';
-
-      if (this.isPlaying !== wasPlaying) {
-        this.handlePlayStateChange();
-      }
-    });
-
-    // BPM data listeners
-    ipcRenderer.on(`vdj-bpm-${this.deck}`, (e, data) => {
-      console.log('bpm: ' + data);
-      this.bpm = parseFloat(data) || 0;
-      this.updatePlaybackRate();
-    });
-
-    ipcRenderer.on(`vdj-absolute-bpm-${this.deck}`, (e, data) => {
-      console.log('absolute-bpm: ' + data);
-      this.absoluteBpm = parseFloat(data) || 0;
-      this.updatePlaybackRate();
-    });
-
     this.startUpdating();
 
     // Listen for the processed waveform data from the main process
@@ -227,10 +177,16 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     }
   }
 
-  updateBpmData() {
+  async updateBpmData() {
     try {
-      window.vdj.query(`deck ${this.deck} get_bpm`, `vdj-bpm-${this.deck}`);
-      window.vdj.query(`deck ${this.deck} get_bpm absolute`, `vdj-absolute-bpm-${this.deck}`);
+      const bpmData = await window.vdj.query(`deck ${this.deck} get_bpm`);
+      console.log('bpm: ' + bpmData);
+      this.bpm = parseFloat(bpmData) || 0;
+      this.updatePlaybackRate();
+      const data = await window.vdj.query(`deck ${this.deck} get_bpm absolute`);
+      console.log('absolute-bpm: ' + data);
+      this.absoluteBpm = parseFloat(data) || 0;
+      this.updatePlaybackRate();
     } catch (error) {
       console.warn('Failed to get BPM data:', error);
     }
@@ -251,9 +207,24 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     }
   }
 
-  updateWaveform() {
+  async updateWaveform() {
     try {
-      window.vdj.query(`deck ${this.deck} get_filepath`, `vdj-filepath-${this.deck}`);
+      const data = await window.vdj.query(`deck ${this.deck} get_filepath`);
+      console.log('data: ' + data);
+      if (data) {
+        if (data !== this.currentFilepath) {
+          this.currentFilepath = data;
+          this.generateWaveformPattern();
+          const durationData = await window.vdj.query(`deck ${this.deck} get_time total `);
+          console.log('duration: ' + durationData);
+          this.duration = parseInt(durationData) || 0;
+          this.trackLoaded = true;
+          // Get BPM data when track loads
+          this.updateBpmData();
+        }
+    } else {
+      this.trackLoaded = false;
+    }
     } catch (error) {
       console.warn('Failed to get get filepath:', error);
     }
@@ -261,8 +232,18 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
   async updatePlaybackInfo() {
     try {
-      window.vdj.query(`deck ${this.deck} get_time elapsed`, `vdj-time-${this.deck}`);
-      window.vdj.query(`deck ${this.deck} play`, `vdj-isplaying-${this.deck}`);
+      const timeData = await window.vdj.query(`deck ${this.deck} get_time elapsed`);
+      console.log('time: ' + timeData);
+      const newTime = parseInt(timeData) || 0;
+      this.updateTimeSync(newTime);
+      const data = await window.vdj.query(`deck ${this.deck} play`);
+      console.log('playing: ' + data);
+      const wasPlaying = this.isPlaying;
+      this.isPlaying = data === 'yes';
+
+      if (this.isPlaying !== wasPlaying) {
+        this.handlePlayStateChange();
+      }
     } catch (error) {
       console.warn('Failed to update playback info:', error);
     }
