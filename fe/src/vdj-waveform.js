@@ -15,8 +15,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       <div class="waveform-container" @click="${this.handleClick}">
         <div class="deck-label">Deck ${this.deck}</div>
         ${this.trackLoaded ? html`
-          <div class="waveform-wrapper ${this.isPlaying ? 'playing' : 'paused'}"
-               style="--waveform-offset: ${waveformOffset}px; --transition-duration: ${this.transitionDuration}s; --animation-duration: ${this.animationDuration}s;">
+          <div id="waveform-wrapper" class="waveform-wrapper ${this.isPlaying ? 'playing' : 'paused'}">
             <div id="waveform-canvas-1" class="waveform loaded"></div>
             <div id="waveform-canvas-2" class="waveform loaded"></div>
             <div id="waveform-canvas-3" class="waveform loaded"></div>
@@ -86,8 +85,6 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     else
       this.style.setProperty('--vdj-waveform-display', 'none');
 
-    this.startUpdating();
-
     // Listen for the processed waveform data from the main process
     ipcRenderer.on('waveform-data', (event, waveformData) => {
         const canvas = this.shadowRoot.getElementById('waveform-canvas-1');
@@ -123,6 +120,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   }
 
   firstUpdated() {
+    this.startUpdating();
   }
 
   updateTimeSync(newTime) {
@@ -133,7 +131,22 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
     // Force a quick transition to sync position
     this.transitionDuration = 0.1;
-    this.requestUpdate();
+    // this.requestUpdate();
+  }
+
+  animateWaveform() {
+    const songDurationInMs = this.duration;
+    const waveformTrack = this.shadowRoot.getElementById('waveform-wrapper');
+
+    // Set the CSS animation duration to match the song duration
+    // Use a string with 's' for seconds
+    waveformTrack.style.animationDuration = `${songDurationInMs}ms`;
+
+    // audio.addEventListener('seeked', () => {
+    //   // When the user seeks, update the animation's playback time
+    //   // The `currentTime` property of the animation is what you control
+    //   waveformTrack.style.animationDelay = `-${audio.currentTime}s`;
+    // });
   }
 
   updatePlaybackRate() {
@@ -142,7 +155,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       // Update animation duration based on playback rate
       this.animationDuration = 2 / this.playbackRate; // Adjust base duration by playback rate
       console.log(`Playback rate: ${this.playbackRate} (BPM: ${this.bpm}/${this.absoluteBpm})`);
-      this.requestUpdate();
+      // this.requestUpdate();
     }
   }
 
@@ -197,7 +210,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.updateInterval = setInterval(() => {
       this.updatePlaybackInfo();
       this.updateBpmData(); // Update BPM data periodically
-    }, 60000);  // Sync frequency
+      // this.animateWaveform();
+    }, 3000);  // Sync frequency
   }
 
   stopUpdating() {
@@ -221,6 +235,25 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           this.trackLoaded = true;
           // Get BPM data when track loads
           this.updateBpmData();
+
+          setTimeout(() => {
+            const waveformWidth = 2000; // The total width of your waveform element in pixels
+
+            // 1. Create the animation object using the Web Animations API
+            const w = this.shadowRoot.getElementById('waveform-wrapper');
+            this.animation = w.animate(
+              [
+                { transform: 'translateX(0)' }, // Keyframe 1: Start at 0
+                { transform: `translateX(-${waveformWidth}px)` } // Keyframe 2: End at a negative width
+              ],
+              {
+                duration: this.duration, // Duration in milliseconds
+                fill: 'forwards', // Keeps the final state after the animation ends
+                easing: 'linear', // Ensures a constant speed
+              }
+            );
+            this.animation.pause();
+          });
         }
     } else {
       this.trackLoaded = false;
@@ -235,11 +268,20 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       const timeData = await window.vdj.query(`deck ${this.deck} get_time elapsed`);
       console.log('time: ' + timeData);
       const newTime = parseInt(timeData) || 0;
+      // this.shadowRoot.getElementById('waveform-wrapper').style.animationDelay = `-${this.currentTime}ms`
+      this.animation.currentTime = newTime;
       this.updateTimeSync(newTime);
       const data = await window.vdj.query(`deck ${this.deck} play`);
       console.log('playing: ' + data);
       const wasPlaying = this.isPlaying;
       this.isPlaying = data === 'yes';
+      if (this.isPlaying) {
+        // this.shadowRoot.getElementById('waveform-wrapper').style.animationPlayState = 'running';
+        this.animation.play();
+      } else {
+        // this.shadowRoot.getElementById('waveform-wrapper').style.animationPlayState = 'paused';
+        this.animation.pause();
+      }
 
       if (this.isPlaying !== wasPlaying) {
         this.handlePlayStateChange();
@@ -327,7 +369,9 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         const options = {
           audio_context: audioContext,
           array_buffer: buffer,
-          scale: 128
+          scale: 128,
+          amplitude_scale: 2.0,
+          split_channels: false
         };
 
         // Use waveform-data to parse the audio buffer
@@ -421,7 +465,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
     // Set the desired width and height for the SVG container
     const svgWidth = 2000;
-    const svgHeight = 80; // Increased height for a larger waveform
+    const svgHeight = 40;
     const verticalOffset = svgHeight / 2; // Center the waveform vertically
 
     x.domain([0, waveform.length]).rangeRound([0, svgWidth]);
@@ -476,6 +520,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         .waveform-container {
           width: 100%;
           height: 100%;
+          overflow: hidden;
           position: relative;
           background: linear-gradient(90deg, #1a1a2e, #16213e, #1a1a2e);
         }
@@ -484,8 +529,18 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           width: 100%;
           height: 100%;
           position: relative;
-          transform: translateX(var(--waveform-offset, 0%));
+          animation: scroll-waveform linear; /* Name the animation and set a linear timing function */
+          animation-play-state: paused; Start the animation paused
         }
+
+        /* @keyframes scroll-waveform {
+          from {
+            transform: translateX(0);
+          }
+          to {
+            transform: translateX(-1680px); /* This should match the negative width of the waveform-track */
+          }
+        } */
         .waveform-wrapper.paused {
           transition: transform var(--transition-duration, 0.1)s ease-out;
         }
