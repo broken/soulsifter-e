@@ -156,7 +156,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
       css`${unsafeCSS(greyscalewaveforms)}`,
       css`
         :host {
-          --vdj-waveform-height: 200px;
+          --vdj-waveform-height: calc(22px* 5 + 5px);;
           display: flex;
           flex-direction: column;
           position: absolute;
