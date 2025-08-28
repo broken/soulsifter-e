@@ -424,7 +424,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     // Remove leading slash if present
     songFilepath = songFilepath.replace(/^\//, '');
     const cacheDir = this.settings.getString('dir.vdjStemWaveforms') || (this.settings.getString('dir.cache') + '/waveforms');
-    return this.path.join(cacheDir, songFilepath.replace(/\.[^.]+$/, `_stem${stemIndex}_${this.audioScale}waveform.data`));
+    return this.path.join(cacheDir, songFilepath.replace(/\.[^.]+$/, `_stem${stemIndex}_waveform${this.audioScale}.data`));
   }
 
   getVdjStemWaveformFilepath(songFilepath, stemIndex) {

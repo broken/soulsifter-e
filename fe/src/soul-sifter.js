@@ -61,7 +61,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
         </main>
       </div>
       <vdj-waveform deck="1"></vdj-waveform>
-      <!-- <vdj-waveform deck="2"></vdj-waveform> -->
+      <vdj-waveform deck="2"></vdj-waveform>
       <genre-edit></genre-edit>
       <mix-edit></mix-edit>
       <playlist-edit></playlist-edit>
@@ -182,6 +182,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
           flex-direction: row;
           height: calc(100% - var(--vdj-waveform-height));
           width: 100%;
+          overflow: hidden;
         }
         main, aside {
           display: flex;
