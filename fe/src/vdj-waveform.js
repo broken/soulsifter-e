@@ -83,20 +83,21 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
   connectedCallback() {
     super.connectedCallback();
-    if (this.settings.getBool('virtualdj.active'))
-      this.style.setProperty('--vdj-waveform-display', 'flex');
-    else
-      this.style.setProperty('--vdj-waveform-display', 'none');
+    window.addEventListener('enable-stem-waveforms', e => {
+      if (this.settings.getBool('virtualdj.active') && e.detail) {
+        this.startUpdating();
+      } else {
+        this.stopUpdating();
+        this.stopDisplayTimeUpdate();
+      }
+    });
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.stopUpdating();
     this.stopDisplayTimeUpdate();
-  }
-
-  firstUpdated() {
-    this.startUpdating();
+    window.removeEventListener('enable-stem-waveforms');
   }
 
   updateTimeSync(newTime) {
@@ -435,7 +436,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     return [
       css`
         :host {
-          display: var(--vdj-waveform-display);
+          display: flex;
           flex-direction: column;
           width: 100%;
           height: 320px;

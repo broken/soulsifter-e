@@ -345,6 +345,10 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
   toggleUseStems(e) {
     this.searchOptions.useStems = !this.searchOptions.useStems;
     this.changeSearchOptions(this.searchOptions);
+    if (this.settings.getBool('virtualdj.active')) {
+      const event = new CustomEvent('enable-stem-waveforms', { detail: this.searchOptions.useStems });
+      window.dispatchEvent(event);
+    }
     this.requestUpdate();
   }
 

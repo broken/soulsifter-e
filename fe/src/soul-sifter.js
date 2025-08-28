@@ -114,11 +114,19 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
     this.alertsChannel.registerChannelEndpoint(a => {
       this.addAlert(a);
     });
+    window.addEventListener('enable-stem-waveforms', e => {
+      if (this.settings.getBool('virtualdj.active') && e.detail) {
+        this.style.setProperty('--vdj-waveform-height', 'calc(22px * 5 + 5px)');
+      } else {
+        this.style.setProperty('--vdj-waveform-height', '0');
+      }
+    });
   }
 
   disconnectedCallback() {
     ipcRenderer.removeAllListeners('addalert');
     ipcRenderer.removeAllListeners('updatealert');
+    window.removeEventListener('enable-stem-waveforms');
     super.disconnectedCallback();
   }
 
@@ -156,7 +164,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
       css`${unsafeCSS(greyscalewaveforms)}`,
       css`
         :host {
-          --vdj-waveform-height: calc(22px* 5 + 5px);;
+          --vdj-waveform-height: 0;
           display: flex;
           flex-direction: column;
           position: absolute;
@@ -192,6 +200,8 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
         }
         vdj-waveform {
           height: var(--vdj-waveform-height);
+          flex-grow: 0;
+          flex-shrink: 0;
         }
         #sections {
           flex: 1 1 auto;
