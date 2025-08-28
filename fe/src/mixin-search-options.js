@@ -43,7 +43,7 @@ let searchOptionsMixin = (superClass) => class extends superClass {
   }
 
   searchOptionsChanged(x) {
-    this.searchOptions = x;
+    Object.assign(this.searchOptions, x);
   }
 }
 
