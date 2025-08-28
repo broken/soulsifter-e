@@ -456,8 +456,20 @@ class SongList extends AlertsMixin(
   }
 
   sendToVirtualDj(deck) {
+    // if no selection, then there is nothing to send
     if (!this.midiSelectedListItem) return;
-    window.vdj.send(`deck ${deck} load "${this.settings.getString('dir.music')}/${this.midiSelectedListItem.song.filepath}"`);
+
+    // determine path of file to send
+    let filepath = '';
+    if (this.mvRestrict) {
+      filepath = this.settings.getString('dir.mv') + this.midiSelectedListItem.song.musicVideo.filePath;
+    } else {
+      filepath = this.settings.getString('dir.music') + this.midiSelectedListItem.song.filepath;
+      // no need to worry about stems because it is automatic with virtual dj
+    }
+
+    // send command to virtual dj
+    window.vdj.send(`deck ${deck} load "${filepath}"`);
     this.midiSelectedListItem.selectSong({});
   }
 

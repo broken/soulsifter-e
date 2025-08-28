@@ -123,7 +123,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     } else {
       filepath = this.settings.getString('dir.music') + this.song.filepath;
       iconpath = this.settings.getString('dir.music') + this.song.album.coverFilepath;
-      if (this.useStems) {
+      if (this.useStems && !this.settings.getBool('virtualdj.active')) {
         let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
         ipcRenderer.invoke('existsfilepath', stemFilepath)
         .then((exists) => {
