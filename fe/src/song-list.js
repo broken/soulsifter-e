@@ -15,10 +15,10 @@ import "@material/web/textfield/filled-text-field.js";
 import "@polymer/paper-dialog/paper-dialog.js";
 
 import "./icon-button.js";
+import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { GenresMixin } from "./mixin-genres.js";
-import { MidiMixin } from "./mixin-midi.js";
 import { PlaylistsMixin } from "./mixin-playlists.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
@@ -34,7 +34,6 @@ import { } from "./song-list-item.js";
 class SongList extends AlertsMixin(
                        BpmMixin(
                        GenresMixin(
-                       MidiMixin(
                        PlaylistsMixin(
                        QueryMixin(
                        SearchMixin(
@@ -46,7 +45,7 @@ class SongList extends AlertsMixin(
                        WaveGenQueueMixin(
                        WaveformUtilMixin(
                        LitElement
-)))))))))))))) {
+))))))))))))) {
   render() {
     let songListItems = html``;
     songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
@@ -124,12 +123,14 @@ class SongList extends AlertsMixin(
     super.connectedCallback();
     window.addEventListener('keydown', this.keydownHandler.bind(this));
     window.addEventListener('song-list-pos', this.getNextOrPrevSong.bind(this));
+    this.registerMidiCallbacks();
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     window.removeEventListener('keydown', this.keydownHandler.bind(this));
     window.removeEventListener('song-list-pos', this.getNextOrPrevSong.bind(this));
+    // todo: unregisterMidiCallbacks
   }
 
   firstUpdated() {
@@ -473,9 +474,8 @@ class SongList extends AlertsMixin(
     this.midiSelectedListItem.selectSong({});
   }
 
-  getMidiInputs() {
-    return [
-      [
+  registerMidiCallbacks() {
+    midiManager.registerInput(
         this.settings.getString('midi.loadLeft'),  // 70
         e => {
           if (this.settings.getBool('virtualdj.active')) {
@@ -484,8 +484,8 @@ class SongList extends AlertsMixin(
             this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'));
           }
         }
-      ],
-      [
+    );
+    midiManager.registerInput(
         this.settings.getString('midi.loadRight'),  // 71
         e => {
           if (this.settings.getBool('virtualdj.active')) {
@@ -494,8 +494,8 @@ class SongList extends AlertsMixin(
             this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'))
           }
         }
-      ],
-      [
+    );
+    midiManager.registerInput(
         this.settings.getString('midi.browse'),  // 64
         e => {
           console.log(e);
@@ -548,8 +548,7 @@ class SongList extends AlertsMixin(
           });
           this.dispatchEvent(event);
         }
-      ]
-    ];
+    );
   }
 
   static get styles() {

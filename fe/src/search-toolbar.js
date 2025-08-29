@@ -6,9 +6,9 @@ import "@thomasloven/round-slider";
 
 import { Utilities } from "webmidi";
 
+import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
-import { MidiMixin } from "./mixin-midi.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
@@ -21,7 +21,7 @@ import "./search-info.js";
 import "./search-options.js";
 
 
-class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement))))))) {
+class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement)))))) {
   render() {
     let bpmRestrictBtn = this.searchOptions.bpmRestrict ? html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note" class="active"></icon-button>`
                                                         : html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note"></icon-button>`;
@@ -86,6 +86,11 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
     this.lastTap = Date.now();
     this.volume = 100;
     this.mouseCoordAlertId = undefined;
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    this.registerMidiCallbacks();
   }
 
   requestSearch(e) {
@@ -398,17 +403,16 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
     this.dispatchEvent(event);
   }
 
-  getMidiInputs() {
-    return [
-      [
+  registerMidiCallbacks() {
+    midiManager.registerInput(
         this.settings.getString('midi.pauseAudio'),
         e => this.dispatchEvent(new CustomEvent('audio-pause', {bubbles: true, composed: true}))
-      ],
-      [
+    );
+    midiManager.registerInput(
         this.settings.getString('midi.volume.msb'),  // 13
         e => this.note = e.rawValue
-      ],
-      [
+    );
+    midiManager.registerInput(
         this.settings.getString('midi.volume.lsb'),  // 33
         e => {
           let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
@@ -429,8 +433,11 @@ class SearchToolbar extends AlertsMixin(BpmMixin(MidiMixin(QueryMixin(SearchMixi
           );
           this.dispatchEvent(event);
         }
-      ]
-    ];
+    );
+  }
+
+  connectToMidiController(e) {
+    midiManager.connect(this.settings.getString('midi.controllerName'));
   }
 
   static get styles() {
