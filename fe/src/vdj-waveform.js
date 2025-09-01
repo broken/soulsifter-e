@@ -46,7 +46,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       displayTime: { type: Number },
       duration: { type: Number },
       // isPlaying: { type: Boolean },
-      // trackLoaded: { type: Boolean },
+      trackLoaded: { type: Boolean },
       // bpm: { type: Number },
       // absoluteBpm: { type: Number },
       // transitionDuration: { type: Number },
@@ -157,8 +157,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   }
 
   startUpdating() {
-    this.updateWaveform();
     this.updateInterval = setInterval(() => {
+      this.updateWaveform();
       this.updatePlaybackInfo();
       this.updateBpmData(); // Update BPM data periodically
     }, 5000);  // Sync frequency
@@ -174,15 +174,17 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   async updateWaveform() {
     try {
       const data = await window.vdj.query(`deck ${this.deck} get_filepath`);
-      console.log('data: ' + data);
-      if (data) {
+      if (!data) {
+        this.trackLoaded = false;
+      } else {
         if (data !== this.currentFilepath) {
+          console.log('new song loaded on deck 1');
+          this.trackLoaded = true;
           this.currentFilepath = data;
           this.generateWaveformPattern();
-          const durationData = await window.vdj.query(`deck ${this.deck} get_time total `);
+          const durationData = await window.vdj.query(`deck ${this.deck} get_time total`);
           console.log('duration: ' + durationData);
           this.duration = parseInt(durationData) || 0;
-          this.trackLoaded = true;
           // Get BPM data when track loads
           this.updateBpmData();
 
@@ -204,9 +206,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
             this.animation.pause();
           }, 8000);
         }
-    } else {
-      this.trackLoaded = false;
-    }
+      }
     } catch (error) {
       console.warn('Failed to get get filepath:', error);
     }
@@ -333,6 +333,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
     } catch(err) {
       this.addAlert('WaveformData failed creating waveform for ' + filepath + ' : ' + err, 8);
+      this.trackLoaded = false;
+      throw err;
     }
   }
 
