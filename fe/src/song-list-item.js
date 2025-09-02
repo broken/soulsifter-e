@@ -214,7 +214,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
 
   sendSongToDeckA(e) {
     if (this.settings.getBool('virtualdj.active')) {
-      window.vdj.send(`deck left load "${this.settings.getString('dir.music')}/${this.song.filepath}"`);
+      window.vdj.send(`deck left load "${this.settings.getString('dir.music')}${this.song.filepath}"`);
     } else {
       this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'));
       e.stopPropagation();
@@ -224,7 +224,7 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
 
   sendSongToDeckB(e) {
     if (this.settings.getBool('virtualdj.active')) {
-      window.vdj.send(`deck right load "${this.settings.getString('dir.music')}/${this.song.filepath}"`);
+      window.vdj.send(`deck right load "${this.settings.getString('dir.music')}${this.song.filepath}"`);
     } else {
       this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'));
       e.stopPropagation();

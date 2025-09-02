@@ -6,6 +6,7 @@ class VirtualDjClient extends Object {
   }
 
   send(command, callback=undefined) {
+    console.log(`Sending VDJ command: ${command}`)
     ipcRenderer.send(
         'vdj-send',
         this.settings.getString('virtualdj.ip'),
@@ -16,6 +17,7 @@ class VirtualDjClient extends Object {
   }
 
   async query(command) {
+    console.log(`Sending VDJ query: ${command}`)
     return ipcRenderer.invoke(
         'vdj-query',
         this.settings.getString('virtualdj.ip'),
