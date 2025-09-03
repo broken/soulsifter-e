@@ -5,6 +5,7 @@ import WaveformData from 'waveform-data';
 import * as d3 from 'd3';
 
 import "./icon-button.js";
+import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { SettingsMixin } from "./mixin-settings.js";
 
@@ -70,7 +71,12 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.updateInterval = null;
     this.displayTimeInterval = null;
     this.stemNames = ['vocal', 'hihat', 'bass', 'instruments', 'kick'];
+    this.loadDelay = 200;
+    this.currentFilepath = undefined;
+
+    // Settings for generated waveforms
     this.audioScale = 1024;
+    this.audioAmplitudeScale = 2.1;
 
     // BPM and smooth animation properties
     this.bpm = 0;
@@ -86,6 +92,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     window.addEventListener('enable-stem-waveforms', e => {
       if (this.settings.getBool('virtualdj.active') && e.detail) {
         this.startUpdating();
+        this.registerMidiCallbacks();
       } else {
         this.stopUpdating();
         this.stopDisplayTimeUpdate();
@@ -100,12 +107,6 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     window.removeEventListener('enable-stem-waveforms');
   }
 
-  updateTimeSync(newTime) {
-    this.displayTime = newTime;
-    this.lastSyncTime = newTime;
-    this.lastSyncTimestamp = Date.now();
-  }
-
   updatePlaybackRate() {
     if (this.absoluteBpm > 0 && this.bpm > 0) {
       this.playbackRate = this.bpm / this.absoluteBpm;
@@ -116,14 +117,6 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     }
   }
 
-  handlePlayStateChange() {
-    if (this.isPlaying) {
-      this.startDisplayTimeUpdate();
-    } else {
-      this.stopDisplayTimeUpdate();
-    }
-  }
-
   startDisplayTimeUpdate() {
     this.stopDisplayTimeUpdate();
     this.displayTimeInterval = setInterval(() => {
@@ -131,7 +124,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       const elapsedMs = now - this.lastSyncTimestamp;
       const expectedProgress = elapsedMs * this.playbackRate;
       this.displayTime = Math.min(this.lastSyncTime + expectedProgress, this.duration);
-    }, 250); // 50ms for smooth. 250ms for more or less.
+    }, 250);  // 50ms for smooth. 250ms for more or less.
   }
 
   stopDisplayTimeUpdate() {
@@ -156,12 +149,33 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     }
   }
 
+  registerMidiCallbacks() {
+    const load = () => {
+      this.updateWaveform();
+      this.updatePlaybackInfo();
+      this.updateBpmData();
+    };
+    // TODO: update from drag&drop and button clicks
+    midiManager.registerInput(
+        this.settings.getString('midi.loadLeft'),
+        e => setTimeout(this.updateWaveform.bind(this), this.loadDelay)
+    );
+    midiManager.registerInput(
+        this.settings.getString('midi.loadRight'),
+        e => setTimeout(this.updateWaveform.bind(this), this.loadDelay)
+    );
+    // midiManager.registerInput(
+    //     this.settings.getString('virtualdj.midi.playPause'),
+    //     e => setTimeout(load, this.loadDelay)
+    // );
+  }
+
   startUpdating() {
     this.updateInterval = setInterval(() => {
       this.updateWaveform();
       this.updatePlaybackInfo();
       this.updateBpmData(); // Update BPM data periodically
-    }, 5000);  // Sync frequency
+    }, 15000);  // Sync frequency
   }
 
   stopUpdating() {
@@ -173,79 +187,72 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
   async updateWaveform() {
     try {
+      // get filepath for deck
       const data = await window.vdj.query(`deck ${this.deck} get_filepath`);
-      if (!data) {
+      if (!data || data.startsWith('error')) {
         this.trackLoaded = false;
-      } else {
-        if (data !== this.currentFilepath) {
-          console.log('new song loaded on deck 1');
-          this.trackLoaded = true;
-          this.currentFilepath = data;
-          this.generateWaveformPattern();
-          const durationData = await window.vdj.query(`deck ${this.deck} get_time total`);
-          console.log('duration: ' + durationData);
-          this.duration = parseInt(durationData) || 0;
-          // Get BPM data when track loads
-          this.updateBpmData();
-
-          setTimeout(() => {
-
-            // 1. Create the animation object using the Web Animations API
-            const w = this.shadowRoot.getElementById('waveform-wrapper');
-            this.animation = w.animate(
-              [
-                { transform: 'translateX(0)' }, // Keyframe 1: Start at 0
-                { transform: `translateX(-${this.waveformWidth}px)` } // Keyframe 2: End at a negative width
-              ],
-              {
-                duration: this.duration, // Duration in milliseconds
-                fill: 'forwards', // Keeps the final state after the animation ends
-                easing: 'linear', // Ensures a constant speed
-              }
-            );
-            this.animation.pause();
-          }, 8000);
-        }
+        return;
       }
+
+      // only update waveform if the song has changed
+      if (data === this.currentFilepath) return;
+      console.log(`deck ${this.deck} loaded new song ${data}`);
+      this.trackLoaded = true;
+      this.currentFilepath = data;
+
+      // get duration of the song
+      const durationData = await window.vdj.query(`deck ${this.deck} get_time total`);
+      this.duration = parseInt(durationData) || 0;
+
+      // generate the waveform
+      await this.processStems(this.currentFilepath);
+
+      // create the animation object using the Web Animations API
+      const w = this.shadowRoot.getElementById('waveform-wrapper');
+      this.animation = w.animate(
+        [
+          { transform: 'translateX(0)' },    // Keyframe 1: Start at 0
+          { transform: `translateX(-${this.waveformWidth}px)` }  // Keyframe 2: End at a negative width set from renderWaveform
+        ],
+        {
+          duration: this.duration,  // Duration in milliseconds
+          fill: 'forwards',  // Keeps the final state after the animation ends
+          easing: 'linear',  // Ensures a constant speed
+        }
+      );
+      this.animation.pause();
     } catch (error) {
-      console.warn('Failed to get get filepath:', error);
+      console.warn('Failed to get get filepath and update the waveform. ', error);
     }
   }
 
   async updatePlaybackInfo() {
+    if (!this.trackLoaded) return;
     try {
+      // get time of the track and update the animation to the time
       const timeData = await window.vdj.query(`deck ${this.deck} get_time elapsed`);
-      console.log('time: ' + timeData);
       const newTime = parseInt(timeData) || 0;
+      this.displayTime = newTime;
+      this.lastSyncTime = newTime;
+      this.lastSyncTimestamp = Date.now();
       this.animation.currentTime = newTime;
-      this.updateTimeSync(newTime);
+
+      // check if track is playing
       const data = await window.vdj.query(`deck ${this.deck} play`);
-      console.log('playing: ' + data);
       const wasPlaying = this.isPlaying;
       this.isPlaying = data === 'yes';
-
       if (this.isPlaying !== wasPlaying) {
-        this.handlePlayStateChange();
         if (this.isPlaying) {
-          // this.shadowRoot.getElementById('waveform-wrapper').style.animationPlayState = 'running';
           this.animation.play();
+          this.startDisplayTimeUpdate();
         } else {
-          // this.shadowRoot.getElementById('waveform-wrapper').style.animationPlayState = 'paused';
           this.animation.pause();
+          this.stopDisplayTimeUpdate();
         }
       }
     } catch (error) {
       console.warn('Failed to update playback info:', error);
     }
-  }
-
-  async generateWaveformPattern() {
-    const waveDir = this.settings.getString('dir.vdjStemWaveforms');
-    if (!waveDir) {
-      return '';
-    }
-
-    await this.processStems(this.currentFilepath);
   }
 
   formatTime(ms) {
@@ -282,20 +289,29 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     try {
       const originalSubpath = filepath.replace(this.settings.getString('dir.music'), '');
 
-      // Check if all waveform cache files exist
-      const cacheFilesExist = await this.checkWaveformCache(originalSubpath);
-      if (cacheFilesExist) {
-        console.log('Loading cached waveforms for', filepath);
+      // Load waveform from the cache if it exists
+      let exists = true;
+      try {
+        for (let i = 1; i <= 5; i++) {
+          const cacheFile = this.getWaveformCacheFilepath(originalSubpath, i);
+          exists &= await ipcRenderer.invoke('existsfilepath', cacheFile);
+          if (!exists) break;
+        }
+      } catch (error) {
+        console.warn('Error checking waveform cache: ', error);
+        exists = false;
+      }
+      if (exists) {
         await this.loadCachedWaveforms(originalSubpath);
         return;
       }
 
-      console.log('Processing new waveforms for', filepath);
-      let fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(filepath)) + this.path.basename(filepath) + '.vdjstems';
-
+      // Unpack stem file
+      const fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(filepath)) + this.path.basename(filepath) + '.vdjstems';
       const tmpPath = await this.fs.mkdtemp(this.path.join(this.os.tmpdir(), 'ss-stems-'));
       await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/1.m4a -map 0:a:1 -c copy ${tmpPath}/2.m4a -map 0:a:2 -c copy ${tmpPath}/3.m4a -map 0:a:3 -c copy ${tmpPath}/4.m4a -map 0:a:4 -c copy ${tmpPath}/5.m4a`);
 
+      // Write out each stem separately
       for (let i = 1; i <= 5; i++) {
         const audioContext = new AudioContext();
         const response = await fetch(`file://${tmpPath}/${i}.m4a`)
@@ -304,7 +320,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           audio_context: audioContext,
           array_buffer: buffer,
           scale: this.audioScale,
-          amplitude_scale: 2.5,
+          amplitude_scale: this.audioAmplitudeScale,
           split_channels: false
         };
 
@@ -317,9 +333,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
             resolve(waveform_arg);
           });
         });
-
-        console.log(`Waveform has ${waveform.channels} channels`);
-        console.log(`Waveform has length ${waveform.length} points`);
+        console.log(`Waveform has ${waveform.length} points (length)`);
 
         // Save waveform data to cache
         await this.saveWaveformCache(originalSubpath, i, waveform.toArrayBuffer());
@@ -333,24 +347,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
     } catch(err) {
       this.addAlert('WaveformData failed creating waveform for ' + filepath + ' : ' + err, 8);
-      this.trackLoaded = false;
       throw err;
-    }
-  }
-
-  async checkWaveformCache(originalSubpath) {
-    try {
-      for (let i = 1; i <= 5; i++) {
-        const cacheFile = this.getWaveformCacheFilepath(originalSubpath, i);
-        const exists = await ipcRenderer.invoke('existsfilepath', cacheFile);
-        if (!exists) {
-          return false;
-        }
-      }
-      return true;
-    } catch (error) {
-      console.warn('Error checking waveform cache:', error);
-      return false;
     }
   }
 
@@ -363,26 +360,20 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         this.renderWaveform(waveform, i);
       }
     } catch (error) {
-      console.warn('Error loading cached waveforms:', error);
-      // If cache loading fails, fall back to regeneration
+      console.warn('Error loading cached waveforms: ', error);
+      // TODO: If cache loading fails, fall back to regeneration
       throw error;
     }
   }
 
   async saveWaveformCache(originalSubpath, stemIndex, waveformData) {
     try {
-      const cacheFile = this.getWaveformCacheFilepath(originalSubpath, stemIndex);
-      const cacheDir = this.path.dirname(cacheFile);
-
-      // Ensure cache directory exists
-      // TODO await ipcRenderer.invoke('ensuredirectory', cacheDir);
-
       // Save waveform data as arraybuffer
+      const cacheFile = this.getWaveformCacheFilepath(originalSubpath, stemIndex);
       await this.fs.writeFile(cacheFile, Buffer.from(waveformData));
       console.log(`Saved waveform cache: ${cacheFile}`);
     } catch (error) {
-      console.warn('Error saving waveform cache:', error);
-      // Non-fatal error, continue without caching
+      console.warn('Error saving waveform cache: ', error);
     }
   }
 
@@ -423,15 +414,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   }
 
   getWaveformCacheFilepath(songFilepath, stemIndex) {
-    // Remove leading slash if present
-    songFilepath = songFilepath.replace(/^\//, '');
-    const cacheDir = this.settings.getString('dir.vdjStemWaveforms') || (this.settings.getString('dir.cache') + '/waveforms');
-    return this.path.join(cacheDir, songFilepath.replace(/\.[^.]+$/, `_stem${stemIndex}_waveform${this.audioScale}.data`));
-  }
-
-  getVdjStemWaveformFilepath(songFilepath, stemIndex) {
-    songFilepath = songFilepath.replace(this.settings.getString('dir.music'), '');
-    return this.settings.getString('dir.vdjStemWaveforms') + songFilepath.replace(/\.[^.]+$/, '_' + stemIndex + '.webp');
+    const cacheDir = this.settings.getString('dir.vdjStemWaveforms');
+    return this.path.join(cacheDir, songFilepath.replace(/\.[^.]+$/, `_stem${stemIndex}_scale${this.audioScale}_amp${this.audioAmplitudeScale}_wf.data`));
   }
 
   static get styles() {
@@ -466,17 +450,9 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           height: 100%;
           position: relative;
           animation: scroll-waveform linear; /* Name the animation and set a linear timing function */
-          animation-play-state: paused; Start the animation paused
+          animation-play-state: paused;  // Start the animation paused
         }
 
-        /* @keyframes scroll-waveform {
-          from {
-            transform: translateX(0);
-          }
-          to {
-            transform: translateX(-1680px); /* This should match the negative width of the waveform-track */
-          }
-        } */
         .waveform-wrapper.paused {
           transition: transform var(--transition-duration, 0.1)s ease-out;
         }
