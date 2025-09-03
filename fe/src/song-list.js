@@ -19,6 +19,7 @@ import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { GenresMixin } from "./mixin-genres.js";
+import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { PlaylistsMixin } from "./mixin-playlists.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
@@ -34,6 +35,7 @@ import { } from "./song-list-item.js";
 class SongList extends AlertsMixin(
                        BpmMixin(
                        GenresMixin(
+                       GetFilepathMixin(
                        PlaylistsMixin(
                        QueryMixin(
                        SearchMixin(
@@ -45,7 +47,7 @@ class SongList extends AlertsMixin(
                        WaveGenQueueMixin(
                        WaveformUtilMixin(
                        LitElement
-))))))))))))) {
+)))))))))))))) {
   render() {
     let songListItems = html``;
     songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
@@ -456,18 +458,12 @@ class SongList extends AlertsMixin(
     setTimeout(() => this.midiSelectedListItem.selectSong({}), 2000);  // wait to select song until after drag event
   }
 
-  sendToVirtualDj(deck) {
+  async sendToVirtualDj(deck) {
     // if no selection, then there is nothing to send
     if (!this.midiSelectedListItem) return;
 
     // determine path of file to send
-    let filepath = '';
-    if (this.mvRestrict) {
-      filepath = this.settings.getString('dir.mv') + this.midiSelectedListItem.song.musicVideo.filePath;
-    } else {
-      filepath = this.settings.getString('dir.music') + this.midiSelectedListItem.song.filepath;
-      // no need to worry about stems because it is automatic with virtual dj
-    }
+    const [filepath, iconpath] = await this.getFilepathAndIconpath(this.midiSelectedListItem.song, this.searchOptions.useStems, this.searchOptions.mvRestrict);
 
     // send command to virtual dj
     window.vdj.send(`deck ${deck} load "${filepath}"`);

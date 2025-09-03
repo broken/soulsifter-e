@@ -6,6 +6,7 @@ import "./audio-player.js";
 import "./icon-button.js";
 import "./pitch-slider.js";
 import "./star-rating.js";
+import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { SongEditMixin } from "./mixin-song-edit.js";
@@ -13,7 +14,7 @@ import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 
 
-class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))) {
+class SongSection extends GetFilepathMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement)))))) {
   render() {
     let localeDateTime = !!this.song ? new Date(this.song.dateAdded).toLocaleString() : '';
     let debugMode = this.settings.getBool('app.debug');
@@ -115,31 +116,9 @@ class SongSection extends SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMix
     }
   }
 
-  dragSong(e) {
+  async dragSong(e) {
     e.preventDefault();
-    let filepath = '';
-    let iconpath = '';
-    if (this.searchOptions.mvRestrict) {
-      filepath = this.settings.getString('dir.mv') + this.song.musicVideo.filePath;
-      iconpath = this.settings.getString('dir.mv') + this.song.musicVideo.thumbnailFilePath;
-    } else {
-      filepath = this.settings.getString('dir.music') + this.song.filepath;
-      iconpath = this.settings.getString('dir.music') + this.song.album.coverFilepath;
-      if (this.searchOptions.useStems) {
-        let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
-        ipcRenderer.invoke('existsfilepath', stemFilepath)
-        .then((exists) => {
-          if (exists) {
-            filepath = stemFilepath;
-          }
-        ipcRenderer.send('ondragstart', filepath, iconpath);
-        }).catch((err) => {
-          this.updateAlert(alertId, undefined, "Failed checking for existence of stems file.\n" + err);
-        });
-      return;
-    }
-  }
-
+    const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.searchOptions.useStems, this.searchOptions.mvRestrict);
     ipcRenderer.send('ondragstart', filepath, iconpath);
   }
 

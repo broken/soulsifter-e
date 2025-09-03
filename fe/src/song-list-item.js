@@ -1,12 +1,13 @@
 import { css, html, LitElement, unsafeCSS } from "lit";
 
 import "./icon-button.js";
+import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 import { } from "./star-rating.js";
 
 
-class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
+class SongListItem extends GetFilepathMixin(SettingsMixin(WaveformUtilMixin(LitElement))) {
   render() {
     let comments = !this.settings.getBool('songList.column.comments') ? '' :
                        this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
@@ -113,32 +114,9 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     return new Date(song.dateAdded).toLocaleDateString();
   }
 
-  dragSong(e) {
+  async dragSong(e) {
     e.preventDefault();
-    let filepath = '';
-    let iconpath = '';
-    if (this.mvRestrict) {
-      filepath = this.settings.getString('dir.mv') + this.song.musicVideo.filePath;
-      iconpath = this.settings.getString('dir.mv') + this.song.musicVideo.thumbnailFilePath;
-    } else {
-      filepath = this.settings.getString('dir.music') + this.song.filepath;
-      iconpath = this.settings.getString('dir.music') + this.song.album.coverFilepath;
-      if (this.useStems && !this.settings.getBool('virtualdj.active')) {
-        let stemFilepath = this.settings.getString('dir.stems') + this.song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
-        ipcRenderer.invoke('existsfilepath', stemFilepath)
-        .then((exists) => {
-          if (exists) {
-            filepath = stemFilepath;
-          }
-          ipcRenderer.send('ondragstart', filepath, iconpath);
-          window.ssDraggedObj = this.song;
-        }).catch((err) => {
-          this.addAlert("Failed checking for existence of stems file.\n" + err, 8);
-        });
-        return;
-      }
-    }
-
+    const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.useStems, this.mvRestrict);
     ipcRenderer.send('ondragstart', filepath, iconpath);
     window.ssDraggedObj = this.song;
   }
@@ -212,9 +190,10 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     e.stopPropagation();
   }
 
-  sendSongToDeckA(e) {
+  async sendSongToDeckA(e) {
+    const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.useStems, this.mvRestrict);
     if (this.settings.getBool('virtualdj.active')) {
-      window.vdj.send(`deck left load "${this.settings.getString('dir.music')}${this.song.filepath}"`);
+      window.vdj.send(`deck left load "${filepath}"`);
     } else {
       this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'));
       e.stopPropagation();
@@ -222,9 +201,10 @@ class SongListItem extends SettingsMixin(WaveformUtilMixin(LitElement)) {
     }
   }
 
-  sendSongToDeckB(e) {
+  async sendSongToDeckB(e) {
+    const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.useStems, this.mvRestrict);
     if (this.settings.getBool('virtualdj.active')) {
-      window.vdj.send(`deck right load "${this.settings.getString('dir.music')}${this.song.filepath}"`);
+      window.vdj.send(`deck right load "${filepath}"`);
     } else {
       this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'));
       e.stopPropagation();
