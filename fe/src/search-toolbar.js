@@ -440,6 +440,15 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     midiManager.connect(this.settings.getString('midi.controllerName'));
   }
 
+  searchOptionsChanged(x) {
+    if (this.searchOptionsChanged.bpmRestrict != x.bpmRestrict ||
+        this.searchOptionsChanged.keyRestrict != x.keyRestrict ||
+        this.searchOptionsChanged.useStems != x.useStems) {
+      this.requestUpdate();
+    }
+    Object.assign(this.searchOptions, x);
+  }
+
   static get styles() {
     return [
       css`
