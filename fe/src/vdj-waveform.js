@@ -445,7 +445,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           background: linear-gradient(90deg, #1a1a2e, #16213e, #1a1a2e);
         }
         .waveform-wrapper {
-          left: 50%;
+          left: 25%;
           width: 100%;
           height: 100%;
           position: relative;
@@ -476,7 +476,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         .progress-indicator {
           position: absolute;
           top: 0;
-          left: 50%;
+          left: 25%;
           width: 2px;
           height: 100%;
           background: #fff;
@@ -519,7 +519,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         .stem-label {
           position: absolute;
           top: 5px;
-          right: calc(100% / 2 + 10px);
+          right: calc(100% - 25% + 10px);
           font-size: 12px;
           color: #999;
           background: rgba(0, 0, 0, 0.5);
