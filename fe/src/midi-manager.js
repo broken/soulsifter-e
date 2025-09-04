@@ -6,7 +6,9 @@ class MidiNote {
       throw new Error(`Invalid MIDI note format. Expected 'XX YY ZZ', but got "${note}"`);
     }
     const typenames = {
-      '8': 'noteoff',
+      '6': 'noteon',
+      '7': 'noteon',
+      '8': 'noteon',
       '9': 'noteon',
       'A': 'polyaftertouch',  // right name?
       'B': 'controlchange',
@@ -20,6 +22,7 @@ class MidiNote {
     this.byte2any = note.substring(6,8) == 'xx'
     if (this.byte2any) this.byte2 = -1;
     else this.byte2 = parseInt(note.substring(6, 8), 16);
+    if (!this.byte2any && this.byte2 == 0 && this.type == 'noteon') this.type = 'noteoff';
   }
 }
 
@@ -84,6 +87,7 @@ class MidiManager {
   }
 
   registerInput(note, callback) {
+    console.log(`${note} registering`)
     const midiNote = new MidiNote(note);
     let chanCb = this._channelCallbacks[midiNote.channel];
     if (!chanCb) {
@@ -105,18 +109,29 @@ class MidiManager {
   }
 
   // Method for components to unregister their inputs
-  unregisterInput(note, callback) {
-    const midiNote = new MidiNote(note);
-    if (!!this._channelCallbacks[midiNote.channel] &&
-        !!this._channelCallbacks[midiNote.channel][midiNote.type] &&
-        !!this._channelCallbacks[midiNote.channel][midiNote.type][midiNote.byte1]) {
-      let callbacks = this._channelCallbacks[midiNote.channel][midiNote.type][midiNote.byte1];
-      for (data in callbacks) {
-        if (data[0] == note && data[1] == callback) {
-          delete callbacks[data];
-          break;
-        }
+  // unregisterInput(note, callback) {
+  //   const midiNote = new MidiNote(note);
+  //   if (!!this._channelCallbacks[midiNote.channel] &&
+  //       !!this._channelCallbacks[midiNote.channel][midiNote.type] &&
+  //       !!this._channelCallbacks[midiNote.channel][midiNote.type][midiNote.byte1]) {
+  //     let callbacks = this._channelCallbacks[midiNote.channel][midiNote.type][midiNote.byte1];
+  //     for (data in callbacks) {
+  //       if (data[0] == note && data[1] == callback) {
+  //         delete callbacks[data];
+  //         break;
+  //       }
+  //     }
+  //   }
+  // }
+
+  removeListeners() {
+    if (this._midiInput) {
+      for (const channel in this._channelCallbacks) {
+        console.log(`Removing midi listeners for channel ${channel}`);
+        let midiChan = this._midiInput.channels[channel];
+        midiChan.removeListener();
       }
+      this._channelCallbacks = []
     }
   }
 }

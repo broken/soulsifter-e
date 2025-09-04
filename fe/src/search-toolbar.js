@@ -91,6 +91,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   connectedCallback() {
     super.connectedCallback();
     this.registerMidiCallbacks();
+    window.addEventListener('register-midi-callbacks', this.registerMidiCallbacks.bind(this));
   }
 
   requestSearch(e) {

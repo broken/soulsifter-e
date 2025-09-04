@@ -4,6 +4,7 @@ import "@material/web/checkbox/checkbox.js";
 import "@material/web/textfield/filled-text-field.js";
 
 import "./abstract-action-page.js";
+import { midiManager } from './midi-manager.js';
 import { SettingsMixin } from "./mixin-settings.js";
 
 
@@ -76,6 +77,13 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Volume (lsb)" .value=${this.midiVolumeLsb} id="midiVolumeLsb" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
                 <br>
                 <md-filled-text-field label="Preview Start Time (in %)" .value=${this.songListPreviewStartPercent} id="songListPreviewStartPercent"></md-filled-text-field>
+              </div>
+              <div class="fields">
+                <label>Midi for VDJ stem responsiveness</label>
+                <md-filled-text-field type="textarea" label="BPM updates (Deck 1)" .value="${this.virtualdjMidiBpmDeck1}" id="virtualdjMidiBpmDeck1" rows="3"></md-filled-text-field>
+                <md-filled-text-field type="textarea" label="BPM updates (Deck 2)" .value="${this.virtualdjMidiBpmDeck2}" id="virtualdjMidiBpmDeck2" rows="3"></md-filled-text-field>
+                <md-filled-text-field type="textarea" label="Position updates (Deck 1)" .value="${this.virtualdjMidiPositionDeck1}" id="virtualdjMidiPositionDeck1" rows="3"></md-filled-text-field>
+                <md-filled-text-field type="textarea" label="Position updates (Deck 2)" .value="${this.virtualdjMidiPositionDeck2}" id="virtualdjMidiPositionDeck2" rows="3"></md-filled-text-field>
               </div>
             </section>
             <section>
@@ -193,6 +201,10 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.overwriteSongFromTag = this.settings.getBool('tag.readOverwrite');
     this.virtualdjActive = this.settings.getBool('virtualdj.active');
     this.virtualdjIp = this.settings.getString('virtualdj.ip');
+    this.virtualdjMidiBpmDeck1 = this.settings.getString('virtualdj.midi.bpm.deck1');
+    this.virtualdjMidiBpmDeck2 = this.settings.getString('virtualdj.midi.bpm.deck2');
+    this.virtualdjMidiPositionDeck1 = this.settings.getString('virtualdj.midi.position.deck1');
+    this.virtualdjMidiPositionDeck2 = this.settings.getString('virtualdj.midi.position.deck2');
     this.virtualdjPort = this.settings.getInt('virtualdj.port');
     this.settingsEditListener = (e) => this.classList.add('show');
     this.song = new ss.Song();
@@ -332,8 +344,16 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.putb('tag.readOverwrite', this.shadowRoot.getElementById('overwriteSongFromTag').checked);
     this.putb('virtualdj.active', this.shadowRoot.getElementById('virtualdjActive').checked);
     this.puts('virtualdj.ip', this.shadowRoot.getElementById('virtualdjIp').value);
+    this.puts('virtualdj.midi.bpm.deck1', this.shadowRoot.getElementById('virtualdjMidiBpmDeck1').value);
+    this.puts('virtualdj.midi.bpm.deck2', this.shadowRoot.getElementById('virtualdjMidiBpmDeck2').value);
+    this.puts('virtualdj.midi.position.deck1', this.shadowRoot.getElementById('virtualdjMidiPositionDeck1').value);
+    this.puts('virtualdj.midi.position.deck2', this.shadowRoot.getElementById('virtualdjMidiPositionDeck2').value);
     this.puti('virtualdj.port', Number(this.shadowRoot.getElementById('virtualdjPort').value));
     this.settings.save();
+    // reset midi
+    midiManager.removeListeners();
+    const event = new CustomEvent('register-midi-callbacks', {});
+    window.dispatchEvent(event);
     this.exit();
   }
 

@@ -77,6 +77,10 @@ namespace soulsifter {
     //ptree.put("tag.readOverwrite", "");
     ptree.put("virtualdj.active", false);
     ptree.put("virtualdj.ip", "127.0.0.1");
+    // ptree.put("virtualdj.midi.bpm.deck1", "");
+    // ptree.put("virtualdj.midi.bpm.deck2", "");
+    // ptree.put("virtualdj.midi.position.deck1", "");
+    // ptree.put("virtualdj.midi.position.deck2", "");
     ptree.put("virtualdj.port", 80);
 
     // TODO settings file stored in other OS place

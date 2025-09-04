@@ -72,6 +72,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.stemNames = ['vocal', 'hihat', 'bass', 'instruments', 'kick'];
     this.loadDelay = 200;
     this.currentFilepath = undefined;
+    this.waveforms = [undefined, undefined, undefined, undefined, undefined];
 
     // Settings for generated waveforms
     this.audioScale = 1024;
@@ -93,13 +94,13 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         this.stopDisplayTimeUpdate();
       }
     });
+    window.addEventListener('register-midi-callbacks', e => this.registerMidiCallbacks());
   }
 
   disconnectedCallback() {
     super.disconnectedCallback();
     this.stopUpdating();
     this.stopDisplayTimeUpdate();
-    window.removeEventListener('enable-stem-waveforms');
   }
 
   startDisplayTimeUpdate() {
@@ -118,7 +119,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     }
   }
 
-  async updateBpmData() {
+  async updateBpmData(render = true) {
     let changed = false;
     try {
       // bpm
@@ -136,7 +137,12 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     } catch (error) {
       console.warn('Failed to get BPM data: ', error);
     }
-    return changed;
+
+    if (changed && render) {
+      for (let i = 0; i < this.stemNames.length; i++) {
+        this.renderWaveform(i);
+      }
+    }
   }
 
   registerMidiCallbacks() {
@@ -154,10 +160,26 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         this.settings.getString('midi.loadRight'),
         e => setTimeout(this.updateWaveform.bind(this), this.loadDelay)
     );
-    // midiManager.registerInput(
-    //     this.settings.getString('virtualdj.midi.playPause'),
-    //     e => setTimeout(load, this.loadDelay)
-    // );
+    const position_change_midi = this.settings.getString(`virtualdj.midi.position.deck${this.deck}`);
+    for (const midi of position_change_midi.split(',')) {
+      const note = midi.trim();
+      if (note) {
+        midiManager.registerInput(
+            note,
+            e => setTimeout(this.updatePlaybackInfo.bind(this), 50)
+        );
+      }
+    }
+    const bpm_change_midi = this.settings.getString(`virtualdj.midi.bpm.deck${this.deck}`);
+    for (const midi of bpm_change_midi.split(',')) {
+      const note = midi.trim();
+      if (midi.trim()) {
+        midiManager.registerInput(
+            note,
+            e => setTimeout(this.updateBpmData.bind(this), 50)
+        );
+      }
+    }
   }
 
   startUpdating() {
@@ -165,8 +187,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.updateInterval = setInterval(() => {
       this.updateWaveform();
       this.updatePlaybackInfo();
-      const changed = this.updateBpmData();
-      // if (changed) this.renderWaveform();
+      this.updateBpmData();
     }, 15000);  // Sync frequency
   }
 
@@ -193,7 +214,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       this.currentFilepath = data;
 
       // update duration & bpm of the song
-      await this.updateBpmData();
+      await this.updateBpmData(false);
 
       // load waveform from the cache if it exists
       const originalSubpath = this.currentFilepath.replace(this.settings.getString('dir.music'), '');
@@ -242,12 +263,13 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           });
         });
         console.log(`Waveform has ${waveform.length} points (length)`);
+        this.waveforms[i] = waveform;
 
         // save waveform data to cache
         await this.saveWaveformCache(originalSubpath, i, waveform.toArrayBuffer());
 
         // render the waveform
-        this.renderWaveform(waveform, i);
+        this.renderWaveform(i);
       }
 
       // Clean up temp directory
@@ -268,7 +290,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       this.displayTime = newTime;
       this.lastSyncTime = newTime;
       this.lastSyncTimestamp = Date.now();
-      this.animation.currentTime = newTime;
+      if (this.animation) this.animation.currentTime = newTime;
 
       // check if track is playing
       const data = await window.vdj.query(`deck ${this.deck} play`);
@@ -322,8 +344,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       for (let i = 1; i <= 5; i++) {
         const cacheFile = this.getWaveformCacheFilepath(originalSubpath, i);
         const waveformData = await this.fs.readFile(cacheFile);
-        const waveform = WaveformData.create(waveformData.buffer);
-        this.renderWaveform(waveform, i);
+        this.waveforms[i] = WaveformData.create(waveformData.buffer);
+        this.renderWaveform(i);
       }
     } catch (error) {
       console.warn('Error loading cached waveforms: ', error);
@@ -343,7 +365,9 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     }
   }
 
-  renderWaveform(waveform, stemIndex) {
+  renderWaveform(stemIndex) {
+    const waveform = this.waveforms[stemIndex];
+    if (!waveform) return;
     const channel = waveform.channel(0);
     const container = d3.select(this.shadowRoot.getElementById(`waveform-canvas-${stemIndex}`));
 
