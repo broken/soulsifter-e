@@ -15,17 +15,17 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     return html`
       <div class="waveform-container" @click="${this.handleClick}">
         <div class="deck-label">Deck ${this.deck}</div>
-        <div class="vocal stem-label">vocal</div>
-        <div class="hihat stem-label">hihat</div>
-        <div class="bass stem-label">bass</div>
-        <div class="instruments stem-label">instruments</div>
-        <div class="kick stem-label">kick</div>
+        <div class="hihat/null stem-label">vocal</div>
+        <div class="vocal stem-label">hihat</div>
+        <div class="instruments stem-label">bass</div>
+        <div class="bass stem-label">instruments</div>
+        <div class="kick/drums stem-label">kick</div>
         ${this.trackLoaded ? html`
           <div id="waveform-wrapper" class="waveform-wrapper ${this.isPlaying ? 'playing' : 'paused'}">
-            <div id="waveform-canvas-1" class="waveform loaded"></div>
             <div id="waveform-canvas-2" class="waveform loaded"></div>
-            <div id="waveform-canvas-3" class="waveform loaded"></div>
+            <div id="waveform-canvas-1" class="waveform loaded"></div>
             <div id="waveform-canvas-4" class="waveform loaded"></div>
+            <div id="waveform-canvas-3" class="waveform loaded"></div>
             <div id="waveform-canvas-5" class="waveform loaded"></div>
           </div>
           <div class="progress-indicator"></div>
@@ -238,7 +238,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       // first, unpack stem file
       const fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(this.currentFilepath)) + this.path.basename(this.currentFilepath) + '.vdjstems';
       const tmpPath = await this.fs.mkdtemp(this.path.join(this.os.tmpdir(), 'ss-stems-'));
-      await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/1.m4a -map 0:a:1 -c copy ${tmpPath}/2.m4a -map 0:a:2 -c copy ${tmpPath}/3.m4a -map 0:a:3 -c copy ${tmpPath}/4.m4a -map 0:a:4 -c copy ${tmpPath}/5.m4a`);
+      await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:1 -c copy ${tmpPath}/1.m4a -map 0:a:2 -c copy ${tmpPath}/2.m4a -map 0:a:3 -c copy ${tmpPath}/3.m4a -map 0:a:4 -c copy ${tmpPath}/4.m4a -map 0:a:5 -c copy ${tmpPath}/5.m4a`);
 
       // write out each stem separately
       for (let i = 1; i <= 5; i++) {
@@ -358,6 +358,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     try {
       // Save waveform data as arraybuffer
       const cacheFile = this.getWaveformCacheFilepath(originalSubpath, stemIndex);
+      await this.fs.mkdir(this.path.dirname(cacheFile), { recursive: true });
       await this.fs.writeFile(cacheFile, Buffer.from(waveformData));
       console.log(`Saved waveform cache: ${cacheFile}`);
     } catch (error) {
