@@ -4,8 +4,6 @@ import "@material/web/dialog/dialog.js";
 import "@material/web/textfield/filled-text-field.js";
 import "@thomasloven/round-slider";
 
-import { Utilities } from "webmidi";
-
 import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
@@ -410,14 +408,9 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         e => this.dispatchEvent(new CustomEvent('audio-pause', {bubbles: true, composed: true}))
     );
     midiManager.registerInput(
-        this.settings.getString('midi.volume.msb'),  // 13
-        e => this.note = e.rawValue
-    );
-    midiManager.registerInput(
-        this.settings.getString('midi.volume.lsb'),  // 33
+        this.settings.getString('midi.volume.value'),
         e => {
-          let value = Utilities.fromMsbLsbToFloat(this.note, e.rawValue);
-          this.note = undefined;
+          const value = e.rawValue;
           let exp = Number(this.settings.getString('midi.volume.exponentialFactor'));
           let linear = Number(this.settings.getString('midi.volume.linearFactor'));
           // 0.93*x^1/2.5 looks to match the closest curve,

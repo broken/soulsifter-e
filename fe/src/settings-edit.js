@@ -10,7 +10,9 @@ import { SettingsMixin } from "./mixin-settings.js";
 
 class SettingsEdit extends SettingsMixin(LitElement) {
   render() {
-    const rawMidiPattern = "[89A-E,a-e][0-9A-Fa-f] [0-7][0-9A-Fa-f] [x0-7][x0-9A-Fa-f]";
+    const note = "[89A-E,a-e][0-9A-Fa-f] [0-7][0-9A-Fa-f] [x0-7][x0-9A-Fa-f]";
+    const dblNote = `${note}\\s*(/\\s*${note})?`;
+    const rawMidiPattern = `^(${dblNote},\s*)?${dblNote}$`;
     return html`
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
         <div class="outer">
@@ -73,17 +75,16 @@ class SettingsEdit extends SettingsMixin(LitElement) {
               <div class="fields">
                 <md-filled-text-field label="Midi volume exp scale" .value=${this.midiVolumeExponentialFactor} id="midiVolumeExponentialFactor"></md-filled-text-field>
                 <md-filled-text-field label="Midi volume linear scale" .value=${this.midiVolumeLinearFactor} id="midiVolumeLinearFactor"></md-filled-text-field>
-                <md-filled-text-field label="Volume (msb)" .value=${this.midiVolumeMsb} id="midiVolumeMsb" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
-                <md-filled-text-field label="Volume (lsb)" .value=${this.midiVolumeLsb} id="midiVolumeLsb" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field label="Volume" .value=${this.midiVolumeValue} id="midiVolumeValue" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
                 <br>
                 <md-filled-text-field label="Preview Start Time (in %)" .value=${this.songListPreviewStartPercent} id="songListPreviewStartPercent"></md-filled-text-field>
               </div>
               <div class="fields">
                 <label>Midi for VDJ stem responsiveness</label>
-                <md-filled-text-field type="textarea" label="BPM updates (Deck 1)" .value="${this.virtualdjMidiBpmDeck1}" id="virtualdjMidiBpmDeck1" rows="3"></md-filled-text-field>
-                <md-filled-text-field type="textarea" label="BPM updates (Deck 2)" .value="${this.virtualdjMidiBpmDeck2}" id="virtualdjMidiBpmDeck2" rows="3"></md-filled-text-field>
-                <md-filled-text-field type="textarea" label="Position updates (Deck 1)" .value="${this.virtualdjMidiPositionDeck1}" id="virtualdjMidiPositionDeck1" rows="3"></md-filled-text-field>
-                <md-filled-text-field type="textarea" label="Position updates (Deck 2)" .value="${this.virtualdjMidiPositionDeck2}" id="virtualdjMidiPositionDeck2" rows="3"></md-filled-text-field>
+                <md-filled-text-field type="textarea" label="BPM updates (Deck 1)" .value="${this.virtualdjMidiBpmDeck1}" id="virtualdjMidiBpmDeck1" rows="3" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field type="textarea" label="BPM updates (Deck 2)" .value="${this.virtualdjMidiBpmDeck2}" id="virtualdjMidiBpmDeck2" rows="3" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field type="textarea" label="Position updates (Deck 1)" .value="${this.virtualdjMidiPositionDeck1}" id="virtualdjMidiPositionDeck1" rows="3" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field type="textarea" label="Position updates (Deck 2)" .value="${this.virtualdjMidiPositionDeck2}" id="virtualdjMidiPositionDeck2" rows="3" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
               </div>
             </section>
             <section>
@@ -179,8 +180,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.midiPauseAudio = this.settings.getString('midi.pauseAudio');
     this.midiVolumeExponentialFactor = this.settings.getString('midi.volume.exponentialFactor');
     this.midiVolumeLinearFactor = this.settings.getString('midi.volume.linearFactor');
-    this.midiVolumeLsb = this.settings.getString('midi.volume.lsb');
-    this.midiVolumeMsb = this.settings.getString('midi.volume.msb');
+    this.midiVolumeValue = this.settings.getString('midi.volume.value');
     this.songListColBpm = this.settings.getBool('songList.column.bpm');
     this.songListColBpmShift = this.settings.getBool('songList.column.bpmShift');
     this.songListColComments = this.settings.getBool('songList.column.comments');
@@ -322,8 +322,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('midi.pauseAudio', this.shadowRoot.getElementById('midiPauseAudio').value);
     this.puts('midi.volume.exponentialFactor', this.shadowRoot.getElementById('midiVolumeExponentialFactor').value);
     this.puts('midi.volume.linearFactor', this.shadowRoot.getElementById('midiVolumeLinearFactor').value);
-    this.puts('midi.volume.lsb', this.shadowRoot.getElementById('midiVolumeLsb').value);
-    this.puts('midi.volume.msb', this.shadowRoot.getElementById('midiVolumeMsb').value);
+    this.puts('midi.volume.value', this.shadowRoot.getElementById('midiVolumeValue').value);
     this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);
     this.putb('songList.column.bpmShift', this.shadowRoot.getElementById('songListColBpmShift').checked);
     this.putb('songList.column.comments', this.shadowRoot.getElementById('songListColComments').checked);
