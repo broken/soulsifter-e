@@ -412,12 +412,13 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         this.settings.getString('midi.volume.value'),
         e => {
           const value = e.rawValue >= 1 ? e.rawValue / 127 : e.rawValue;
-          let exp = Number(this.settings.getString('midi.volume.exponentialFactor'));
-          let linear = Number(this.settings.getString('midi.volume.linearFactor'));
+          const exp = Number(this.settings.getString('midi.volume.exponentialFactor'));
+          const linear = Number(this.settings.getString('midi.volume.linearFactor'));
+          const b = Number(this.settings.getString('midi.volume.constantFactor'));
           // 0.93*x^1/2.5 looks to match the closest curve,
           // but osx prob has its own curve that we have to compensate for
           // https://www.desmos.com/calculator/pwfyfk6yb2
-          let y = Math.pow(value, exp) * linear;
+          let y = Math.pow(value, exp) * linear + b;
           console.log(`Setting volume to ${y} from value ${value}`);
           let vol = Math.max(Math.min(y, 1), 0);
           this.volume = vol * 100;

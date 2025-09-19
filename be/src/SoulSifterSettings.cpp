@@ -59,6 +59,7 @@ namespace soulsifter {
     //ptree.put("midi.pauseAudio", "");
     ptree.put("midi.volume.exponentialFactor", "0.25");
     ptree.put("midi.volume.linearFactor", "1.125");
+    ptree.put("midi.volume.constantFactor", "0");
     //ptree.put("midi.volume.value", "");
     ptree.put("search.energyGap", 1);
     ptree.put("search.includeUnknownKeys", true);

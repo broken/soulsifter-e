@@ -75,6 +75,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
               <div class="fields">
                 <md-filled-text-field label="Midi volume exp scale" .value=${this.midiVolumeExponentialFactor} id="midiVolumeExponentialFactor"></md-filled-text-field>
                 <md-filled-text-field label="Midi volume linear scale" .value=${this.midiVolumeLinearFactor} id="midiVolumeLinearFactor"></md-filled-text-field>
+                <md-filled-text-field label="Midi volume linear scale" .value=${this.midiVolumeConstantFactor} id="midiVolumeConstantFactor"></md-filled-text-field>
                 <md-filled-text-field label="Volume" .value=${this.midiVolumeValue} id="midiVolumeValue" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
                 <br>
                 <md-filled-text-field label="Preview Start Time (in %)" .value=${this.songListPreviewStartPercent} id="songListPreviewStartPercent"></md-filled-text-field>
@@ -187,6 +188,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.midiLoadLeft = this.settings.getString('midi.loadLeft');
     this.midiLoadRight = this.settings.getString('midi.loadRight');
     this.midiPauseAudio = this.settings.getString('midi.pauseAudio');
+    this.midiVolumeConstantFactor = this.settings.getString('midi.volume.constantFactor');
     this.midiVolumeExponentialFactor = this.settings.getString('midi.volume.exponentialFactor');
     this.midiVolumeLinearFactor = this.settings.getString('midi.volume.linearFactor');
     this.midiVolumeValue = this.settings.getString('midi.volume.value');
@@ -333,6 +335,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('midi.loadLeft', this.shadowRoot.getElementById('midiLoadLeft').value);
     this.puts('midi.loadRight', this.shadowRoot.getElementById('midiLoadRight').value);
     this.puts('midi.pauseAudio', this.shadowRoot.getElementById('midiPauseAudio').value);
+    this.puts('midi.volume.constantFactor', this.shadowRoot.getElementById('midiVolumeConstantFactor').value);
     this.puts('midi.volume.exponentialFactor', this.shadowRoot.getElementById('midiVolumeExponentialFactor').value);
     this.puts('midi.volume.linearFactor', this.shadowRoot.getElementById('midiVolumeLinearFactor').value);
     this.puts('midi.volume.value', this.shadowRoot.getElementById('midiVolumeValue').value);
