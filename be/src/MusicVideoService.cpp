@@ -1,5 +1,6 @@
 #include "MusicVideoService.h"
 
+#include <filesystem>
 #include <future>
 #include <sstream>
 #include <stdio.h>
@@ -32,21 +33,22 @@ namespace soulsifter {
 
 JobQueue<std::vector<std::string>> MusicVideoService::job_queue;
 
-std::string mv_yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --write-thumbnail ");
+std::string mv_yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome -S res,vcodec:h264,acodec:m4a --write-thumbnail ");
 std::string yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --print-json --write-thumbnail --restrict-filenames --extract-audio --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt ");
 
 namespace {
 
-string removeSpecialCharsFromPath(string filepath) {
-  string newPath = MusicManager::cleanDirName(filepath);
-  if (!newPath.compare(filepath)) return filepath;
+string removeSpecialCharsFromFilename(string filepath) {
+  std::filesystem::path path = filepath;
+  std::filesystem::path newPath = path.replace_filename(MusicManager::cleanDirName(path.filename().string()));
+  if (!newPath.string().compare(filepath)) return filepath;
 
-  LOG(INFO) << "Renaming '" << filepath << "'' to '" << newPath << "'";
+  LOG(INFO) << "Renaming '" << filepath << "'' to '" << newPath.string() << "'";
   try {
       boost::filesystem::path src(filepath);
-      boost::filesystem::path dest(newPath);
+      boost::filesystem::path dest(newPath.string());
       boost::filesystem::rename(src, dest);
-      return newPath;
+      return newPath.string();
   } catch (const boost::filesystem::filesystem_error& ex) {
       LOG(WARNING) << "Unable to rename music video related file '" << filepath << "'\n" << ex.what();
       return filepath;
@@ -272,9 +274,10 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
 
   string output(ss.str());
   LOG(INFO) << output;
-  boost::regex thumbnailRegex("Writing thumbnail to: (.*)$");
+  boost::regex thumbnailRegex("Writing.*thumbnail.*to: (.*)$");
   boost::regex mp4VideoRegex("Merging formats into \"(.*)mp4\"$");
   boost::regex mkvVideoRegex("Merging formats into \"(.*)mkv\"$");
+  boost::regex webmVideoRegex("Merging formats into \"(.*)webm\"$");
   boost::smatch match;
   string tmpVideoName;
   bool needsConversion;
@@ -287,11 +290,18 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
       ssTn << mvArtistDir << "/" << match[1];
       musicVideo->setThumbnailFilePath(ssTn.str());
     } else if (boost::regex_search(line, match, mkvVideoRegex)) {
-      tmpVideoName = match[1];
-      needsConversion = true;
+      stringstream ss;
+      ss << mvArtistDir << "/" << match[1] << "mkv";
+      musicVideo->setFilePath(ss.str());
+      needsConversion = false;
     } else if (boost::regex_search(line, match, mp4VideoRegex)) {
       stringstream ss;
       ss << mvArtistDir << "/" << match[1] << "mp4";
+      musicVideo->setFilePath(ss.str());
+      needsConversion = false;
+    } else if (boost::regex_search(line, match, webmVideoRegex)) {
+      stringstream ss;
+      ss << mvArtistDir << "/" << match[1] << "webm";
       musicVideo->setFilePath(ss.str());
       needsConversion = false;
     }
@@ -302,6 +312,7 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
     return NULL;
   }
 
+  // We used to convert for Serato, but it is not needed for VirtualDJ
   // Convert to mp4 from mkv (mostly need audio codec conversion)
   if (needsConversion) {
     stringstream ffmpegCmd;
@@ -321,8 +332,8 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
 
   // remove special chars from files just in case
   // probably don't need with --restrict-filenames, but whatever
-  musicVideo->setFilePath(removeSpecialCharsFromPath(musicVideo->getFilePath()));
-  musicVideo->setThumbnailFilePath(removeSpecialCharsFromPath(musicVideo->getThumbnailFilePath()));
+  musicVideo->setFilePath(removeSpecialCharsFromFilename(musicVideo->getFilePath()));
+  musicVideo->setThumbnailFilePath(removeSpecialCharsFromFilename(musicVideo->getThumbnailFilePath()));
 
   // remove base path
   musicVideo->setFilePath(boost::algorithm::ireplace_first_copy(musicVideo->getFilePath(), SoulSifterSettings::getInstance().get<string>("dir.mv"), ""));
@@ -338,4 +349,3 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
 
 }  // namespace soulsifter
 }  // namespace dogatech
-
