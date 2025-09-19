@@ -63,6 +63,12 @@ class MidiManager {
     }
   }
 
+  async disconnect() {
+    this._midiInput.removeListener();
+    this._midiInput = null;
+    this._channelCallbacks = [];
+  }
+
   _setupListeners() {
     if (this._midiInput) {
       Object.entries(this._channelCallbacks).forEach(([channel, chanCb]) => {

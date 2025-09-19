@@ -57,6 +57,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         <options-menu-item @click="${this.openMouseCoordsAlert}">Show Mouse Coordinates</options-menu-item>
         <options-menu-item @click="${this.openCommonMultiplesAlert}">Show Common Multiples</options-menu-item>
         <options-menu-item @click="${this.connectToMidiController}">Connect to Midi controller</options-menu-item>
+        <options-menu-item @click="${this.disconnectMidiController}">Disconnect from Midi controller</options-menu-item>
         <options-menu-item @click="${this.openAboutPageDialog}">About</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
       </options-menu>
@@ -432,6 +433,10 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   connectToMidiController(e) {
     midiManager.connect(this.settings.getString('midi.controllerName'));
+  }
+
+  disconnectMidiController(e) {
+    midiManager.disconnect();
   }
 
   searchOptionsChanged(x) {
