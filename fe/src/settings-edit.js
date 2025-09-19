@@ -78,6 +78,11 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Volume" .value=${this.midiVolumeValue} id="midiVolumeValue" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
                 <br>
                 <md-filled-text-field label="Preview Start Time (in %)" .value=${this.songListPreviewStartPercent} id="songListPreviewStartPercent"></md-filled-text-field>
+                <br>
+                <md-filled-text-field label="Audio source 1 midi" .value=${this.midiAudioOutputLeft} id="midiAudioOutputLeft"></md-filled-text-field>
+                <md-filled-text-field label="Audio source 1 name" .value=${this.midiAudioOutputLeftName} id="midiAudioOutputLeftName"></md-filled-text-field>
+                <md-filled-text-field label="Audio source 2 midi" .value=${this.midiAudioOutputRight} id="midiAudioOutputRight"></md-filled-text-field>
+                <md-filled-text-field label="Audio source 2 name" .value=${this.midiAudioOutputRightName} id="midiAudioOutputRightName"></md-filled-text-field>
               </div>
               <div class="fields">
                 <label>Midi for VDJ stem responsiveness</label>
@@ -173,6 +178,10 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.editAutoPlay = this.settings.getBool('edit.autoPlay');
     this.feedlyDevToken = this.settings.getString('feedly.devToken');
     this.feedlyUserId = this.settings.getString('feedly.userId');
+    this.midiAudioOutputLeft = this.settings.getString('midi.audioOutput.left');
+    this.midiAudioOutputLeftName = this.settings.getString('midi.audioOutput.leftName');
+    this.midiAudioOutputRight = this.settings.getString('midi.audioOutput.right');
+    this.midiAudioOutputRightName = this.settings.getString('midi.audioOutput.rightName');
     this.midiBrowse = this.settings.getString('midi.browse');
     this.midiControllerName = this.settings.getString('midi.controllerName');
     this.midiLoadLeft = this.settings.getString('midi.loadLeft');
@@ -315,6 +324,10 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.putb('edit.autoPlay', this.shadowRoot.getElementById('editAutoPlay').checked);
     this.puts('feedly.devToken', this.shadowRoot.getElementById('feedlyDevToken').value);
     this.puts('feedly.userId', this.shadowRoot.getElementById('feedlyUserId').value);
+    this.puts('midi.audioOutput.left', this.shadowRoot.getElementById('midiAudioOutputLeft').value);
+    this.puts('midi.audioOutput.leftName', this.shadowRoot.getElementById('midiAudioOutputLeftName').value);
+    this.puts('midi.audioOutput.right', this.shadowRoot.getElementById('midiAudioOutputRight').value);
+    this.puts('midi.audioOutput.rightName', this.shadowRoot.getElementById('midiAudioOutputRightName').value);
     this.puts('midi.browse', this.shadowRoot.getElementById('midiBrowse').value);
     this.puts('midi.controllerName', this.shadowRoot.getElementById('midiControllerName').value);
     this.puts('midi.loadLeft', this.shadowRoot.getElementById('midiLoadLeft').value);

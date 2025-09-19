@@ -465,6 +465,26 @@ class SongList extends AlertsMixin(
   }
 
   registerMidiCallbacks() {
+    const util = require('util');
+    const exec = util.promisify(require('node:child_process').exec);
+    midiManager.registerInput(
+        this.settings.getString('midi.audioOutput.left'),
+        async e => {
+          if (this._audioOutput != this.settings.getString('midi.audioOutput.leftName')) {
+            await exec(`SwitchAudioSource -s "${this.settings.getString('midi.audioOutput.leftName')}"`);
+            this._audioOutput = this.settings.getString('midi.audioOutput.leftName');
+          }
+        }
+    );
+    midiManager.registerInput(
+        this.settings.getString('midi.audioOutput.right'),
+        async e => {
+          if (this._audioOutput != this.settings.getString('midi.audioOutput.rightName')) {
+            await exec(`SwitchAudioSource -s "${this.settings.getString('midi.audioOutput.rightName')}"`);
+            this._audioOutput = this.settings.getString('midi.audioOutput.rightName');
+          }
+        }
+    );
     midiManager.registerInput(
         this.settings.getString('midi.loadLeft'),  // 70
         e => {
@@ -536,7 +556,7 @@ class SongList extends AlertsMixin(
               composed: true,
               detail: { song: this.midiSelectedListItem.song, pct: startPct, player: this.midiSelectedListItem }
           });
-          this.dispatchEvent(event);
+          setTimeout(() => this.dispatchEvent(event), 200);  // wait for audio output to switch
         }
     );
   }

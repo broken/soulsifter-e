@@ -48,6 +48,10 @@ namespace soulsifter {
     //ptree.put("google.appKey", "");
     //ptree.put("google.email", "");
     //ptree.put("google.androidId", "");
+    //ptree.put("midi.audioOutput.left", "");
+    //ptree.put("midi.audioOutput.leftName", "");
+    //ptree.put("midi.audioOutput.right", "");
+    //ptree.put("midi.audioOutput.rightName", "");
     //ptree.put("midi.browse", "");
     //ptree.put("midi.controllerName", "");
     //ptree.put("midi.loadLeft", "");
