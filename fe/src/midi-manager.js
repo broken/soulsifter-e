@@ -87,25 +87,34 @@ class MidiManager {
   }
 
   registerInput(note, callback) {
-    console.log(`${note} registering`)
-    const midiNote = new MidiNote(note);
-    let chanCb = this._channelCallbacks[midiNote.channel];
-    if (!chanCb) {
-      chanCb = {};
-      this._channelCallbacks[midiNote.channel] = chanCb;
+    try {
+      if (!note || !callback) return;
+      const notes = note.split(',').map(item => item.trim());
+      for (note of notes) {
+        console.log(`${note} registering`);
+        const midiNote = new MidiNote(note);
+        let chanCb = this._channelCallbacks[midiNote.channel];
+        if (!chanCb) {
+          chanCb = {};
+          this._channelCallbacks[midiNote.channel] = chanCb;
+        }
+        let typeCb = chanCb[midiNote.type];
+        if (!typeCb) {
+          typeCb = [];
+          chanCb[midiNote.type] = typeCb;
+        }
+        let cb = typeCb[midiNote.byte1];
+        if (!cb) {
+          cb = [];
+          typeCb[midiNote.byte1] = cb;
+          this._setupListenerOnChannelForType(midiNote.channel, midiNote.type);
+        }
+        cb.push([midiNote, callback]);
+      }
+    } catch (err) {
+      console.error(err);
+      return;
     }
-    let typeCb = chanCb[midiNote.type];
-    if (!typeCb) {
-      typeCb = [];
-      chanCb[midiNote.type] = typeCb;
-    }
-    let cb = typeCb[midiNote.byte1];
-    if (!cb) {
-      cb = [];
-      typeCb[midiNote.byte1] = cb;
-      this._setupListenerOnChannelForType(midiNote.channel, midiNote.type);
-    }
-    cb.push([midiNote, callback]);
   }
 
   // Method for components to unregister their inputs
