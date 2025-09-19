@@ -411,7 +411,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
     midiManager.registerInput(
         this.settings.getString('midi.volume.value'),
         e => {
-          const value = e.rawValue;
+          const value = e.rawValue >= 1 ? e.rawValue / 127 : e.rawValue;
           let exp = Number(this.settings.getString('midi.volume.exponentialFactor'));
           let linear = Number(this.settings.getString('midi.volume.linearFactor'));
           // 0.93*x^1/2.5 looks to match the closest curve,
