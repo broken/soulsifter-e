@@ -89,7 +89,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   connectedCallback() {
     super.connectedCallback();
-    this.registerMidiCallbacks();
     window.addEventListener('register-midi-callbacks', this.registerMidiCallbacks.bind(this));
   }
 
@@ -433,6 +432,8 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   }
 
   connectToMidiController(e) {
+    const event = new CustomEvent('register-midi-callbacks', {});
+    window.dispatchEvent(event);
     midiManager.connect(this.settings.getString('midi.controllerName'));
   }
 

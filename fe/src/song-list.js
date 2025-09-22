@@ -126,7 +126,6 @@ class SongList extends AlertsMixin(
     window.addEventListener('keydown', this.keydownHandler.bind(this));
     window.addEventListener('song-list-pos', this.getNextOrPrevSong.bind(this));
     window.addEventListener('register-midi-callbacks', this.registerMidiCallbacks.bind(this));
-    this.registerMidiCallbacks();
   }
 
   firstUpdated() {

@@ -88,7 +88,6 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     window.addEventListener('enable-stem-waveforms', e => {
       if (this.settings.getBool('virtualdj.active') && e.detail) {
         this.startUpdating();
-        this.registerMidiCallbacks();
       } else {
         this.stopUpdating();
         this.stopDisplayTimeUpdate();

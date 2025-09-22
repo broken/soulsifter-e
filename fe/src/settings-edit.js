@@ -366,9 +366,11 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puti('virtualdj.port', Number(this.shadowRoot.getElementById('virtualdjPort').value));
     this.settings.save();
     // reset midi
-    midiManager.removeListeners();
-    const event = new CustomEvent('register-midi-callbacks', {});
-    window.dispatchEvent(event);
+    if (midiManager.isConnected()) {
+      midiManager.removeListeners();
+      const event = new CustomEvent('register-midi-callbacks', {});
+      window.dispatchEvent(event);
+    }
     this.exit();
   }
 
