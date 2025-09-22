@@ -15,11 +15,11 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     return html`
       <div class="waveform-container" @click="${this.handleClick}">
         <div class="deck-label">Deck ${this.deck}</div>
-        <div class="hihat/null stem-label">vocal</div>
         <div class="vocal stem-label">hihat</div>
-        <div class="instruments stem-label">bass</div>
+        <div class="hihat stem-label">vocal</div>
         <div class="bass stem-label">instruments</div>
-        <div class="kick/drums stem-label">kick</div>
+        <div class="instruments stem-label">bass</div>
+        <div class="kick stem-label">kick</div>
         ${this.trackLoaded ? html`
           <div id="waveform-wrapper" class="waveform-wrapper ${this.isPlaying ? 'playing' : 'paused'}">
             <div id="waveform-canvas-2" class="waveform loaded"></div>
