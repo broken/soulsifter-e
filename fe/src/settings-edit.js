@@ -84,6 +84,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Audio source 1 name" .value=${this.midiAudioOutputLeftName} id="midiAudioOutputLeftName"></md-filled-text-field>
                 <md-filled-text-field label="Audio source 2 midi" .value=${this.midiAudioOutputRight} id="midiAudioOutputRight"></md-filled-text-field>
                 <md-filled-text-field label="Audio source 2 name" .value=${this.midiAudioOutputRightName} id="midiAudioOutputRightName"></md-filled-text-field>
+                <md-filled-text-field label="Safty cross fader midi" .value=${this.midiAudioOutputSafetyCrossFader} id="midiAudioOutputSafetyCrossFader"></md-filled-text-field>
+                <md-filled-text-field label="Safty volume fader 1 midi" .value=${this.midiAudioOutputSafetyLeftFader} id="midiAudioOutputSafetyLeftFader"></md-filled-text-field>
+                <md-filled-text-field label="Safty volume fader 2 midi" .value=${this.midiAudioOutputSafetyRightFader} id="midiAudioOutputSafetyRightFader"></md-filled-text-field>
               </div>
               <div class="fields">
                 <label>Midi for VDJ stem responsiveness</label>
@@ -183,6 +186,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.midiAudioOutputLeftName = this.settings.getString('midi.audioOutput.leftName');
     this.midiAudioOutputRight = this.settings.getString('midi.audioOutput.right');
     this.midiAudioOutputRightName = this.settings.getString('midi.audioOutput.rightName');
+    this.midiAudioOutputSafetyCrossFader = this.settings.getString('midi.audioOutput.safety.crossFader');
+    this.midiAudioOutputSafetyLeftFader = this.settings.getString('midi.audioOutput.safety.leftFader');
+    this.midiAudioOutputSafetyRightFader = this.settings.getString('midi.audioOutput.safety.rightFader');
     this.midiBrowse = this.settings.getString('midi.browse');
     this.midiControllerName = this.settings.getString('midi.controllerName');
     this.midiLoadLeft = this.settings.getString('midi.loadLeft');
@@ -330,6 +336,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('midi.audioOutput.leftName', this.shadowRoot.getElementById('midiAudioOutputLeftName').value);
     this.puts('midi.audioOutput.right', this.shadowRoot.getElementById('midiAudioOutputRight').value);
     this.puts('midi.audioOutput.rightName', this.shadowRoot.getElementById('midiAudioOutputRightName').value);
+    this.puts('midi.audioOutput.safety.crossFader', this.shadowRoot.getElementById('midiAudioOutputSafetyCrossFader').value);
+    this.puts('midi.audioOutput.safety.leftFader', this.shadowRoot.getElementById('midiAudioOutputSafetyLeftFader').value);
+    this.puts('midi.audioOutput.safety.rightFader', this.shadowRoot.getElementById('midiAudioOutputSafetyRightFader').value);
     this.puts('midi.browse', this.shadowRoot.getElementById('midiBrowse').value);
     this.puts('midi.controllerName', this.shadowRoot.getElementById('midiControllerName').value);
     this.puts('midi.loadLeft', this.shadowRoot.getElementById('midiLoadLeft').value);

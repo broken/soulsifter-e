@@ -52,6 +52,9 @@ namespace soulsifter {
     //ptree.put("midi.audioOutput.leftName", "");
     //ptree.put("midi.audioOutput.right", "");
     //ptree.put("midi.audioOutput.rightName", "");
+    //ptree.put("midi.audioOutput.safety.crossFader", "");
+    //ptree.put("midi.audioOutput.safety.leftFader", "");
+    //ptree.put("midi.audioOutput.safety.rightFader", "");
     //ptree.put("midi.browse", "");
     //ptree.put("midi.controllerName", "");
     //ptree.put("midi.loadLeft", "");

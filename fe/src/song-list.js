@@ -485,6 +485,24 @@ class SongList extends AlertsMixin(
         }
     );
     midiManager.registerInput(
+        this.settings.getString('midi.audioOutput.safety.crossFader'),
+        e => {
+          this._audioOutputCrossFader = e.rawValue;
+        }
+    );
+    midiManager.registerInput(
+        this.settings.getString('midi.audioOutput.safety.leftFader'),
+        e => {
+          this._audioOutputLeftFader = e.rawValue;
+        }
+    );
+    midiManager.registerInput(
+        this.settings.getString('midi.audioOutput.safety.rightFader'),
+        e => {
+          this._audioOutputRightFader = e.rawValue;
+        }
+    );
+    midiManager.registerInput(
         this.settings.getString('midi.loadLeft'),  // 70
         e => {
           if (this.settings.getBool('virtualdj.active')) {
@@ -549,13 +567,25 @@ class SongList extends AlertsMixin(
             this.scrollTo({top: newScrollTop, behavior: 'instant'});
             console.info(`targetTop: ${targetTop}, moveTop ${moveTop}  newScrollTop: ${newScrollTop}, stop ${selectedRect.top} `);
           }
-          const startPct = this.settings.getInt('songList.previewStartPercent') / 100;
-          let event = new CustomEvent('audio-preview-song', {
-              bubbles: true,
-              composed: true,
-              detail: { song: this.midiSelectedListItem.song, pct: startPct, player: this.midiSelectedListItem }
-          });
-          setTimeout(() => this.dispatchEvent(event), 200);  // wait for audio output to switch
+          if (( // does not have separate audio channels, so no safety checks required
+                !this.settings.getString('midi.audioOutput.leftName') &&
+                !this.settings.getString('midi.audioOutput.rightName')
+              ) || (  // left channel safety check
+                this._audioOutput == this.settings.getString('midi.audioOutput.leftName')
+                && (this._audioOutputLeftFader == 0 || this._audioOutputCrossFader == 0x7F)
+              ) || (  // right channel safety check
+                this._audioOutput == this.settings.getString('midi.audioOutput.rightName')
+                && (this._audioOutputRightFader == 0 || this._audioOutputCrossFader == 0)
+              )
+            ) {
+            const startPct = this.settings.getInt('songList.previewStartPercent') / 100;
+            let event = new CustomEvent('audio-preview-song', {
+                bubbles: true,
+                composed: true,
+                detail: { song: this.midiSelectedListItem.song, pct: startPct, player: this.midiSelectedListItem }
+            });
+            setTimeout(() => this.dispatchEvent(event), 200);  // wait for audio output to switch
+          }
         }
     );
   }
