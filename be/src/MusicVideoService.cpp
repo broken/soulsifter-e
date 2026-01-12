@@ -33,8 +33,8 @@ namespace soulsifter {
 
 JobQueue<std::vector<std::string>> MusicVideoService::job_queue;
 
-std::string mv_yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome -S res,vcodec:h264,acodec:m4a --write-thumbnail ");
-std::string yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --print-json --write-thumbnail --restrict-filenames --extract-audio --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt ");
+std::string mv_yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes node -S res,vcodec:h264,acodec:m4a --write-thumbnail ");
+std::string yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes node --print-json --write-thumbnail --restrict-filenames --extract-audio --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt ");
 
 namespace {
 
