@@ -136,11 +136,18 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
         LOG(DEBUG) << json;
       }
 
+      string filename = ptree.get<string>("_filename", "");
+      string ext = ptree.get<string>("ext", "");
+      if (filename.empty() || ext.empty()) {
+        LOG(WARNING) << "Missing _filename or ext in yt-dlp output";
+        continue;
+      }
+
       Song* song = new Song();
       Album* album = new Album();
       song->setAlbum(album);
 
-      string baseFileName = ptree.get<string>("_filename").substr(0, ptree.get<string>("_filename").size() - ptree.get<string>("ext").size());
+      string baseFileName = filename.substr(0, filename.size() - ext.size());
       song->setFilepath(SoulSifterSettings::getInstance().get<string>("dir.tmp") + '/' + baseFileName + "mp3");
       album->setCoverFilepath(SoulSifterSettings::getInstance().get<string>("dir.tmp") + '/' + baseFileName + "jpg");
       if (!boost::filesystem::exists(album->getCoverFilepath())) {
@@ -150,15 +157,17 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
       string date;
       if (url.find("music.youtube") != std::string::npos) {
         // youtube music
-        LOG(DEBUG) << "title = " << ptree.get<string>("track");
-        song->setTitle(ptree.get<string>("track"));
-        LOG(DEBUG) << "artist = " << ptree.get<string>("artist");
-        LOG(DEBUG) << "creator = " << ptree.get<string>("creator");
-        LOG(DEBUG) << "channel = " << ptree.get<string>("channel");
+        song->setTitle(ptree.get<string>("track", ""));
+        LOG(DEBUG) << "title = " << song->getTitle();
+        string artist = ptree.get<string>("artist", "");
+        LOG(DEBUG) << "artist = " << artist;
+        LOG(DEBUG) << "creator = " << ptree.get<string>("creator", "");
+        string channel = ptree.get<string>("channel", "");
+        LOG(DEBUG) << "channel = " << channel;
         // youtube music adds featuring and remixers to artists, so we remove it possibly here
         {
           std::vector<std::string> artists;
-          boost::split(artists, ptree.get<string>("artist"), boost::is_any_of(","));
+          boost::split(artists, artist, boost::is_any_of(","));
           // remove remixer
           for (size_t i = 1; i < artists.size(); ++i) {
             if (song->getTitle().find(trim_copy(artists[i])) == std::string::npos) {
@@ -168,9 +177,9 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
           song->setArtist(trim_copy(artists[0]));
           LOG(DEBUG) << "artist after removing remixer = " << song->getArtist();
           // update featuring
-          if (song->getArtist().rfind(ptree.get<string>("channel"), 0) == 0
-              && song->getArtist() != ptree.get<string>("channel")) {
-            song->setArtist(ptree.get<string>("channel") + " (ft. " + song->getArtist().substr(ptree.get<string>("channel").length() + 2) + ")");
+          if (song->getArtist().rfind(channel, 0) == 0
+              && song->getArtist() != channel) {
+            song->setArtist(channel + " (ft. " + song->getArtist().substr(channel.length() + 2) + ")");
           }
           LOG(DEBUG) << "artist after updating featuring = " << song->getArtist();
           // consolidate double spaces to a single space
@@ -180,11 +189,11 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
           song->setArtist(s);
           LOG(DEBUG) << "artist after removing double spaces = " << song->getArtist();
         }
-        album->setName(ptree.get<string>("album"));
-        song->setTrack(ptree.get<string>("playlist_index"));
+        album->setName(ptree.get<string>("album", ""));
+        song->setTrack(ptree.get<string>("playlist_index", ""));
         date = ptree.get<string>("release_date", "00000000");
         if (!date.compare("null") || !date.compare("00000000")) {
-          string songDescription = ptree.get<string>("description");
+          string songDescription = ptree.get<string>("description", "");
           boost::regex descReleasedRegex("Released on: (\\d{4})-(\\d{2})-(\\d{2})\\b");
           boost::smatch match;
           if (boost::regex_search(songDescription, match, descReleasedRegex, boost::match_extra)) {
@@ -197,12 +206,12 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
         }
       } else {
         // youtube
-        song->setYoutubeId(ptree.get<string>("id"));
-        song->setCurator(ptree.get<string>("uploader"));
-        string title = ptree.get<string>("title");
+        song->setYoutubeId(ptree.get<string>("id", ""));
+        song->setCurator(ptree.get<string>("uploader", ""));
+        string title = ptree.get<string>("title", "");
         if (!MusicManager::getInstance().splitArtistAndTitle(title, song)) {
           song->setTitle(title);
-          song->setArtist(ptree.get<string>("uploader"));
+          song->setArtist(ptree.get<string>("uploader", ""));
           // Remove " - Topic" from artist field
           boost::regex artistTopicRegex(" - Topic$");
           song->setArtist(boost::regex_replace(song->getArtist(), artistTopicRegex, ""));
@@ -210,9 +219,13 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
         date = ptree.get<string>("upload_date", "00000000");
       }
       if (!date.empty() && !!date.compare("null")) {
-        album->setReleaseDateYear(std::stoi(date.substr(0, 4)));
-        album->setReleaseDateMonth(std::stoi(date.substr(4, 2)));
-        album->setReleaseDateDay(std::stoi(date.substr(6, 4)));
+        try {
+          album->setReleaseDateYear(std::stoi(date.substr(0, 4)));
+          album->setReleaseDateMonth(std::stoi(date.substr(4, 2)));
+          album->setReleaseDateDay(std::stoi(date.substr(6, 4)));
+        } catch (...) {
+          LOG(WARNING) << "Error parsing date: " << date;
+        }
       }
 
       TagService::writeId3v2Tag(song);
