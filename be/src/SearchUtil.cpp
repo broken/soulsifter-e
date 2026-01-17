@@ -555,8 +555,7 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
                                        int energy,
                                        const bool musicVideoMode,
                                        int orderBy,
-                                       int offset,
-                                       std::function<void(string)> errorCallback) {
+                                       int offset) {
   LOG(INFO) << "q:" << query << ", bpm:" << bpm << ", key:" << key << ", styles:" << ", limit:" << limit;
   vector<Song*>* songs = new vector<Song*>();
 
@@ -567,15 +566,8 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from PlaylistEntries pe left outer join Songs s on pe.songid=s.id inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
   else
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from Songs s inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
-  try {
     ss << buildQueryPredicate(query, &limit, &energy, &orderBy);
     ss << buildOptionPredicate(bpm, key, styles, songsToOmit, playlists, limit, energy, orderBy, offset);
-  } catch (boost::exception &e) {
-    LOG(WARNING) << "ERROR: Error parsing query. " << boost::diagnostic_information(e);
-    if (errorCallback) errorCallback(boost::diagnostic_information(e));
-    else LOG(WARNING) << "Undefined callback. Unable to send error.";
-    return songs;
-  }
 
   LOG(DEBUG) << "Query:";
   LOG(DEBUG) << ss.str();
@@ -619,9 +611,7 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
         bool reconnected = MysqlAccess::getInstance().reconnect();
         LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
       } else {
-        LOG(WARNING) << e.what();
-        if (errorCallback) errorCallback(e.what());
-        else LOG(WARNING) << "Undefined callback. Unable to send error.";
+        throw e;
       }
     }
   }

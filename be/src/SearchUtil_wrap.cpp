@@ -42,7 +42,7 @@ SearchUtil::SearchUtil(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Search
 
 Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  if (info.Length() < 12) {
+  if (info.Length() < 11) {
     Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
@@ -128,25 +128,25 @@ Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a10(info[10].As<Napi::Number>().Int32Value());
-  if (!info[11].IsFunction()) {
-    Napi::TypeError::New(env, "TypeError: Function expected (for info[11])").ThrowAsJavaScriptException();
+  try {
+    std::vector<dogatech::soulsifter::Song*>* result =
+        dogatech::soulsifter::SearchUtil::searchSongs(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
+
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result->size()));
+    for (int i = 0; i < (int) result->size(); i++) {
+        Napi::Object instance = Song::NewInstance(env);
+        Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+        r->setWrappedValue((*result)[i], true);
+        a.Set(i, instance);
+    }
+    delete result;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  } catch (...) {
+    Napi::Error::New(env, "Unknown error occurred during search").ThrowAsJavaScriptException();
     return env.Null();
   }
-  Napi::Function a11Fn = info[11].As<Napi::Function>();
-  auto a11 = [&env, &a11Fn](string p0) {
-    a11Fn.Call(env.Global(), {Napi::String::New(env, p0)});
-  };
-  std::vector<dogatech::soulsifter::Song*>* result =
-      dogatech::soulsifter::SearchUtil::searchSongs(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10, a11);
-
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result->size()));
-  for (int i = 0; i < (int) result->size(); i++) {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue((*result)[i], true);
-    a.Set(i, instance);
-  }
-  delete result;
-  return a;
 }
 

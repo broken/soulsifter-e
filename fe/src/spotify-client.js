@@ -140,8 +140,12 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
       return;
     }
     if (!!playlist.query) {
-      let songs = ss.SearchUtil.searchSongs(playlist.query, 200, 0, '', playlist.styles, [], [], 0, false, 0, 0,
-          (msg) => { this.addAlert(msg, 5); });
+      let songs = [];
+      try {
+        songs = ss.SearchUtil.searchSongs(playlist.query, 200, 0, '', playlist.styles, [], [], 0, false, 0, 0);
+      } catch (e) {
+        this.addAlert(e.message, 5);
+      }
       let i = 0;
       try {
         for (i = 0; i < songs.length; ++i) {
@@ -196,7 +200,11 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
                      .map(function(x) { return x.song; });
     } else {
       entries = [];
-      songs = ss.SearchUtil.searchSongs(playlist.query + ' trashed:0', 200, 0, '', playlist.styles, [], []);  // todo: err callbck
+      try {
+        songs = ss.SearchUtil.searchSongs(playlist.query + ' trashed:0', 200, 0, '', playlist.styles, [], []);
+      } catch (e) {
+        console.error(e);
+      }
     }
 
     // get youtube playlist items

@@ -278,7 +278,12 @@ class SongList extends AlertsMixin(
     p.q += !this.searchOptions.trashedRestrict ? '' : (p.q.length ? ' ' : '') + 'trashed:0';
     p.q += !this.searchOptions.mixedRestrict ? '' : (p.q.length ? ' ' : '') + 'mixed:0';
     omitSongs = !this.searchOptions.repeatRestrict ? [] : this.songTrail.map(e => e.song);
-    let songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, this.offset, (msg) => { this.addAlert(msg, 5); });
+    let songs = [];
+    try {
+      songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, this.offset);
+    } catch (e) {
+      this.addAlert(e.message, 5);
+    }
     if (pageMore) this.songs.push(...songs);
     else this.songs = songs;
     this.generateMissingWaveforms();

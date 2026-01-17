@@ -224,13 +224,13 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     if (!this.editedSong.id) {
       try {
         let query = 'a:="' + this.shadowRoot.getElementById('artist').value + '" t:="' + this.shadowRoot.getElementById('title').value + '"';
-        let songs = ss.SearchUtil.searchSongs(query, 1, 0, "", [], [], [], 0, false, 0, 0, (msg) => { this.addAlert(msg, 5); });
+        let songs = ss.SearchUtil.searchSongs(query, 1, 0, "", [], [], [], 0, false, 0, 0);
         if (songs.length > 0) {
           this.addAlert('Track with same artist & title already exists. (' + songs[0].artist +  ' - ' + songs[0].title + ')');
           // TODO get confirmation before adding
         }
       } catch(e) {
-        console.error(e);
+        this.addAlert(e.message, 5);
       }
     }
   }
