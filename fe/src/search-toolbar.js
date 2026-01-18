@@ -201,7 +201,8 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
           this.updateAlert(alertId, 1, 'Completed ' + url, undefined, openFn);
         }
       }).catch((err) => {
-        this.updateAlert(alertId, undefined, "Failed processing " + url + "\n" + err);
+        console.error(err);
+        this.updateAlert(alertId, undefined, "Failed processing " + url + "\n" + (err.message || err));
       });
     });
   }

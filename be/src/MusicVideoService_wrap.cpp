@@ -131,7 +131,7 @@ class DownloadAudioAsyncWorker : public Napi::AsyncWorker {
   void OnError(const Napi::Error& e) {
     Napi::Env env = Env();
     Napi::HandleScope scope(env);
-    deferred->Reject(Napi::TypeError::New(env, "Failed to process async function downloadAudioAsync").Value());
+    deferred->Reject(e.Value());
   }
 
  private:

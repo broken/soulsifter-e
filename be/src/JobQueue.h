@@ -65,7 +65,11 @@ void JobQueue<ReturnT>::pop() {
 
     auto& func = std::get<0>(job);
     auto& promise = std::get<1>(job);
-    promise.set_value(func());
+    try {
+      promise.set_value(func());
+    } catch (...) {
+      promise.set_exception(std::current_exception());
+    }
 
     lock.lock();
   }

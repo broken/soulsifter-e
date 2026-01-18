@@ -1,8 +1,10 @@
 #include "MusicVideoService.h"
 
 #include <filesystem>
+#include <fstream>
 #include <future>
 #include <sstream>
+#include <stdexcept>
 #include <stdio.h>
 #include <string>
 #include <vector>
@@ -106,9 +108,11 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
     return filepaths;
   }
 
+  boost::filesystem::path stderrPath = tmpPath / boost::filesystem::unique_path("ss-ytdl-err-%%%%-%%%%-%%%%-%%%%");
+
   FILE *fpipe;
   stringstream command;
-  command << "cd " << tmpPath << "; yt-dlp " << yt_dlp_opts << url;
+  command << "cd " << tmpPath << "; yt-dlp " << yt_dlp_opts << url << " 2> '" << stderrPath.string() << "'";
   if (!(fpipe = (FILE*)popen(command.str().c_str(), "r"))) {
     LOG(WARNING) << "Problem with yt-dlp pipe.";
     return filepaths;
@@ -121,7 +125,19 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
     ss << buffer;
   }
 
-  pclose(fpipe);
+  int exitStatus = pclose(fpipe);
+
+  // Read stderr from temp file it was redirected to
+  std::ifstream stderrFile(stderrPath.string());
+  std::stringstream stderrSS;
+  stderrSS << stderrFile.rdbuf();
+  std::string stderrStr = stderrSS.str();
+  stderrFile.close();
+  boost::filesystem::remove(stderrPath);
+
+  if (exitStatus != 0) {
+    throw std::runtime_error(stderrStr);
+  }
 
   // read output
   string json;
