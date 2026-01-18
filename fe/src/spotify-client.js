@@ -201,7 +201,7 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
     } else {
       entries = [];
       try {
-        songs = ss.SearchUtil.searchSongs(playlist.query + ' trashed:0', 200, 0, '', playlist.styles, [], []);
+        songs = ss.SearchUtil.searchSongs(playlist.query + ' trashed:0', 200, 0, '', playlist.styles, [], [], 0, false, 0, 0);
       } catch (e) {
         console.error(e);
       }

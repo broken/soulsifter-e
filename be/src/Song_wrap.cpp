@@ -106,8 +106,14 @@ Song::Song(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Song>(info), song(
 }
 
 void Song::clear(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Song* obj = this;
-  obj->song->clear();
+  try {
+    obj->song->clear();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::findById(const Napi::CallbackInfo& info) {
@@ -121,16 +127,21 @@ Napi::Value Song::findById(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::soulsifter::Song* result =
-      dogatech::soulsifter::Song::findById(a0);
+  try {
+    dogatech::soulsifter::Song* result =
+        dogatech::soulsifter::Song::findById(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -145,16 +156,21 @@ Napi::Value Song::findByFilepath(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::Song* result =
-      dogatech::soulsifter::Song::findByFilepath(a0);
+  try {
+    dogatech::soulsifter::Song* result =
+        dogatech::soulsifter::Song::findByFilepath(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -169,16 +185,21 @@ Napi::Value Song::findByGoogleSongId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::Song* result =
-      dogatech::soulsifter::Song::findByGoogleSongId(a0);
+  try {
+    dogatech::soulsifter::Song* result =
+        dogatech::soulsifter::Song::findByGoogleSongId(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -193,16 +214,21 @@ Napi::Value Song::findByYoutubeId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::Song* result =
-      dogatech::soulsifter::Song::findByYoutubeId(a0);
+  try {
+    dogatech::soulsifter::Song* result =
+        dogatech::soulsifter::Song::findByYoutubeId(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -217,16 +243,21 @@ Napi::Value Song::findBySpotifyId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::Song* result =
-      dogatech::soulsifter::Song::findBySpotifyId(a0);
+  try {
+    dogatech::soulsifter::Song* result =
+        dogatech::soulsifter::Song::findBySpotifyId(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -241,16 +272,21 @@ Napi::Value Song::findByRESongId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::soulsifter::Song* result =
-      dogatech::soulsifter::Song::findByRESongId(a0);
+  try {
+    dogatech::soulsifter::Song* result =
+        dogatech::soulsifter::Song::findByRESongId(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -265,89 +301,135 @@ Napi::Value Song::findByDupeId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::ResultSetIterator<dogatech::soulsifter::Song>* result =
-      dogatech::soulsifter::Song::findByDupeId(a0);
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::Song>* result =
+        dogatech::soulsifter::Song::findByDupeId(a0);
 
-  vector<dogatech::soulsifter::Song*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::Song*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value Song::findAll(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  dogatech::ResultSetIterator<dogatech::soulsifter::Song>* result =
-      dogatech::soulsifter::Song::findAll();
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::Song>* result =
+        dogatech::soulsifter::Song::findAll();
 
-  vector<dogatech::soulsifter::Song*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::Song*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value Song::update(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->update();
+  try {
+    int result =    obj->song->update();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Song::save(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->save();
+  try {
+    int result =    obj->song->save();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Song::sync(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  bool result =  obj->song->sync();
+  try {
+    bool result =    obj->song->sync();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Song::reAlbum(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->reAlbum();
+  try {
+    const string result =    obj->song->reAlbum();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Song::getDateAddedString(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getDateAddedString();
+  try {
+    const string result =    obj->song->getDateAddedString();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setDateAddedToNow(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Song* obj = this;
-  obj->song->setDateAddedToNow();
+  try {
+    obj->song->setDateAddedToNow();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getId();
+  try {
+    int result =    obj->song->getId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -362,15 +444,25 @@ void Song::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setId(a0);
+  try {
+    obj->song->setId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getArtist(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getArtist();
+  try {
+    const string& result =    obj->song->getArtist();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setArtist(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -385,15 +477,25 @@ void Song::setArtist(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setArtist(a0);
+  try {
+    obj->song->setArtist(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getTrack(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getTrack();
+  try {
+    const string& result =    obj->song->getTrack();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setTrack(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -408,15 +510,25 @@ void Song::setTrack(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setTrack(a0);
+  try {
+    obj->song->setTrack(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getTitle(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getTitle();
+  try {
+    const string& result =    obj->song->getTitle();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setTitle(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -431,15 +543,25 @@ void Song::setTitle(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setTitle(a0);
+  try {
+    obj->song->setTitle(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getRemixer(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getRemixer();
+  try {
+    const string& result =    obj->song->getRemixer();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setRemixer(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -454,15 +576,25 @@ void Song::setRemixer(const Napi::CallbackInfo& info, const Napi::Value &value) 
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setRemixer(a0);
+  try {
+    obj->song->setRemixer(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getFeaturing(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getFeaturing();
+  try {
+    const string& result =    obj->song->getFeaturing();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setFeaturing(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -477,15 +609,25 @@ void Song::setFeaturing(const Napi::CallbackInfo& info, const Napi::Value &value
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setFeaturing(a0);
+  try {
+    obj->song->setFeaturing(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getFilepath(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getFilepath();
+  try {
+    const string& result =    obj->song->getFilepath();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setFilepath(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -500,15 +642,25 @@ void Song::setFilepath(const Napi::CallbackInfo& info, const Napi::Value &value)
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setFilepath(a0);
+  try {
+    obj->song->setFilepath(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getRating(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getRating();
+  try {
+    int result =    obj->song->getRating();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -523,15 +675,25 @@ void Song::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setRating(a0);
+  try {
+    obj->song->setRating(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getDateAdded(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  time_t result =  obj->song->getDateAdded();
+  try {
+    time_t result =    obj->song->getDateAdded();
 
-  return Napi::Number::New(env, result * 1000);
+    return Napi::Number::New(env, result * 1000);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setDateAdded(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -546,15 +708,25 @@ void Song::setDateAdded(const Napi::CallbackInfo& info, const Napi::Value &value
     return;
   }
   time_t a0(value.As<Napi::Number>().Int32Value() / 1000);
-  obj->song->setDateAdded(a0);
+  try {
+    obj->song->setDateAdded(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getBpm(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getBpm();
+  try {
+    const string& result =    obj->song->getBpm();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setBpm(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -569,15 +741,25 @@ void Song::setBpm(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setBpm(a0);
+  try {
+    obj->song->setBpm(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getTonicKey(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getTonicKey();
+  try {
+    const string& result =    obj->song->getTonicKey();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setTonicKey(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -592,15 +774,25 @@ void Song::setTonicKey(const Napi::CallbackInfo& info, const Napi::Value &value)
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setTonicKey(a0);
+  try {
+    obj->song->setTonicKey(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getEnergy(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getEnergy();
+  try {
+    int result =    obj->song->getEnergy();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setEnergy(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -615,15 +807,25 @@ void Song::setEnergy(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setEnergy(a0);
+  try {
+    obj->song->setEnergy(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getComments(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getComments();
+  try {
+    const string& result =    obj->song->getComments();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setComments(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -638,15 +840,25 @@ void Song::setComments(const Napi::CallbackInfo& info, const Napi::Value &value)
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setComments(a0);
+  try {
+    obj->song->setComments(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getTrashed(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  bool result =  obj->song->getTrashed();
+  try {
+    bool result =    obj->song->getTrashed();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setTrashed(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -661,15 +873,25 @@ void Song::setTrashed(const Napi::CallbackInfo& info, const Napi::Value &value) 
     return;
   }
   bool a0(value.As<Napi::Boolean>().Value());
-  obj->song->setTrashed(a0);
+  try {
+    obj->song->setTrashed(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getLowQuality(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  bool result =  obj->song->getLowQuality();
+  try {
+    bool result =    obj->song->getLowQuality();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setLowQuality(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -684,15 +906,25 @@ void Song::setLowQuality(const Napi::CallbackInfo& info, const Napi::Value &valu
     return;
   }
   bool a0(value.As<Napi::Boolean>().Value());
-  obj->song->setLowQuality(a0);
+  try {
+    obj->song->setLowQuality(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getGoogleSongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getGoogleSongId();
+  try {
+    const string& result =    obj->song->getGoogleSongId();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setGoogleSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -707,15 +939,25 @@ void Song::setGoogleSongId(const Napi::CallbackInfo& info, const Napi::Value &va
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setGoogleSongId(a0);
+  try {
+    obj->song->setGoogleSongId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getYoutubeId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getYoutubeId();
+  try {
+    const string& result =    obj->song->getYoutubeId();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -730,15 +972,25 @@ void Song::setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &value
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setYoutubeId(a0);
+  try {
+    obj->song->setYoutubeId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getSpotifyId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getSpotifyId();
+  try {
+    const string& result =    obj->song->getSpotifyId();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -753,15 +1005,25 @@ void Song::setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &value
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setSpotifyId(a0);
+  try {
+    obj->song->setSpotifyId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getDurationInMs(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getDurationInMs();
+  try {
+    int result =    obj->song->getDurationInMs();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setDurationInMs(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -776,15 +1038,25 @@ void Song::setDurationInMs(const Napi::CallbackInfo& info, const Napi::Value &va
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setDurationInMs(a0);
+  try {
+    obj->song->setDurationInMs(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getCurator(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const string result =  obj->song->getCurator();
+  try {
+    const string& result =    obj->song->getCurator();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setCurator(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -799,15 +1071,25 @@ void Song::setCurator(const Napi::CallbackInfo& info, const Napi::Value &value) 
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->song->setCurator(a0);
+  try {
+    obj->song->setCurator(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getRESongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getRESongId();
+  try {
+    int result =    obj->song->getRESongId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setRESongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -822,15 +1104,25 @@ void Song::setRESongId(const Napi::CallbackInfo& info, const Napi::Value &value)
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setRESongId(a0);
+  try {
+    obj->song->setRESongId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getAlbumId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getAlbumId();
+  try {
+    int result =    obj->song->getAlbumId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -845,36 +1137,51 @@ void Song::setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value) 
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setAlbumId(a0);
+  try {
+    obj->song->setAlbumId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getAlbum(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  dogatech::soulsifter::Album* result =  obj->song->getAlbum();
+  try {
+    dogatech::soulsifter::Album* result =    obj->song->getAlbum();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Album::NewInstance(env);
+      Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Album::NewInstance(env);
-    Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
 Napi::Value Song::getAlbumConst(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  dogatech::soulsifter::Album* result =  obj->song->getAlbumConst();
+  try {
+    dogatech::soulsifter::Album* result =    obj->song->getAlbumConst();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Album::NewInstance(env);
+      Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Album::NewInstance(env);
-    Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
@@ -891,15 +1198,25 @@ void Song::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value) {
   }
   dogatech::soulsifter::Album* a0tmp(Napi::ObjectWrap<Album>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::Album& a0 = *a0tmp;
-  obj->song->setAlbum(a0);
+  try {
+    obj->song->setAlbum(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getAlbumPartId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getAlbumPartId();
+  try {
+    int result =    obj->song->getAlbumPartId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setAlbumPartId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -914,36 +1231,51 @@ void Song::setAlbumPartId(const Napi::CallbackInfo& info, const Napi::Value &val
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setAlbumPartId(a0);
+  try {
+    obj->song->setAlbumPartId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getAlbumPart(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  dogatech::soulsifter::AlbumPart* result =  obj->song->getAlbumPart();
+  try {
+    dogatech::soulsifter::AlbumPart* result =    obj->song->getAlbumPart();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = AlbumPart::NewInstance(env);
+      AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = AlbumPart::NewInstance(env);
-    AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
 Napi::Value Song::getAlbumPartConst(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  dogatech::soulsifter::AlbumPart* result =  obj->song->getAlbumPartConst();
+  try {
+    dogatech::soulsifter::AlbumPart* result =    obj->song->getAlbumPartConst();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = AlbumPart::NewInstance(env);
+      AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = AlbumPart::NewInstance(env);
-    AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
@@ -960,15 +1292,25 @@ void Song::setAlbumPart(const Napi::CallbackInfo& info, const Napi::Value &value
   }
   dogatech::soulsifter::AlbumPart* a0tmp(Napi::ObjectWrap<AlbumPart>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::AlbumPart& a0 = *a0tmp;
-  obj->song->setAlbumPart(a0);
+  try {
+    obj->song->setAlbumPart(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getMusicVideoId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getMusicVideoId();
+  try {
+    int result =    obj->song->getMusicVideoId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setMusicVideoId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -983,36 +1325,51 @@ void Song::setMusicVideoId(const Napi::CallbackInfo& info, const Napi::Value &va
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setMusicVideoId(a0);
+  try {
+    obj->song->setMusicVideoId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getMusicVideo(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  dogatech::soulsifter::MusicVideo* result =  obj->song->getMusicVideo();
+  try {
+    dogatech::soulsifter::MusicVideo* result =    obj->song->getMusicVideo();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = MusicVideo::NewInstance(env);
+      MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = MusicVideo::NewInstance(env);
-    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
 Napi::Value Song::getMusicVideoConst(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  dogatech::soulsifter::MusicVideo* result =  obj->song->getMusicVideoConst();
+  try {
+    dogatech::soulsifter::MusicVideo* result =    obj->song->getMusicVideoConst();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = MusicVideo::NewInstance(env);
+      MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = MusicVideo::NewInstance(env);
-    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
@@ -1029,19 +1386,29 @@ void Song::setMusicVideo(const Napi::CallbackInfo& info, const Napi::Value &valu
   }
   dogatech::soulsifter::MusicVideo* a0tmp(Napi::ObjectWrap<MusicVideo>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::MusicVideo& a0 = *a0tmp;
-  obj->song->setMusicVideo(a0);
+  try {
+    obj->song->setMusicVideo(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getStyleIds(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const std::vector<int>& result =  obj->song->getStyleIds();
+  try {
+    const std::vector<int>& result =    obj->song->getStyleIds();
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    a.Set(i, Napi::Number::New(env, result[i]));
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      a.Set(i, Napi::Number::New(env, result[i]));
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 void Song::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -1065,22 +1432,32 @@ void Song::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value)
     int32_t x(a0Array.Get(i).As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
-  obj->song->setStyleIds(a0);
+  try {
+    obj->song->setStyleIds(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getStyles(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  const std::vector<dogatech::soulsifter::Style*>& result =  obj->song->getStyles();
+  try {
+    const std::vector<dogatech::soulsifter::Style*>& result =    obj->song->getStyles();
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    Napi::Object instance = Style::NewInstance(env);
-    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue((result)[i], false);
-    a.Set(i, instance);
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      Napi::Object instance = Style::NewInstance(env);
+      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+      r->setWrappedValue((result)[i], false);
+      a.Set(i, instance);
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 void Song::setStyles(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -1104,15 +1481,25 @@ void Song::setStyles(const Napi::CallbackInfo& info, const Napi::Value &value) {
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(a0Array.Get(i).As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
-  obj->song->setStyles(a0);
+  try {
+    obj->song->setStyles(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getBpmLock(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  bool result =  obj->song->getBpmLock();
+  try {
+    bool result =    obj->song->getBpmLock();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setBpmLock(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -1127,15 +1514,25 @@ void Song::setBpmLock(const Napi::CallbackInfo& info, const Napi::Value &value) 
     return;
   }
   bool a0(value.As<Napi::Boolean>().Value());
-  obj->song->setBpmLock(a0);
+  try {
+    obj->song->setBpmLock(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getTonicKeyLock(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  bool result =  obj->song->getTonicKeyLock();
+  try {
+    bool result =    obj->song->getTonicKeyLock();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setTonicKeyLock(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -1150,15 +1547,25 @@ void Song::setTonicKeyLock(const Napi::CallbackInfo& info, const Napi::Value &va
     return;
   }
   bool a0(value.As<Napi::Boolean>().Value());
-  obj->song->setTonicKeyLock(a0);
+  try {
+    obj->song->setTonicKeyLock(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getDupeId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  int result =  obj->song->getDupeId();
+  try {
+    int result =    obj->song->getDupeId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Song::setDupeId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -1173,36 +1580,51 @@ void Song::setDupeId(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->song->setDupeId(a0);
+  try {
+    obj->song->setDupeId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Song::getDupe(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  dogatech::soulsifter::Song* result =  obj->song->getDupe();
+  try {
+    dogatech::soulsifter::Song* result =    obj->song->getDupe();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
 Napi::Value Song::getDupeConst(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Song* obj = this;
-  dogatech::soulsifter::Song* result =  obj->song->getDupeConst();
+  try {
+    dogatech::soulsifter::Song* result =    obj->song->getDupeConst();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -1219,6 +1641,11 @@ void Song::setDupe(const Napi::CallbackInfo& info, const Napi::Value &value) {
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::Song& a0 = *a0tmp;
-  obj->song->setDupe(a0);
+  try {
+    obj->song->setDupe(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

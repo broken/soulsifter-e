@@ -65,8 +65,14 @@ Mix::Mix(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Mix>(info), mix(null
 }
 
 void Mix::clear(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Mix* obj = this;
-  obj->mix->clear();
+  try {
+    obj->mix->clear();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::findById(const Napi::CallbackInfo& info) {
@@ -80,16 +86,21 @@ Napi::Value Mix::findById(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::soulsifter::Mix* result =
-      dogatech::soulsifter::Mix::findById(a0);
+  try {
+    dogatech::soulsifter::Mix* result =
+        dogatech::soulsifter::Mix::findById(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Mix::NewInstance(env);
+      Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Mix::NewInstance(env);
-    Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -109,16 +120,21 @@ Napi::Value Mix::findByOutSongIdAndInSongId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a1(info[1].As<Napi::Number>().Int32Value());
-  dogatech::soulsifter::Mix* result =
-      dogatech::soulsifter::Mix::findByOutSongIdAndInSongId(a0, a1);
+  try {
+    dogatech::soulsifter::Mix* result =
+        dogatech::soulsifter::Mix::findByOutSongIdAndInSongId(a0, a1);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Mix::NewInstance(env);
+      Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Mix::NewInstance(env);
-    Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -133,19 +149,24 @@ Napi::Value Mix::findByOutSongId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
-      dogatech::soulsifter::Mix::findByOutSongId(a0);
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
+        dogatech::soulsifter::Mix::findByOutSongId(a0);
 
-  vector<dogatech::soulsifter::Mix*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Mix::NewInstance(env);
-    Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::Mix*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = Mix::NewInstance(env);
+      Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value Mix::findByInSongId(const Napi::CallbackInfo& info) {
@@ -159,60 +180,85 @@ Napi::Value Mix::findByInSongId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
-      dogatech::soulsifter::Mix::findByInSongId(a0);
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
+        dogatech::soulsifter::Mix::findByInSongId(a0);
 
-  vector<dogatech::soulsifter::Mix*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Mix::NewInstance(env);
-    Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::Mix*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = Mix::NewInstance(env);
+      Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value Mix::findAll(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
-      dogatech::soulsifter::Mix::findAll();
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
+        dogatech::soulsifter::Mix::findAll();
 
-  vector<dogatech::soulsifter::Mix*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Mix::NewInstance(env);
-    Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::Mix*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = Mix::NewInstance(env);
+      Mix* r = Napi::ObjectWrap<Mix>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value Mix::update(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  int result =  obj->mix->update();
+  try {
+    int result =    obj->mix->update();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Mix::save(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  int result =  obj->mix->save();
+  try {
+    int result =    obj->mix->save();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Mix::sync(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  bool result =  obj->mix->sync();
+  try {
+    bool result =    obj->mix->sync();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Mix::mixoutCountForRESongId(const Napi::CallbackInfo& info) {
@@ -226,18 +272,28 @@ Napi::Value Mix::mixoutCountForRESongId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  int result =
-      dogatech::soulsifter::Mix::mixoutCountForRESongId(a0);
+  try {
+    int result =
+        dogatech::soulsifter::Mix::mixoutCountForRESongId(a0);
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Mix::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  int result =  obj->mix->getId();
+  try {
+    int result =    obj->mix->getId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Mix::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -252,15 +308,25 @@ void Mix::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->mix->setId(a0);
+  try {
+    obj->mix->setId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::getOutSongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  int result =  obj->mix->getOutSongId();
+  try {
+    int result =    obj->mix->getOutSongId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Mix::setOutSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -275,36 +341,51 @@ void Mix::setOutSongId(const Napi::CallbackInfo& info, const Napi::Value &value)
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->mix->setOutSongId(a0);
+  try {
+    obj->mix->setOutSongId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::getOutSong(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  dogatech::soulsifter::Song* result =  obj->mix->getOutSong();
+  try {
+    dogatech::soulsifter::Song* result =    obj->mix->getOutSong();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
 Napi::Value Mix::getOutSongConst(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  dogatech::soulsifter::Song* result =  obj->mix->getOutSongConst();
+  try {
+    dogatech::soulsifter::Song* result =    obj->mix->getOutSongConst();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
@@ -321,15 +402,25 @@ void Mix::setOutSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::Song& a0 = *a0tmp;
-  obj->mix->setOutSong(a0);
+  try {
+    obj->mix->setOutSong(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::getInSongId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  int result =  obj->mix->getInSongId();
+  try {
+    int result =    obj->mix->getInSongId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Mix::setInSongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -344,36 +435,51 @@ void Mix::setInSongId(const Napi::CallbackInfo& info, const Napi::Value &value) 
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->mix->setInSongId(a0);
+  try {
+    obj->mix->setInSongId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::getInSong(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  dogatech::soulsifter::Song* result =  obj->mix->getInSong();
+  try {
+    dogatech::soulsifter::Song* result =    obj->mix->getInSong();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
 Napi::Value Mix::getInSongConst(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  dogatech::soulsifter::Song* result =  obj->mix->getInSongConst();
+  try {
+    dogatech::soulsifter::Song* result =    obj->mix->getInSongConst();
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Song::NewInstance(env);
-    Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
@@ -390,15 +496,25 @@ void Mix::setInSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
   dogatech::soulsifter::Song& a0 = *a0tmp;
-  obj->mix->setInSong(a0);
+  try {
+    obj->mix->setInSong(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::getBpmDiff(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  const string result =  obj->mix->getBpmDiff();
+  try {
+    const string& result =    obj->mix->getBpmDiff();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Mix::setBpmDiff(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -413,15 +529,25 @@ void Mix::setBpmDiff(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->mix->setBpmDiff(a0);
+  try {
+    obj->mix->setBpmDiff(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::getRating(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  int result =  obj->mix->getRating();
+  try {
+    int result =    obj->mix->getRating();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Mix::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -436,15 +562,25 @@ void Mix::setRating(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->mix->setRating(a0);
+  try {
+    obj->mix->setRating(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::getComments(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  const string result =  obj->mix->getComments();
+  try {
+    const string& result =    obj->mix->getComments();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Mix::setComments(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -459,15 +595,25 @@ void Mix::setComments(const Napi::CallbackInfo& info, const Napi::Value &value) 
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->mix->setComments(a0);
+  try {
+    obj->mix->setComments(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Mix::getAddon(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Mix* obj = this;
-  bool result =  obj->mix->getAddon();
+  try {
+    bool result =    obj->mix->getAddon();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Mix::setAddon(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -482,6 +628,11 @@ void Mix::setAddon(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   bool a0(value.As<Napi::Boolean>().Value());
-  obj->mix->setAddon(a0);
+  try {
+    obj->mix->setAddon(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

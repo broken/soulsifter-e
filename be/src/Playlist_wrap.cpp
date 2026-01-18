@@ -61,8 +61,14 @@ Playlist::Playlist(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Playlist>(
 }
 
 void Playlist::clear(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Playlist* obj = this;
-  obj->playlist->clear();
+  try {
+    obj->playlist->clear();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Playlist::findById(const Napi::CallbackInfo& info) {
@@ -76,16 +82,21 @@ Napi::Value Playlist::findById(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::soulsifter::Playlist* result =
-      dogatech::soulsifter::Playlist::findById(a0);
+  try {
+    dogatech::soulsifter::Playlist* result =
+        dogatech::soulsifter::Playlist::findById(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Playlist::NewInstance(env);
+      Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Playlist::NewInstance(env);
-    Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -100,16 +111,21 @@ Napi::Value Playlist::findByName(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::Playlist* result =
-      dogatech::soulsifter::Playlist::findByName(a0);
+  try {
+    dogatech::soulsifter::Playlist* result =
+        dogatech::soulsifter::Playlist::findByName(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Playlist::NewInstance(env);
+      Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Playlist::NewInstance(env);
-    Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -124,74 +140,109 @@ Napi::Value Playlist::findBySpotifyId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::Playlist* result =
-      dogatech::soulsifter::Playlist::findBySpotifyId(a0);
+  try {
+    dogatech::soulsifter::Playlist* result =
+        dogatech::soulsifter::Playlist::findBySpotifyId(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Playlist::NewInstance(env);
+      Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Playlist::NewInstance(env);
-    Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
 Napi::Value Playlist::findAll(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  dogatech::ResultSetIterator<dogatech::soulsifter::Playlist>* result =
-      dogatech::soulsifter::Playlist::findAll();
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::Playlist>* result =
+        dogatech::soulsifter::Playlist::findAll();
 
-  vector<dogatech::soulsifter::Playlist*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Playlist::NewInstance(env);
-    Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::Playlist*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = Playlist::NewInstance(env);
+      Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value Playlist::update(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  int result =  obj->playlist->update();
+  try {
+    int result =    obj->playlist->update();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Playlist::save(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  int result =  obj->playlist->save();
+  try {
+    int result =    obj->playlist->save();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Playlist::sync(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  bool result =  obj->playlist->sync();
+  try {
+    bool result =    obj->playlist->sync();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Playlist::erase(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  int result =  obj->playlist->erase();
+  try {
+    int result =    obj->playlist->erase();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Playlist::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  int result =  obj->playlist->getId();
+  try {
+    int result =    obj->playlist->getId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Playlist::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -206,15 +257,25 @@ void Playlist::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->playlist->setId(a0);
+  try {
+    obj->playlist->setId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Playlist::getName(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const string result =  obj->playlist->getName();
+  try {
+    const string& result =    obj->playlist->getName();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Playlist::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -229,15 +290,25 @@ void Playlist::setName(const Napi::CallbackInfo& info, const Napi::Value &value)
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->playlist->setName(a0);
+  try {
+    obj->playlist->setName(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Playlist::getQuery(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const string result =  obj->playlist->getQuery();
+  try {
+    const string& result =    obj->playlist->getQuery();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Playlist::setQuery(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -252,15 +323,25 @@ void Playlist::setQuery(const Napi::CallbackInfo& info, const Napi::Value &value
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->playlist->setQuery(a0);
+  try {
+    obj->playlist->setQuery(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Playlist::getGmusicId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const string result =  obj->playlist->getGmusicId();
+  try {
+    const string& result =    obj->playlist->getGmusicId();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Playlist::setGmusicId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -275,15 +356,25 @@ void Playlist::setGmusicId(const Napi::CallbackInfo& info, const Napi::Value &va
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->playlist->setGmusicId(a0);
+  try {
+    obj->playlist->setGmusicId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Playlist::getYoutubeId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const string result =  obj->playlist->getYoutubeId();
+  try {
+    const string& result =    obj->playlist->getYoutubeId();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Playlist::setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -298,15 +389,25 @@ void Playlist::setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &v
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->playlist->setYoutubeId(a0);
+  try {
+    obj->playlist->setYoutubeId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Playlist::getSpotifyId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const string result =  obj->playlist->getSpotifyId();
+  try {
+    const string& result =    obj->playlist->getSpotifyId();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Playlist::setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -321,19 +422,29 @@ void Playlist::setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &v
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->playlist->setSpotifyId(a0);
+  try {
+    obj->playlist->setSpotifyId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Playlist::getStyleIds(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const std::vector<int>& result =  obj->playlist->getStyleIds();
+  try {
+    const std::vector<int>& result =    obj->playlist->getStyleIds();
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    a.Set(i, Napi::Number::New(env, result[i]));
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      a.Set(i, Napi::Number::New(env, result[i]));
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 void Playlist::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -357,22 +468,32 @@ void Playlist::setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &va
     int32_t x(a0Array.Get(i).As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
-  obj->playlist->setStyleIds(a0);
+  try {
+    obj->playlist->setStyleIds(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Playlist::getStyles(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Playlist* obj = this;
-  const std::vector<dogatech::soulsifter::Style*>& result =  obj->playlist->getStyles();
+  try {
+    const std::vector<dogatech::soulsifter::Style*>& result =    obj->playlist->getStyles();
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    Napi::Object instance = Style::NewInstance(env);
-    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue((result)[i], false);
-    a.Set(i, instance);
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      Napi::Object instance = Style::NewInstance(env);
+      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+      r->setWrappedValue((result)[i], false);
+      a.Set(i, instance);
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 void Playlist::setStyles(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -396,6 +517,11 @@ void Playlist::setStyles(const Napi::CallbackInfo& info, const Napi::Value &valu
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(a0Array.Get(i).As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
-  obj->playlist->setStyles(a0);
+  try {
+    obj->playlist->setStyles(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

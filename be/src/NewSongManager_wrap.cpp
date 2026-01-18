@@ -61,7 +61,12 @@ void NewSongManager::import(const Napi::CallbackInfo& info) {
     std::string x(a0Array.Get(i).As<Napi::String>().Utf8Value());
     a0.push_back(x);
   }
-  obj->newsongmanager->import(a0);
+  try {
+    obj->newsongmanager->import(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value NewSongManager::nextSong(const Napi::CallbackInfo& info) {
@@ -81,17 +86,27 @@ Napi::Value NewSongManager::nextSong(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   dogatech::soulsifter::Song* a1(Napi::ObjectWrap<Song>::Unwrap(info[1].As<Napi::Object>())->getWrappedValue());
-  bool result =  obj->newsongmanager->nextSong(a0, a1);
+  try {
+    bool result =    obj->newsongmanager->nextSong(a0, a1);
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value NewSongManager::coverImagePath(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   NewSongManager* obj = this;
-  string result =  obj->newsongmanager->coverImagePath();
+  try {
+    string result =    obj->newsongmanager->coverImagePath();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value NewSongManager::processSong(const Napi::CallbackInfo& info) {
@@ -106,9 +121,14 @@ Napi::Value NewSongManager::processSong(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
-  bool result =  obj->newsongmanager->processSong(a0);
+  try {
+    bool result =    obj->newsongmanager->processSong(a0);
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void NewSongManager::trashMusicFile(const Napi::CallbackInfo& info) {
@@ -123,6 +143,11 @@ void NewSongManager::trashMusicFile(const Napi::CallbackInfo& info) {
     return;
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
-  obj->newsongmanager->trashMusicFile(a0);
+  try {
+    obj->newsongmanager->trashMusicFile(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

@@ -134,18 +134,15 @@ Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
 
     Napi::Array a = Napi::Array::New(env, static_cast<int>(result->size()));
     for (int i = 0; i < (int) result->size(); i++) {
-        Napi::Object instance = Song::NewInstance(env);
-        Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-        r->setWrappedValue((*result)[i], true);
-        a.Set(i, instance);
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue((*result)[i], true);
+      a.Set(i, instance);
     }
     delete result;
     return a;
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  } catch (...) {
-    Napi::Error::New(env, "Unknown error occurred during search").ThrowAsJavaScriptException();
     return env.Null();
   }
 }

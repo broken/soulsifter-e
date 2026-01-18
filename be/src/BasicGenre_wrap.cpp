@@ -53,8 +53,14 @@ BasicGenre::BasicGenre(const Napi::CallbackInfo& info) : Napi::ObjectWrap<BasicG
 }
 
 void BasicGenre::clear(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   BasicGenre* obj = this;
-  obj->basicgenre->clear();
+  try {
+    obj->basicgenre->clear();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value BasicGenre::findById(const Napi::CallbackInfo& info) {
@@ -68,16 +74,21 @@ Napi::Value BasicGenre::findById(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::soulsifter::BasicGenre* result =
-      dogatech::soulsifter::BasicGenre::findById(a0);
+  try {
+    dogatech::soulsifter::BasicGenre* result =
+        dogatech::soulsifter::BasicGenre::findById(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = BasicGenre::NewInstance(env);
+      BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = BasicGenre::NewInstance(env);
-    BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -92,58 +103,83 @@ Napi::Value BasicGenre::findByName(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::BasicGenre* result =
-      dogatech::soulsifter::BasicGenre::findByName(a0);
+  try {
+    dogatech::soulsifter::BasicGenre* result =
+        dogatech::soulsifter::BasicGenre::findByName(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = BasicGenre::NewInstance(env);
+      BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = BasicGenre::NewInstance(env);
-    BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
 Napi::Value BasicGenre::findAll(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  dogatech::ResultSetIterator<dogatech::soulsifter::BasicGenre>* result =
-      dogatech::soulsifter::BasicGenre::findAll();
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::BasicGenre>* result =
+        dogatech::soulsifter::BasicGenre::findAll();
 
-  vector<dogatech::soulsifter::BasicGenre*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = BasicGenre::NewInstance(env);
-    BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::BasicGenre*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = BasicGenre::NewInstance(env);
+      BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value BasicGenre::update(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   BasicGenre* obj = this;
-  int result =  obj->basicgenre->update();
+  try {
+    int result =    obj->basicgenre->update();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value BasicGenre::save(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   BasicGenre* obj = this;
-  int result =  obj->basicgenre->save();
+  try {
+    int result =    obj->basicgenre->save();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value BasicGenre::sync(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   BasicGenre* obj = this;
-  bool result =  obj->basicgenre->sync();
+  try {
+    bool result =    obj->basicgenre->sync();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value BasicGenre::findByFilepath(const Napi::CallbackInfo& info) {
@@ -157,16 +193,21 @@ Napi::Value BasicGenre::findByFilepath(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::BasicGenre* result =
-      dogatech::soulsifter::BasicGenre::findByFilepath(a0);
+  try {
+    dogatech::soulsifter::BasicGenre* result =
+        dogatech::soulsifter::BasicGenre::findByFilepath(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = BasicGenre::NewInstance(env);
+      BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = BasicGenre::NewInstance(env);
-    BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -181,25 +222,35 @@ Napi::Value BasicGenre::findByArtist(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::BasicGenre* result =
-      dogatech::soulsifter::BasicGenre::findByArtist(a0);
+  try {
+    dogatech::soulsifter::BasicGenre* result =
+        dogatech::soulsifter::BasicGenre::findByArtist(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = BasicGenre::NewInstance(env);
+      BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = BasicGenre::NewInstance(env);
-    BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
 Napi::Value BasicGenre::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   BasicGenre* obj = this;
-  int result =  obj->basicgenre->getId();
+  try {
+    int result =    obj->basicgenre->getId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void BasicGenre::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -214,15 +265,25 @@ void BasicGenre::setId(const Napi::CallbackInfo& info, const Napi::Value &value)
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->basicgenre->setId(a0);
+  try {
+    obj->basicgenre->setId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value BasicGenre::getName(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   BasicGenre* obj = this;
-  const string result =  obj->basicgenre->getName();
+  try {
+    const string& result =    obj->basicgenre->getName();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void BasicGenre::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -237,6 +298,11 @@ void BasicGenre::setName(const Napi::CallbackInfo& info, const Napi::Value &valu
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->basicgenre->setName(a0);
+  try {
+    obj->basicgenre->setName(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

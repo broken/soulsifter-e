@@ -44,8 +44,14 @@ SoulSifterSettings::SoulSifterSettings(const Napi::CallbackInfo& info) : Napi::O
 }
 
 void SoulSifterSettings::save(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   SoulSifterSettings* obj = this;
-  obj->soulsiftersettings->save();
+  try {
+    obj->soulsiftersettings->save();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value SoulSifterSettings::getString(const Napi::CallbackInfo& info) {
@@ -60,9 +66,14 @@ Napi::Value SoulSifterSettings::getString(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  string result =  obj->soulsiftersettings->getString(a0);
+  try {
+    string result =    obj->soulsiftersettings->getString(a0);
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void SoulSifterSettings::putString(const Napi::CallbackInfo& info) {
@@ -82,7 +93,12 @@ void SoulSifterSettings::putString(const Napi::CallbackInfo& info) {
     return;
   }
   std::string a1(info[1].As<Napi::String>().Utf8Value());
-  obj->soulsiftersettings->putString(a0, a1);
+  try {
+    obj->soulsiftersettings->putString(a0, a1);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value SoulSifterSettings::getInt(const Napi::CallbackInfo& info) {
@@ -97,9 +113,14 @@ Napi::Value SoulSifterSettings::getInt(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  int result =  obj->soulsiftersettings->getInt(a0);
+  try {
+    int result =    obj->soulsiftersettings->getInt(a0);
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void SoulSifterSettings::putInt(const Napi::CallbackInfo& info) {
@@ -119,7 +140,12 @@ void SoulSifterSettings::putInt(const Napi::CallbackInfo& info) {
     return;
   }
   int32_t a1(info[1].As<Napi::Number>().Int32Value());
-  obj->soulsiftersettings->putInt(a0, a1);
+  try {
+    obj->soulsiftersettings->putInt(a0, a1);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value SoulSifterSettings::getBool(const Napi::CallbackInfo& info) {
@@ -134,9 +160,14 @@ Napi::Value SoulSifterSettings::getBool(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  bool result =  obj->soulsiftersettings->getBool(a0);
+  try {
+    bool result =    obj->soulsiftersettings->getBool(a0);
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void SoulSifterSettings::putBool(const Napi::CallbackInfo& info) {
@@ -156,6 +187,11 @@ void SoulSifterSettings::putBool(const Napi::CallbackInfo& info) {
     return;
   }
   bool a1(info[1].As<Napi::Boolean>().Value());
-  obj->soulsiftersettings->putBool(a0, a1);
+  try {
+    obj->soulsiftersettings->putBool(a0, a1);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

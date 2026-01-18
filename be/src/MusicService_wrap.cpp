@@ -49,10 +49,15 @@ Napi::Value MusicService::cleanDirName(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  string result =
-      dogatech::soulsifter::MusicService::cleanDirName(a0);
+  try {
+    string result =
+        dogatech::soulsifter::MusicService::cleanDirName(a0);
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value MusicService::updateAlbumCover(const Napi::CallbackInfo& info) {
@@ -79,10 +84,15 @@ Napi::Value MusicService::updateAlbumCover(const Napi::CallbackInfo& info) {
   auto a2 = [&env, &a2Fn](std::string p0) {
     a2Fn.Call(env.Global(), {Napi::String::New(env, p0)});
   };
-  bool result =
-      dogatech::soulsifter::MusicService::updateAlbumCover(a0, a1, a2);
+  try {
+    bool result =
+        dogatech::soulsifter::MusicService::updateAlbumCover(a0, a1, a2);
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value MusicService::moveAlbum(const Napi::CallbackInfo& info) {
@@ -104,9 +114,14 @@ Napi::Value MusicService::moveAlbum(const Napi::CallbackInfo& info) {
   auto a1 = [&env, &a1Fn](std::string p0) {
     a1Fn.Call(env.Global(), {Napi::String::New(env, p0)});
   };
-  bool result =
-      dogatech::soulsifter::MusicService::moveAlbum(a0, a1);
+  try {
+    bool result =
+        dogatech::soulsifter::MusicService::moveAlbum(a0, a1);
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 

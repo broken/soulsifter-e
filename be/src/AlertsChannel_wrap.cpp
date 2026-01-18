@@ -54,7 +54,12 @@ void AlertsChannel::registerChannelEndpoint(const Napi::CallbackInfo& info) {
     };
     a0Fn.BlockingCall(callback);
   };
-  obj->alertschannel->registerChannelEndpoint(a0);
+  try {
+    obj->alertschannel->registerChannelEndpoint(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 void AlertsChannel::send(const Napi::CallbackInfo& info) {
@@ -69,6 +74,11 @@ void AlertsChannel::send(const Napi::CallbackInfo& info) {
     return;
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  obj->alertschannel->send(a0);
+  try {
+    obj->alertschannel->send(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

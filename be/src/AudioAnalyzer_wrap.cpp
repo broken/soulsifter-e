@@ -52,14 +52,19 @@ Napi::Value AudioAnalyzer::analyzeBpm(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
-  std::vector<double> result =
-      dogatech::soulsifter::AudioAnalyzer::analyzeBpm(a0);
+  try {
+    std::vector<double> result =
+        dogatech::soulsifter::AudioAnalyzer::analyzeBpm(a0);
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    a.Set(i, Napi::Number::New(env, result[i]));
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      a.Set(i, Napi::Number::New(env, result[i]));
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 class AnalyzeBpmAsyncWorker : public Napi::AsyncWorker {
@@ -71,9 +76,13 @@ class AnalyzeBpmAsyncWorker : public Napi::AsyncWorker {
   ~AnalyzeBpmAsyncWorker() { }
 
   void Execute() {
-    std::future<std::vector<double>> result =
-        dogatech::soulsifter::AudioAnalyzer::analyzeBpmAsync(a0);
-    res = result.get();
+    try {
+      std::future<std::vector<double>> result =
+          dogatech::soulsifter::AudioAnalyzer::analyzeBpmAsync(a0);
+      res = result.get();
+    } catch (const std::exception& e) {
+      SetError(e.what());
+    }
   }
 
   void OnOK() {
@@ -111,14 +120,25 @@ Napi::Value AudioAnalyzer::analyzeBpmAsync(const Napi::CallbackInfo& info) {
     return deferred->Promise();
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
-  AnalyzeBpmAsyncWorker* w = new AnalyzeBpmAsyncWorker(env, deferred, a0);
-  w->Queue();
-  return deferred->Promise();
+  try {
+    AnalyzeBpmAsyncWorker* w = new AnalyzeBpmAsyncWorker(env, deferred, a0);
+    w->Queue();
+    return deferred->Promise();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void AudioAnalyzer::analyzeBpms(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  try {
 
-      dogatech::soulsifter::AudioAnalyzer::analyzeBpms();
+        dogatech::soulsifter::AudioAnalyzer::analyzeBpms();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value AudioAnalyzer::analyzeDuration(const Napi::CallbackInfo& info) {
@@ -132,14 +152,25 @@ Napi::Value AudioAnalyzer::analyzeDuration(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
-  int result =
-      dogatech::soulsifter::AudioAnalyzer::analyzeDuration(a0);
+  try {
+    int result =
+        dogatech::soulsifter::AudioAnalyzer::analyzeDuration(a0);
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void AudioAnalyzer::analyzeDurations(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  try {
 
-      dogatech::soulsifter::AudioAnalyzer::analyzeDurations();
+        dogatech::soulsifter::AudioAnalyzer::analyzeDurations();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

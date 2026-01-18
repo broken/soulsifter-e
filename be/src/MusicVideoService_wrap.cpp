@@ -56,16 +56,21 @@ Napi::Value MusicVideoService::associateYouTubeVideo(const Napi::CallbackInfo& i
     return env.Null();
   }
   std::string a1(info[1].As<Napi::String>().Utf8Value());
-  dogatech::soulsifter::MusicVideo* result =
-      dogatech::soulsifter::MusicVideoService::associateYouTubeVideo(a0, a1);
+  try {
+    dogatech::soulsifter::MusicVideo* result =
+        dogatech::soulsifter::MusicVideoService::associateYouTubeVideo(a0, a1);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = MusicVideo::NewInstance(env);
+      MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
+      r->setWrappedValue(result, false);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = MusicVideo::NewInstance(env);
-    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
-    r->setWrappedValue(result, false);
-    return instance;
   }
 }
 
@@ -80,14 +85,19 @@ Napi::Value MusicVideoService::downloadAudio(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  std::vector<string> result =
-      dogatech::soulsifter::MusicVideoService::downloadAudio(a0);
+  try {
+    std::vector<string> result =
+        dogatech::soulsifter::MusicVideoService::downloadAudio(a0);
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    a.Set(i, Napi::String::New(env, result[i]));
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      a.Set(i, Napi::String::New(env, result[i]));
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 class DownloadAudioAsyncWorker : public Napi::AsyncWorker {
@@ -99,9 +109,13 @@ class DownloadAudioAsyncWorker : public Napi::AsyncWorker {
   ~DownloadAudioAsyncWorker() { }
 
   void Execute() {
-    std::future<std::vector<std::string>> result =
-        dogatech::soulsifter::MusicVideoService::downloadAudioAsync(a0);
-    res = result.get();
+    try {
+      std::future<std::vector<std::string>> result =
+          dogatech::soulsifter::MusicVideoService::downloadAudioAsync(a0);
+      res = result.get();
+    } catch (const std::exception& e) {
+      SetError(e.what());
+    }
   }
 
   void OnOK() {
@@ -138,8 +152,13 @@ Napi::Value MusicVideoService::downloadAudioAsync(const Napi::CallbackInfo& info
     return deferred->Promise();
   }
   std::string a0(info[0].As<Napi::String>().Utf8Value());
-  DownloadAudioAsyncWorker* w = new DownloadAudioAsyncWorker(env, deferred, a0);
-  w->Queue();
-  return deferred->Promise();
+  try {
+    DownloadAudioAsyncWorker* w = new DownloadAudioAsyncWorker(env, deferred, a0);
+    w->Queue();
+    return deferred->Promise();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 

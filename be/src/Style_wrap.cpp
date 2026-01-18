@@ -61,8 +61,14 @@ Style::Style(const Napi::CallbackInfo& info) : Napi::ObjectWrap<Style>(info), st
 }
 
 void Style::clear(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
   Style* obj = this;
-  obj->style->clear();
+  try {
+    obj->style->clear();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::findById(const Napi::CallbackInfo& info) {
@@ -76,16 +82,21 @@ Napi::Value Style::findById(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::soulsifter::Style* result =
-      dogatech::soulsifter::Style::findById(a0);
+  try {
+    dogatech::soulsifter::Style* result =
+        dogatech::soulsifter::Style::findById(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Style::NewInstance(env);
+      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Style::NewInstance(env);
-    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
@@ -100,83 +111,118 @@ Napi::Value Style::findByREId(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  dogatech::soulsifter::Style* result =
-      dogatech::soulsifter::Style::findByREId(a0);
+  try {
+    dogatech::soulsifter::Style* result =
+        dogatech::soulsifter::Style::findByREId(a0);
 
-  if (result == NULL) {
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Style::NewInstance(env);
+      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
-  } else {
-    Napi::Object instance = Style::NewInstance(env);
-    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue(result, true);
-    return instance;
   }
 }
 
 Napi::Value Style::findAll(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  dogatech::ResultSetIterator<dogatech::soulsifter::Style>* result =
-      dogatech::soulsifter::Style::findAll();
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::Style>* result =
+        dogatech::soulsifter::Style::findAll();
 
-  vector<dogatech::soulsifter::Style*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Style::NewInstance(env);
-    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::Style*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = Style::NewInstance(env);
+      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value Style::update(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  int result =  obj->style->update();
+  try {
+    int result =    obj->style->update();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Style::save(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  int result =  obj->style->save();
+  try {
+    int result =    obj->style->save();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Style::sync(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  bool result =  obj->style->sync();
+  try {
+    bool result =    obj->style->sync();
 
-  return Napi::Boolean::New(env, result);
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 Napi::Value Style::findAllParents(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  dogatech::ResultSetIterator<dogatech::soulsifter::Style>* result =
-      dogatech::soulsifter::Style::findAllParents();
+  try {
+    dogatech::ResultSetIterator<dogatech::soulsifter::Style>* result =
+        dogatech::soulsifter::Style::findAllParents();
 
-  vector<dogatech::soulsifter::Style*>* v = result->toVector();
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
-  for (int i = 0; i < (int) v->size(); i++) {
-    Napi::Object instance = Style::NewInstance(env);
-    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue((*v)[i], true);
-    a.Set(i, instance);
+    vector<dogatech::soulsifter::Style*>* v = result->toVector();
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
+    for (int i = 0; i < (int) v->size(); i++) {
+      Napi::Object instance = Style::NewInstance(env);
+      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+      r->setWrappedValue((*v)[i], true);
+      a.Set(i, instance);
+    }
+    delete v;
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  delete v;
-  return a;
 }
 
 Napi::Value Style::getId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  int result =  obj->style->getId();
+  try {
+    int result =    obj->style->getId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Style::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -191,15 +237,25 @@ void Style::setId(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->style->setId(a0);
+  try {
+    obj->style->setId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::getName(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const string result =  obj->style->getName();
+  try {
+    const string& result =    obj->style->getName();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Style::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -214,15 +270,25 @@ void Style::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->style->setName(a0);
+  try {
+    obj->style->setName(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::getREId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  int result =  obj->style->getREId();
+  try {
+    int result =    obj->style->getREId();
 
-  return Napi::Number::New(env, result);
+    return Napi::Number::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Style::setREId(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -237,15 +303,25 @@ void Style::setREId(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   int32_t a0(value.As<Napi::Number>().Int32Value());
-  obj->style->setREId(a0);
+  try {
+    obj->style->setREId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::getRELabel(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const string result =  obj->style->getRELabel();
+  try {
+    const string& result =    obj->style->getRELabel();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Style::setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -260,15 +336,25 @@ void Style::setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value)
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->style->setRELabel(a0);
+  try {
+    obj->style->setRELabel(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::getDescription(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const string result =  obj->style->getDescription();
+  try {
+    const string& result =    obj->style->getDescription();
 
-  return Napi::String::New(env, result);
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
 }
 
 void Style::setDescription(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -283,19 +369,29 @@ void Style::setDescription(const Napi::CallbackInfo& info, const Napi::Value &va
     return;
   }
   std::string a0(value.As<Napi::String>().Utf8Value());
-  obj->style->setDescription(a0);
+  try {
+    obj->style->setDescription(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::getChildIds(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const std::vector<int>& result =  obj->style->getChildIds();
+  try {
+    const std::vector<int>& result =    obj->style->getChildIds();
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    a.Set(i, Napi::Number::New(env, result[i]));
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      a.Set(i, Napi::Number::New(env, result[i]));
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 void Style::setChildIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -319,22 +415,32 @@ void Style::setChildIds(const Napi::CallbackInfo& info, const Napi::Value &value
     int32_t x(a0Array.Get(i).As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
-  obj->style->setChildIds(a0);
+  try {
+    obj->style->setChildIds(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::getChildren(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const std::vector<dogatech::soulsifter::Style*>& result =  obj->style->getChildren();
+  try {
+    const std::vector<dogatech::soulsifter::Style*>& result =    obj->style->getChildren();
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    Napi::Object instance = Style::NewInstance(env);
-    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue((result)[i], false);
-    a.Set(i, instance);
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      Napi::Object instance = Style::NewInstance(env);
+      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+      r->setWrappedValue((result)[i], false);
+      a.Set(i, instance);
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 void Style::setChildren(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -358,19 +464,29 @@ void Style::setChildren(const Napi::CallbackInfo& info, const Napi::Value &value
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(a0Array.Get(i).As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
-  obj->style->setChildren(a0);
+  try {
+    obj->style->setChildren(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::getParentIds(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const std::vector<int>& result =  obj->style->getParentIds();
+  try {
+    const std::vector<int>& result =    obj->style->getParentIds();
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    a.Set(i, Napi::Number::New(env, result[i]));
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      a.Set(i, Napi::Number::New(env, result[i]));
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 void Style::setParentIds(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -394,22 +510,32 @@ void Style::setParentIds(const Napi::CallbackInfo& info, const Napi::Value &valu
     int32_t x(a0Array.Get(i).As<Napi::Number>().Int32Value());
     a0.push_back(x);
   }
-  obj->style->setParentIds(a0);
+  try {
+    obj->style->setParentIds(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 Napi::Value Style::getParents(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   Style* obj = this;
-  const std::vector<dogatech::soulsifter::Style*>& result =  obj->style->getParents();
+  try {
+    const std::vector<dogatech::soulsifter::Style*>& result =    obj->style->getParents();
 
-  Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
-  for (int i = 0; i < (int) result.size(); i++) {
-    Napi::Object instance = Style::NewInstance(env);
-    Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-    r->setWrappedValue((result)[i], false);
-    a.Set(i, instance);
+    Napi::Array a = Napi::Array::New(env, static_cast<int>(result.size()));
+    for (int i = 0; i < (int) result.size(); i++) {
+      Napi::Object instance = Style::NewInstance(env);
+      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
+      r->setWrappedValue((result)[i], false);
+      a.Set(i, instance);
+    }
+    return a;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
-  return a;
 }
 
 void Style::setParents(const Napi::CallbackInfo& info, const Napi::Value &value) {
@@ -433,6 +559,11 @@ void Style::setParents(const Napi::CallbackInfo& info, const Napi::Value &value)
     dogatech::soulsifter::Style* x(Napi::ObjectWrap<Style>::Unwrap(a0Array.Get(i).As<Napi::Object>())->getWrappedValue());
     a0.push_back(x);
   }
-  obj->style->setParents(a0);
+  try {
+    obj->style->setParents(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 

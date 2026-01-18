@@ -49,8 +49,13 @@ void TagService::readId3v2Tag(const Napi::CallbackInfo& info) {
     return;
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
+  try {
 
-      dogatech::soulsifter::TagService::readId3v2Tag(a0);
+        dogatech::soulsifter::TagService::readId3v2Tag(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 void TagService::writeId3v2Tag(const Napi::CallbackInfo& info) {
@@ -64,8 +69,13 @@ void TagService::writeId3v2Tag(const Napi::CallbackInfo& info) {
     return;
   }
   dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
+  try {
 
-      dogatech::soulsifter::TagService::writeId3v2Tag(a0);
+        dogatech::soulsifter::TagService::writeId3v2Tag(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
 class UpdateSongAttributesFromTagsWorker : public Napi::AsyncProgressWorker<float> {
@@ -80,7 +90,11 @@ class UpdateSongAttributesFromTagsWorker : public Napi::AsyncProgressWorker<floa
     auto a0 = [&ep](float p) {
       ep.Send(&p, 1);
     };
-    dogatech::soulsifter::TagService::updateSongAttributesFromTags(a0);
+    try {
+      dogatech::soulsifter::TagService::updateSongAttributesFromTags(a0);
+    } catch (const std::exception& e) {
+      SetError(e.what());
+    }
   }
 
   void OnProgress(const float *data, size_t count) {
@@ -107,8 +121,13 @@ void TagService::updateSongAttributesFromTags(const Napi::CallbackInfo& info) {
     return;
   }
   Napi::Function a0 = info[0].As<Napi::Function>();
-  UpdateSongAttributesFromTagsWorker* w = new UpdateSongAttributesFromTagsWorker(a0);
-  w->Queue();
-  return;
+  try {
+    UpdateSongAttributesFromTagsWorker* w = new UpdateSongAttributesFromTagsWorker(a0);
+    w->Queue();
+    return;
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
 }
 
