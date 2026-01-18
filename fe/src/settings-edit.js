@@ -40,6 +40,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Default song list limit" .value=${this.songListLimit} allowedPattern="[0-9]*" preventInvalidInput id="songListLimit"></md-filled-text-field></label>
                 <md-filled-text-field label="Energy search difference" .value=${this.energyGap} allowedPattern="[0-9]" preventInvalidInput id="energyGap"></md-filled-text-field></label>
                 <md-filled-text-field label="Preview Time (in secs)" .value=${this.songListPreviewTimeInSecs} id="songListPreviewTimeInSecs"></md-filled-text-field>
+                <md-filled-text-field label="Short Song Warning Limit (in secs)" .value=${this.songListWarningShortSong} id="songListWarningShortSong"></md-filled-text-field>
                 <label><md-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect"></md-checkbox>Automatically search after selecting a song</label>
                 <label><md-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys"></md-checkbox>Include unknown keys in key searches</label>
                 <br>
@@ -213,6 +214,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.songListPreviewStartPercent = this.settings.getInt('songList.previewStartPercent');
     this.songListPreviewTimeInSecs = this.settings.getInt('songList.previewTimeInSec');
     this.songListSearchOnSelect = this.settings.getBool('songList.searchOnSelect');
+    this.songListWarningShortSong = this.settings.getInt('songList.warning.shortSong');
     this.energyGap = this.settings.getInt('search.energyGap');
     this.includeUnknownKeys = this.settings.getBool('search.includeUnknownKeys');
     this.overwriteSongFromTag = this.settings.getBool('tag.readOverwrite');
@@ -363,6 +365,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puti('songList.previewStartPercent', Number(this.shadowRoot.getElementById('songListPreviewStartPercent').value));
     this.puti('songList.previewTimeInSec', Number(this.shadowRoot.getElementById('songListPreviewTimeInSecs').value));
     this.putb('songList.searchOnSelect', this.shadowRoot.getElementById('songListSearchOnSelect').checked);
+    this.puti('songList.warning.shortSong', Number(this.shadowRoot.getElementById('songListWarningShortSong').value));
     this.puti('search.energyGap', Number(this.shadowRoot.getElementById('energyGap').value));
     this.putb('search.includeUnknownKeys', this.shadowRoot.getElementById('includeUnknownKeys').checked);
     this.putb('tag.readOverwrite', this.shadowRoot.getElementById('overwriteSongFromTag').checked);

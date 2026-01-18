@@ -81,6 +81,7 @@ namespace soulsifter {
     ptree.put("songList.previewStartPercent", 33);
     ptree.put("songList.previewTimeInSec", 10);
     ptree.put("songList.searchOnSelect", false);
+    ptree.put("songList.warning.shortSong", 180);
     //ptree.put("tag.readOverwrite", "");
     ptree.put("virtualdj.active", false);
     ptree.put("virtualdj.ip", "127.0.0.1");

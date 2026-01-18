@@ -9,8 +9,10 @@ import { } from "./star-rating.js";
 
 class SongListItem extends GetFilepathMixin(SettingsMixin(WaveformUtilMixin(LitElement))) {
   render() {
+    let isShort = (this.song.durationInMs / 1000) <= this.settings.getInt('songList.warning.shortSong');
+    let baseComment = this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     let comments = !this.settings.getBool('songList.column.comments') ? '' :
-                       this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
+                   isShort ? html`${baseComment} <span class="warn">(Short)</span>` : baseComment;
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
     let waveforms = '';
     if (this.settings.getBool('songList.column.waveform')) {
