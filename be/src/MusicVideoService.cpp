@@ -41,7 +41,7 @@ namespace {
     return std::string("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes 'deno:") + SoulSifterSettings::getInstance().get<string>("path.deno") + "' -S res,vcodec:h264,acodec:m4a --write-thumbnail ";
   }
   std::string getYtDlpOpts() {
-    return std::string("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes 'deno:") + SoulSifterSettings::getInstance().get<string>("path.deno") + "' --print-json --write-thumbnail --restrict-filenames --extract-audio --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt ";
+    return std::string("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes 'deno:") + SoulSifterSettings::getInstance().get<string>("path.deno") + "' --print-json --write-thumbnail --extract-audio --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt ";
   }
 }
 
