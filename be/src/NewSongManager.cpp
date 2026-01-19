@@ -95,6 +95,7 @@ bool NewSongManager::nextSong(Song* updatedSong, Song* originalSong) {
   if (filesToAdd->pullSong(&path)) {
     originalSong->clear();
     originalSong->setFilepath(*path);
+    delete path;
     MusicManager::getInstance().readTagsFromSong(originalSong);
     MusicManager::getInstance().updateSongWithChanges(*originalSong, updatedSong);
 
