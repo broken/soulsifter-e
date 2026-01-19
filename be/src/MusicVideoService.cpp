@@ -35,8 +35,14 @@ namespace soulsifter {
 
 JobQueue<std::vector<std::string>> MusicVideoService::job_queue;
 
-std::string mv_yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes node -S res,vcodec:h264,acodec:m4a --write-thumbnail ");
-std::string yt_dlp_opts("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes node --print-json --write-thumbnail --restrict-filenames --extract-audio --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt ");
+namespace {
+  std::string getMvYtDlpOpts() {
+    return std::string("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes 'deno:") + SoulSifterSettings::getInstance().get<string>("path.deno") + "' -S res,vcodec:h264,acodec:m4a --write-thumbnail ";
+  }
+  std::string getYtDlpOpts() {
+    return std::string("--abort-on-error --compat-options filename --restrict-filenames --cookies-from-browser chrome --js-runtimes 'deno:") + SoulSifterSettings::getInstance().get<string>("path.deno") + "' --print-json --write-thumbnail --restrict-filenames --extract-audio --audio-format mp3 --audio-quality 0 --quiet --download-archive /tmp/ss-ytdl.txt ";
+  }
+}
 
 namespace {
 
@@ -112,7 +118,7 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
 
   FILE *fpipe;
   stringstream command;
-  command << "cd " << tmpPath << "; yt-dlp " << yt_dlp_opts << url << " 2> '" << stderrPath.string() << "'";
+  command << "cd " << tmpPath << "; yt-dlp " << getYtDlpOpts() << url << " 2> '" << stderrPath.string() << "'";
   if (!(fpipe = (FILE*)popen(command.str().c_str(), "r"))) {
     LOG(WARNING) << "Problem with yt-dlp pipe.";
     return filepaths;
@@ -285,7 +291,7 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
 
   FILE *fpipe;
   stringstream command;
-  command << "cd \"" << mvArtistDir << "\"; yt-dlp " << mv_yt_dlp_opts << url;
+  command << "cd \"" << mvArtistDir << "\"; yt-dlp " << getMvYtDlpOpts() << url;
   if (!(fpipe = (FILE*)popen(command.str().c_str(), "r"))) {
     LOG(WARNING) << "Problem with yt-dlp pipe.";
     pclose(fpipe);

@@ -32,6 +32,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Waveforms Directory" .value=${this.waveformsDir} id="waveformsDir"></md-filled-text-field>
                 <md-filled-text-field label="VirtualDJ Stems Directory" .value=${this.vdjStemsDir} id="vdjStemsDir"></md-filled-text-field>
                 <md-filled-text-field label="VirtualDJ Stem Waveforms Directory" .value=${this.vdjStemWaveformsDir} id="vdjStemWaveformsDir"></md-filled-text-field>
+                <md-filled-text-field label="Deno Path" .value=${this.pathDeno} id="pathDeno"></md-filled-text-field>
                 <br>
                 <label><md-checkbox ?checked="${this.overwriteSongFromTag}" id="overwriteSongFromTag"></md-checkbox>Overwrite values when reading ID3 tags</label>
                 <label><md-checkbox ?checked="${this.appDebugMode}" id="appDebugMode"></md-checkbox>Debug mode (requires restart)</label>
@@ -199,6 +200,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.midiVolumeExponentialFactor = this.settings.getString('midi.volume.exponentialFactor');
     this.midiVolumeLinearFactor = this.settings.getString('midi.volume.linearFactor');
     this.midiVolumeValue = this.settings.getString('midi.volume.value');
+    this.pathDeno = this.settings.getString('path.deno');
     this.songListColBpm = this.settings.getBool('songList.column.bpm');
     this.songListColBpmShift = this.settings.getBool('songList.column.bpmShift');
     this.songListColComments = this.settings.getBool('songList.column.comments');
@@ -350,6 +352,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('midi.volume.exponentialFactor', this.shadowRoot.getElementById('midiVolumeExponentialFactor').value);
     this.puts('midi.volume.linearFactor', this.shadowRoot.getElementById('midiVolumeLinearFactor').value);
     this.puts('midi.volume.value', this.shadowRoot.getElementById('midiVolumeValue').value);
+    this.puts('path.deno', this.shadowRoot.getElementById('pathDeno').value);
     this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);
     this.putb('songList.column.bpmShift', this.shadowRoot.getElementById('songListColBpmShift').checked);
     this.putb('songList.column.comments', this.shadowRoot.getElementById('songListColComments').checked);
