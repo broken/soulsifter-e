@@ -107,6 +107,11 @@ class UpdateSongAttributesFromTagsWorker : public Napi::AsyncProgressWorker<floa
     Callback().Call({Env().Null(), Napi::String::New(Env(), "done"), Env().Null()});
   }
 
+  void OnError(const Napi::Error& e) {
+    Napi::HandleScope scope(Env());
+    Callback().Call({e.Value(), Env().Null(), Env().Null()});
+  }
+
  private:
 };
 
