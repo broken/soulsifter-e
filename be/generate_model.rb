@@ -168,7 +168,7 @@ def sqlTryBlock()
 end
 
 def sqlCatchBlock()
-  return "            } catch (sql::SQLException &e) {\n                LOG(WARNING) << \"ERROR: SQLException in \" << __FILE__ << \" (\" << __func__<< \") on line \" << __LINE__;\n                LOG(WARNING) << \"ERROR: \" << e.what() << \" (MySQL error code: \" << e.getErrorCode() << \", SQLState: \" << e.getSQLState() << \")\";\n                bool reconnected = MysqlAccess::getInstance().reconnect();\n                LOG(INFO) << (reconnected ? \"Successful\" : \"Failed\") << \" mysql reconnection\";\n                if (i == 1) AlertsChannel::getInstance().send(std::string(\"DB Error (\") + __FILE__ + \"::\" + __func__ + \") : \" + e.what());\n            }\n        }\n"
+  return "            } catch (sql::SQLException &e) {\n                LOG(WARNING) << \"ERROR: SQLException in \" << __FILE__ << \" (\" << __func__<< \") on line \" << __LINE__;\n                LOG(WARNING) << \"ERROR: \" << e.what() << \" (MySQL error code: \" << e.getErrorCode() << \", SQLState: \" << e.getSQLState() << \")\";\n                bool reconnected = MysqlAccess::getInstance().reconnect();\n                LOG(INFO) << (reconnected ? \"Successful\" : \"Failed\") << \" mysql reconnection\";\n                if (i == 1) {\n                    AlertsChannel::getInstance().send(std::string(\"DB Error (\") + __FILE__ + \"::\" + __func__ + \") : \" + e.what());\n                    throw e;\n                }\n            }\n        }\n"
 end
 
 def syncChildBlock(f)

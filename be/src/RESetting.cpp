@@ -88,7 +88,10 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
-                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                if (i == 1) {
+                    AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                    throw e;
+                }
             }
         }
         return NULL;
@@ -115,7 +118,10 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
-                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                if (i == 1) {
+                    AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                    throw e;
+                }
             }
         }
         return NULL;
@@ -133,7 +139,10 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
-                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                if (i == 1) {
+                    AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                    throw e;
+                }
             }
         }
         return NULL;
@@ -158,7 +167,10 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
-                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                if (i == 1) {
+                    AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                    throw e;
+                }
             }
         }
         return 0;
@@ -190,7 +202,10 @@ namespace soulsifter {
                 LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
                 bool reconnected = MysqlAccess::getInstance().reconnect();
                 LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
-                if (i == 1) AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                if (i == 1) {
+                    AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                    throw e;
+                }
             }
         }
         return 0;
