@@ -96,6 +96,7 @@ Napi::Value MusicVideo::findAll(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::MusicVideo>* result =
         dogatech::soulsifter::MusicVideo::findAll();
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::MusicVideo*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {

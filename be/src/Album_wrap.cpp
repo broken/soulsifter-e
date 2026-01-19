@@ -185,6 +185,7 @@ Napi::Value Album::findByName(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Album>* result =
         dogatech::soulsifter::Album::findByName(a0);
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Album*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -216,6 +217,7 @@ Napi::Value Album::findByArtist(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Album>* result =
         dogatech::soulsifter::Album::findByArtist(a0);
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Album*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -238,6 +240,7 @@ Napi::Value Album::findAll(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Album>* result =
         dogatech::soulsifter::Album::findAll();
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Album*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {

@@ -135,6 +135,7 @@ Napi::Value Style::findAll(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Style>* result =
         dogatech::soulsifter::Style::findAll();
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Style*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -196,6 +197,7 @@ Napi::Value Style::findAllParents(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Style>* result =
         dogatech::soulsifter::Style::findAllParents();
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Style*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -433,7 +435,7 @@ Napi::Value Style::getChildren(const Napi::CallbackInfo& info) {
     for (int i = 0; i < (int) result.size(); i++) {
       Napi::Object instance = Style::NewInstance(env);
       Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-      r->setWrappedValue((result)[i], false);
+      r->setWrappedValue(result[i], false);
       a.Set(i, instance);
     }
     return a;
@@ -528,7 +530,7 @@ Napi::Value Style::getParents(const Napi::CallbackInfo& info) {
     for (int i = 0; i < (int) result.size(); i++) {
       Napi::Object instance = Style::NewInstance(env);
       Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-      r->setWrappedValue((result)[i], false);
+      r->setWrappedValue(result[i], false);
       a.Set(i, instance);
     }
     return a;

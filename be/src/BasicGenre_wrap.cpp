@@ -127,6 +127,7 @@ Napi::Value BasicGenre::findAll(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::BasicGenre>* result =
         dogatech::soulsifter::BasicGenre::findAll();
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::BasicGenre*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {

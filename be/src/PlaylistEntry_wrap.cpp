@@ -152,6 +152,7 @@ Napi::Value PlaylistEntry::findByPlaylistId(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::PlaylistEntry>* result =
         dogatech::soulsifter::PlaylistEntry::findByPlaylistId(a0);
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::PlaylistEntry*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -183,6 +184,7 @@ Napi::Value PlaylistEntry::findBySongId(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::PlaylistEntry>* result =
         dogatech::soulsifter::PlaylistEntry::findBySongId(a0);
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::PlaylistEntry*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -205,6 +207,7 @@ Napi::Value PlaylistEntry::findAll(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::PlaylistEntry>* result =
         dogatech::soulsifter::PlaylistEntry::findAll();
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::PlaylistEntry*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {

@@ -306,6 +306,7 @@ Napi::Value Song::findByDupeId(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Song>* result =
         dogatech::soulsifter::Song::findByDupeId(a0);
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Song*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -328,6 +329,7 @@ Napi::Value Song::findAll(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Song>* result =
         dogatech::soulsifter::Song::findAll();
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Song*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -1451,7 +1453,7 @@ Napi::Value Song::getStyles(const Napi::CallbackInfo& info) {
     for (int i = 0; i < (int) result.size(); i++) {
       Napi::Object instance = Style::NewInstance(env);
       Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-      r->setWrappedValue((result)[i], false);
+      r->setWrappedValue(result[i], false);
       a.Set(i, instance);
     }
     return a;

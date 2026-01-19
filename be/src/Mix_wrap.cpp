@@ -153,6 +153,7 @@ Napi::Value Mix::findByOutSongId(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
         dogatech::soulsifter::Mix::findByOutSongId(a0);
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Mix*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -184,6 +185,7 @@ Napi::Value Mix::findByInSongId(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
         dogatech::soulsifter::Mix::findByInSongId(a0);
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Mix*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {
@@ -206,6 +208,7 @@ Napi::Value Mix::findAll(const Napi::CallbackInfo& info) {
     dogatech::ResultSetIterator<dogatech::soulsifter::Mix>* result =
         dogatech::soulsifter::Mix::findAll();
 
+    if (result == nullptr) return Napi::Array::New(env, 0);
     vector<dogatech::soulsifter::Mix*>* v = result->toVector();
     Napi::Array a = Napi::Array::New(env, static_cast<int>(v->size()));
     for (int i = 0; i < (int) v->size(); i++) {

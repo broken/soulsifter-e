@@ -132,12 +132,14 @@ Napi::Value SearchUtil::searchSongs(const Napi::CallbackInfo& info) {
     std::vector<dogatech::soulsifter::Song*>* result =
         dogatech::soulsifter::SearchUtil::searchSongs(a0, a1, a2, a3, a4, a5, a6, a7, a8, a9, a10);
 
-    Napi::Array a = Napi::Array::New(env, static_cast<int>(result->size()));
-    for (int i = 0; i < (int) result->size(); i++) {
-      Napi::Object instance = Song::NewInstance(env);
-      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-      r->setWrappedValue((*result)[i], true);
-      a.Set(i, instance);
+    Napi::Array a = Napi::Array::New(env, result ? static_cast<int>(result->size()) : 0);
+    if (result) {
+      for (int i = 0; i < (int) result->size(); i++) {
+        Napi::Object instance = Song::NewInstance(env);
+        Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+        r->setWrappedValue((*result)[i], true);
+        a.Set(i, instance);
+      }
     }
     delete result;
     return a;
