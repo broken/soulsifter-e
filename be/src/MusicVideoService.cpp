@@ -3,6 +3,7 @@
 #include <filesystem>
 #include <fstream>
 #include <future>
+#include <memory>
 #include <sstream>
 #include <stdexcept>
 #include <stdio.h>
@@ -165,9 +166,9 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
         continue;
       }
 
-      Song* song = new Song();
-      Album* album = new Album();
-      song->setAlbum(album);
+      std::unique_ptr<Song> song(new Song());
+      std::unique_ptr<Album> album(new Album());
+      song->setAlbum(album.release());
 
       string baseFileName = filename.substr(0, filename.size() - ext.size());
       song->setFilepath(SoulSifterSettings::getInstance().get<string>("dir.tmp") + '/' + baseFileName + "mp3");
@@ -231,7 +232,7 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
         song->setYoutubeId(ptree.get<string>("id", ""));
         song->setCurator(ptree.get<string>("uploader", ""));
         string title = ptree.get<string>("title", "");
-        if (!MusicManager::getInstance().splitArtistAndTitle(title, song)) {
+        if (!MusicManager::getInstance().splitArtistAndTitle(title, song.get())) {
           song->setTitle(title);
           song->setArtist(ptree.get<string>("uploader", ""));
           // Remove " - Topic" from artist field
@@ -250,13 +251,12 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
         }
       }
 
-      TagService::writeId3v2Tag(song);
+      TagService::writeId3v2Tag(song.get());
       filepaths.push_back(song->getFilepath());
       if (url.find("music.youtube") == std::string::npos || !isCoverAdded) {
         filepaths.push_back(album->getCoverFilepath());
         isCoverAdded = true;
       }
-      delete song;
     }
   }
   return filepaths;
@@ -316,7 +316,7 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
   boost::smatch match;
   string tmpVideoName;
   bool needsConversion;
-  MusicVideo* musicVideo = new MusicVideo();
+  std::unique_ptr<MusicVideo> musicVideo(new MusicVideo());
   vector<string> lines;
   boost::split(lines, output, boost::is_any_of("\n"));
   for (string line : lines) {
@@ -342,7 +342,6 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
     }
   }
   if (tmpVideoName.empty() && musicVideo->getFilePath().empty()) {
-    delete musicVideo;
     LOG(WARNING) << "Did not find music video file from yt-dlp output.";
     return NULL;
   }
@@ -379,7 +378,7 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
   song->setMusicVideoId(musicVideo->getId());
   song->update();
 
-  return musicVideo;
+  return musicVideo.release();
 }
 
 }  // namespace soulsifter
