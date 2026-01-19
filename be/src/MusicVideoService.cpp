@@ -167,8 +167,8 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
       }
 
       std::unique_ptr<Song> song(new Song());
-      std::unique_ptr<Album> album(new Album());
-      song->setAlbum(album.release());
+      Album* album = new Album();
+      song->setAlbum(album);
 
       string baseFileName = filename.substr(0, filename.size() - ext.size());
       song->setFilepath(SoulSifterSettings::getInstance().get<string>("dir.tmp") + '/' + baseFileName + "mp3");
