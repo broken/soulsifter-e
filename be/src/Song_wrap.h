@@ -104,6 +104,8 @@ class Song : public Napi::ObjectWrap<Song> {
   Napi::Value getDupe(const Napi::CallbackInfo& info);
   Napi::Value getDupeConst(const Napi::CallbackInfo& info);
   void setDupe(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getExplicitLyrics(const Napi::CallbackInfo& info);
+  void setExplicitLyrics(const Napi::CallbackInfo& info, const Napi::Value &value);
 
   static Napi::FunctionReference* constructor;
   dogatech::soulsifter::Song* song;

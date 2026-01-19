@@ -73,7 +73,8 @@ namespace soulsifter {
     bpmLock(false),
     tonicKeyLock(false),
     dupeId(0),
-    dupe(NULL) {
+    dupe(NULL),
+    explicitLyrics(false) {
     }
 
     Song::Song(const Song& song) :
@@ -110,7 +111,8 @@ namespace soulsifter {
     bpmLock(song.getBpmLock()),
     tonicKeyLock(song.getTonicKeyLock()),
     dupeId(song.getDupeId()),
-    dupe(NULL) {
+    dupe(NULL),
+    explicitLyrics(song.getExplicitLyrics()) {
         if (song.reSong) setRESong(*song.reSong);
         if (song.album) setAlbum(*song.album);
         if (song.albumPart) setAlbumPart(*song.albumPart);
@@ -183,6 +185,7 @@ namespace soulsifter {
             delete dupe;
             dupe = NULL;
         }
+        explicitLyrics = song.getExplicitLyrics();
     }
 
     Song::~Song() {
@@ -239,6 +242,7 @@ namespace soulsifter {
         dupeId = 0;
         delete dupe;
         dupe = NULL;
+        explicitLyrics = false;
     }
 
 # pragma mark static methods
@@ -271,6 +275,7 @@ namespace soulsifter {
         song->setBpmLock(rs->getBoolean("bpmLock"));
         song->setTonicKeyLock(rs->getBoolean("tonicKeyLock"));
         song->setDupeId(rs->getInt("dupeId"));
+        song->setExplicitLyrics(rs->getBoolean("explicitLyrics"));
         if (!rs->isNull("styleIds")) {
             string csv = rs->getString("styleIds");
             istringstream iss(csv);
@@ -532,7 +537,7 @@ namespace soulsifter {
                     dupeId = dupe->getId();
                 }
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Songs set artist=?, track=?, title=?, remixer=?, featuring=?, filepath=?, rating=?, dateAdded=?, bpm=?, tonicKey=?, energy=?, comments=?, trashed=?, lowQuality=?, googleSongId=?, youtubeId=?, spotifyId=?, durationInMs=?, curator=?, reSongId=?, albumId=?, albumPartId=?, musicVideoId=?, bpmLock=?, tonicKeyLock=?, dupeId=? where id=?");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Songs set artist=?, track=?, title=?, remixer=?, featuring=?, filepath=?, rating=?, dateAdded=?, bpm=?, tonicKey=?, energy=?, comments=?, trashed=?, lowQuality=?, googleSongId=?, youtubeId=?, spotifyId=?, durationInMs=?, curator=?, reSongId=?, albumId=?, albumPartId=?, musicVideoId=?, bpmLock=?, tonicKeyLock=?, dupeId=?, explicitLyrics=? where id=?");
                 if (!artist.empty()) ps->setString(1, artist);
                 else ps->setNull(1, sql::DataType::VARCHAR);
                 if (!track.empty()) ps->setString(2, track);
@@ -579,7 +584,8 @@ namespace soulsifter {
                 ps->setBoolean(25, tonicKeyLock);
                 if (dupeId > 0) ps->setInt(26, dupeId);
                 else ps->setNull(26, sql::DataType::INTEGER);
-                ps->setInt(27, id);
+                ps->setBoolean(27, explicitLyrics);
+                ps->setInt(28, id);
                 int result = ps->executeUpdate();
                 if (!styleIds.empty()) {
                     stringstream ss("insert ignore into SongStyles (songId, styleId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
@@ -675,7 +681,7 @@ namespace soulsifter {
                     dupeId = dupe->getId();
                 }
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Songs (artist, track, title, remixer, featuring, filepath, rating, dateAdded, bpm, tonicKey, energy, comments, trashed, lowQuality, googleSongId, youtubeId, spotifyId, durationInMs, curator, reSongId, albumId, albumPartId, musicVideoId, bpmLock, tonicKeyLock, dupeId) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Songs (artist, track, title, remixer, featuring, filepath, rating, dateAdded, bpm, tonicKey, energy, comments, trashed, lowQuality, googleSongId, youtubeId, spotifyId, durationInMs, curator, reSongId, albumId, albumPartId, musicVideoId, bpmLock, tonicKeyLock, dupeId, explicitLyrics) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 if (!artist.empty()) ps->setString(1, artist);
                 else ps->setNull(1, sql::DataType::VARCHAR);
                 if (!track.empty()) ps->setString(2, track);
@@ -722,6 +728,7 @@ namespace soulsifter {
                 ps->setBoolean(25, tonicKeyLock);
                 if (dupeId > 0) ps->setInt(26, dupeId);
                 else ps->setNull(26, sql::DataType::INTEGER);
+                ps->setBoolean(27, explicitLyrics);
                 int saved = ps->executeUpdate();
                 if (!saved) {
                     LOG(WARNING) << "Not able to save song";
@@ -907,6 +914,10 @@ namespace soulsifter {
             needsUpdate = true;
         }
         if (dupe) needsUpdate |= dupe->sync();
+        if (explicitLyrics != song->getExplicitLyrics()) {
+            LOG(INFO) << "updating song " << id << " explicitLyrics from " << song->getExplicitLyrics() << " to " << explicitLyrics;
+            needsUpdate = true;
+        }
         return needsUpdate;
     }
 
@@ -1147,6 +1158,9 @@ namespace soulsifter {
         delete this->dupe;
         this->dupe = dupe;
     }
+
+    bool Song::getExplicitLyrics() const { return explicitLyrics; }
+    void Song::setExplicitLyrics(const bool explicitLyrics) { this->explicitLyrics = explicitLyrics; }
 
 }
 }

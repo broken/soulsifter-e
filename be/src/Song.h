@@ -139,6 +139,8 @@ namespace soulsifter {
         Song* getDupeConst() const;
         void setDupe(const Song& dupe);
         void setDupe(Song* dupe);  // takes ownership
+        bool getExplicitLyrics() const;
+        void setExplicitLyrics(bool explicitLyrics);
 
         friend ResultSetIterator<Song>;
         friend class SearchUtil;
@@ -178,6 +180,7 @@ namespace soulsifter {
         bool tonicKeyLock;
         int dupeId;
         Song* dupe;
+        bool explicitLyrics;
 
         static void populateFields(const sql::ResultSet* rs, Song* song);
     };

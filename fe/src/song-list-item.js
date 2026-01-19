@@ -1,5 +1,6 @@
 import { css, html, LitElement, unsafeCSS } from "lit";
 
+import "@material/mwc-icon";
 import "./icon-button.js";
 import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { SettingsMixin } from "./mixin-settings.js";
@@ -11,6 +12,9 @@ class SongListItem extends GetFilepathMixin(SettingsMixin(WaveformUtilMixin(LitE
   render() {
     let isShort = (this.song.durationInMs / 1000) <= this.settings.getInt('songList.warning.shortSong');
     let baseComment = this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
+    if (this.song.explicitLyrics) {
+      baseComment = html`<mwc-icon class="explicit">explicit</mwc-icon>${baseComment}`;
+    }
     let comments = !this.settings.getBool('songList.column.comments') ? '' :
                    isShort ? html`${baseComment} <span class="warn">(Short)</span>` : baseComment;
     let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
@@ -300,6 +304,11 @@ class SongListItem extends GetFilepathMixin(SettingsMixin(WaveformUtilMixin(LitE
         }
         .song-item .warn {
           color: var(--ss-song-list-item-comments-warn);
+        }
+        .song-item .explicit {
+          --mdc-icon-size: 16px;
+          vertical-align: middle;
+          margin-right: 4px;
         }
         .song-item .fade-out:after {
           background: var(--ss-song-list-item-fade-out);

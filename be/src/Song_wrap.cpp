@@ -81,6 +81,7 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Song::getDupeId, &Song::setDupeId>("dupeId"),
     InstanceAccessor<&Song::getDupe, &Song::setDupe>("dupe"),
     InstanceAccessor<&Song::getDupeConst>("dupeConst"),
+    InstanceAccessor<&Song::getExplicitLyrics, &Song::setExplicitLyrics>("explicitLyrics"),
   });
 
   constructor = new Napi::FunctionReference();
@@ -1643,6 +1644,39 @@ void Song::setDupe(const Napi::CallbackInfo& info, const Napi::Value &value) {
   dogatech::soulsifter::Song& a0 = *a0tmp;
   try {
     obj->song->setDupe(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
+}
+
+Napi::Value Song::getExplicitLyrics(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Song* obj = this;
+  try {
+    bool result =    obj->song->getExplicitLyrics();
+
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+}
+
+void Song::setExplicitLyrics(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return;
+  }
+  Song* obj = this;
+  if (!value.IsBoolean()) {
+    Napi::TypeError::New(env, "TypeError: Boolean expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
+  bool a0(value.As<Napi::Boolean>().Value());
+  try {
+    obj->song->setExplicitLyrics(a0);
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return;

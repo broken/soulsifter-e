@@ -46,6 +46,9 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
               <label><md-checkbox ?checked="${this.editedSong.lowQuality}" id="lowQuality"></md-checkbox>Low Quality</label>
               <label><md-checkbox ?checked="${this.editedSong.album.mixed}" id="album_mixed"></md-checkbox>Mixed</label>
             </div>
+            <div class="row">
+              <label><md-checkbox ?checked="${this.editedSong.explicitLyrics}" id="explicitLyrics"></md-checkbox>Explicit Lyrics</label>
+            </div>
           </div>
           <div class="fields">
             <div>
@@ -574,6 +577,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.shadowRoot.getElementById('tonic_key_lock').icon = this.song.tonicKeyLock ? "lock" : "lock_open";
     this.shadowRoot.getElementById('lowQuality').checked = this.song.lowQuality;
     this.shadowRoot.getElementById('album_mixed').checked = this.song.album.mixed;
+    this.shadowRoot.getElementById('explicitLyrics').checked = this.song.explicitLyrics;
     this.shadowRoot.getElementById('trashed').checked = this.song.trashed;
     this.shadowRoot.getElementById('album_artist').value = this.song.album.artist.trim();
     this.albumArtistValChanged();  // I'm not sure why this isn't always called from the above change.
@@ -613,6 +617,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     song.tonicKey = this.shadowRoot.getElementById('tonicKey').value;
     song.lowQuality = this.shadowRoot.getElementById('lowQuality').checked;
     song.album.mixed = this.shadowRoot.getElementById('album_mixed').checked;
+    song.explicitLyrics = this.shadowRoot.getElementById('explicitLyrics').checked;
     song.trashed = this.shadowRoot.getElementById('trashed').checked;
     // TODO song.album.cover = this.shadowRoot.getElementById('album_cover').value;
     song.album.artist = this.shadowRoot.getElementById('album_artist').value;

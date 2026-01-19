@@ -946,7 +946,8 @@ songFields = [
   [:bool, "bpmLock", 0],
   [:bool, "tonicKeyLock", 0],
   [:int, "dupeId", Attrib::ID | Attrib::MULTIFIND],
-  ["Song", "dupe", Attrib::PTR]
+  ["Song", "dupe", Attrib::PTR],
+  [:bool, "explicitLyrics", 0]
 ]
 songAttribs = 0
 songCustomMethods = "        explicit Song(RESong* song);\n\n        static RESong* createRESongFromSong(Song& song);\n\n        const string reAlbum();\n        const string getDateAddedString() const;\n        void setDateAddedToNow();\n\n"
