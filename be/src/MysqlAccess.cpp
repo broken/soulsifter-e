@@ -120,6 +120,9 @@ bool MysqlAccess::reconnect() {
         LOG(INFO) << "Reconnecing a" << (connection->isValid() ? " valid" : "n invalid") << " connection.";
         disconnect();
         std::this_thread::sleep_for(std::chrono::seconds(1));
+        for (const std::pair<const std::string, sql::PreparedStatement*>& entry : preparedStatements) {
+            delete entry.second;
+        }
         preparedStatements.clear();
         connect();
         std::this_thread::sleep_for(std::chrono::seconds(1));
