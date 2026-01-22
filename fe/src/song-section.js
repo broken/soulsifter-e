@@ -70,6 +70,7 @@ class SongSection extends GetFilepathMixin(SearchOptionsMixin(SettingsMixin(Song
     this.songTrailCache = [];
     this.clearCache = true;
     this.saveSongTrailListener = (e) => this.saveSongTrail(e);
+    this.keydownHandlerListener = (e) => this.keydownHandler(e);
     this.song = new ss.Song();
     this.song.album = new ss.Album();
     this.mix = undefined;
@@ -79,10 +80,12 @@ class SongSection extends GetFilepathMixin(SearchOptionsMixin(SettingsMixin(Song
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('save-song-trail', this.saveSongTrailListener);
+    window.addEventListener('keydown', this.keydownHandlerListener);
   }
 
   disconnectedCallback() {
     window.removeEventListener('save-song-trail', this.saveSongTrailListener);
+    window.removeEventListener('keydown', this.keydownHandlerListener);
     super.disconnectedCallback();
   }
 
@@ -120,6 +123,27 @@ class SongSection extends GetFilepathMixin(SearchOptionsMixin(SettingsMixin(Song
     e.preventDefault();
     const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.searchOptions.useStems, this.searchOptions.mvRestrict);
     ipcRenderer.send('ondragstart', filepath, iconpath);
+  }
+
+  keydownHandler(e) {
+    if (this.shadowRoot.activeElement) return;
+
+    const playPause = this.settings.getString('hotkey.media.playPause');
+    const back = this.settings.getString('hotkey.nav.back');
+    const forward = this.settings.getString('hotkey.nav.forward');
+
+    if (playPause === e.code) {
+      e.preventDefault();
+      const audio = this.shadowRoot.getElementById('audio');
+      if (audio.paused) audio.play();
+      else audio.pause();
+    } else if (back === e.code) {
+      e.preventDefault();
+      this.backAction();
+    } else if (forward === e.code) {
+      e.preventDefault();
+      if (this.songTrailCache.length) this.forwardAction();
+    }
   }
 
   backAction(e) {

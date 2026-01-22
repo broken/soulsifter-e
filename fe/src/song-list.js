@@ -151,6 +151,42 @@ class SongList extends AlertsMixin(
       this.selectedListItems.clear();
       this.lastSelectedListItem = undefined;
     }
+    if (this.shadowRoot.activeElement) return;
+    const hotkeyUp = this.settings.getString('hotkey.songList.up');
+    const hotkeyDown = this.settings.getString('hotkey.songList.down');
+    const hotkeySelect = this.settings.getString('hotkey.songList.select');
+    if (hotkeyUp === e.code) {
+      e.preventDefault();
+      this.moveSelection(-1);
+    } else if (hotkeyDown === e.code) {
+      e.preventDefault();
+      this.moveSelection(1);
+    } else if (hotkeySelect === e.code) {
+      e.preventDefault();
+      if (this.midiSelectedListItem) this.midiSelectedListItem.selectSong({});
+    }
+  }
+
+  moveSelection(diff) {
+    const items = Array.from(this.shadowRoot.querySelectorAll('song-list-item'));
+    if (!items.length) return;
+    let idx = -1;
+    if (this.midiSelectedListItem) {
+      idx = items.indexOf(this.midiSelectedListItem);
+      this.midiSelectedListItem.removeAttribute('selected');
+    }
+    idx += diff;
+    if (idx < 0) idx = 0;
+    if (idx >= items.length) idx = items.length - 1;
+    this.midiSelectedListItem = items[idx];
+    this.midiSelectedListItem.setAttribute('selected', '');
+
+    const thisRect = this.getBoundingClientRect();
+    const selectedRect = this.midiSelectedListItem.getBoundingClientRect();
+    const targetTop = thisRect.height / 2 - selectedRect.height / 2 + thisRect.top;
+    const moveTop = selectedRect.top - targetTop;
+    const newScrollTop = this.scrollTop + moveTop;
+    this.scrollTo({top: newScrollTop, behavior: 'instant'});
   }
 
   bpmChanged(bpm) {
@@ -533,44 +569,10 @@ class SongList extends AlertsMixin(
           console.log(e);
           const velRight = 1;
           const velLeft = 127;
-          let items = this.shadowRoot.querySelectorAll('song-list-item');
-          if (!this.midiSelectedListItem) {
-            if (items.length) this.midiSelectedListItem = items[0];
-          } else {
-            this.midiSelectedListItem.removeAttribute('selected');
-            if (e.message.dataBytes[1] == velRight) {
-              let useNext = false;
-              for (let item of items) {
-                if (item == this.midiSelectedListItem) {
-                  useNext = true;
-                } else if (useNext) {
-                  useNext = false;
-                  this.midiSelectedListItem = item;
-                  break;
-                }
-              }
-            } else if (e.message.dataBytes[1] == velLeft) {
-              let prevItem = items[0];
-              for (let item of items) {
-                if (item == this.midiSelectedListItem) {
-                  this.midiSelectedListItem = prevItem;
-                  break;
-                } else {
-                  prevItem = item;
-                }
-              }
-            }
-          }
-          this.midiSelectedListItem.setAttribute('selected', '');
-          {
-            // scroll so selected is in the middle
-            const thisRect = this.getBoundingClientRect();
-            const selectedRect = this.midiSelectedListItem.getBoundingClientRect();
-            const targetTop = thisRect.height / 2 - selectedRect.height / 2 + thisRect.top;
-            const moveTop = selectedRect.top - targetTop;
-            const newScrollTop = this.scrollTop + moveTop;
-            this.scrollTo({top: newScrollTop, behavior: 'instant'});
-            console.info(`targetTop: ${targetTop}, moveTop ${moveTop}  newScrollTop: ${newScrollTop}, stop ${selectedRect.top} `);
+          if (e.message.dataBytes[1] == velRight) {
+            this.moveSelection(1);
+          } else if (e.message.dataBytes[1] == velLeft) {
+            this.moveSelection(-1);
           }
           if (( // does not have separate audio channels, so no safety checks required
                 !this.settings.getString('midi.audioOutput.leftName') &&

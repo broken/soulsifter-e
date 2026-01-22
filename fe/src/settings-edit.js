@@ -13,6 +13,20 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     const note = "[89A-E,a-e][0-9A-Fa-f] [0-7][0-9A-Fa-f] [x0-7][x0-9A-Fa-f]";
     const dblNote = `${note}\\s*(/\\s*${note})?`;
     const rawMidiPattern = `^(${dblNote},\s*)?${dblNote}$`;
+    const commonKeys = [
+      ['Space', 'Space'],
+      ['Enter', 'Enter'],
+      ['ArrowUp', 'Up Arrow'],
+      ['ArrowDown', 'Down Arrow'],
+      ['ArrowLeft', 'Left Arrow'],
+      ['ArrowRight', 'Right Arrow'],
+      ['Backspace', 'Backspace'],
+      ['Escape', 'Escape'],
+      ['Digit0', '0'],
+      ['Digit1', '1 (etc for 0-9)'],
+      ['KeyA', 'A'],
+      ['KeyB', 'B (etc for A-Z)'],
+    ];
     return html`
       <abstract-action-page @cancel="${this.exit}" @accept="${this.save}">
         <div class="outer">
@@ -22,6 +36,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
             <mwc-tab @click="${() => this.tabClicked(2)}" label="Subscriptions" isFadingIndicator></mwc-tab>
             <mwc-tab @click="${() => this.tabClicked(3)}" label="DVS Integration" isFadingIndicator></mwc-tab>
             <mwc-tab @click="${() => this.tabClicked(4)}" label="Song List Fields" isFadingIndicator></mwc-tab>
+            <mwc-tab @click="${() => this.tabClicked(5)}" label="Keyboard" isFadingIndicator></mwc-tab>
           </mwc-tab-bar>
           <main id="main">
             <section active>
@@ -147,6 +162,24 @@ class SettingsEdit extends SettingsMixin(LitElement) {
               </div>
               <song-list-item id="songListItem" .song="${this.song}" bpm="104"></song-list-item>
             </section>
+            <section>
+              <div class="fields">
+                <md-filled-text-field label="Song List Up" .value=${this.hotkeySongListUp} id="hotkeySongListUp"></md-filled-text-field>
+                <md-filled-text-field label="Song List Down" .value=${this.hotkeySongListDown} id="hotkeySongListDown"></md-filled-text-field>
+                <md-filled-text-field label="Song List Select" .value=${this.hotkeySongListSelect} id="hotkeySongListSelect"></md-filled-text-field>
+                <md-filled-text-field label="Play / Pause" .value=${this.hotkeyMediaPlayPause} id="hotkeyMediaPlayPause"></md-filled-text-field>
+                <md-filled-text-field label="Go Back" .value=${this.hotkeyNavBack} id="hotkeyNavBack"></md-filled-text-field>
+                <md-filled-text-field label="Go Forward" .value=${this.hotkeyNavForward} id="hotkeyNavForward"></md-filled-text-field>
+              </div>
+              <div class="fields">
+                <label>Possible values (Press any key to see its code)</label>
+                <md-filled-text-field label="Last Pressed Key Code" .value=${this.lastKeyPressed} readonly></md-filled-text-field>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 10px; color: var(--md-sys-color-on-surface-variant);">
+                  ${commonKeys.map(([code, name]) => html`<div>${name}: <strong>${code}</strong></div>`)}
+                </div>
+                <label>Warning: only trust arrow keys with moving through song-list.</label>
+              </div>
+            </section>
           </main>
         </div>
       </abstract-action-page>
@@ -174,6 +207,12 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.dbUser = this.settings.getString('db.user');
     this.dbPassword = this.settings.getString('db.password');
     this.dbUrl = this.settings.getString('db.url');
+    this.hotkeyMediaPlayPause = this.settings.getString('hotkey.media.playPause');
+    this.hotkeyNavBack = this.settings.getString('hotkey.nav.back');
+    this.hotkeyNavForward = this.settings.getString('hotkey.nav.forward');
+    this.hotkeySongListUp = this.settings.getString('hotkey.songList.up');
+    this.hotkeySongListDown = this.settings.getString('hotkey.songList.down');
+    this.hotkeySongListSelect = this.settings.getString('hotkey.songList.select');
     this.dragAndDropDeckLeftX = this.settings.getString('dragAndDrop.deckLeftX');
     this.dragAndDropDeckLeftY = this.settings.getString('dragAndDrop.deckLeftY');
     this.dragAndDropDeckRightX = this.settings.getString('dragAndDrop.deckRightX');
@@ -228,6 +267,11 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.virtualdjMidiPositionDeck2 = this.settings.getString('virtualdj.midi.position.deck2');
     this.virtualdjPort = this.settings.getInt('virtualdj.port');
     this.settingsEditListener = (e) => this.classList.add('show');
+    this.keyDownListener = (e) => {
+      if (this.classList.contains('show')) {
+        this.lastKeyPressed = e.code;
+      }
+    };
     this.song = new ss.Song();
     this.song.id = 69;
     this.song.track = '01';
@@ -259,10 +303,12 @@ class SettingsEdit extends SettingsMixin(LitElement) {
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('settings-edit', this.settingsEditListener);
+    window.addEventListener('keydown', this.keyDownListener);
   }
 
   disconnectedCallback() {
     window.removeEventListener('settings-edit', this.settingsEditListener);
+    window.removeEventListener('keydown', this.keyDownListener);
     super.disconnectedCallback();
   }
 
@@ -326,6 +372,12 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('db.user', this.shadowRoot.getElementById('dbUser').value);
     this.puts('db.password', this.shadowRoot.getElementById('dbPassword').value);
     this.puts('db.url', this.shadowRoot.getElementById('dbUrl').value);
+    this.puts('hotkey.media.playPause', this.shadowRoot.getElementById('hotkeyMediaPlayPause').value);
+    this.puts('hotkey.nav.back', this.shadowRoot.getElementById('hotkeyNavBack').value);
+    this.puts('hotkey.nav.forward', this.shadowRoot.getElementById('hotkeyNavForward').value);
+    this.puts('hotkey.songList.up', this.shadowRoot.getElementById('hotkeySongListUp').value);
+    this.puts('hotkey.songList.down', this.shadowRoot.getElementById('hotkeySongListDown').value);
+    this.puts('hotkey.songList.select', this.shadowRoot.getElementById('hotkeySongListSelect').value);
     this.puts('dragAndDrop.deckLeftX', this.shadowRoot.getElementById('dragAndDropDeckLeftX').value);
     this.puts('dragAndDrop.deckLeftY', this.shadowRoot.getElementById('dragAndDropDeckLeftY').value);
     this.puts('dragAndDrop.deckRightX', this.shadowRoot.getElementById('dragAndDropDeckRightX').value);
@@ -420,6 +472,12 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   putb(key, value) {
     this.settings.putBool(key, value);
+  }
+
+  static get properties() {
+    return {
+      lastKeyPressed: { type: String },
+    };
   }
 
   static get styles() {

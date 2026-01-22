@@ -48,6 +48,12 @@ namespace soulsifter {
     //ptree.put("google.appKey", "");
     //ptree.put("google.email", "");
     //ptree.put("google.androidId", "");
+    ptree.put("hotkey.media.playPause", "");
+    ptree.put("hotkey.nav.back", "");
+    ptree.put("hotkey.nav.forward", "");
+    ptree.put("hotkey.songList.up", "");
+    ptree.put("hotkey.songList.down", "");
+    ptree.put("hotkey.songList.select", "");
     //ptree.put("midi.audioOutput.left", "");
     //ptree.put("midi.audioOutput.leftName", "");
     //ptree.put("midi.audioOutput.right", "");
