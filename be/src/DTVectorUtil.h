@@ -53,7 +53,7 @@ namespace dogatech {
     template <typename T>
     static bool equivalentVectors(const vector<T>& l, const vector<T>& r) {
         if (l.size() != r.size()) return false;
-        // TODO don't i just need to check one if they're the same size?
+        // Check both directions to take into account duplicates.
         return containsVector(l, r) && containsVector(r, l);
     }
   
