@@ -7,6 +7,7 @@ import "./icon-button.js";
 import "./pitch-slider.js";
 import "./star-rating.js";
 import { GetFilepathMixin } from "./mixin-get-filepath.js";
+import { KeyboardMixin } from "./mixin-keyboard.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { SongEditMixin } from "./mixin-song-edit.js";
@@ -14,7 +15,7 @@ import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 
 
-class SongSection extends GetFilepathMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement)))))) {
+class SongSection extends GetFilepathMixin(KeyboardMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement))))))) {
   render() {
     let localeDateTime = !!this.song ? new Date(this.song.dateAdded).toLocaleString() : '';
     let debugMode = this.settings.getBool('app.debug');
@@ -126,8 +127,7 @@ class SongSection extends GetFilepathMixin(SearchOptionsMixin(SettingsMixin(Song
   }
 
   keydownHandler(e) {
-    const target = e.composedPath()[0];
-    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable) return;
+    if (!this.validateKeyboardShortcut(e)) return;
 
     const playPause = this.settings.getString('hotkey.media.playPause');
     const back = this.settings.getString('hotkey.nav.back');
