@@ -46,9 +46,6 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
               <label><md-checkbox ?checked="${this.editedSong.lowQuality}" id="lowQuality"></md-checkbox>Low Quality</label>
               <label><md-checkbox ?checked="${this.editedSong.album.mixed}" id="album_mixed"></md-checkbox>Mixed</label>
             </div>
-            <div class="row">
-              <label><md-checkbox ?checked="${this.editedSong.explicitLyrics}" id="explicitLyrics"></md-checkbox>Explicit Lyrics</label>
-            </div>
           </div>
           <div class="fields">
             <div>
@@ -79,6 +76,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             </div>
             <div class="row">
               <label><md-checkbox ?checked="${this.editedSong.trashed}" ?disabled="${this.songIsTrashed}" id="trashed"></md-checkbox>Trash</label>
+              <label><md-checkbox ?checked="${this.editedSong.explicitLyrics}" id="explicitLyrics"></md-checkbox>Explicit Lyrics</label>
             </div>
           </div>
           <div class="fields">
