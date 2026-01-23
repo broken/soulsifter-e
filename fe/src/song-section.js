@@ -126,7 +126,8 @@ class SongSection extends GetFilepathMixin(SearchOptionsMixin(SettingsMixin(Song
   }
 
   keydownHandler(e) {
-    if (this.shadowRoot.activeElement) return;
+    const target = e.composedPath()[0];
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable) return;
 
     const playPause = this.settings.getString('hotkey.media.playPause');
     const back = this.settings.getString('hotkey.nav.back');

@@ -151,7 +151,8 @@ class SongList extends AlertsMixin(
       this.selectedListItems.clear();
       this.lastSelectedListItem = undefined;
     }
-    if (this.shadowRoot.activeElement) return;
+    const target = e.composedPath()[0];
+    if (['INPUT', 'TEXTAREA', 'SELECT'].includes(target.tagName) || target.isContentEditable) return;
     const hotkeyUp = this.settings.getString('hotkey.songList.up');
     const hotkeyDown = this.settings.getString('hotkey.songList.down');
     const hotkeySelect = this.settings.getString('hotkey.songList.select');
