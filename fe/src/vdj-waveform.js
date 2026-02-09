@@ -292,7 +292,13 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       this.displayTime = newTime;
       this.lastSyncTime = newTime;
       this.lastSyncTimestamp = Date.now();
-      if (this.animation) this.animation.currentTime = newTime;
+      if (this.animation) {
+        // Only sync if drift is significant (> 200ms) to prevent stutter
+        const drift = Math.abs(this.animation.currentTime - newTime);
+        if (drift > 200) {
+          this.animation.currentTime = newTime;
+        }
+      }
 
       // check if track is playing
       const data = await window.vdj.query(`deck ${this.deck} play`);
@@ -410,7 +416,14 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
   updateWrapperAnimation() {
     const pixelBeatDistance = 115;
-    this.waveformWidth = this.duration * this.bpm / 60 / 1000 * pixelBeatDistance;
+    const newWaveformWidth = this.duration * this.bpm / 60 / 1000 * pixelBeatDistance;
+
+    // If animation exists and width hasn't changed significantly, skip recreation
+    if (this.animation && this.waveformWidth && Math.abs(this.waveformWidth - newWaveformWidth) < 1) {
+      return;
+    }
+
+    this.waveformWidth = newWaveformWidth;
 
     // create the animation object using the Web Animations API
     const w = this.shadowRoot.getElementById('waveform-wrapper');
