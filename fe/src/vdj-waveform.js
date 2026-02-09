@@ -138,6 +138,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     }
 
     if (changed && render) {
+      this.updateWrapperAnimation();
       for (let i = 0; i < this.stemNames.length; i++) {
         this.renderWaveform(i);
       }
@@ -271,6 +272,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
         this.renderWaveform(i);
       }
 
+      this.updateWrapperAnimation();
+
       // Clean up temp directory
       await this.exec(`rm -rf "${tmpPath}"`);
 
@@ -381,9 +384,11 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     const max = channel.max_array();
 
     // Set the desired width and height for the SVG container
-    const pixelBeatDistance = 115;  // 115
-    this.waveformWidth = this.duration * this.bpm / 60 / 1000 * pixelBeatDistance;
     const verticalOffset = VDJWaveform.waveformHeight / 2; // Center the waveform vertically
+
+    if (!this.waveformWidth) {
+      this.updateWrapperAnimation();
+    }
 
     x.domain([0, waveform.length]).rangeRound([0, this.waveformWidth]);
     y.domain([d3.min(min), d3.max(max)]).rangeRound([verticalOffset, -verticalOffset]);
@@ -401,9 +406,17 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       .attr('transform', () => `translate(0, ${verticalOffset})`)
       .attr('d', area)
       .attr('stroke', this.getStemColor(stemIndex - 1));
+  }
+
+  updateWrapperAnimation() {
+    const pixelBeatDistance = 115;
+    this.waveformWidth = this.duration * this.bpm / 60 / 1000 * pixelBeatDistance;
 
     // create the animation object using the Web Animations API
     const w = this.shadowRoot.getElementById('waveform-wrapper');
+    if (this.animation) {
+      this.animation.cancel();
+    }
     this.animation = w.animate(
       [
         { transform: 'translateX(0)' },    // Keyframe 1: Start at 0
@@ -416,6 +429,15 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       }
     );
     this.animation.pause();
+    this.animation.currentTime = this.displayTime;
+    if (this.isPlaying) {
+      this.animation.play();
+    }
+    // Update widths of existing SVGs if they exist
+    const svgs = this.shadowRoot.querySelectorAll('.waveform svg');
+    svgs.forEach(svg => {
+      svg.style.width = `${this.waveformWidth}px`;
+    });
   }
 
   getWaveformCacheFilepath(songFilepath, stemIndex) {
@@ -458,12 +480,6 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           animation-play-state: paused;  // Start the animation paused
         }
 
-        .waveform-wrapper.paused {
-          transition: transform var(--transition-duration, 0.1)s ease-out;
-        }
-        .waveform-wrapper.playing {
-          transition: transform var(--transition-duration, 2)s linear;
-        }
         .waveform {
           width: 100%;
           height: ${VDJWaveform.waveformHeight}px;
