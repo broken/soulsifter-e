@@ -75,7 +75,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.waveforms = [undefined, undefined, undefined, undefined, undefined];
 
     // Settings for generated waveforms
-    this.audioScale = 2048;
+    this.audioScale = this.settings.getInt('virtualdj.waveform.audioScale');
     this.audioAmplitudeScale = 2.1;
 
     // BPM and smooth animation properties
@@ -415,7 +415,7 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
   }
 
   updateWrapperAnimation() {
-    const pixelBeatDistance = 115;
+    const pixelBeatDistance = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
     const newWaveformWidth = Math.round(this.duration * this.bpm / 60 / 1000 * pixelBeatDistance);
 
     // If animation exists and width hasn't changed significantly, skip recreation

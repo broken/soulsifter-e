@@ -132,6 +132,14 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <label><md-checkbox ?checked="${this.virtualdjActive}" id="virtualdjActive"></md-checkbox>Activate VirtualDJ Integration</label>
                 <md-filled-text-field label="VirtualDJ IP" .value=${this.virtualdjIp} id="virtualdjIp"></md-filled-text-field>
                 <md-filled-text-field label="VirtualDJ Port" .value=${this.virtualdjPort} id="virtualdjPort"></md-filled-text-field>
+                <br>
+                <options-menu-input label="Num Samples per pixel of data" value="${this.virtualdjWaveformAudioScale}" id="virtualdjWaveformAudioScale">
+                  <options-menu-item>512</options-menu-item>
+                  <options-menu-item>1024</options-menu-item>
+                  <options-menu-item>2048</options-menu-item>
+                  <options-menu-item>4096</options-menu-item>
+                </options-menu-input>
+                <md-filled-text-field label="Zoom (115=mid)" .value=${this.virtualdjWaveformPixelBeatDistance} id="virtualdjWaveformPixelBeatDistance"></md-filled-text-field>
               </div>
               <div class="fields">
                 <md-filled-text-field label="Deck A X" .value=${this.dragAndDropDeckLeftX} id="dragAndDropDeckLeftX"></md-filled-text-field>
@@ -265,6 +273,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.virtualdjMidiBpmDeck2 = this.settings.getString('virtualdj.midi.bpm.deck2');
     this.virtualdjMidiPositionDeck1 = this.settings.getString('virtualdj.midi.position.deck1');
     this.virtualdjMidiPositionDeck2 = this.settings.getString('virtualdj.midi.position.deck2');
+    this.virtualdjWaveformAudioScale = this.settings.getInt('virtualdj.waveform.audioScale');
+    this.virtualdjWaveformPixelBeatDistance = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
     this.virtualdjPort = this.settings.getInt('virtualdj.port');
     this.settingsEditListener = (e) => this.classList.add('show');
     this.keyDownListener = (e) => {
@@ -430,6 +440,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('virtualdj.midi.bpm.deck2', this.shadowRoot.getElementById('virtualdjMidiBpmDeck2').value);
     this.puts('virtualdj.midi.position.deck1', this.shadowRoot.getElementById('virtualdjMidiPositionDeck1').value);
     this.puts('virtualdj.midi.position.deck2', this.shadowRoot.getElementById('virtualdjMidiPositionDeck2').value);
+    this.puti('virtualdj.waveform.audioScale', Number(this.shadowRoot.getElementById('virtualdjWaveformAudioScale').value));
+    this.puti('virtualdj.waveform.pixelBeatDistance', Number(this.shadowRoot.getElementById('virtualdjWaveformPixelBeatDistance').value));
     this.puti('virtualdj.port', Number(this.shadowRoot.getElementById('virtualdjPort').value));
     this.settings.save();
     // reset midi

@@ -97,6 +97,8 @@ namespace soulsifter {
     // ptree.put("virtualdj.midi.position.deck1", "");
     // ptree.put("virtualdj.midi.position.deck2", "");
     ptree.put("virtualdj.port", 80);
+    ptree.put("virtualdj.waveform.audioScale", 2048);
+    ptree.put("virtualdj.waveform.pixelBeatDistance", 115);
 
     // TODO settings file stored in other OS place
     filename.append(getenv("HOME"));
