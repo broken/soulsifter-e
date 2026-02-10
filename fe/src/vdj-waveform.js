@@ -483,14 +483,15 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
           overflow: hidden;
           position: relative;
           background: linear-gradient(90deg, #1a1a2e, #16213e, #1a1a2e);
+          contain: layout style;
         }
         .waveform-wrapper {
           left: 25%;
           width: 100%;
           height: 100%;
           position: relative;
-          animation: scroll-waveform linear; /* Name the animation and set a linear timing function */
-          animation-play-state: paused;  // Start the animation paused
+          will-change: transform;
+          backface-visibility: hidden;
         }
 
         .waveform {
