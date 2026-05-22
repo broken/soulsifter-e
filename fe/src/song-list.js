@@ -512,18 +512,28 @@ class SongList extends AlertsMixin(
     midiManager.registerInput(
         this.settings.getString('midi.audioOutput.left'),
         async e => {
-          if (this._audioOutput != this.settings.getString('midi.audioOutput.leftName')) {
-            await exec(`SwitchAudioSource -s "${this.settings.getString('midi.audioOutput.leftName')}"`);
-            this._audioOutput = this.settings.getString('midi.audioOutput.leftName');
+          try {
+            if (this._audioOutput != this.settings.getString('midi.audioOutput.leftName')) {
+              await exec(`SwitchAudioSource -s "${this.settings.getString('midi.audioOutput.leftName')}"`);
+              this._audioOutput = this.settings.getString('midi.audioOutput.leftName');
+            }
+          } catch (err) {
+            console.error(err);
+            this.addAlert(`Failed to switch audio source to "${this.settings.getString('midi.audioOutput.leftName')}": ` + err.message, 5);
           }
         }
     );
     midiManager.registerInput(
         this.settings.getString('midi.audioOutput.right'),
         async e => {
-          if (this._audioOutput != this.settings.getString('midi.audioOutput.rightName')) {
-            await exec(`SwitchAudioSource -s "${this.settings.getString('midi.audioOutput.rightName')}"`);
-            this._audioOutput = this.settings.getString('midi.audioOutput.rightName');
+          try {
+            if (this._audioOutput != this.settings.getString('midi.audioOutput.rightName')) {
+              await exec(`SwitchAudioSource -s "${this.settings.getString('midi.audioOutput.rightName')}"`);
+              this._audioOutput = this.settings.getString('midi.audioOutput.rightName');
+            }
+          } catch (err) {
+            console.error(err);
+            this.addAlert(`Failed to switch audio source to "${this.settings.getString('midi.audioOutput.rightName')}": ` + err.message, 5);
           }
         }
     );
