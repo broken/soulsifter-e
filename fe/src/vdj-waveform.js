@@ -7,10 +7,11 @@ import * as d3 from 'd3';
 import "./icon-button.js";
 import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
+import { KeyboardMixin } from "./mixin-keyboard.js";
 import { SettingsMixin } from "./mixin-settings.js";
 
 
-class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
+class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) {
   render() {
     return html`
       <div class="waveform-container" @click="${this.handleClick}">
@@ -58,6 +59,8 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
 
   constructor() {
     super();
+    this.keydownHandlerListener = (e) => this.keydownHandler(e);
+    this.handleZoomListener = (e) => this.handleZoom(e);
     this.fs = require('fs/promises');
     this.os = require('os');
     this.path = require('path');
@@ -83,6 +86,40 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
     this.lastSyncTimestamp = 0;
   }
 
+  handleZoom(e) {
+    // This is called when the zoom level changes. We do this here so different components can
+    // react to the zoom change together.
+    if (this.trackLoaded) {
+      this.updateWrapperAnimation();
+    }
+  }
+
+  keydownHandler(e) {
+    // Check if we should ignore this event (e.g. user typing in an input field)
+    if (this.validateKeyboardShortcut && !this.validateKeyboardShortcut(e)) return;
+    if (e.defaultPrevented) return;
+
+    const zoomIn = this.settings.getString('hotkey.waveform.zoomIn');
+    const zoomOut = this.settings.getString('hotkey.waveform.zoomOut');
+
+    let newVal = undefined;
+    if (zoomIn && zoomIn === e.code) {
+      e.preventDefault();
+      const currentVal = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
+      newVal = Math.min(1000, Math.max(currentVal + 1, Math.round(currentVal * 1.2)));
+    } else if (zoomOut && zoomOut === e.code) {
+      e.preventDefault();
+      const currentVal = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
+      newVal = Math.max(1, Math.min(currentVal - 1, Math.round(currentVal / 1.2)));
+    }
+
+    if (newVal !== undefined) {
+      this.settings.putInt('virtualdj.waveform.pixelBeatDistance', newVal);
+      this.settings.save();
+      window.dispatchEvent(new CustomEvent('vdj-waveform-zoom'));
+    }
+  }
+
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('enable-stem-waveforms', e => {
@@ -94,9 +131,13 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       }
     });
     window.addEventListener('register-midi-callbacks', e => this.registerMidiCallbacks());
+    window.addEventListener('keydown', this.keydownHandlerListener);
+    window.addEventListener('vdj-waveform-zoom', this.handleZoomListener);
   }
 
   disconnectedCallback() {
+    window.removeEventListener('keydown', this.keydownHandlerListener);
+    window.removeEventListener('vdj-waveform-zoom', this.handleZoomListener);
     super.disconnectedCallback();
     this.stopUpdating();
     this.stopDisplayTimeUpdate();
@@ -447,10 +488,9 @@ class VDJWaveform extends AlertsMixin(SettingsMixin(LitElement)) {
       this.animation.play();
     }
     // Update widths of existing SVGs if they exist
-    const svgs = this.shadowRoot.querySelectorAll('.waveform svg');
-    svgs.forEach(svg => {
-      svg.style.width = `${this.waveformWidth}px`;
-    });
+    for (let i = 1; i <= 5; i++) {
+      this.renderWaveform(i);
+    }
   }
 
   getWaveformCacheFilepath(songFilepath, stemIndex) {

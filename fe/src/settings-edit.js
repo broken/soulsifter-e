@@ -178,6 +178,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Play / Pause" .value=${this.hotkeyMediaPlayPause} id="hotkeyMediaPlayPause"></md-filled-text-field>
                 <md-filled-text-field label="Go Back" .value=${this.hotkeyNavBack} id="hotkeyNavBack"></md-filled-text-field>
                 <md-filled-text-field label="Go Forward" .value=${this.hotkeyNavForward} id="hotkeyNavForward"></md-filled-text-field>
+                <md-filled-text-field label="Waveform Zoom In" .value=${this.hotkeyWaveformZoomIn} id="hotkeyWaveformZoomIn"></md-filled-text-field>
+                <md-filled-text-field label="Waveform Zoom Out" .value=${this.hotkeyWaveformZoomOut} id="hotkeyWaveformZoomOut"></md-filled-text-field>
               </div>
               <div class="fields">
                 <label>Possible values (Press any key to see its code)</label>
@@ -221,6 +223,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.hotkeySongListUp = this.settings.getString('hotkey.songList.up');
     this.hotkeySongListDown = this.settings.getString('hotkey.songList.down');
     this.hotkeySongListSelect = this.settings.getString('hotkey.songList.select');
+    this.hotkeyWaveformZoomIn = this.settings.getString('hotkey.waveform.zoomIn');
+    this.hotkeyWaveformZoomOut = this.settings.getString('hotkey.waveform.zoomOut');
     this.dragAndDropDeckLeftX = this.settings.getString('dragAndDrop.deckLeftX');
     this.dragAndDropDeckLeftY = this.settings.getString('dragAndDrop.deckLeftY');
     this.dragAndDropDeckRightX = this.settings.getString('dragAndDrop.deckRightX');
@@ -277,6 +281,11 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.virtualdjWaveformPixelBeatDistance = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
     this.virtualdjPort = this.settings.getInt('virtualdj.port');
     this.settingsEditListener = (e) => this.classList.add('show');
+    this.settingsZoomListener = (e) => {
+      this.virtualdjWaveformPixelBeatDistance = e.detail.value;
+      const el = this.shadowRoot.getElementById('virtualdjWaveformPixelBeatDistance');
+      if (el) el.value = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
+    };
     this.keyDownListener = (e) => {
       if (this.classList.contains('show')) {
         this.lastKeyPressed = e.code;
@@ -314,11 +323,13 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     super.connectedCallback();
     window.addEventListener('settings-edit', this.settingsEditListener);
     window.addEventListener('keydown', this.keyDownListener);
+    window.addEventListener('vdj-waveform-zoom', this.settingsZoomListener);
   }
 
   disconnectedCallback() {
     window.removeEventListener('settings-edit', this.settingsEditListener);
     window.removeEventListener('keydown', this.keyDownListener);
+    window.removeEventListener('vdj-waveform-zoom', this.settingsZoomListener);
     super.disconnectedCallback();
   }
 
@@ -364,6 +375,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   save(e, detail, sender) {
     this.validate();
+    let oldvirtualdjWaveformPixelBeatDistance = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
     this.puts('app.theme', this.shadowRoot.getElementById('appTheme').value);
     this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
@@ -388,6 +400,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('hotkey.songList.up', this.shadowRoot.getElementById('hotkeySongListUp').value);
     this.puts('hotkey.songList.down', this.shadowRoot.getElementById('hotkeySongListDown').value);
     this.puts('hotkey.songList.select', this.shadowRoot.getElementById('hotkeySongListSelect').value);
+    this.puts('hotkey.waveform.zoomIn', this.shadowRoot.getElementById('hotkeyWaveformZoomIn').value);
+    this.puts('hotkey.waveform.zoomOut', this.shadowRoot.getElementById('hotkeyWaveformZoomOut').value);
     this.puts('dragAndDrop.deckLeftX', this.shadowRoot.getElementById('dragAndDropDeckLeftX').value);
     this.puts('dragAndDrop.deckLeftY', this.shadowRoot.getElementById('dragAndDropDeckLeftY').value);
     this.puts('dragAndDrop.deckRightX', this.shadowRoot.getElementById('dragAndDropDeckRightX').value);
@@ -450,6 +464,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
       const event = new CustomEvent('register-midi-callbacks', {});
       window.dispatchEvent(event);
     }
+    if (oldvirtualdjWaveformPixelBeatDistance != this.settings.getInt('virtualdj.waveform.pixelBeatDistance'))
+      window.dispatchEvent(new CustomEvent('vdj-waveform-zoom'));
     this.exit();
   }
 

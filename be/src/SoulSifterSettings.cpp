@@ -54,6 +54,8 @@ namespace soulsifter {
     ptree.put("hotkey.songList.up", "");
     ptree.put("hotkey.songList.down", "");
     ptree.put("hotkey.songList.select", "");
+    ptree.put("hotkey.waveform.zoomIn", "");
+    ptree.put("hotkey.waveform.zoomOut", "");
     //ptree.put("midi.audioOutput.left", "");
     //ptree.put("midi.audioOutput.leftName", "");
     //ptree.put("midi.audioOutput.right", "");
