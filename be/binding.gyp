@@ -92,6 +92,10 @@
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
             'GCC_ENABLE_CPP_RTTI': 'YES',
             'MACOSX_DEPLOYMENT_TARGET': '26.0',
+            'LD_RUNPATH_SEARCH_PATHS': [
+              '/usr/local/mysql/lib',
+              '/usr/local/mysql-connector-c++/lib64',
+            ],
           },
           'link_settings': {
             'libraries': [
@@ -124,7 +128,11 @@
         }],
       ],
       "include_dirs": [
-        "<!@(node -p \"require('node-addon-api').include\")"
+        "<!@(node -p \"require('node-addon-api').include\")",
+        "/opt/homebrew/include",
+        "/usr/local/include",
+        "/usr/local/mysql/include",
+        "/usr/local/mysql-connector-c++/include",
       ],
       'defines': [ 'NAPI_DISABLE_CPP_EXCEPTIONS' ],
     }

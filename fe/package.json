@@ -2,7 +2,7 @@
   "name": "SoulSifter",
   "version": "1.11.0",
   "description": "DJ & music organization app.",
-  "build": 4292,
+  "build": 4294,
   "main": "main.js",
   "scripts": {
     "fe:build": "vite build",
@@ -19,13 +19,13 @@
   "author": "Robert Neale",
   "license": "Apache-2.0",
   "devDependencies": {
-    "@electron-forge/cli": "^7.5.0",
-    "@electron-forge/maker-deb": "^7.5.0",
-    "@electron-forge/maker-rpm": "^7.5.0",
-    "@electron-forge/maker-squirrel": "^7.5.0",
-    "@electron-forge/maker-zip": "^7.5.0",
-    "electron": "^33.2.0",
-    "vite": "^5.4.10"
+    "@electron-forge/cli": "^7.11.2",
+    "@electron-forge/maker-deb": "^7.11.2",
+    "@electron-forge/maker-rpm": "^7.11.2",
+    "@electron-forge/maker-squirrel": "^7.11.2",
+    "@electron-forge/maker-zip": "^7.11.2",
+    "electron": "^42.3.3",
+    "vite": "^8.0.16"
   },
   "dependencies": {
     "@material/mwc-circular-progress": "^0.27.0",
@@ -37,6 +37,7 @@
     "@polymer/paper-dialog": "^3.0.1",
     "@polymer/paper-toast": "^3.0.1",
     "@thomasloven/round-slider": "^0.6.0",
+    "axios": "^1.17.0",
     "crc-32": "^1.2.2",
     "d3": "^7.9.0",
     "electron-squirrel-startup": "^1.0.1",
@@ -49,5 +50,13 @@
     "waveform-data": "^4.5.2",
     "wavesurfer.js": "^7.8.8",
     "webmidi": "^3.1.11"
+  },
+  "allowScripts": {
+    "electron@42.3.3": true,
+    "electron-winstaller@5.3.1": true,
+    "fsevents@2.3.3": true
+  },
+  "overrides": {
+    "yauzl": "^3.3.1"
   }
 }

@@ -8,12 +8,12 @@
     "be:build": "npm i",
     "be:compile": "npm run be:build && npm run be:rebuild",
     "be:generatemodel": "ruby generate_model.rb",
-    "be:rebuild": "HOME=~/.electron-gyp npx node-gyp rebuild --target=21.7.3 --arch=x64 --dist-url=https://nodejs.org/dist",
+    "be:rebuild": "HOME=~/.electron-gyp npx node-gyp rebuild --target=42.3.3 --dist-url=https://electronjs.org/headers",
     "be:test": "npm run be:build && node test.js"
   },
   "author": "Robert Neale",
   "license": "Apache-2.0",
-  "gypfile": true,
+  "gypfile": false,
   "dependencies": {
     "bindings": "^1.5.0",
     "node-addon-api": "^8.2.1"
