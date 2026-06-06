@@ -10,33 +10,37 @@ It would be awesome if others found it useful, but I'm focused on features I nee
 Fresh Build Instructions
 ------------------------
 Presteps:
+* db folder
+  * Installing with the dmg on Mac, I had to place the db in /Users/Shared/db and chown to _mysql:_mysql
 * create mysql db
   * SELECT @@GLOBAL.sql_mode; SET GLOBAL sql_mode=(SELECT REPLACE(@@sql_mode,'ONLY_FULL_GROUP_BY',''));
   * update /etc/mysql/my.cnf to with the new sql-mode= under [mysqld]
     * example: [mysqld]
-      secure_file_priv=/Users/dogatech/Music/db
+      secure_file_priv=/Users/Shared/db
       sql-mode="STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION"
       local_infile=ON
       innodb_force_recovery=0
-      lower_case_table_names=1
+      lower_case_table_names=2
   * create music database with user ss, password pw, read & write creds to music db.
-    * create database music;
-    * create user 'ss'@'localhost' identified by 'pw';
-    * grant all privileges on music.* to 'ss'@'localhost';
-    * create user 'ssadmin'@'localhost' identified by 'pw';
-    * grant all privileges on music.* to 'ssadmin'@'localhost';
-    * grant SESSION_VARIABLES_ADMIN on *.* to 'ssadmin'@'localhost';
-    * grant FILE on *.* to 'ssadmin'@'localhost';
-    * grant PROCESS on *.* to 'ssadmin'@'localhost';
-    * SET GLOBAL local_infile=1;
-    * flush privileges;
+    * run create_db.sh or use commands below:
+      * create database music;
+      * create user 'ss'@'localhost' identified by 'pw';
+      * grant all privileges on music.* to 'ss'@'localhost';
+      * create user 'ssadmin'@'localhost' identified by 'pw';
+      * grant all privileges on music.* to 'ssadmin'@'localhost';
+      * grant SESSION_VARIABLES_ADMIN on *.* to 'ssadmin'@'localhost';
+      * grant FILE on *.* to 'ssadmin'@'localhost';
+      * grant PROCESS on *.* to 'ssadmin'@'localhost';
+      * SET GLOBAL local_infile=1;
+      * flush privileges;
   * run restore_db.sh to create all the tables (the last line to populate the data may fail, but that's okay if you don't have any)
   * git_add_update.sh script available if you periodically wish to take snapshots of your data and save it to a git repo. Can be really handy to take a backup using it before running any scripts on the db, and then git diff allows for a good comparison to make sure changes are expected.
+* required libs (brew install): libtag, mad, boost, ffmpeg, g3log, cliclick, switchaudio-osx
+  * sudo launchctl config user path /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
+  * mysql-connector-c++ (no brew; just download & add include & lib dir to CPLUS_INCLUDE_PATH & LIBRARY_PATH)
 * (to build) install npm modules
   * global: node-gyp
   * locally with npm install
-* required libs (brew install): mysql-connector-c++ (no brew; just download & copy in right locations), libtag, mad, boost, ffmpeg, g3log (1.3.4 (<=c++14)), cliclick, switchaudio-osx
-  * sudo launchctl config user path /usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin
 * It can read MixedInKey values from id3 tags. Settings:
   * Update custom "initial key" tag
   * Write energy tag in front of the grouping
