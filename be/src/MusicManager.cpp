@@ -295,11 +295,11 @@ void MusicManager::readTagsFromSong(Song* song) {
         TagLib::ID3v1::Tag* id3v1 = f.ID3v1Tag();
         if (id3v1) {
             stringstream ss;
-            if (id3v1->title() != TagLib::String::null) song->setTitle(trim_copy(id3v1->title().to8Bit()));
-            if (id3v1->artist() != TagLib::String::null) song->setArtist(trim_copy(id3v1->artist().to8Bit()));
-            if (id3v1->album() != TagLib::String::null) song->getAlbum()->setName(trim_copy(id3v1->album().to8Bit()));
-            if (id3v1->comment() != TagLib::String::null) song->setComments(trim_copy(id3v1->comment().to8Bit()));
-            //TODO if (id3v1->genre() != TagLib::String::null) song->setGenre(id3v1->genre().to8Bit());
+            if (!id3v1->title().isEmpty()) song->setTitle(trim_copy(id3v1->title().to8Bit()));
+            if (!id3v1->artist().isEmpty()) song->setArtist(trim_copy(id3v1->artist().to8Bit()));
+            if (!id3v1->album().isEmpty()) song->getAlbum()->setName(trim_copy(id3v1->album().to8Bit()));
+            if (!id3v1->comment().isEmpty()) song->setComments(trim_copy(id3v1->comment().to8Bit()));
+            //TODO if (!id3v1->genre().isEmpty()) song->setGenre(id3v1->genre().to8Bit());
             if (id3v1->year() != 0) song->getAlbum()->setReleaseDateYear(id3v1->year());
             if (id3v1->track() != 0) {
                 ss.clear();
@@ -316,11 +316,11 @@ void MusicManager::readTagsFromSong(Song* song) {
       TagLib::MP4::Tag* tag = f.tag();
       if (tag) {
         stringstream ss;
-        if (tag->title() != TagLib::String::null) song->setTitle(trim_copy(tag->title().to8Bit()));
-        if (tag->artist() != TagLib::String::null) song->setArtist(trim_copy(tag->artist().to8Bit()));
+        if (!tag->title().isEmpty()) song->setTitle(trim_copy(tag->title().to8Bit()));
+        if (!tag->artist().isEmpty()) song->setArtist(trim_copy(tag->artist().to8Bit()));
         if (tag->track() != 0) song->setTrack(trim_copy((ostringstream() << tag->track()).str()));
-        if (tag->album() != TagLib::String::null) song->getAlbum()->setName(trim_copy(tag->album().to8Bit()));
-        if (tag->comment() != TagLib::String::null) song->setComments(trim_copy(tag->comment().to8Bit()));
+        if (!tag->album().isEmpty()) song->getAlbum()->setName(trim_copy(tag->album().to8Bit()));
+        if (!tag->comment().isEmpty()) song->setComments(trim_copy(tag->comment().to8Bit()));
         if (tag->year() != 0) song->getAlbum()->setReleaseDateYear(tag->year());
       }
       TagService::readId3v2Tag(song);

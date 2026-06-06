@@ -59,7 +59,7 @@ public:
       return "image/png";
     } else {
       LOG(WARNING) << "Unknown image type for file " << filename;
-      return TagLib::String::null;
+      return TagLib::String();
     }
   }
 
@@ -68,7 +68,7 @@ public:
   }
 
   bool isValid() const {
-    return isOpen() && !mimeType().isNull();
+    return isOpen() && !mimeType().isEmpty();
   }
 
 private:
@@ -280,17 +280,17 @@ void TagService::readId3v2Tag(Song* song) {
     return;
   }
 
-    if (id3v2->artist() != TagLib::String::null) song->setArtist(trim_copy(id3v2->artist().to8Bit()));
+    if (!id3v2->artist().isEmpty()) song->setArtist(trim_copy(id3v2->artist().to8Bit()));
     song->setTrack(getId3v2Text(id3v2, "TRCK"));
-    if (id3v2->title() != TagLib::String::null) song->setTitle(trim_copy(id3v2->title().to8Bit()));
+    if (!id3v2->title().isEmpty()) song->setTitle(trim_copy(id3v2->title().to8Bit()));
     song->setRemixer(getId3v2Text(id3v2, "TPE4"));
     song->getAlbum()->setArtist(getId3v2Text(id3v2, "TPE2"));
-    if (id3v2->album() != TagLib::String::null) song->getAlbum()->setName(trim_copy(id3v2->album().to8Bit()));
+    if (!id3v2->album().isEmpty()) song->getAlbum()->setName(trim_copy(id3v2->album().to8Bit()));
     song->getAlbum()->setLabel(getId3v2Text(id3v2, "TPUB"));
     song->getAlbum()->setCatalogId(getId3v2Text(id3v2, "TCID"));
     if (id3v2->year() != 0) song->getAlbum()->setReleaseDateYear(id3v2->year());
-    //TODO if (id3v2->genre() != TagLib::String::null) song->setGenre(id3v2->genre().to8Bit());
-    if (id3v2->comment() != TagLib::String::null) song->setComments(trim_copy(id3v2->comment().to8Bit()));
+    //TODO if (!id3v2->genre().isEmpty()) song->setGenre(id3v2->genre().to8Bit());
+    if (!id3v2->comment().isEmpty()) song->setComments(trim_copy(id3v2->comment().to8Bit()));
 
     TagLib::ID3v2::FrameList frameList = id3v2->frameListMap()["POPM"];
     if (!frameList.isEmpty()) {
