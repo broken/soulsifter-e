@@ -91,19 +91,19 @@
           'xcode_settings': {
             'GCC_ENABLE_CPP_EXCEPTIONS': 'YES',
             'GCC_ENABLE_CPP_RTTI': 'YES',
-            'MACOSX_DEPLOYMENT_TARGET': '12.0',
+            'MACOSX_DEPLOYMENT_TARGET': '26.0',
           },
           'link_settings': {
             'libraries': [
-              '/usr/local/lib/libboost_date_time.dylib',
-              '/usr/local/lib/libboost_filesystem.dylib',
-              '/usr/local/lib/libboost_regex.dylib',
-              '/usr/local/lib/libboost_thread.dylib',
-              '/usr/local/lib/libg3log.2.dylib',
-              '/usr/local/lib/libmad.dylib',
-              '/usr/local/lib/libmysqlclient.24.dylib',
-              '/usr/local/lib/libmysqlcppconn.10.dylib',
-              '/usr/local/lib/libtag.1.dylib',
+              '/opt/homebrew/lib/libboost_date_time.dylib',
+              '/opt/homebrew/lib/libboost_filesystem.dylib',
+              '/opt/homebrew/lib/libboost_regex.dylib',
+              '/opt/homebrew/lib/libboost_thread.dylib',
+              '/opt/homebrew/lib/libg3log.2.dylib',
+              '/opt/homebrew/lib/libmad.dylib',
+              '/usr/local/mysql/lib/libmysqlclient.24.dylib',
+              '/usr/local/mysql-connector-c++/lib64/libmysqlcppconn.10.dylib',
+              '/opt/homebrew/lib/libtag.2.dylib',
             ]
           }
         }],
@@ -118,13 +118,12 @@
               '/usr/lib/x86_64-linux-gnu/libmad.so.0',
               '/usr/lib/x86_64-linux-gnu/libmysqlclient.so.24',
               '/usr/lib/x86_64-linux-gnu/libmysqlcppconn.so.10',
-              '/usr/lib/x86_64-linux-gnu/libtag.so.1',
+              '/usr/lib/x86_64-linux-gnu/libtag.so.2',
             ]
           }
         }],
       ],
       "include_dirs": [
-        "/Users/dogatech/.node-gyp/12.1.0/include/node",
         "<!@(node -p \"require('node-addon-api').include\")"
       ],
       'defines': [ 'NAPI_DISABLE_CPP_EXCEPTIONS' ],
