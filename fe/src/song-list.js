@@ -482,8 +482,8 @@ class SongList extends AlertsMixin(
 
     ipcRenderer.send('ss-focus');
 
-    const util = require('util');
-    const exec = util.promisify(require('node:child_process').exec);
+    const util = window.require('util');
+    const exec = util.promisify(window.require('child_process').exec);
     const easing = this.settings.getInt('dragAndDrop.easing');
     const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
 
@@ -507,8 +507,8 @@ class SongList extends AlertsMixin(
   }
 
   registerMidiCallbacks() {
-    const util = require('util');
-    const exec = util.promisify(require('node:child_process').exec);
+    const util = window.require('util');
+    const exec = util.promisify(window.require('child_process').exec);
     midiManager.registerInput(
         this.settings.getString('midi.audioOutput.left'),
         async e => {

@@ -1,7 +1,7 @@
 const GooglePlayMusic = class {
 
   constructor() {
-    let PlayMusic = require('playmusic');
+    let PlayMusic = window.require('playmusic');
     this.playMusic = new PlayMusic();
   }
 

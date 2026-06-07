@@ -61,11 +61,11 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
     super();
     this.keydownHandlerListener = (e) => this.keydownHandler(e);
     this.handleZoomListener = (e) => this.handleZoom(e);
-    this.fs = require('fs/promises');
-    this.os = require('os');
-    this.path = require('path');
-    const util = require('util');
-    this.exec = util.promisify(require('child_process').exec);
+    this.fs = window.require('fs').promises;
+    this.os = window.require('os');
+    this.path = window.require('path');
+    const util = window.require('util');
+    this.exec = util.promisify(window.require('child_process').exec);
     this.displayTime = 0;
     this.duration = 0;
     this.isPlaying = false;

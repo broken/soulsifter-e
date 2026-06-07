@@ -219,8 +219,8 @@ class SongListItem extends GetFilepathMixin(SettingsMixin(WaveformUtilMixin(LitE
   }
 
   dragSongTo(x, y) {
-    const util = require('util');
-    const exec = util.promisify(require('node:child_process').exec);
+    const util = window.require('util');
+    const exec = util.promisify(window.require('child_process').exec);
     const easing = this.settings.getInt('dragAndDrop.easing');
     const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
 

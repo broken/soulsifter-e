@@ -36,7 +36,7 @@ class WavePlayer extends SettingsMixin(LitElement) {
 
   constructor() {
     super();
-    this.fs = require('fs');
+    this.fs = window.require('fs');
     this.duration = 1;
     this.currentTime = 0;
     this.prevSongId = 0;

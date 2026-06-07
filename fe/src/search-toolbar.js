@@ -124,7 +124,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   dropCreateSongButton(e) {
     e.preventDefault();
-    const { webUtils } = require('electron');
+    const { webUtils } = window.require('electron');
     this.shadowRoot.getElementById('createSongButton').icon = 'add_circle';
     var files = e.dataTransfer.files;
     var filepaths = new Array();
@@ -224,7 +224,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   addSongsFromFeedly(e) {
     let job = async () => {
-      const axios = require("axios");
+      const axios = window.require("axios");
       let urlBase = 'https://cloud.feedly.com';
       let userId = this.settings.getString('feedly.userId');
       let devToken = this.settings.getString('feedly.devToken');

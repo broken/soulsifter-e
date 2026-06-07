@@ -10,9 +10,9 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
     this.logged_in = false;
     this.access_token = null;
 
-    this.express = require('express'); // Express web server framework
+    this.express = window.require('express'); // Express web server framework
 
-    var SpotifyWebApi = require('spotify-web-api-node');
+    var SpotifyWebApi = window.require('spotify-web-api-node');
     // credentials are optional
     this.spotifyApi = new SpotifyWebApi({
       clientId: settings.getString('spotify.clientId'),

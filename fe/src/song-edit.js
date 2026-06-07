@@ -192,8 +192,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.genres = [];
     this.basicGenreList = ss.BasicGenre.findAll();
     // used for moving cover files
-    this.fs = require('fs');
-    this.path = require('path');
+    this.fs = window.require('fs');
+    this.path = window.require('path');
     // Dummy values for rendering
     this.taggedSong = new ss.Song();
     this.sterilizeSong(this.taggedSong);
