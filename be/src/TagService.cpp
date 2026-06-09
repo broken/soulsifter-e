@@ -157,7 +157,7 @@ bool readId3v2TagAttributes(Song* song, TagLib::ID3v2::Tag* id3v2) {
   }
   // energy
   const string grpTag = getId3v2Text(id3v2, "TIT1");
-  boost::regex grpRegex("^(\\d+(?![\\w\\d]))?(?: - )?(?:1?\\d[AB] (.{1,3}))?$");
+  boost::regex grpRegex("^(?:Energy )?(\\d+(?![\\w\\d]))?(?: - )?(?:1?\\d[AB] (.{1,3}))?$");
   boost::smatch grpMatch;
   string oldKey;
   if (boost::regex_search(grpTag, grpMatch, grpRegex, boost::match_default)) {
@@ -218,7 +218,7 @@ void setId3v2Text(TagLib::ID3v2::Tag* id3v2, const char* name, const char* val) 
   TagLib::ByteVector handle = name;
   TagLib::String value = val;
 
-  if(!id3v2->frameList(handle).isEmpty()) {
+  if (!id3v2->frameList(handle).isEmpty()) {
     id3v2->frameList(handle).front()->setText(value);
   } else {
     TagLib::ID3v2::TextIdentificationFrame *frame = new TagLib::ID3v2::TextIdentificationFrame(handle, TagLib::String::UTF8);
@@ -231,7 +231,7 @@ void setId3v2UserText(TagLib::ID3v2::Tag* id3v2, const char* description, const 
   TagLib::StringList values(val);
 
   TagLib::ID3v2::UserTextIdentificationFrame* frame = TagLib::ID3v2::UserTextIdentificationFrame::find(id3v2, description);
-  if(frame) {
+  if (frame) {
     frame->setText(values);
   } else {
     frame = new TagLib::ID3v2::UserTextIdentificationFrame(description, values, TagLib::String::UTF8);
