@@ -255,3 +255,29 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
 }
 
 window.customElements.define('soul-sifter', SoulSifter);
+
+// Prevent TypeError: Cannot read properties of undefined (reading 'length') when text fields are updated with undefined/null value
+const patchTextField = (tagName) => {
+  const klass = customElements.get(tagName);
+  if (klass) {
+    let proto = klass.prototype;
+    let descriptor;
+    let p = proto;
+    while (p && !descriptor) {
+      descriptor = Object.getOwnPropertyDescriptor(p, 'value');
+      p = Object.getPrototypeOf(p);
+    }
+    if (descriptor && descriptor.set) {
+      const originalSet = descriptor.set;
+      descriptor.set = function(val) {
+        if (val === undefined || val === null) {
+          val = '';
+        }
+        originalSet.call(this, val);
+      };
+      Object.defineProperty(p, 'value', descriptor);
+    }
+  }
+};
+patchTextField('md-filled-text-field');
+patchTextField('md-outlined-text-field');
