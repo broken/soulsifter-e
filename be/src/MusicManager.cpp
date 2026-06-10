@@ -14,6 +14,7 @@
 #include "MusicManager.h"
 
 #include <algorithm>
+#include <cerrno>
 #include <ctype.h>
 #include <map>
 #include <regex.h>
@@ -92,6 +93,19 @@ namespace {
   static inline std::string trim_copy(std::string s) {
       trim(s);
       return s;
+  }
+
+  void moveFile(const boost::filesystem::path& src, const boost::filesystem::path& dest) {
+    try {
+      boost::filesystem::rename(src, dest);
+    } catch (const boost::filesystem::filesystem_error& ex) {
+      if (ex.code() == boost::system::errc::cross_device_link || ex.code().value() == EXDEV) {
+        boost::filesystem::copy_file(src, dest);
+        boost::filesystem::remove(src);
+      } else {
+        throw;
+      }
+    }
   }
 
 void moveFeaturingFromTitleToArtist(Song* updatedSong) {
@@ -516,7 +530,7 @@ bool MusicManager::updateAlbumCover(const string& img, Album* album, std::functi
 
     // move file to dest
     try {
-      boost::filesystem::rename(src, dest);
+      moveFile(src, dest);
     } catch (const boost::filesystem::filesystem_error& ex) {
       std::string errMsg("Failed  moving cover image. " + std::string(ex.what()));
       LOG(WARNING) << errMsg;
@@ -728,7 +742,7 @@ bool MusicManager::moveSong(Song* song) {
         stringstream destPath;
         destPath << SoulSifterSettings::getInstance().get<string>("dir.music") << songPath;
         boost::filesystem::path dest(destPath.str());
-        boost::filesystem::rename(src, dest);
+        moveFile(src, dest);
 
         // update song path
         song->setFilepath(songPath);
@@ -748,7 +762,7 @@ bool MusicManager::moveSong(Song* song) {
             boost::filesystem::path src(img);
             destpath << SoulSifterSettings::getInstance().get<string>("dir.music") << albumSubPathForImage << "/" << cleanDirName(src.filename().string());
             boost::filesystem::path dest(destpath.str());
-            boost::filesystem::rename(src, dest);
+            moveFile(src, dest);
 
             return true;
         } catch (const boost::filesystem::filesystem_error& ex) {
