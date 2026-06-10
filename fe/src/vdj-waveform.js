@@ -377,15 +377,24 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
   }
 
   getDirChecksumAndSuffix(directoryPath) {
+    // Remove drive name (e.g. /Volumes/T7 or /Volume/T7 or C:)
+    let pathWithoutDrive = directoryPath;
+    if (directoryPath.match(/^\/Volumes?\/[^\/]+/i)) {
+      pathWithoutDrive = directoryPath.replace(/^\/Volumes?\/[^\/]+/i, '');
+    } else if (directoryPath.match(/^[a-zA-Z]:/)) {
+      pathWithoutDrive = directoryPath.replace(/^[a-zA-Z]:/, '');
+    }
+
     // Remove separators before getting the last 4 characters.
-    const dirName = directoryPath.replace(/\\|\//g, '');
+    const dirName = pathWithoutDrive.replace(/\\|\//g, '');
     const last4 = dirName.slice(-4);
+    const first4 = dirName.slice(0, 4);
 
     // Compute the CRC32 checksum as a 32-bit integer, then format as a hex string.
-    const csum = crc32.buf(Buffer.from(directoryPath, 'utf-8'));
+    const csum = crc32.buf(Buffer.from(pathWithoutDrive, 'utf-8'));
     const chksum = (csum >>> 0).toString(16).padStart(8, '0');
 
-    return `User..${last4}-${chksum}/`;
+    return `${first4}..${last4}-${chksum}/`;
   }
 
   async loadCachedWaveforms(originalSubpath) {
