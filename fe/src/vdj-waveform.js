@@ -23,11 +23,11 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
         <div class="kick stem-label">kick</div>
         ${this.trackLoaded ? html`
           <div id="waveform-wrapper" class="waveform-wrapper ${this.isPlaying ? 'playing' : 'paused'}">
-            <div id="waveform-canvas-2" class="waveform loaded"></div>
             <div id="waveform-canvas-1" class="waveform loaded"></div>
-            <div id="waveform-canvas-4" class="waveform loaded"></div>
+            <div id="waveform-canvas-0" class="waveform loaded"></div>
             <div id="waveform-canvas-3" class="waveform loaded"></div>
-            <div id="waveform-canvas-5" class="waveform loaded"></div>
+            <div id="waveform-canvas-2" class="waveform loaded"></div>
+            <div id="waveform-canvas-4" class="waveform loaded"></div>
           </div>
           <div class="progress-indicator"></div>
           <div class="time-display">
@@ -261,7 +261,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       const originalSubpath = this.currentFilepath.replace(this.settings.getString('dir.music'), '');
       let exists = true;
       try {
-        for (let i = 1; i <= 5; i++) {
+        for (let i = 0; i < 5; i++) {
           const cacheFile = this.getWaveformCacheFilepath(originalSubpath, i);
           exists &= await ipcRenderer.invoke('existsfilepath', cacheFile);
           if (!exists) break;
@@ -279,10 +279,10 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       // first, unpack stem file
       const fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(this.currentFilepath)) + this.path.basename(this.currentFilepath) + '.vdjstems';
       const tmpPath = await this.fs.mkdtemp(this.path.join(this.os.tmpdir(), 'ss-stems-'));
-      await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:1 -c copy ${tmpPath}/1.m4a -map 0:a:2 -c copy ${tmpPath}/2.m4a -map 0:a:3 -c copy ${tmpPath}/3.m4a -map 0:a:4 -c copy ${tmpPath}/4.m4a -map 0:a:5 -c copy ${tmpPath}/5.m4a`);
+      await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/0.m4a -map 0:a:1 -c copy ${tmpPath}/1.m4a -map 0:a:2 -c copy ${tmpPath}/2.m4a -map 0:a:3 -c copy ${tmpPath}/3.m4a -map 0:a:4 -c copy ${tmpPath}/4.m4a`);
 
       // write out each stem separately
-      for (let i = 1; i <= 5; i++) {
+      for (let i = 0; i < 5; i++) {
         const audioContext = new AudioContext();
         const response = await fetch(`file://${tmpPath}/${i}.m4a`)
         const buffer = await response.arrayBuffer();
@@ -399,7 +399,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
 
   async loadCachedWaveforms(originalSubpath) {
     try {
-      for (let i = 1; i <= 5; i++) {
+      for (let i = 0; i < 5; i++) {
         const cacheFile = this.getWaveformCacheFilepath(originalSubpath, i);
         const waveformData = await this.fs.readFile(cacheFile);
         this.waveforms[i] = WaveformData.create(waveformData.buffer);
@@ -461,7 +461,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       .append('path')
       .attr('transform', () => `translate(0, ${verticalOffset})`)
       .attr('d', area)
-      .attr('stroke', this.getStemColor(stemIndex - 1));
+      .attr('stroke', this.getStemColor(stemIndex));
   }
 
   updateWrapperAnimation() {
@@ -497,7 +497,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       this.animation.play();
     }
     // Update widths of existing SVGs if they exist
-    for (let i = 1; i <= 5; i++) {
+    for (let i = 0; i < 5; i++) {
       this.renderWaveform(i);
     }
   }
