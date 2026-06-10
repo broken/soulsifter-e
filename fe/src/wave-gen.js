@@ -49,11 +49,26 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
   }
 
   async startProcessing(filepath) {
-    try {
-      while (!!filepath) {
+    while (!!filepath) {
+      try {
         let fullFilepath = this.settings.getString('dir.music') + filepath;
         let waveformFilepath = this.getFullWaveformFilepath(filepath);
-        await this.fs.promises.access(fullFilepath, this.fs.constants.F_OK | this.fs.constants.R_OK);
+
+        let exists = false;
+        const startTime = Date.now();
+        while (Date.now() - startTime < 60000) {
+          try {
+            await this.fs.promises.access(fullFilepath, this.fs.constants.F_OK | this.fs.constants.R_OK);
+            exists = true;
+            break;
+          } catch (err) {
+            await new Promise(resolve => setTimeout(resolve, 1000));
+          }
+        }
+        if (!exists) {
+          await this.fs.promises.access(fullFilepath, this.fs.constants.F_OK | this.fs.constants.R_OK);
+        }
+
         await this.wavesurfer.load(fullFilepath);
         let img = await this.wavesurfer.exportImage('image/webp', 1, 'blob');
         let wfDirPath = this.path.dirname(waveformFilepath);
@@ -65,10 +80,10 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
         await this.fs.promises.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
         console.log('File written successfully to ' + waveformFilepath);
         this.notifyWaveGenCompleted(filepath);
-        filepath = this.removeSongFromWaveGenQueue();
+      } catch(err) {
+        this.addAlert('Wavesurfer failed creating waveform for ' + filepath + ' : ' + err, 1);
       }
-    } catch(err) {
-      this.addAlert('Wavesurfer failed creating waveform for ' + filepath + ' : ' + err, 8);
+      filepath = this.removeSongFromWaveGenQueue();
     }
     this.isWavesurferProcessing = false;
   }
