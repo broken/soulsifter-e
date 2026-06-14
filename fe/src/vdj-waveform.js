@@ -253,6 +253,18 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       console.log(`deck ${this.deck} loaded new song ${data}`);
       this.trackLoaded = true;
       this.currentFilepath = data;
+      this.waveformWidth = undefined;
+      this.waveforms = [undefined, undefined, undefined, undefined, undefined];
+
+      // Clear canvas elements from previous song
+      if (this.shadowRoot) {
+        for (let i = 0; i < 5; i++) {
+          const container = this.shadowRoot.getElementById(`waveform-canvas-${i}`);
+          if (container) {
+            container.innerHTML = '';
+          }
+        }
+      }
 
       // update duration & bpm of the song
       await this.updateBpmData(false);
@@ -272,6 +284,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       }
       if (exists) {
         await this.loadCachedWaveforms(originalSubpath);
+        this.updateWrapperAnimation();
         return;
       }
 
@@ -347,10 +360,10 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       this.isPlaying = data === 'yes';
       if (this.isPlaying !== wasPlaying) {
         if (this.isPlaying) {
-          this.animation.play();
+          if (this.animation) this.animation.play();
           this.startDisplayTimeUpdate();
         } else {
-          this.animation.pause();
+          if (this.animation) this.animation.pause();
           this.stopDisplayTimeUpdate();
         }
       }
@@ -444,6 +457,9 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
 
     if (!this.waveformWidth) {
       this.updateWrapperAnimation();
+      if (!this.waveformWidth) {
+        return;
+      }
     }
 
     x.domain([0, waveform.length]).rangeRound([0, this.waveformWidth]);
@@ -465,6 +481,10 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
   }
 
   updateWrapperAnimation() {
+    if (!this.duration || !this.bpm) {
+      return;
+    }
+
     const pixelBeatDistance = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
     const newWaveformWidth = Math.round(this.duration * this.bpm / 60 / 1000 * pixelBeatDistance);
 
@@ -473,10 +493,14 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       return;
     }
 
-    this.waveformWidth = newWaveformWidth;
-
     // create the animation object using the Web Animations API
     const w = this.shadowRoot.getElementById('waveform-wrapper');
+    if (!w) {
+      return;
+    }
+
+    this.waveformWidth = newWaveformWidth;
+
     if (this.animation) {
       this.animation.cancel();
     }
