@@ -289,8 +289,25 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       }
 
       // waveform not cached - so generate it
-      // first, unpack stem file
+      // first, wait for the stems file to exist
       const fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(this.currentFilepath)) + this.path.basename(this.currentFilepath) + '.vdjstems';
+      let stemsFileExists = false;
+      const startTime = Date.now();
+      console.log(`Waiting for stems file to exist: ${fullFilepath}`);
+      while (Date.now() - startTime < 60000) {
+        try {
+          await this.fs.access(fullFilepath);
+          stemsFileExists = true;
+          break;
+        } catch (err) {
+          await new Promise(resolve => setTimeout(resolve, 1000));
+        }
+      }
+      if (!stemsFileExists) {
+        throw new Error(`Stems file does not exist after 60 seconds: ${fullFilepath}`);
+      }
+
+      // unpack stem file
       const tmpPath = await this.fs.mkdtemp(this.path.join(this.os.tmpdir(), 'ss-stems-'));
       await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/0.m4a -map 0:a:1 -c copy ${tmpPath}/1.m4a -map 0:a:2 -c copy ${tmpPath}/2.m4a -map 0:a:3 -c copy ${tmpPath}/3.m4a -map 0:a:4 -c copy ${tmpPath}/4.m4a`);
 
