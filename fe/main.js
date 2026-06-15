@@ -183,6 +183,42 @@ class YoutubeClientMain {
     return new Date().getTime() + bufferInMins * 60 * 1000 >= this.expiry_date;
   }
 
+  isTransientError(err) {
+    if (!err) return false;
+    const status = err.status || err.code || (err.response && err.response.status);
+    if (status === 429 || status >= 500) {
+      return true;
+    }
+    if (status === 409) {
+      const errors = err.errors || (err.response && err.response.data && err.response.data.error && err.response.data.error.errors);
+      if (Array.isArray(errors)) {
+        return errors.some(e => e.reason === 'SERVICE_UNAVAILABLE');
+      }
+    }
+    if (err.message && err.message.includes('SERVICE_UNAVAILABLE')) {
+      return true;
+    }
+    return false;
+  }
+
+  async callWithRetry(apiCallFn, maxRetries = 5, initialDelayMs = 1000) {
+    let attempt = 0;
+    while (true) {
+      try {
+        return await apiCallFn();
+      } catch (err) {
+        attempt++;
+        if (attempt <= maxRetries && this.isTransientError(err)) {
+          const delay = initialDelayMs * Math.pow(2, attempt - 1);
+          console.warn(`YouTube API call failed (attempt ${attempt}/${maxRetries}) with transient error. Retrying in ${delay}ms...`);
+          await this.sleep(delay);
+        } else {
+          throw err;
+        }
+      }
+    }
+  }
+
   async auth(reauthenticate=false) {
     // check if already authenticated
     if (!!this.oauth2Client && !reauthenticate && !this.isExpired()) return;
@@ -376,7 +412,7 @@ class YoutubeClientMain {
   }
 
   _createPlaylist(playlist) {
-    return new Promise((resolve, reject) => {
+    return this.callWithRetry(() => new Promise((resolve, reject) => {
       console.info('Creating playlist ' + playlist.name);
       this.service.playlists.insert({
         auth: this.oauth2Client,
@@ -394,7 +430,7 @@ class YoutubeClientMain {
         if (err) reject(err);
         else resolve(response);
       });
-    });
+    }));
   }
 
   _getPlaylistItems(playlist, nextPageToken=undefined) {
@@ -405,17 +441,17 @@ class YoutubeClientMain {
         maxResults: 20
       };
     if (!!nextPageToken) request.pageToken = nextPageToken;
-    return new Promise((resolve, reject) => {
+    return this.callWithRetry(() => new Promise((resolve, reject) => {
       console.info('Getting playlist items.');
       this.service.playlistItems.list(request, (err, response) => {
         if (err) reject(err);
         else resolve(response);
       });
-    });
+    }));
   }
 
   _findSong(song) {
-    return new Promise((resolve, reject) => {
+    return this.callWithRetry(() => new Promise((resolve, reject) => {
       console.info('Looking up song ' + song.id + ' on YouTube.');
       this.service.search.list({
         auth: this.oauth2Client,
@@ -428,11 +464,11 @@ class YoutubeClientMain {
         if (err) reject(err);
         else resolve(response);
       });
-    });
+    }));
   }
 
   _addPlaylistItem(playlistYoutubeId, songYoutubeId, position = -1) {
-    return new Promise((resolve, reject) => {
+    return this.callWithRetry(() => new Promise((resolve, reject) => {
       console.info('Adding song ' + songYoutubeId + ' to playlist ' + playlistYoutubeId);
       this.service.playlistItems.insert({
         auth: this.oauth2Client,
@@ -451,15 +487,15 @@ class YoutubeClientMain {
         if (err) reject(err);
         else resolve(response);
       });
-    });
+    }));
   }
 
   _addPlaylistEntry(entry) {
-    return _addPlaylistItem(entry.playlist.youtubeId, entry.song.youtubeId, entry.position);
+    return this._addPlaylistItem(entry.playlist.youtubeId, entry.song.youtubeId, entry.position);
   }
 
   _removePlaylistEntry(itemId) {
-    return new Promise((resolve, reject) => {
+    return this.callWithRetry(() => new Promise((resolve, reject) => {
       console.info('Deleting playlist item ' + itemId);
       this.service.playlistItems.delete({
         auth: this.oauth2Client,
@@ -468,11 +504,11 @@ class YoutubeClientMain {
         if (err) reject(err);
         else resolve(response);
       });
-    });
+    }));
   }
 
   _deletePlaylist(playlistId) {
-    return new Promise((resolve, reject) => {
+    return this.callWithRetry(() => new Promise((resolve, reject) => {
       console.info('Deleting playlist ' + playlistId);
       this.service.playlists.delete({
         auth: this.oauth2Client,
@@ -481,7 +517,7 @@ class YoutubeClientMain {
         if (err) reject(err);
         else resolve(response);
       });
-    });
+    }));
   }
 };
 let yt = new YoutubeClientMain();
