@@ -61,6 +61,15 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
     super();
     this.keydownHandlerListener = (e) => this.keydownHandler(e);
     this.handleZoomListener = (e) => this.handleZoom(e);
+    this.enableStemWaveformsListener = e => {
+      if (this.settings.getBool('virtualdj.active') && e.detail) {
+        this.startUpdating();
+      } else {
+        this.stopUpdating();
+        this.stopDisplayTimeUpdate();
+      }
+    };
+    this.registerMidiCallbacksListener = e => this.registerMidiCallbacks();
     this.fs = window.require('fs').promises;
     this.os = window.require('os');
     this.path = window.require('path');
@@ -122,20 +131,15 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
 
   connectedCallback() {
     super.connectedCallback();
-    window.addEventListener('enable-stem-waveforms', e => {
-      if (this.settings.getBool('virtualdj.active') && e.detail) {
-        this.startUpdating();
-      } else {
-        this.stopUpdating();
-        this.stopDisplayTimeUpdate();
-      }
-    });
-    window.addEventListener('register-midi-callbacks', e => this.registerMidiCallbacks());
+    window.addEventListener('enable-stem-waveforms', this.enableStemWaveformsListener);
+    window.addEventListener('register-midi-callbacks', this.registerMidiCallbacksListener);
     window.addEventListener('keydown', this.keydownHandlerListener);
     window.addEventListener('vdj-waveform-zoom', this.handleZoomListener);
   }
 
   disconnectedCallback() {
+    window.removeEventListener('enable-stem-waveforms', this.enableStemWaveformsListener);
+    window.removeEventListener('register-midi-callbacks', this.registerMidiCallbacksListener);
     window.removeEventListener('keydown', this.keydownHandlerListener);
     window.removeEventListener('vdj-waveform-zoom', this.handleZoomListener);
     super.disconnectedCallback();
