@@ -443,9 +443,9 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   }
 
   searchOptionsChanged(x) {
-    if (this.searchOptionsChanged.bpmRestrict != x.bpmRestrict ||
-        this.searchOptionsChanged.keyRestrict != x.keyRestrict ||
-        this.searchOptionsChanged.useStems != x.useStems) {
+    if (this.searchOptions.bpmRestrict != x.bpmRestrict ||
+        this.searchOptions.keyRestrict != x.keyRestrict ||
+        this.searchOptions.useStems != x.useStems) {
       this.requestUpdate();
     }
     Object.assign(this.searchOptions, x);
