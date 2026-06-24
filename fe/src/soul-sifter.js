@@ -114,19 +114,20 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
     this.alertsChannel.registerChannelEndpoint(a => {
       this.addAlert(a);
     });
-    window.addEventListener('enable-stem-waveforms', e => {
+    this.enableStemWaveformsListener = e => {
       if (this.settings.getBool('virtualdj.active') && e.detail) {
-        this.style.setProperty('--vdj-waveform-height', 'calc(22px * 5 + 5px)');
+        this.classList.add('stems-enabled');
       } else {
-        this.style.setProperty('--vdj-waveform-height', '0');
+        this.classList.remove('stems-enabled');
       }
-    });
+    };
+    window.addEventListener('enable-stem-waveforms', this.enableStemWaveformsListener);
   }
 
   disconnectedCallback() {
     ipcRenderer.removeAllListeners('addalert');
     ipcRenderer.removeAllListeners('updatealert');
-    window.removeEventListener('enable-stem-waveforms');
+    window.removeEventListener('enable-stem-waveforms', this.enableStemWaveformsListener);
     super.disconnectedCallback();
   }
 
@@ -164,7 +165,6 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
       css`${unsafeCSS(greyscalewaveforms)}`,
       css`
         :host {
-          --vdj-waveform-height: 0;
           display: flex;
           flex-direction: column;
           position: absolute;
@@ -180,7 +180,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
         #content {
           display: flex;
           flex-direction: row;
-          height: calc(100% - var(--vdj-waveform-height));
+          flex: 1 1 auto;
           width: 100%;
           overflow: hidden;
         }
@@ -200,9 +200,13 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
           max-width: calc(100% - var(--sidebar-width));
         }
         vdj-waveform {
-          height: var(--vdj-waveform-height);
           flex-grow: 0;
           flex-shrink: 0;
+          display: none;
+        }
+        :host(.stems-enabled) vdj-waveform {
+          display: flex;
+          height: calc(22px * 5 + 5px);
         }
         #sections {
           flex: 1 1 auto;
