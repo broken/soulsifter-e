@@ -3,9 +3,10 @@ const { app, clipboard, dialog, BrowserWindow, ipcMain, nativeImage } = require(
 const fs = require('fs');
 const path = require('path');
 
-// Ensure common CLI paths are in PATH when launched as a packaged GUI app
+// Ensure common CLI paths and pyenv shims are in PATH when launched as a packaged GUI app
 if (process.platform === 'darwin') {
   const commonPaths = [
+    path.join(process.env.HOME || '', '.pyenv/shims'),
     '/opt/homebrew/bin',
     '/opt/homebrew/sbin',
     '/usr/local/bin',
@@ -14,9 +15,12 @@ if (process.platform === 'darwin') {
     path.join(process.env.HOME || '', 'bin')
   ];
   const currentPaths = (process.env.PATH || '').split(':');
-  for (const p of commonPaths) {
-    if (!currentPaths.includes(p) && fs.existsSync(p)) {
-      currentPaths.push(p);
+  for (let i = commonPaths.length - 1; i >= 0; i--) {
+    const p = commonPaths[i];
+    if (fs.existsSync(p)) {
+      const idx = currentPaths.indexOf(p);
+      if (idx !== -1) currentPaths.splice(idx, 1);
+      currentPaths.unshift(p);
     }
   }
   process.env.PATH = currentPaths.join(':');
