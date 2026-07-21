@@ -7,19 +7,21 @@ import "@thomasloven/round-slider";
 import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
+import { KeyboardMixin } from "./mixin-keyboard.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import "./about-page.js";
 import "./icon-button.js";
+import "./hotkeys-info.js";
 import "./options-menu.js";
 import "./options-menu-item.js";
 import "./search-info.js";
 import "./search-options.js";
 
 
-class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement)))))) {
+class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement))))))) {
   render() {
     let bpmRestrictBtn = this.searchOptions.bpmRestrict ? html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note" class="active"></icon-button>`
                                                         : html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note"></icon-button>`;
@@ -58,6 +60,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
         <options-menu-item @click="${this.openCommonMultiplesAlert}">Show Common Multiples</options-menu-item>
         <options-menu-item @click="${this.connectToMidiController}">Connect to Midi controller</options-menu-item>
         <options-menu-item @click="${this.disconnectMidiController}">Disconnect from Midi controller</options-menu-item>
+        <options-menu-item @click="${this.openHotkeysInfoDialog}">Show Keyboard Shortcuts (?)</options-menu-item>
         <options-menu-item @click="${this.openAboutPageDialog}">About</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
       </options-menu>
@@ -66,6 +69,9 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
       </md-dialog>
       <md-dialog id="searchOptionsDialog">
         <search-options slot="content"></search-options>
+      </md-dialog>
+      <md-dialog id="hotkeysInfoDialog">
+        <hotkeys-info slot="content"></hotkeys-info>
       </md-dialog>
       <md-dialog id="aboutPageDialog">
         <about-page slot="content"></about-page>
@@ -90,6 +96,13 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('register-midi-callbacks', this.registerMidiCallbacks.bind(this));
+    this.keydownListener = (e) => this.keydownHandler(e);
+    window.addEventListener('keydown', this.keydownListener);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('keydown', this.keydownListener);
+    super.disconnectedCallback();
   }
 
   requestSearch(e) {
@@ -269,6 +282,18 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
 
   openSearchOptionsDialog(e) {
     this.shadowRoot.getElementById('searchOptionsDialog').show();
+  }
+
+  openHotkeysInfoDialog(e) {
+    this.shadowRoot.getElementById('hotkeysInfoDialog').show();
+  }
+
+  keydownHandler(e) {
+    if (!this.validateKeyboardShortcut(e)) return;
+    if (e.key === '?') {
+      e.preventDefault();
+      this.openHotkeysInfoDialog();
+    }
   }
 
   openAboutPageDialog(e) {
@@ -475,6 +500,9 @@ class SearchToolbar extends AlertsMixin(BpmMixin(QueryMixin(SearchMixin(SearchOp
           --md-filled-text-field-bottom-space: 2px;
         }
         #searchInfoDialog {
+          max-width: none;
+        }
+        #hotkeysInfoDialog {
           max-width: none;
         }
         #searchOptionsDialog {
