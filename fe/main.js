@@ -2,6 +2,26 @@
 const { app, clipboard, dialog, BrowserWindow, ipcMain, nativeImage } = require('electron');
 const fs = require('fs');
 const path = require('path');
+
+// Ensure common CLI paths are in PATH when launched as a packaged GUI app
+if (process.platform === 'darwin') {
+  const commonPaths = [
+    '/opt/homebrew/bin',
+    '/opt/homebrew/sbin',
+    '/usr/local/bin',
+    '/usr/local/sbin',
+    path.join(process.env.HOME || '', '.local/bin'),
+    path.join(process.env.HOME || '', 'bin')
+  ];
+  const currentPaths = (process.env.PATH || '').split(':');
+  for (const p of commonPaths) {
+    if (!currentPaths.includes(p) && fs.existsSync(p)) {
+      currentPaths.push(p);
+    }
+  }
+  process.env.PATH = currentPaths.join(':');
+}
+
 const { google } = require('googleapis');
 const ss = require('soulsifter');
 

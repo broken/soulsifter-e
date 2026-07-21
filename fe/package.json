@@ -2,7 +2,7 @@
   "name": "SoulSifter",
   "version": "1.11.0",
   "description": "DJ & music organization app.",
-  "build": 4317,
+  "build": 4319,
   "main": "main.js",
   "scripts": {
     "fe:build": "vite build",
