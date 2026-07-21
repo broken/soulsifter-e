@@ -269,7 +269,9 @@ const patchTextField = (tagName) => {
     let p = proto;
     while (p && !descriptor) {
       descriptor = Object.getOwnPropertyDescriptor(p, 'value');
-      p = Object.getPrototypeOf(p);
+      if (!descriptor) {
+        p = Object.getPrototypeOf(p);
+      }
     }
     if (descriptor && descriptor.set) {
       const originalSet = descriptor.set;
