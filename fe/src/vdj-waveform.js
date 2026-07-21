@@ -59,7 +59,6 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
 
   constructor() {
     super();
-    this.keydownHandlerListener = (e) => this.keydownHandler(e);
     this.handleZoomListener = (e) => this.handleZoom(e);
     this.enableStemWaveformsListener = e => {
       if (this.settings.getBool('virtualdj.active') && e.detail) {
@@ -133,14 +132,12 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
     super.connectedCallback();
     window.addEventListener('enable-stem-waveforms', this.enableStemWaveformsListener);
     window.addEventListener('register-midi-callbacks', this.registerMidiCallbacksListener);
-    window.addEventListener('keydown', this.keydownHandlerListener);
     window.addEventListener('vdj-waveform-zoom', this.handleZoomListener);
   }
 
   disconnectedCallback() {
     window.removeEventListener('enable-stem-waveforms', this.enableStemWaveformsListener);
     window.removeEventListener('register-midi-callbacks', this.registerMidiCallbacksListener);
-    window.removeEventListener('keydown', this.keydownHandlerListener);
     window.removeEventListener('vdj-waveform-zoom', this.handleZoomListener);
     super.disconnectedCallback();
     this.stopUpdating();

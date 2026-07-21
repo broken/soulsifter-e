@@ -96,13 +96,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('register-midi-callbacks', this.registerMidiCallbacks.bind(this));
-    this.keydownListener = (e) => this.keydownHandler(e);
-    window.addEventListener('keydown', this.keydownListener);
-  }
-
-  disconnectedCallback() {
-    window.removeEventListener('keydown', this.keydownListener);
-    super.disconnectedCallback();
   }
 
   requestSearch(e) {

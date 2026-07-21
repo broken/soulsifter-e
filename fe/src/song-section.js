@@ -71,7 +71,6 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(SearchOptionsMixin(Sett
     this.songTrailCache = [];
     this.clearCache = true;
     this.saveSongTrailListener = (e) => this.saveSongTrail(e);
-    this.keydownHandlerListener = (e) => this.keydownHandler(e);
     this.song = new ss.Song();
     this.song.album = new ss.Album();
     this.mix = undefined;
@@ -81,12 +80,10 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(SearchOptionsMixin(Sett
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('save-song-trail', this.saveSongTrailListener);
-    window.addEventListener('keydown', this.keydownHandlerListener);
   }
 
   disconnectedCallback() {
     window.removeEventListener('save-song-trail', this.saveSongTrailListener);
-    window.removeEventListener('keydown', this.keydownHandlerListener);
     super.disconnectedCallback();
   }
 
