@@ -46,8 +46,8 @@ public:
     string getCopyToPath();
     bool moveSong(Song* song);
     bool moveImage(const string& filepath);
-    static bool updateAlbumCover(const string& img, Album* album, std::function<void(std::string)> errorCallback = {});
-    static bool moveAlbum(Album* album, std::function<void(std::string)> errorCallback = {});
+    static bool updateAlbumCover(const string& img, Album* album);
+    static bool moveAlbum(Album* album);
 
     // organizational genres
     void updateDatabaseBasicGenres();

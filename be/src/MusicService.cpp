@@ -41,12 +41,12 @@ std::string MusicService::cleanDirName(const std::string& name) {
   return s;
 }
 
-bool MusicService::updateAlbumCover(const string& img, Album* album, std::function<void(std::string)> errorCallback) {
+bool MusicService::updateAlbumCover(const string& img, Album* album) {
   return MusicManager::updateAlbumCover(img, album);
 }
 
-bool MusicService::moveAlbum(Album* album, std::function<void(std::string)> errorCallback) {
-  return MusicManager::moveAlbum(album, errorCallback);
+bool MusicService::moveAlbum(Album* album) {
+  return MusicManager::moveAlbum(album);
 }
 
 }  // namespace soulsifter

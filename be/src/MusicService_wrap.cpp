@@ -62,7 +62,7 @@ Napi::Value MusicService::cleanDirName(const Napi::CallbackInfo& info) {
 
 Napi::Value MusicService::updateAlbumCover(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  if (info.Length() < 3) {
+  if (info.Length() < 2) {
     Napi::TypeError::New(env, "Expected at least 2 arguments.").ThrowAsJavaScriptException();
     return env.Null();
   }
@@ -76,17 +76,9 @@ Napi::Value MusicService::updateAlbumCover(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   dogatech::soulsifter::Album* a1(Napi::ObjectWrap<Album>::Unwrap(info[1].As<Napi::Object>())->getWrappedValue());
-  if (!info[2].IsFunction()) {
-    Napi::TypeError::New(env, "TypeError: Function expected (for info[2])").ThrowAsJavaScriptException();
-    return env.Null();
-  }
-  Napi::Function a2Fn = info[2].As<Napi::Function>();
-  auto a2 = [&env, &a2Fn](std::string p0) {
-    a2Fn.Call(env.Global(), {Napi::String::New(env, p0)});
-  };
   try {
     bool result =
-        dogatech::soulsifter::MusicService::updateAlbumCover(a0, a1, a2);
+        dogatech::soulsifter::MusicService::updateAlbumCover(a0, a1);
 
     return Napi::Boolean::New(env, result);
   } catch (const std::exception& e) {
@@ -97,7 +89,7 @@ Napi::Value MusicService::updateAlbumCover(const Napi::CallbackInfo& info) {
 
 Napi::Value MusicService::moveAlbum(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
-  if (info.Length() < 2) {
+  if (info.Length() < 1) {
     Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
     return env.Null();
   }
@@ -106,17 +98,9 @@ Napi::Value MusicService::moveAlbum(const Napi::CallbackInfo& info) {
     return env.Null();
   }
   dogatech::soulsifter::Album* a0(Napi::ObjectWrap<Album>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
-  if (!info[1].IsFunction()) {
-    Napi::TypeError::New(env, "TypeError: Function expected (for info[1])").ThrowAsJavaScriptException();
-    return env.Null();
-  }
-  Napi::Function a1Fn = info[1].As<Napi::Function>();
-  auto a1 = [&env, &a1Fn](std::string p0) {
-    a1Fn.Call(env.Global(), {Napi::String::New(env, p0)});
-  };
   try {
     bool result =
-        dogatech::soulsifter::MusicService::moveAlbum(a0, a1);
+        dogatech::soulsifter::MusicService::moveAlbum(a0);
 
     return Napi::Boolean::New(env, result);
   } catch (const std::exception& e) {
