@@ -45,6 +45,7 @@
 
 #include "Album.h"
 #include "AlbumPart.h"
+#include "AlertsChannel.h"
 #include "BasicGenre.h"
 #include "DTVectorUtil.h"
 #include "MysqlAccess.h"
@@ -508,7 +509,7 @@ string MusicManager::getCopyToPath() {
     return "";
 }
 
-bool MusicManager::updateAlbumCover(const string& img, Album* album, std::function<void(std::string)> errorCallback) {
+bool MusicManager::updateAlbumCover(const string& img, Album* album) {
   boost::filesystem::path src(img);
 
   // determine destination path
@@ -518,13 +519,13 @@ bool MusicManager::updateAlbumCover(const string& img, Album* album, std::functi
   destpath << SoulSifterSettings::getInstance().get<string>("dir.music") << albumSubPathForImage;
   boost::filesystem::path dest(destpath.str());
 
-  if (boost::filesystem::equivalent(src, dest)) {
+  if (boost::filesystem::exists(src) && boost::filesystem::exists(dest) && boost::filesystem::equivalent(src, dest)) {
     LOG(INFO) << "Not moving cover because source path is equivalent to destination path.";
   } else {
     if (boost::filesystem::exists(dest)) {
       std::string errMsg("Will not move cover image, because destination path already exists.");
       LOG(WARNING) << errMsg;
-      if (errorCallback) errorCallback(errMsg);
+      AlertsChannel::getInstance().send(errMsg);
       return false;
     }
 
@@ -532,9 +533,9 @@ bool MusicManager::updateAlbumCover(const string& img, Album* album, std::functi
     try {
       moveFile(src, dest);
     } catch (const boost::filesystem::filesystem_error& ex) {
-      std::string errMsg("Failed  moving cover image. " + std::string(ex.what()));
+      std::string errMsg("Failed moving cover image. " + std::string(ex.what()));
       LOG(WARNING) << errMsg;
-      if (errorCallback) errorCallback(errMsg);
+      AlertsChannel::getInstance().send(errMsg);
       return false;
     }
   }
@@ -546,14 +547,14 @@ bool MusicManager::updateAlbumCover(const string& img, Album* album, std::functi
   return true;
 }
 
-bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> errorCallback) {
+bool MusicManager::moveAlbum(Album* album) {
   vector<Song*>* songs = SearchUtil::searchSongs("q:albumid=" + std::to_string(album->getId()));
 
   // determine current album directory
   if (songs->size() == 0) {
     std::string errMsg("Cannot move album " + std::to_string(album->getId()) + ", because it has no songs.");
     LOG(WARNING) << errMsg;
-    if (errorCallback) errorCallback(errMsg);
+    AlertsChannel::getInstance().send(errMsg);
     return false;
   }
   const Song& song = *(*songs)[0];
@@ -562,7 +563,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
   if (song.getAlbumPartId()) {
     std::string errMsg("Will not move album " + std::to_string(album->getId()) + ", because album parts are not supported.");
     LOG(WARNING) << errMsg;
-    if (errorCallback) errorCallback(errMsg);
+    AlertsChannel::getInstance().send(errMsg);
     return false;
   }
   boost::filesystem::path aSongPath(song.getFilepath());
@@ -571,7 +572,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
   if (!boost::filesystem::exists(src) || !boost::filesystem::is_directory(src)) {
     std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because source path does not exist.");
     LOG(WARNING) << errMsg;
-    if (errorCallback) errorCallback(errMsg);
+    AlertsChannel::getInstance().send(errMsg);
     return false;
   }
   // check if stems directory exists
@@ -585,13 +586,13 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
   if (boost::filesystem::exists(dest)) {
     std::string errMsg("Will not move album " + std::to_string(album->getId()) + ", because destination path already exists.");
     LOG(WARNING) << errMsg;
-    if (errorCallback) errorCallback(errMsg);
+    AlertsChannel::getInstance().send(errMsg);
     return false;
   }
   if (src == dest) {
     std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because source and destination paths are the same.");
     LOG(WARNING) << errMsg;
-    if (errorCallback) errorCallback(errMsg);
+    AlertsChannel::getInstance().send(errMsg);
     return false;
   }
   // now stems
@@ -603,13 +604,13 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
     if (!boost::filesystem::create_directories(destParent)) {
       std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because parent directory cannot be created.");
       LOG(WARNING) << errMsg;
-      if (errorCallback) errorCallback(errMsg);
+      AlertsChannel::getInstance().send(errMsg);
       return false;
     }
   } else if (!boost::filesystem::is_directory(destParent)) {
       std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because destination is not a directory.");
       LOG(WARNING) << errMsg;
-      if (errorCallback) errorCallback(errMsg);
+      AlertsChannel::getInstance().send(errMsg);
       return false;
   }
   // do same for stems
@@ -619,13 +620,13 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
       if (!boost::filesystem::create_directories(stemsDestParent)) {
         std::string errMsg("Unable to move stems album " + std::to_string(album->getId()) + ", because parent directory cannot be created.");
         LOG(WARNING) << errMsg;
-        if (errorCallback) errorCallback(errMsg);
+        AlertsChannel::getInstance().send(errMsg);
         return false;
       }
     } else if (!boost::filesystem::is_directory(stemsDestParent)) {
         std::string errMsg("Unable to move stems album " + std::to_string(album->getId()) + ", because destination is not a directory.");
         LOG(WARNING) << errMsg;
-        if (errorCallback) errorCallback(errMsg);
+        AlertsChannel::getInstance().send(errMsg);
         return false;
     }
   }
@@ -636,7 +637,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
   } catch (const boost::filesystem::filesystem_error& err) {
     std::string errMsg("Failed moving album " + std::to_string(album->getId()) + ", because " + err.what());
     LOG(WARNING) << errMsg;
-    if (errorCallback) errorCallback(errMsg);
+    AlertsChannel::getInstance().send(errMsg);
     return false;
   }
   // do same for stems
@@ -646,7 +647,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
     } catch (const boost::filesystem::filesystem_error& err) {
       std::string errMsg("Failed moving stems album " + std::to_string(album->getId()) + " (though continuing), because " + err.what());
       LOG(WARNING) << errMsg;
-      if (errorCallback) errorCallback(errMsg);
+      AlertsChannel::getInstance().send(errMsg);
     }
   }
 
@@ -659,7 +660,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
     if (!boost::filesystem::exists(SoulSifterSettings::getInstance().get<string>("dir.music") + s->getFilepath())) {
       std::string errMsg("Moved song " + std::to_string(s->getId()) + " does not exist at new path.");
       LOG(WARNING) << errMsg;
-      if (errorCallback) errorCallback(errMsg);
+      AlertsChannel::getInstance().send(errMsg);
     }
     // TODO move music video if it exists
   }
@@ -673,7 +674,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
     if (!boost::filesystem::exists(SoulSifterSettings::getInstance().get<string>("dir.music") + album->getCoverFilepath())) {
       std::string errMsg("Moved cover for album " + std::to_string(album->getId()) + " does not exist at new path.");
       LOG(WARNING) << errMsg;
-      if (errorCallback) errorCallback(errMsg);
+      AlertsChannel::getInstance().send(errMsg);
     }
   }
 
@@ -687,7 +688,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
     } catch (const boost::filesystem::filesystem_error& err) {
       std::string errMsg("Error removing directory " + artistDir.string() + ", because " + err.what());
       LOG(WARNING) << errMsg;
-      if (errorCallback) errorCallback(errMsg);
+      AlertsChannel::getInstance().send(errMsg);
     }
   }
   if (stemsExists) {
@@ -699,7 +700,7 @@ bool MusicManager::moveAlbum(Album* album, std::function<void(std::string)> erro
       } catch (const boost::filesystem::filesystem_error& err) {
         std::string errMsg("Error removing stems directory " + artistDir.string() + ", because " + err.what());
         LOG(WARNING) << errMsg;
-        if (errorCallback) errorCallback(errMsg);
+        AlertsChannel::getInstance().send(errMsg);
       }
     }
   }
