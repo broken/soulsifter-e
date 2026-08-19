@@ -20,6 +20,7 @@ class Song : public Napi::ObjectWrap<Song> {
   static Napi::Value findByFilepath(const Napi::CallbackInfo& info);
   static Napi::Value findByGoogleSongId(const Napi::CallbackInfo& info);
   static Napi::Value findByYoutubeId(const Napi::CallbackInfo& info);
+  static Napi::Value findByYoutubeMusicId(const Napi::CallbackInfo& info);
   static Napi::Value findBySpotifyId(const Napi::CallbackInfo& info);
   static Napi::Value findByRESongId(const Napi::CallbackInfo& info);
   static Napi::Value findByDupeId(const Napi::CallbackInfo& info);
@@ -65,6 +66,8 @@ class Song : public Napi::ObjectWrap<Song> {
   void setGoogleSongId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getYoutubeId(const Napi::CallbackInfo& info);
   void setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &value);
+  Napi::Value getYoutubeMusicId(const Napi::CallbackInfo& info);
+  void setYoutubeMusicId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getSpotifyId(const Napi::CallbackInfo& info);
   void setSpotifyId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getDurationInMs(const Napi::CallbackInfo& info);

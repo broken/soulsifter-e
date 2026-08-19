@@ -930,6 +930,7 @@ songFields = [
   [:bool, "lowQuality", 0],
   [:string, "googleSongId", Attrib::FIND],
   [:string, "youtubeId", Attrib::FIND],
+  [:string, "youtubeMusicId", Attrib::FIND],
   [:string, "spotifyId", Attrib::FIND],
   [:int, "durationInMs", 0],
   [:string, "curator", 0],

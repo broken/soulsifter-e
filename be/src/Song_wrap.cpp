@@ -30,6 +30,7 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     StaticMethod<&Song::findByFilepath>("findByFilepath"),
     StaticMethod<&Song::findByGoogleSongId>("findByGoogleSongId"),
     StaticMethod<&Song::findByYoutubeId>("findByYoutubeId"),
+    StaticMethod<&Song::findByYoutubeMusicId>("findByYoutubeMusicId"),
     StaticMethod<&Song::findBySpotifyId>("findBySpotifyId"),
     StaticMethod<&Song::findByRESongId>("findByRESongId"),
     StaticMethod<&Song::findByDupeId>("findByDupeId"),
@@ -58,6 +59,7 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Song::getLowQuality, &Song::setLowQuality>("lowQuality"),
     InstanceAccessor<&Song::getGoogleSongId, &Song::setGoogleSongId>("googleSongId"),
     InstanceAccessor<&Song::getYoutubeId, &Song::setYoutubeId>("youtubeId"),
+    InstanceAccessor<&Song::getYoutubeMusicId, &Song::setYoutubeMusicId>("youtubeMusicId"),
     InstanceAccessor<&Song::getSpotifyId, &Song::setSpotifyId>("spotifyId"),
     InstanceAccessor<&Song::getDurationInMs, &Song::setDurationInMs>("durationInMs"),
     InstanceAccessor<&Song::getCurator, &Song::setCurator>("curator"),
@@ -218,6 +220,35 @@ Napi::Value Song::findByYoutubeId(const Napi::CallbackInfo& info) {
   try {
     dogatech::soulsifter::Song* result =
         dogatech::soulsifter::Song::findByYoutubeId(a0);
+
+    if (result == NULL) {
+      return env.Null();
+    } else {
+      Napi::Object instance = Song::NewInstance(env);
+      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
+      r->setWrappedValue(result, true);
+      return instance;
+    }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+}
+
+Napi::Value Song::findByYoutubeMusicId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  if (!info[0].IsString()) {
+    Napi::TypeError::New(env, "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  try {
+    dogatech::soulsifter::Song* result =
+        dogatech::soulsifter::Song::findByYoutubeMusicId(a0);
 
     if (result == NULL) {
       return env.Null();
@@ -977,6 +1008,39 @@ void Song::setYoutubeId(const Napi::CallbackInfo& info, const Napi::Value &value
   std::string a0(value.As<Napi::String>().Utf8Value());
   try {
     obj->song->setYoutubeId(a0);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return;
+  }
+}
+
+Napi::Value Song::getYoutubeMusicId(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Song* obj = this;
+  try {
+    const string& result =    obj->song->getYoutubeMusicId();
+
+    return Napi::String::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+}
+
+void Song::setYoutubeMusicId(const Napi::CallbackInfo& info, const Napi::Value &value) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return;
+  }
+  Song* obj = this;
+  if (!value.IsString()) {
+    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
+    return;
+  }
+  std::string a0(value.As<Napi::String>().Utf8Value());
+  try {
+    obj->song->setYoutubeMusicId(a0);
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return;
