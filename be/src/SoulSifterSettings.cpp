@@ -45,8 +45,6 @@ namespace soulsifter {
     //ptree.put("google.oauthAccessToken", "");
     //ptree.put("google.oauthAccessTokenExpiration", "0");
     //ptree.put("google.oauthRefreshToken", "");
-    //ptree.put("google.appKey", "");
-    //ptree.put("google.email", "");
     //ptree.put("google.androidId", "");
     ptree.put("hotkey.media.playPause", "");
     ptree.put("hotkey.nav.back", "ArrowLeft");

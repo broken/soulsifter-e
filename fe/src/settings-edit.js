@@ -115,8 +115,6 @@ class SettingsEdit extends SettingsMixin(LitElement) {
             </section>
             <section>
               <div class="fields">
-                <md-filled-text-field label="Google Music Email" .value=${this.googleEmail} id="googleEmail"></md-filled-text-field>
-                <md-filled-text-field label="Google Music App Key" .value=${this.googleAppKey} id="googleAppKey"></md-filled-text-field>
                 <md-filled-text-field label="Android ID" .value=${this.googleAndroidId} id="googleAndroidId"></md-filled-text-field>
                 <md-filled-text-field label="Google Client ID" .value=${this.googleClientId} id="googleClientId"></md-filled-text-field>
                 <md-filled-text-field label="Google Client Secret" .value=${this.googleClientSecret} id="googleClientSecret"></md-filled-text-field>
@@ -208,8 +206,6 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.vdjStemWaveformsDir = this.settings.getString('dir.vdjStemWaveforms');
     this.waveformsDir = this.settings.getString('dir.waveforms');
     this.googleAndroidId = this.settings.getString('google.androidId');
-    this.googleAppKey = this.settings.getString('google.appKey');
-    this.googleEmail = this.settings.getString('google.email');
     this.googleClientId = this.settings.getString('google.clientId');
     this.googleClientSecret = this.settings.getString('google.clientSecret');
     this.googleOauthRefreshToken = this.settings.getString('google.oauthRefreshToken');
@@ -385,8 +381,6 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('dir.vdjStemWaveforms', this.shadowRoot.getElementById('vdjStemWaveformsDir').value);
     this.puts('dir.waveforms', this.shadowRoot.getElementById('waveformsDir').value);
     this.puts('google.androidId', this.shadowRoot.getElementById('googleAndroidId').value);
-    this.puts('google.appKey', this.shadowRoot.getElementById('googleAppKey').value);
-    this.puts('google.email', this.shadowRoot.getElementById('googleEmail').value);
     this.puts('google.clientId', this.shadowRoot.getElementById('googleClientId').value);
     this.puts('google.clientSecret', this.shadowRoot.getElementById('googleClientSecret').value);
     this.puts('google.oauthRefreshToken', this.shadowRoot.getElementById('googleOauthRefreshToken').value);
