@@ -46,6 +46,10 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
               <label><md-checkbox ?checked="${this.editedSong.lowQuality}" id="lowQuality"></md-checkbox>Low Quality</label>
               <label><md-checkbox ?checked="${this.editedSong.album.mixed}" id="album_mixed"></md-checkbox>Mixed</label>
             </div>
+            <div class="row">
+              <label><md-checkbox ?checked="${this.editedSong.trashed}" ?disabled="${this.songIsTrashed}" id="trashed"></md-checkbox>Trash</label>
+              <label><md-checkbox ?checked="${this.editedSong.explicitLyrics}" id="explicitLyrics"></md-checkbox>Explicit Lyrics</label>
+            </div>
           </div>
           <div class="fields">
             <div>
@@ -53,6 +57,9 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             </div>
             <div>
               <md-filled-text-field label="YouTube ID" .value="${this.editedSong.youtubeId}" id="youtube_id" pattern="${youtubeIdPattern}"></md-filled-text-field>
+            </div>
+            <div>
+              <md-filled-text-field label="YouTube Music ID" .value="${this.editedSong.youtubeMusicId}" id="youtube_music_id" pattern="${youtubeIdPattern}"></md-filled-text-field>
             </div>
             <div>
               <div id="ratingContainer">
@@ -73,10 +80,6 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
                 <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
               </div>
               <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
-            </div>
-            <div class="row">
-              <label><md-checkbox ?checked="${this.editedSong.trashed}" ?disabled="${this.songIsTrashed}" id="trashed"></md-checkbox>Trash</label>
-              <label><md-checkbox ?checked="${this.editedSong.explicitLyrics}" id="explicitLyrics"></md-checkbox>Explicit Lyrics</label>
             </div>
           </div>
           <div class="fields">
@@ -568,6 +571,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.shadowRoot.getElementById('comments').value = this.song.comments.trim();
     this.shadowRoot.getElementById('curator').value = this.song.curator.trim();
     this.shadowRoot.getElementById('youtube_id').value = this.song.youtubeId.trim();
+    this.shadowRoot.getElementById('youtube_music_id').value = this.song.youtubeMusicId.trim();
     this.shadowRoot.getElementById('rating').value = this.song.rating;
     this.shadowRoot.getElementById('bpm').value = this.song.bpm.trim();
     this.shadowRoot.getElementById('bpm_lock').icon = this.song.bpmLock ? "lock" : "lock_open";
@@ -610,6 +614,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     song.comments = this.shadowRoot.getElementById('comments').value;
     song.curator = this.shadowRoot.getElementById('curator').value;
     song.youtubeId = this.shadowRoot.getElementById('youtube_id').value;
+    song.youtubeMusicId = this.shadowRoot.getElementById('youtube_music_id').value;
     song.rating = Number(this.shadowRoot.getElementById('rating').value);
     song.bpm = this.shadowRoot.getElementById('bpm').value;
     song.tonicKey = this.shadowRoot.getElementById('tonicKey').value;

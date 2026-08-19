@@ -180,6 +180,8 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
       string date;
       if (url.find("music.youtube") != std::string::npos) {
         // youtube music
+        song->setYoutubeMusicId(ptree.get<string>("id", ""));
+        LOG(DEBUG) << "youtubeMusicId = " << song->getYoutubeMusicId();
         song->setTitle(ptree.get<string>("track", ""));
         LOG(DEBUG) << "title = " << song->getTitle();
         string artist = ptree.get<string>("artist", "");
