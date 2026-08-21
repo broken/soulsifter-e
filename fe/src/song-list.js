@@ -300,7 +300,7 @@ class SongList extends AlertsMixin(
           playlists.push(this.playlists[i]);
           orderBy = /* playlist */ 5;
         } else {
-          this.query += (!!this.query ? " " : "") + "( " + this.playlists[i].query + " ) ";
+          this.query += " " + this.playlists[i].query + " ";
           genres = genres.concat(this.playlists[i].styles);
         }
       }
