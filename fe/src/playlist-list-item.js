@@ -12,12 +12,13 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
     let icon = !!this.playlist.query ? html`<mwc-icon class="mdc-ripple-surface mdc-ripple-surface--primary">find_replace</mwc-icon>` : html``;
     return html`
       <div class="itemContainer" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
-        <div class="item" ?selected="${this.selected}" @click="${this.toggleSelect}">
+        <div class="item" ?selected="${this.selected}" ?excluded="${this.excluded}" @click="${this.toggleSelect}">
           <div class="group">
             <span>${this.playlist.name}</span>
             ${icon}
           </div>
           <options-menu id="opt">
+            <options-menu-item @click="${this.toggleExcludeAction}">${this.excluded ? 'Include in search' : 'Exclude from search'}</options-menu-item>
             <options-menu-item @click="${this.editAction}">Edit playlist</options-menu-item>
             <options-menu-item @click="${this.copyAction}">Copy to clipboard</options-menu-item>
             <options-menu-item @click="${this.deleteAction}">Delete playlist</options-menu-item>
@@ -32,22 +33,40 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
     return {
       playlist: { type: Object },
       selected: { type: Boolean },
+      excluded: { type: Boolean },
     }
   }
 
   constructor() {
     super();
     this.selected = false;
+    this.excluded = false;
   }
 
   toggleSelect(e) {
-    this.select = !this.selected;
     let grp = e.metaKey || e.shiftKey || e.ctrlKey;
+    if (e.altKey) {
+      let event = new CustomEvent('toggle-exclude', {
+          detail: { playlist: this.playlist, multi: grp },
+          bubbles: true,
+          composed: true });
+      this.dispatchEvent(event);
+      return;
+    }
     let event = new CustomEvent('toggle-select', {
         detail: { playlist: this.playlist, multi: grp },
         bubbles: true,
         composed: true });
     this.dispatchEvent(event);
+  }
+
+  toggleExcludeAction(e) {
+    let event = new CustomEvent('toggle-exclude', {
+        detail: { playlist: this.playlist, multi: true },
+        bubbles: true,
+        composed: true });
+    this.dispatchEvent(event);
+    e.stopPropagation();
   }
 
   editAction(e) {
@@ -130,6 +149,9 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
         }
         .item[selected] {
           background-color: var(--ss-playlist-list-item-selected-background-color);
+        }
+        .item[excluded] {
+          background-color: var(--ss-playlist-list-item-excluded-background-color, rgba(220, 53, 69, 0.35));
         }
         .group {
           display: flex;

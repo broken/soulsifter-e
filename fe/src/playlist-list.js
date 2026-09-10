@@ -9,7 +9,7 @@ import { PlaylistsMixin } from "./mixin-playlists.js";
 
 class PlaylistList extends PlaylistsMixin(LitElement) {
   render() {
-    let items = this.allPlaylists.map(p => html`<playlist-list-item .playlist="${p}" @toggle-select="${this.toggleSelection}" ?selected="${this.isPlaylistSelected(p)}"></playlist-list-item>`);
+    let items = this.allPlaylists.map(p => html`<playlist-list-item .playlist="${p}" @toggle-select="${this.toggleSelection}" @toggle-exclude="${this.toggleExcludeSelection}" ?selected="${this.isPlaylistSelected(p)}" ?excluded="${this.isPlaylistExcluded(p)}"></playlist-list-item>`);
     return html`
       <div class="list">
         ${items}
@@ -49,15 +49,13 @@ class PlaylistList extends PlaylistsMixin(LitElement) {
     window.dispatchEvent(event);
   }
 
-  isPlaylistSelected(p) {
-    for (let i = 0; i < this.playlists.length; ++i) {
-      if (this.playlists[i].id == p.id) return true;
-    }
-    return false;
-  }
-
   toggleSelection(e) {
     this.togglePlaylist(e.detail.playlist, e.detail.multi);
+    this.requestUpdate();
+  }
+
+  toggleExcludeSelection(e) {
+    this.toggleOmitPlaylist(e.detail.playlist, e.detail.multi);
     this.requestUpdate();
   }
 

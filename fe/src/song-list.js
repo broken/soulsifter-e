@@ -121,12 +121,22 @@ class SongList extends AlertsMixin(
     this.midiSelectedListItem = undefined;
     // used for setting back original genres after playlist selection
     this.genresBeforePlaylist = [];
+    this.cachedOmitPlaylistSongs = [];
+    this.updatePlaylistsListener = () => {
+      this.recomputeOmitPlaylistSongs();
+    };
   }
 
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('song-list-pos', this.getNextOrPrevSong.bind(this));
     window.addEventListener('register-midi-callbacks', this.registerMidiCallbacks.bind(this));
+    window.addEventListener('update-playlists', this.updatePlaylistsListener);
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('update-playlists', this.updatePlaylistsListener);
+    super.disconnectedCallback();
   }
 
   firstUpdated() {
@@ -200,6 +210,42 @@ class SongList extends AlertsMixin(
     this.playlists = playlists;
     if (!!playlists.length) this.search();
     else this.genres = this.genresBeforePlaylist;
+  }
+
+  omitPlaylistsChanged(omitPlaylists) {
+    this.omitPlaylists = omitPlaylists;
+    this.recomputeOmitPlaylistSongs();
+    this.search();
+  }
+
+  recomputeOmitPlaylistSongs() {
+    let omitSongs = [];
+    if (this.omitPlaylists && this.omitPlaylists.length) {
+      for (let i = 0; i < this.omitPlaylists.length; ++i) {
+        let p = this.omitPlaylists[i];
+        if (!p.query) {
+          let entries = ss.PlaylistEntry.findByPlaylistId(p.id);
+          for (let entry of entries) {
+            if (entry && entry.songId) {
+              // Get an owned copy of song so it is not destructed when entries go out of scope.
+              let song = ss.Song.findById(entry.songId);
+              if (song && song.id) omitSongs.push(song);
+            }
+          }
+        } else {
+          let smartSongs = ss.SearchUtil.searchSongs(p.query, 10000, 0, '', p.styles || [], [], [], 0, false, 0, 0);
+          if (smartSongs && smartSongs.length) {
+            omitSongs.push(...smartSongs);
+          }
+        }
+      }
+    }
+    let seen = new Set();
+    this.cachedOmitPlaylistSongs = omitSongs.filter(s => {
+      if (!s || !s.id || seen.has(s.id)) return false;
+      seen.add(s.id);
+      return true;
+    });
   }
 
   genresChanged(x) {
@@ -315,6 +361,9 @@ class SongList extends AlertsMixin(
     p.q += !this.searchOptions.trashedRestrict ? '' : (p.q.length ? ' ' : '') + 'trashed:0';
     p.q += !this.searchOptions.mixedRestrict ? '' : (p.q.length ? ' ' : '') + 'mixed:0';
     omitSongs = !this.searchOptions.repeatRestrict ? [] : this.songTrail.map(e => e.song);
+    if (this.cachedOmitPlaylistSongs && this.cachedOmitPlaylistSongs.length) {
+      omitSongs.push(...this.cachedOmitPlaylistSongs);
+    }
     let songs = [];
     try {
       songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, this.offset);

@@ -73,6 +73,7 @@
   --ss-pitch-slider-background-color: var(--bg2);
   --ss-pitch-slider-color: var(--accent2);
   --ss-playlist-list-item-selected-background-color: var(--accent3);
+  --ss-playlist-list-item-excluded-background-color: color-mix(in srgb, var(--err), transparent 65%);
   --ss-search-info-text-heading-color: var(--clr_bold);
   --ss-search-info-text-emphasis-color: var(--accent2);
   --ss-search-toolbar-background-color: var(--bg2);
