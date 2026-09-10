@@ -253,23 +253,115 @@ void guessGenresForSong(Song* song) {
   }
 }
 
-std::string getAlbumSubPath(const Album& album) {
-  std::ostringstream ssdirpath;
+std::vector<std::string> getPathComponents(const std::string& pathStr) {
+  std::string relativePath = boost::algorithm::ireplace_first_copy(
+      pathStr, SoulSifterSettings::getInstance().get<string>("dir.music"), "");
+  boost::filesystem::path p(relativePath);
+  std::vector<std::string> parts;
+  for (const auto& elem : p) {
+    std::string s = elem.string();
+    if (!s.empty() && s != "." && s != "/") {
+      parts.push_back(s);
+    }
+  }
+  return parts;
+}
+
+}  // namespace
+
+std::string MusicManager::getAlbumSubPath(const Album& album) {
+  std::string genre = album.getBasicGenreConst() ? album.getBasicGenreConst()->getName() : "";
   std::string albumartist = album.getArtist().length() > 0 ? album.getArtist() : "_compilations_";
-  std::string albumname = album.getName();
-  ssdirpath << album.getBasicGenreConst()->getName() << "/" << MusicManager::cleanDirName(albumartist) << "/" << MusicManager::cleanDirName(albumname);
+  std::string artistDir = MusicManager::cleanDirName(albumartist);
+  if (artistDir.empty()) {
+    // If the artist (or album) names are all non-ascii characters, they will be empty after cleaning.
+    // First check if the artist already exists in the db, and use its directory.
+    ResultSetIterator<Album>* iter = Album::findByArtist(album.getArtist());
+    Album existingAlbum;
+    while (iter->next(&existingAlbum)) {
+      vector<Song*>* songs = SearchUtil::searchSongs("q:albumid=" + std::to_string(existingAlbum.getId()), /*limit*/ 1);
+      if (songs && songs->size() > 0) {
+        const Song* s = (*songs)[0];
+        std::vector<std::string> parts = getPathComponents(s->getFilepath());
+        if (parts.size() >= 2) {
+          artistDir = parts[1];
+          deleteVectorPointers(songs);
+          break;
+        }
+        deleteVectorPointers(songs);
+      }
+    }
+    delete iter;
+    // If the artist directory was not found, we will create one.
+    if (artistDir.empty()) {
+      boost::filesystem::path genrePath = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / genre;
+      for (int i = 1; i < 10000; ++i) {
+        char buf[32];
+        snprintf(buf, sizeof(buf), "artist%03d", i);
+        boost::filesystem::path testPath = genrePath / buf;
+        if (!boost::filesystem::exists(testPath)) {
+          artistDir = buf;
+          break;
+        }
+      }
+      if (artistDir.empty()) {
+        throw std::runtime_error("Unable to find an available artist directory.");
+      }
+    }
+  }
+
+  // Arist name was found, now do the same with album.
+  std::string albumDir = MusicManager::cleanDirName(album.getName());
+  if (albumDir.empty()) {
+    if (!album.getCoverFilepath().empty()) {
+      std::vector<std::string> parts = getPathComponents(album.getCoverFilepath());
+      if (parts.size() >= 3) {
+        albumDir = parts[2];
+      }
+    }
+    if (albumDir.empty() && album.getId() > 0) {
+      vector<Song*>* songs = SearchUtil::searchSongs("q:albumid=" + std::to_string(album.getId()), /*limit*/ 1);
+      if (songs && songs->size() > 0) {
+        const Song* s = (*songs)[0];
+        if (!s->getFilepath().empty()) {
+          std::vector<std::string> parts = getPathComponents(s->getFilepath());
+          if (parts.size() >= 3) {
+            albumDir = parts[2];
+          }
+        }
+        deleteVectorPointers(songs);
+      }
+    }
+
+    if (albumDir.empty()) {
+      boost::filesystem::path artistPath = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / genre / artistDir;
+      for (int i = 1; i < 10000; ++i) {
+        char buf[32];
+        snprintf(buf, sizeof(buf), "album%03d", i);
+        boost::filesystem::path testPath = artistPath / buf;
+        if (!boost::filesystem::exists(testPath)) {
+          albumDir = buf;
+          break;
+        }
+      }
+      if (albumDir.empty()) {
+        throw std::runtime_error("Unable to find an available album directory.");
+      }
+    }
+  }
+
+  std::ostringstream ssdirpath;
+  ssdirpath << genre << "/" << artistDir << "/" << albumDir;
   std::string albumSubPath = ssdirpath.str();
   transform(albumSubPath.begin(), albumSubPath.end(), albumSubPath.begin(), ::tolower);
   return albumSubPath;
 }
 
-std::string getAlbumFullPath(const Album& album) {
+std::string MusicManager::getAlbumFullPath(const Album& album) {
   std::stringstream path;
   path << SoulSifterSettings::getInstance().get<string>("dir.music") << getAlbumSubPath(album);
   return path.str();
 }
-
-}  // namespace
 
 # pragma mark initialization
 

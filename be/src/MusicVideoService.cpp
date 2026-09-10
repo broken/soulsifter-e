@@ -273,13 +273,8 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
     return NULL;
   }
 
-  string mvArtistDir;
-  {
-    stringstream ss;
-    ss << mvBasePath.string() << MusicManager::cleanDirName(song->getAlbum()->getBasicGenre()->getName())
-       << "/" << MusicManager::cleanDirName(song->getArtist());
-    mvArtistDir = ss.str();
-  }
+  boost::filesystem::path albumSubPath(MusicManager::getAlbumSubPath(*song->getAlbum()));
+  string mvArtistDir = (mvBasePath / albumSubPath.parent_path()).string();
   boost::filesystem::path mvArtistPath(mvArtistDir);
   if (!boost::filesystem::exists(mvArtistPath)) {
     if (!boost::filesystem::create_directories(mvArtistPath)) {
