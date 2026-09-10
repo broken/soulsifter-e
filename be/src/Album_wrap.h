@@ -49,7 +49,7 @@ class Album : public Napi::ObjectWrap<Album> {
   Napi::Value getBasicGenreId(const Napi::CallbackInfo& info);
   void setBasicGenreId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getBasicGenre(const Napi::CallbackInfo& info);
-  Napi::Value getBasicGenreConst(const Napi::CallbackInfo& info);
+  // Unable to process getBasicGenreConst
   void setBasicGenre(const Napi::CallbackInfo& info, const Napi::Value &value);
 
   static Napi::FunctionReference* constructor;

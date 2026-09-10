@@ -33,7 +33,7 @@ class AlbumPart : public Napi::ObjectWrap<AlbumPart> {
   Napi::Value getAlbumId(const Napi::CallbackInfo& info);
   void setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getAlbum(const Napi::CallbackInfo& info);
-  Napi::Value getAlbumConst(const Napi::CallbackInfo& info);
+  // Unable to process getAlbumConst
   void setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value);
 
   static Napi::FunctionReference* constructor;

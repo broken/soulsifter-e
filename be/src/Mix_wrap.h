@@ -30,12 +30,12 @@ class Mix : public Napi::ObjectWrap<Mix> {
   Napi::Value getOutSongId(const Napi::CallbackInfo& info);
   void setOutSongId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getOutSong(const Napi::CallbackInfo& info);
-  Napi::Value getOutSongConst(const Napi::CallbackInfo& info);
+  // Unable to process getOutSongConst
   void setOutSong(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getInSongId(const Napi::CallbackInfo& info);
   void setInSongId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getInSong(const Napi::CallbackInfo& info);
-  Napi::Value getInSongConst(const Napi::CallbackInfo& info);
+  // Unable to process getInSongConst
   void setInSong(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getBpmDiff(const Napi::CallbackInfo& info);
   void setBpmDiff(const Napi::CallbackInfo& info, const Napi::Value &value);

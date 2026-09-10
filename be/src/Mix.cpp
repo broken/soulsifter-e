@@ -435,7 +435,7 @@ namespace soulsifter {
         }
         return outSong;
     }
-    Song* Mix::getOutSongConst() const {
+    const Song* Mix::getOutSongConst() const {
         return (!outSong && outSongId) ? Song::findById(outSongId) : outSong;
     }
     void Mix::setOutSong(const Song& outSong) {
@@ -464,7 +464,7 @@ namespace soulsifter {
         }
         return inSong;
     }
-    Song* Mix::getInSongConst() const {
+    const Song* Mix::getInSongConst() const {
         return (!inSong && inSongId) ? Song::findById(inSongId) : inSong;
     }
     void Mix::setInSong(const Song& inSong) {

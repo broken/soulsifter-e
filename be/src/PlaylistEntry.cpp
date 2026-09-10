@@ -421,7 +421,7 @@ namespace soulsifter {
         }
         return playlist;
     }
-    Playlist* PlaylistEntry::getPlaylistConst() const {
+    const Playlist* PlaylistEntry::getPlaylistConst() const {
         return (!playlist && playlistId) ? Playlist::findById(playlistId) : playlist;
     }
     void PlaylistEntry::setPlaylist(const Playlist& playlist) {
@@ -450,7 +450,7 @@ namespace soulsifter {
         }
         return song;
     }
-    Song* PlaylistEntry::getSongConst() const {
+    const Song* PlaylistEntry::getSongConst() const {
         return (!song && songId) ? Song::findById(songId) : song;
     }
     void PlaylistEntry::setSong(const Song& song) {

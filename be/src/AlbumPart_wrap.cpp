@@ -33,7 +33,7 @@ Napi::Object AlbumPart::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&AlbumPart::getName, &AlbumPart::setName>("name"),
     InstanceAccessor<&AlbumPart::getAlbumId, &AlbumPart::setAlbumId>("albumId"),
     InstanceAccessor<&AlbumPart::getAlbum, &AlbumPart::setAlbum>("album"),
-    InstanceAccessor<&AlbumPart::getAlbumConst>("albumConst"),
+    // Unable to process getAlbumConst
   });
 
   constructor = new Napi::FunctionReference();
@@ -395,26 +395,6 @@ Napi::Value AlbumPart::getAlbum(const Napi::CallbackInfo& info) {
   AlbumPart* obj = this;
   try {
     dogatech::soulsifter::Album* result =    obj->albumpart->getAlbum();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Album::NewInstance(env);
-      Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value AlbumPart::getAlbumConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  AlbumPart* obj = this;
-  try {
-    dogatech::soulsifter::Album* result =    obj->albumpart->getAlbumConst();
 
     if (result == NULL) {
       return env.Null();

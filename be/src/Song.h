@@ -107,25 +107,25 @@ namespace soulsifter {
         int getRESongId() const;
         void setRESongId(int reSongId);
         RESong* getRESong();
-        RESong* getRESongConst() const;
+        const RESong* getRESongConst() const;
         void setRESong(const RESong& reSong);
         void setRESong(RESong* reSong);  // takes ownership
         int getAlbumId() const;
         void setAlbumId(int albumId);
         Album* getAlbum();
-        Album* getAlbumConst() const;
+        const Album* getAlbumConst() const;
         void setAlbum(const Album& album);
         void setAlbum(Album* album);  // takes ownership
         int getAlbumPartId() const;
         void setAlbumPartId(int albumPartId);
         AlbumPart* getAlbumPart();
-        AlbumPart* getAlbumPartConst() const;
+        const AlbumPart* getAlbumPartConst() const;
         void setAlbumPart(const AlbumPart& albumPart);
         void setAlbumPart(AlbumPart* albumPart);  // takes ownership
         int getMusicVideoId() const;
         void setMusicVideoId(int musicVideoId);
         MusicVideo* getMusicVideo();
-        MusicVideo* getMusicVideoConst() const;
+        const MusicVideo* getMusicVideoConst() const;
         void setMusicVideo(const MusicVideo& musicVideo);
         void setMusicVideo(MusicVideo* musicVideo);  // takes ownership
         const vector<int>& getStyleIds() const;
@@ -139,7 +139,7 @@ namespace soulsifter {
         int getDupeId() const;
         void setDupeId(int dupeId);
         Song* getDupe();
-        Song* getDupeConst() const;
+        const Song* getDupeConst() const;
         void setDupe(const Song& dupe);
         void setDupe(Song* dupe);  // takes ownership
         bool getExplicitLyrics() const;

@@ -69,20 +69,20 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     // Unable to process setRESong
     InstanceAccessor<&Song::getAlbumId, &Song::setAlbumId>("albumId"),
     InstanceAccessor<&Song::getAlbum, &Song::setAlbum>("album"),
-    InstanceAccessor<&Song::getAlbumConst>("albumConst"),
+    // Unable to process getAlbumConst
     InstanceAccessor<&Song::getAlbumPartId, &Song::setAlbumPartId>("albumPartId"),
     InstanceAccessor<&Song::getAlbumPart, &Song::setAlbumPart>("albumPart"),
-    InstanceAccessor<&Song::getAlbumPartConst>("albumPartConst"),
+    // Unable to process getAlbumPartConst
     InstanceAccessor<&Song::getMusicVideoId, &Song::setMusicVideoId>("musicVideoId"),
     InstanceAccessor<&Song::getMusicVideo, &Song::setMusicVideo>("musicVideo"),
-    InstanceAccessor<&Song::getMusicVideoConst>("musicVideoConst"),
+    // Unable to process getMusicVideoConst
     InstanceAccessor<&Song::getStyleIds, &Song::setStyleIds>("styleIds"),
     InstanceAccessor<&Song::getStyles, &Song::setStyles>("styles"),
     InstanceAccessor<&Song::getBpmLock, &Song::setBpmLock>("bpmLock"),
     InstanceAccessor<&Song::getTonicKeyLock, &Song::setTonicKeyLock>("tonicKeyLock"),
     InstanceAccessor<&Song::getDupeId, &Song::setDupeId>("dupeId"),
     InstanceAccessor<&Song::getDupe, &Song::setDupe>("dupe"),
-    InstanceAccessor<&Song::getDupeConst>("dupeConst"),
+    // Unable to process getDupeConst
     InstanceAccessor<&Song::getExplicitLyrics, &Song::setExplicitLyrics>("explicitLyrics"),
   });
 
@@ -1232,26 +1232,6 @@ Napi::Value Song::getAlbum(const Napi::CallbackInfo& info) {
   }
 }
 
-Napi::Value Song::getAlbumConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Song* obj = this;
-  try {
-    dogatech::soulsifter::Album* result =    obj->song->getAlbumConst();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Album::NewInstance(env);
-      Album* r = Napi::ObjectWrap<Album>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
 void Song::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
@@ -1326,26 +1306,6 @@ Napi::Value Song::getAlbumPart(const Napi::CallbackInfo& info) {
   }
 }
 
-Napi::Value Song::getAlbumPartConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Song* obj = this;
-  try {
-    dogatech::soulsifter::AlbumPart* result =    obj->song->getAlbumPartConst();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = AlbumPart::NewInstance(env);
-      AlbumPart* r = Napi::ObjectWrap<AlbumPart>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
 void Song::setAlbumPart(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
@@ -1405,26 +1365,6 @@ Napi::Value Song::getMusicVideo(const Napi::CallbackInfo& info) {
   Song* obj = this;
   try {
     dogatech::soulsifter::MusicVideo* result =    obj->song->getMusicVideo();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = MusicVideo::NewInstance(env);
-      MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value Song::getMusicVideoConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Song* obj = this;
-  try {
-    dogatech::soulsifter::MusicVideo* result =    obj->song->getMusicVideoConst();
 
     if (result == NULL) {
       return env.Null();
@@ -1660,26 +1600,6 @@ Napi::Value Song::getDupe(const Napi::CallbackInfo& info) {
   Song* obj = this;
   try {
     dogatech::soulsifter::Song* result =    obj->song->getDupe();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Song::NewInstance(env);
-      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-      r->setWrappedValue(result, true);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value Song::getDupeConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Song* obj = this;
-  try {
-    dogatech::soulsifter::Song* result =    obj->song->getDupeConst();
 
     if (result == NULL) {
       return env.Null();

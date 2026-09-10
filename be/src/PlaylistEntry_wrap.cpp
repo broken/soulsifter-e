@@ -34,10 +34,10 @@ Napi::Object PlaylistEntry::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&PlaylistEntry::getId, &PlaylistEntry::setId>("id"),
     InstanceAccessor<&PlaylistEntry::getPlaylistId, &PlaylistEntry::setPlaylistId>("playlistId"),
     InstanceAccessor<&PlaylistEntry::getPlaylist, &PlaylistEntry::setPlaylist>("playlist"),
-    InstanceAccessor<&PlaylistEntry::getPlaylistConst>("playlistConst"),
+    // Unable to process getPlaylistConst
     InstanceAccessor<&PlaylistEntry::getSongId, &PlaylistEntry::setSongId>("songId"),
     InstanceAccessor<&PlaylistEntry::getSong, &PlaylistEntry::setSong>("song"),
-    InstanceAccessor<&PlaylistEntry::getSongConst>("songConst"),
+    // Unable to process getSongConst
     InstanceAccessor<&PlaylistEntry::getPosition, &PlaylistEntry::setPosition>("position"),
   });
 
@@ -362,26 +362,6 @@ Napi::Value PlaylistEntry::getPlaylist(const Napi::CallbackInfo& info) {
   }
 }
 
-Napi::Value PlaylistEntry::getPlaylistConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  PlaylistEntry* obj = this;
-  try {
-    dogatech::soulsifter::Playlist* result =    obj->playlistentry->getPlaylistConst();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Playlist::NewInstance(env);
-      Playlist* r = Napi::ObjectWrap<Playlist>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
 void PlaylistEntry::setPlaylist(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
@@ -441,26 +421,6 @@ Napi::Value PlaylistEntry::getSong(const Napi::CallbackInfo& info) {
   PlaylistEntry* obj = this;
   try {
     dogatech::soulsifter::Song* result =    obj->playlistentry->getSong();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Song::NewInstance(env);
-      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value PlaylistEntry::getSongConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  PlaylistEntry* obj = this;
-  try {
-    dogatech::soulsifter::Song* result =    obj->playlistentry->getSongConst();
 
     if (result == NULL) {
       return env.Null();

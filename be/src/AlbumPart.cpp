@@ -365,7 +365,7 @@ namespace soulsifter {
         }
         return album;
     }
-    Album* AlbumPart::getAlbumConst() const {
+    const Album* AlbumPart::getAlbumConst() const {
         return (!album && albumId) ? Album::findById(albumId) : album;
     }
     void AlbumPart::setAlbum(const Album& album) {

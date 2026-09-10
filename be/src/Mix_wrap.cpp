@@ -32,10 +32,10 @@ Napi::Object Mix::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Mix::getId, &Mix::setId>("id"),
     InstanceAccessor<&Mix::getOutSongId, &Mix::setOutSongId>("outSongId"),
     InstanceAccessor<&Mix::getOutSong, &Mix::setOutSong>("outSong"),
-    InstanceAccessor<&Mix::getOutSongConst>("outSongConst"),
+    // Unable to process getOutSongConst
     InstanceAccessor<&Mix::getInSongId, &Mix::setInSongId>("inSongId"),
     InstanceAccessor<&Mix::getInSong, &Mix::setInSong>("inSong"),
-    InstanceAccessor<&Mix::getInSongConst>("inSongConst"),
+    // Unable to process getInSongConst
     InstanceAccessor<&Mix::getBpmDiff, &Mix::setBpmDiff>("bpmDiff"),
     InstanceAccessor<&Mix::getRating, &Mix::setRating>("rating"),
     InstanceAccessor<&Mix::getComments, &Mix::setComments>("comments"),
@@ -372,26 +372,6 @@ Napi::Value Mix::getOutSong(const Napi::CallbackInfo& info) {
   }
 }
 
-Napi::Value Mix::getOutSongConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Mix* obj = this;
-  try {
-    dogatech::soulsifter::Song* result =    obj->mix->getOutSongConst();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Song::NewInstance(env);
-      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
 void Mix::setOutSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
@@ -451,26 +431,6 @@ Napi::Value Mix::getInSong(const Napi::CallbackInfo& info) {
   Mix* obj = this;
   try {
     dogatech::soulsifter::Song* result =    obj->mix->getInSong();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Song::NewInstance(env);
-      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value Mix::getInSongConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Mix* obj = this;
-  try {
-    dogatech::soulsifter::Song* result =    obj->mix->getInSongConst();
 
     if (result == NULL) {
       return env.Null();

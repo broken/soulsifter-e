@@ -626,7 +626,7 @@ def hAccessor(f)
     str << "        void set#{cap(f[$name])}(#{f[$type]} #{f[$name]});\n"
   elsif (f[$attrib] & Attrib::PTR > 0)
     str << "        #{f[$type]}* get#{cap(f[$name])}();\n"
-    str << "        #{f[$type]}* get#{cap(f[$name])}Const() const;\n"
+    str << "        const #{f[$type]}* get#{cap(f[$name])}Const() const;\n"
     str << "        void set#{cap(f[$name])}(const #{f[$type]}& #{f[$name]});\n"
     str << "        void set#{cap(f[$name])}(#{f[$type]}* #{f[$name]});  // takes ownership\n"
   elsif (isVector(f[$type]))
@@ -657,7 +657,7 @@ def cAccessor(name, f)
     str << "    void #{cap(name)}::set#{cap(f[$name])}(const string& #{f[$name]}) { this->#{f[$name]} = #{f[$name]}; }\n"
   elsif (f[$attrib] & Attrib::PTR > 0)
     str << "    #{f[$type]}* #{cap(name)}::get#{cap(f[$name])}() {\n        if (!#{f[$name]} && #{f[$name]}Id) {\n            #{f[$name]} = #{f[$type][0..-1]}::findById(#{f[$name]}Id);\n        }\n        return #{f[$name]};\n    }\n"
-    str << "    #{f[$type]}* #{cap(name)}::get#{cap(f[$name])}Const() const {\n        return (!#{f[$name]} && #{f[$name]}Id) ? #{f[$type][0..-1]}::findById(#{f[$name]}Id) : #{f[$name]};\n    }\n"
+    str << "    const #{f[$type]}* #{cap(name)}::get#{cap(f[$name])}Const() const {\n        return (!#{f[$name]} && #{f[$name]}Id) ? #{f[$type][0..-1]}::findById(#{f[$name]}Id) : #{f[$name]};\n    }\n"
     str << "    void #{cap(name)}::set#{cap(f[$name])}(const #{f[$type]}& #{f[$name]}) {\n        this->#{f[$name]}Id = #{f[$name]}.getId();\n        delete this->#{f[$name]};\n        this->#{f[$name]} = new #{f[$type]}(#{f[$name]});\n    }\n"
     str << "    void #{cap(name)}::set#{cap(f[$name])}(#{f[$type]}* #{f[$name]}) {\n        this->#{f[$name]}Id = #{f[$name]}->getId();\n        delete this->#{f[$name]};\n        this->#{f[$name]} = #{f[$name]};\n    }\n"
   elsif (isVector(f[$type]) && f[$attrib] & Attrib::ID == 0)

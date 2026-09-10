@@ -30,12 +30,12 @@ class PlaylistEntry : public Napi::ObjectWrap<PlaylistEntry> {
   Napi::Value getPlaylistId(const Napi::CallbackInfo& info);
   void setPlaylistId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getPlaylist(const Napi::CallbackInfo& info);
-  Napi::Value getPlaylistConst(const Napi::CallbackInfo& info);
+  // Unable to process getPlaylistConst
   void setPlaylist(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getSongId(const Napi::CallbackInfo& info);
   void setSongId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getSong(const Napi::CallbackInfo& info);
-  Napi::Value getSongConst(const Napi::CallbackInfo& info);
+  // Unable to process getSongConst
   void setSong(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getPosition(const Napi::CallbackInfo& info);
   void setPosition(const Napi::CallbackInfo& info, const Napi::Value &value);

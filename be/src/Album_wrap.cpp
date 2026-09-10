@@ -42,7 +42,7 @@ Napi::Object Album::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Album::getReleaseDateDay, &Album::setReleaseDateDay>("releaseDateDay"),
     InstanceAccessor<&Album::getBasicGenreId, &Album::setBasicGenreId>("basicGenreId"),
     InstanceAccessor<&Album::getBasicGenre, &Album::setBasicGenre>("basicGenre"),
-    InstanceAccessor<&Album::getBasicGenreConst>("basicGenreConst"),
+    // Unable to process getBasicGenreConst
   });
 
   constructor = new Napi::FunctionReference();
@@ -677,26 +677,6 @@ Napi::Value Album::getBasicGenre(const Napi::CallbackInfo& info) {
   Album* obj = this;
   try {
     dogatech::soulsifter::BasicGenre* result =    obj->album->getBasicGenre();
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = BasicGenre::NewInstance(env);
-      BasicGenre* r = Napi::ObjectWrap<BasicGenre>::Unwrap(instance);
-      r->setWrappedValue(result, false);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value Album::getBasicGenreConst(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Album* obj = this;
-  try {
-    dogatech::soulsifter::BasicGenre* result =    obj->album->getBasicGenreConst();
 
     if (result == NULL) {
       return env.Null();

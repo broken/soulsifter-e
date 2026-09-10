@@ -82,17 +82,17 @@ class Song : public Napi::ObjectWrap<Song> {
   Napi::Value getAlbumId(const Napi::CallbackInfo& info);
   void setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getAlbum(const Napi::CallbackInfo& info);
-  Napi::Value getAlbumConst(const Napi::CallbackInfo& info);
+  // Unable to process getAlbumConst
   void setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getAlbumPartId(const Napi::CallbackInfo& info);
   void setAlbumPartId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getAlbumPart(const Napi::CallbackInfo& info);
-  Napi::Value getAlbumPartConst(const Napi::CallbackInfo& info);
+  // Unable to process getAlbumPartConst
   void setAlbumPart(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getMusicVideoId(const Napi::CallbackInfo& info);
   void setMusicVideoId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getMusicVideo(const Napi::CallbackInfo& info);
-  Napi::Value getMusicVideoConst(const Napi::CallbackInfo& info);
+  // Unable to process getMusicVideoConst
   void setMusicVideo(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getStyleIds(const Napi::CallbackInfo& info);
   void setStyleIds(const Napi::CallbackInfo& info, const Napi::Value &value);
@@ -105,7 +105,7 @@ class Song : public Napi::ObjectWrap<Song> {
   Napi::Value getDupeId(const Napi::CallbackInfo& info);
   void setDupeId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getDupe(const Napi::CallbackInfo& info);
-  Napi::Value getDupeConst(const Napi::CallbackInfo& info);
+  // Unable to process getDupeConst
   void setDupe(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getExplicitLyrics(const Napi::CallbackInfo& info);
   void setExplicitLyrics(const Napi::CallbackInfo& info, const Napi::Value &value);
