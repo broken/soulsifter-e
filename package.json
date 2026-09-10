@@ -10,6 +10,8 @@
     "bump:major": "version_type=major npm run bump:internal",
     "bump:minor": "version_type=minor npm run bump:internal",
     "bump:patch": "version_type=patch npm run bump:internal",
+    "clean:waveforms": "node scripts/clean-waveforms.mjs --delete",
+    "clean:waveforms:dry-run": "node scripts/clean-waveforms.mjs",
     "generatemodel": "cd be && npm run be:generatemodel",
     "package": "npm run buildnumber && cd fe && npm run fe:package",
     "packagedebug": "npm run buildnumber && cd fe && npm run fe:packagedebug",
