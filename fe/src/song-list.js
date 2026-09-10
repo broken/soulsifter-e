@@ -208,8 +208,8 @@ class SongList extends AlertsMixin(
 
   playlistsChanged(playlists) {
     this.playlists = playlists;
-    if (!!playlists.length) this.search();
-    else this.genres = this.genresBeforePlaylist;
+    if (!playlists.length) this.genres = this.genresBeforePlaylist;
+    this.search();
   }
 
   omitPlaylistsChanged(omitPlaylists) {
