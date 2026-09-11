@@ -191,9 +191,22 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(SearchOptionsMixin(Sett
     this.shadowRoot.getElementById('musicVideoThumbnail').style.backgroundImage = url;
   }
 
-  associateVideo() {
+  async associateVideo() {
     if (!this.song) return;
-    let videoUrl = this.shadowRoot.getElementById('videoUrlInput').value;
+    const input = this.shadowRoot.getElementById('videoUrlInput');
+    let videoUrl = input ? input.value.trim() : '';
+    if (!videoUrl) {
+      const query = [this.song.artist, this.song.title].filter(Boolean).join(' ');
+      if (!query) {
+        console.warn('Cannot search YouTube without an artist or title.');
+        return;
+      }
+      videoUrl = await ipcRenderer.invoke('select-youtube-video', query);
+      if (!videoUrl) return;
+      if (input) {
+        input.value = videoUrl;
+      }
+    }
     this.setMusicVideo(ss.MusicVideoService.associateYouTubeVideo(this.song, videoUrl));
   }
 

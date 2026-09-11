@@ -191,6 +191,53 @@ ipcMain.on('copytoclipboard', (event, str) => {
   clipboard.writeText(str);
 })
 
+ipcMain.handle('select-youtube-video', async (event, query) => {
+  const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
+
+  const searchWindow = new BrowserWindow({
+    width: 1024,
+    height: 720,
+    title: `YouTube Search: ${query}`,
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+    }
+  });
+
+  searchWindow.loadURL(searchUrl);
+
+  return new Promise((resolve) => {
+    let resolved = false;
+
+    const isVideoUrl = (url) => {
+      if (!url) return false;
+      return (
+        url.includes('youtube.com/watch?v=') ||
+        url.includes('youtu.be/') ||
+        url.includes('youtube.com/shorts/')
+      );
+    };
+
+    const handleNavigation = (url) => {
+      if (!resolved && isVideoUrl(url)) {
+        resolved = true;
+        searchWindow.close();
+        resolve(url);
+      }
+    };
+
+    searchWindow.webContents.on('did-navigate-in-page', (e, url) => handleNavigation(url));
+    searchWindow.webContents.on('did-navigate', (e, url) => handleNavigation(url));
+
+    searchWindow.on('closed', () => {
+      if (!resolved) {
+        resolved = true;
+        resolve(null);
+      }
+    });
+  });
+})
+
 class YoutubeClientMain {
 
   constructor() {
