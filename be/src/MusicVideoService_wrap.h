@@ -16,6 +16,7 @@ class MusicVideoService : public Napi::ObjectWrap<MusicVideoService> {
 
  private:
   static Napi::Value associateYouTubeVideo(const Napi::CallbackInfo& info);
+  static Napi::Value associateYouTubeVideoAsync(const Napi::CallbackInfo& info);
   static Napi::Value downloadAudio(const Napi::CallbackInfo& info);
   static Napi::Value downloadAudioAsync(const Napi::CallbackInfo& info);
 

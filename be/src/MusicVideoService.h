@@ -18,10 +18,12 @@ class MusicVideo;
 class MusicVideoService {
 public:
   static MusicVideo* associateYouTubeVideo(Song* song, const string& url);
+  static std::future<MusicVideo*> associateYouTubeVideoAsync(Song* song, const string& url);
   static vector<string> downloadAudio(const string& url);
   static std::future<std::vector<std::string>> downloadAudioAsync(const std::string& url);
 
 private:
+  static JobQueue<MusicVideo*> mv_job_queue;
   static JobQueue<std::vector<std::string>> job_queue;
 };
 

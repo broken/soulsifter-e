@@ -34,6 +34,7 @@ using namespace std;
 namespace dogatech {
 namespace soulsifter {
 
+JobQueue<MusicVideo*> MusicVideoService::mv_job_queue;
 JobQueue<std::vector<std::string>> MusicVideoService::job_queue;
 
 namespace {
@@ -262,6 +263,10 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
     }
   }
   return filepaths;
+}
+
+future<MusicVideo*> MusicVideoService::associateYouTubeVideoAsync(Song* song, const string& url) {
+  return mv_job_queue.push([song, url]() { return MusicVideoService::associateYouTubeVideo(song, url); });
 }
 
 MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& url) {

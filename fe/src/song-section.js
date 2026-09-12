@@ -193,6 +193,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(SearchOptionsMixin(Sett
 
   async associateVideo() {
     if (!this.song) return;
+    const songId = this.song.id;
     const input = this.shadowRoot.getElementById('videoUrlInput');
     let videoUrl = input ? input.value.trim() : '';
     if (!videoUrl) {
@@ -207,7 +208,10 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(SearchOptionsMixin(Sett
         input.value = videoUrl;
       }
     }
-    this.setMusicVideo(ss.MusicVideoService.associateYouTubeVideo(this.song, videoUrl));
+    const mv = await ss.MusicVideoService.associateYouTubeVideoAsync(this.song, videoUrl);
+    if (!!this.song && this.song.id == songId) {
+      this.setMusicVideo(mv);
+    }
   }
 
   dragMusicVideo(e) {

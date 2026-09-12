@@ -19,6 +19,7 @@ void MusicVideoService::setWrappedValue(dogatech::soulsifter::MusicVideoService*
 Napi::Object MusicVideoService::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "MusicVideoService", {
     StaticMethod<&MusicVideoService::associateYouTubeVideo>("associateYouTubeVideo"),
+    StaticMethod<&MusicVideoService::associateYouTubeVideoAsync>("associateYouTubeVideoAsync"),
     StaticMethod<&MusicVideoService::downloadAudio>("downloadAudio"),
     StaticMethod<&MusicVideoService::downloadAudioAsync>("downloadAudioAsync"),
   });
@@ -68,6 +69,74 @@ Napi::Value MusicVideoService::associateYouTubeVideo(const Napi::CallbackInfo& i
       r->setWrappedValue(result, false);
       return instance;
     }
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+}
+
+class AssociateYouTubeVideoAsyncWorker : public Napi::AsyncWorker {
+ public:
+  AssociateYouTubeVideoAsyncWorker(Napi::Env env, std::shared_ptr<Napi::Promise::Deferred> d, dogatech::soulsifter::Song* a0, const string& a1)
+      : Napi::AsyncWorker(env), deferred(d), a0x(*a0), a0(&a0x), a1(a1) {
+  }
+
+  ~AssociateYouTubeVideoAsyncWorker() { }
+
+  void Execute() {
+    try {
+      std::future<dogatech::soulsifter::MusicVideo*> result =
+          dogatech::soulsifter::MusicVideoService::associateYouTubeVideoAsync(a0, a1);
+      res = result.get();
+    } catch (const std::exception& e) {
+      SetError(e.what());
+    }
+  }
+
+  void OnOK() {
+    Napi::Env env = Env();
+    Napi::HandleScope scope(env);
+    Napi::Object wrapped_result = MusicVideo::NewInstance(env);
+    MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(wrapped_result);
+    r->setWrappedValue(res, false);
+    deferred->Resolve(wrapped_result);
+  }
+
+  void OnError(const Napi::Error& e) {
+    Napi::Env env = Env();
+    Napi::HandleScope scope(env);
+    deferred->Reject(e.Value());
+  }
+
+ private:
+  std::shared_ptr<Napi::Promise::Deferred> deferred;
+  dogatech::soulsifter::MusicVideo* res;
+  dogatech::soulsifter::Song a0x;
+  dogatech::soulsifter::Song* a0;
+  const string a1;
+};
+
+Napi::Value MusicVideoService::associateYouTubeVideoAsync(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  std::shared_ptr<Napi::Promise::Deferred> deferred = std::make_shared<Napi::Promise::Deferred>(Napi::Promise::Deferred::New(env));
+  if (info.Length() < 2) {
+    deferred->Reject(Napi::String::New(env, "Expected at least 2 arguments."));
+    return deferred->Promise();
+  }
+  if (!info[0].IsObject()) {
+    deferred->Reject(Napi::String::New(env, "TypeError: Object expected (for info[0])"));
+    return deferred->Promise();
+  }
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
+  if (!info[1].IsString()) {
+    deferred->Reject(Napi::String::New(env, "TypeError: String expected (for info[1])"));
+    return deferred->Promise();
+  }
+  std::string a1(info[1].As<Napi::String>().Utf8Value());
+  try {
+    AssociateYouTubeVideoAsyncWorker* w = new AssociateYouTubeVideoAsyncWorker(env, deferred, a0, a1);
+    w->Queue();
+    return deferred->Promise();
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
