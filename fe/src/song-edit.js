@@ -297,6 +297,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     } else {
       this.newSongManager.processSong(this.editedSong);
       if (!!this.videoUrl) {
+        // TODO: Make non-blocking, show progress, or remove feature.
         ss.MusicVideoService.associateYouTubeVideo(this.editedSong, this.videoUrl);
         this.videoUrl = undefined;
       }

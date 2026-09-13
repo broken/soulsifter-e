@@ -208,8 +208,8 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(SearchOptionsMixin(Sett
         input.value = videoUrl;
       }
     }
-    const mv = await ss.MusicVideoService.associateYouTubeVideoAsync(this.song, videoUrl);
-    if (!!this.song && this.song.id == songId) {
+    const mv = await this.associateMusicVideo(this.song, videoUrl);
+    if (!!this.song && this.song.id == songId && mv) {
       this.setMusicVideo(mv);
     }
   }
