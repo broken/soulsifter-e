@@ -550,7 +550,8 @@ class SongList extends AlertsMixin(
     if (!this.midiSelectedListItem) return;
 
     // ensure a music video exists if appropriate
-    await this.maybeEnsureMusicVideo(this.midiSelectedListItem.song, this.searchOptions.mvRestrict);
+    const shouldLoad = await this.maybeEnsureMusicVideo(this.midiSelectedListItem.song, this.searchOptions.mvRestrict);
+    if (!shouldLoad) return;
 
     // determine path of file to send
     const [filepath, iconpath] = await this.getFilepathAndIconpath(this.midiSelectedListItem.song, this.searchOptions.useStems, this.searchOptions.mvRestrict);

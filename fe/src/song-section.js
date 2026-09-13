@@ -203,8 +203,9 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
         console.warn('Cannot search YouTube without an artist or title.');
         return;
       }
-      videoUrl = await ipcRenderer.invoke('select-youtube-video', query);
-      if (!videoUrl) return;
+      const res = await ipcRenderer.invoke('select-youtube-video', query, false);
+      if (res.action !== 'video' || !res.url) return;
+      videoUrl = res.url;
       if (input) {
         input.value = videoUrl;
       }

@@ -16,28 +16,34 @@ let musicVideoMixin = (superClass) => class extends AlertsMixin(superClass) {
     }
   }
 
+  // Returns true if we should proceed with selecting the song.
   async maybeEnsureMusicVideo(song, mvRestrict) {
     if (!song || !mvRestrict || !this.settings.getBool('mv.on_demand') || !this.settings.getBool('app.debug')) {
-      return song;
+      return true;
     }
     if (song.musicVideo && song.musicVideo.filePath) {
-      return song;
+      return true;
     }
     const query = [song.artist, song.title].filter(Boolean).join(' ');
     try {
-      const videoUrl = await ipcRenderer.invoke('select-youtube-video', query);
-      if (videoUrl) {
-        const mv = await this.associateMusicVideo(song, videoUrl);
+      const res = await ipcRenderer.invoke('select-youtube-video', query, true);
+      if (res.action === 'load-audio') {
+        return true;
+      }
+      if (res.action === 'video' && res.url) {
+        const mv = await this.associateMusicVideo(song, res.url);
         if (mv) {
           song.musicVideo = mv;
           let event = new CustomEvent('song-edit-changed', { detail: song.id });
           window.dispatchEvent(event);
         }
+        return true;
       }
     } catch (err) {
       console.error('Failed to select or associate YouTube video:', err);
     }
-    return song;
+    // res.action === 'cancel'
+    return false;
   }
 }
 

@@ -205,25 +205,29 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
   }
 
   async sendSongToDeckA(e) {
-    await this.maybeEnsureMusicVideo(this.song, this.mvRestrict);
+    e.stopPropagation();
+    const shouldLoad = await this.maybeEnsureMusicVideo(this.song, this.mvRestrict);
+    if (!shouldLoad) return;
     const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.useStems, this.mvRestrict);
     if (this.settings.getBool('virtualdj.active')) {
       window.vdj.send(`deck left load "${filepath}"`);
+      this.selectSong(e);
     } else {
       this.dragSongTo(this.settings.getString('dragAndDrop.deckLeftX'), this.settings.getString('dragAndDrop.deckLeftY'));
-      e.stopPropagation();
       setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
     }
   }
 
   async sendSongToDeckB(e) {
-    await this.maybeEnsureMusicVideo(this.song, this.mvRestrict);
+    e.stopPropagation();
+    const shouldLoad = await this.maybeEnsureMusicVideo(this.song, this.mvRestrict);
+    if (!shouldLoad) return;
     const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.useStems, this.mvRestrict);
     if (this.settings.getBool('virtualdj.active')) {
       window.vdj.send(`deck right load "${filepath}"`);
+      this.selectSong(e);
     } else {
       this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'));
-      e.stopPropagation();
       setTimeout(() => this.selectSong(e), 1000);  // wait to select song until after drag event
     }
   }

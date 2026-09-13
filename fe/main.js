@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, clipboard, dialog, BrowserWindow, ipcMain, nativeImage } = require('electron');
+const { app, clipboard, dialog, BrowserWindow, WebContentsView, ipcMain, nativeImage } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -191,20 +191,145 @@ ipcMain.on('copytoclipboard', (event, str) => {
   clipboard.writeText(str);
 })
 
-ipcMain.handle('select-youtube-video', async (event, query) => {
+ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback = false) => {
   const searchUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
 
   const searchWindow = new BrowserWindow({
     width: 1024,
     height: 720,
     title: `YouTube Search: ${query}`,
+    backgroundColor: '#18181b',
     webPreferences: {
       nodeIntegration: false,
       contextIsolation: true,
     }
   });
 
-  searchWindow.loadURL(searchUrl);
+  const escapedQuery = String(query)
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;');
+
+  const audioButtonHtml = allowAudioFallback
+    ? `<button class="btn-audio" onclick="window.location.href='ss-action://load-audio'">Load Audio Only</button>`
+    : '';
+
+  const toolbarHtml = `<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; user-select: none; }
+    body {
+      background: #18181b;
+      color: #f4f4f5;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 13px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      border-bottom: 1px solid #27272a;
+    }
+    .title-container {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+      flex: 1;
+      margin-right: 16px;
+    }
+    .badge {
+      background: #ef4444;
+      color: white;
+      font-size: 10px;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 6px;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      flex-shrink: 0;
+    }
+    .query-text {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      color: #d4d4d8;
+      font-weight: 500;
+    }
+    .query-highlight {
+      color: #fafafa;
+      font-weight: 600;
+    }
+    .actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+    }
+    button {
+      border: none;
+      outline: none;
+      cursor: pointer;
+      font-family: inherit;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 6px;
+      transition: background 0.15s ease, transform 0.05s ease;
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+    .btn-audio {
+      background: #2563eb;
+      color: #ffffff;
+    }
+    .btn-audio:hover {
+      background: #1d4ed8;
+    }
+    .btn-cancel {
+      background: #3f3f46;
+      color: #e4e4e7;
+    }
+    .btn-cancel:hover {
+      background: #52525b;
+      color: #ffffff;
+    }
+  </style>
+</head>
+<body>
+  <div class="title-container">
+    <span class="badge">Music Video</span>
+    <span class="query-text">Select video for: <span class="query-highlight">${escapedQuery}</span></span>
+  </div>
+  <div class="actions">
+    ${audioButtonHtml}
+    <button class="btn-cancel" onclick="window.location.href='ss-action://cancel'">Cancel</button>
+  </div>
+</body>
+</html>`;
+
+  searchWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(toolbarHtml)}`);
+
+  const youtubeView = new WebContentsView({
+    webPreferences: {
+      nodeIntegration: false,
+      contextIsolation: true,
+    }
+  });
+  searchWindow.contentView.addChildView(youtubeView);
+
+  const updateBounds = () => {
+    const [width, height] = searchWindow.getContentSize();
+    youtubeView.setBounds({ x: 0, y: 48, width: width, height: Math.max(0, height - 48) });
+  };
+  updateBounds();
+  searchWindow.on('resize', updateBounds);
+
+  youtubeView.webContents.loadURL(searchUrl);
 
   return new Promise((resolve) => {
     let resolved = false;
@@ -218,21 +343,43 @@ ipcMain.handle('select-youtube-video', async (event, query) => {
       );
     };
 
-    const handleNavigation = (url) => {
-      if (!resolved && isVideoUrl(url)) {
+    const finish = (result) => {
+      if (!resolved) {
         resolved = true;
         searchWindow.close();
-        resolve(url);
+        resolve(result);
       }
     };
 
-    searchWindow.webContents.on('did-navigate-in-page', (e, url) => handleNavigation(url));
-    searchWindow.webContents.on('did-navigate', (e, url) => handleNavigation(url));
+    // Handle clicks in the toolbar
+    const handleToolbarNavigation = (url) => {
+      if (!url) return;
+      if (url.includes('ss-action://load-audio')) {
+        finish({ action: 'load-audio' });
+      } else if (url.includes('ss-action://cancel')) {
+        finish({ action: 'cancel' });
+      }
+    };
+    searchWindow.webContents.on('will-navigate', (e, url) => {
+      if (url.startsWith('ss-action://')) {
+        e.preventDefault();
+        handleToolbarNavigation(url);
+      }
+    });
+
+    // Handle clicks in the Youtube View
+    const handleYoutubeNavigation = (url) => {
+      if (!resolved && isVideoUrl(url)) {
+        finish({ action: 'video', url: url });
+      }
+    };
+    youtubeView.webContents.on('did-navigate-in-page', (e, url) => handleYoutubeNavigation(url));
+    youtubeView.webContents.on('did-navigate', (e, url) => handleYoutubeNavigation(url));
 
     searchWindow.on('closed', () => {
       if (!resolved) {
         resolved = true;
-        resolve(null);
+        resolve({ action: 'cancel' });
       }
     });
   });
