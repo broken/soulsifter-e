@@ -3,12 +3,13 @@ import { css, html, LitElement, unsafeCSS } from "lit";
 import "@material/mwc-icon";
 import "./icon-button.js";
 import { GetFilepathMixin } from "./mixin-get-filepath.js";
+import { MusicVideoMixin } from "./mixin-music-video.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 import { } from "./star-rating.js";
 
 
-class SongListItem extends GetFilepathMixin(SettingsMixin(WaveformUtilMixin(LitElement))) {
+class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(WaveformUtilMixin(LitElement)))) {
   render() {
     let isShort = (this.song.durationInMs / 1000) <= this.settings.getInt('songList.warning.shortSong');
     let baseComment = this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;

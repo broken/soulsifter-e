@@ -21,6 +21,7 @@ import { BpmMixin } from "./mixin-bpm.js";
 import { GenresMixin } from "./mixin-genres.js";
 import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { KeyboardMixin } from "./mixin-keyboard.js";
+import { MusicVideoMixin } from "./mixin-music-video.js";
 import { PlaylistsMixin } from "./mixin-playlists.js";
 import { QueryMixin } from "./mixin-query.js";
 import { SearchMixin } from "./mixin-search.js";
@@ -38,6 +39,7 @@ class SongList extends AlertsMixin(
                        GenresMixin(
                        GetFilepathMixin(
                        KeyboardMixin(
+                       MusicVideoMixin(
                        PlaylistsMixin(
                        QueryMixin(
                        SearchMixin(
@@ -49,7 +51,7 @@ class SongList extends AlertsMixin(
                        WaveGenQueueMixin(
                        WaveformUtilMixin(
                        LitElement
-))))))))))))))) {
+)))))))))))))))) {
   render() {
     let songListItems = html``;
     songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
