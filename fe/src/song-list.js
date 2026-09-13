@@ -639,24 +639,6 @@ class SongList extends AlertsMixin(
         }
     );
     midiManager.registerInput(
-        this.settings.getString('midi.back'),
-        e => {
-          if (window.isVideoModalOpen) {
-            ipcRenderer.send('yt-modal-action', { action: 'cancel' });
-            return;
-          }
-        }
-    );
-    midiManager.registerInput(
-        this.settings.getString('midi.forward'),
-        e => {
-          if (window.isVideoModalOpen) {
-            ipcRenderer.send('yt-modal-action', { action: 'load-audio' });
-            return;
-          }
-        }
-    );
-    midiManager.registerInput(
         this.settings.getString('midi.browse'),  // 64
         e => {
           console.log(e);

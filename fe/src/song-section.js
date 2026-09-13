@@ -14,6 +14,7 @@ import { SettingsMixin } from "./mixin-settings.js";
 import { SongEditMixin } from "./mixin-song-edit.js";
 import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
+import { midiManager } from "./midi-manager.js";
 
 
 class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement)))))))) {
@@ -72,6 +73,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
     this.songTrailCache = [];
     this.clearCache = true;
     this.saveSongTrailListener = (e) => this.saveSongTrail(e);
+    this.registerMidiCallbacksListener = () => this.registerMidiCallbacks();
     this.song = new ss.Song();
     this.song.album = new ss.Album();
     this.mix = undefined;
@@ -81,11 +83,41 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('save-song-trail', this.saveSongTrailListener);
+    window.addEventListener('register-midi-callbacks', this.registerMidiCallbacksListener);
   }
 
   disconnectedCallback() {
+    window.removeEventListener('register-midi-callbacks', this.registerMidiCallbacksListener);
     window.removeEventListener('save-song-trail', this.saveSongTrailListener);
     super.disconnectedCallback();
+  }
+
+  registerMidiCallbacks() {
+    midiManager.registerInput(
+        this.settings.getString('midi.back'),
+        e => {
+          if (window.isVideoModalOpen) {
+            ipcRenderer.send('yt-modal-action', { action: 'cancel' });
+            return;
+          }
+          if (this.songTrail.length) {
+            this.backAction();
+          }
+        }
+    );
+    midiManager.registerInput(
+        this.settings.getString('midi.forward'),
+        e => {
+          if (window.isVideoModalOpen) {
+            ipcRenderer.send('yt-modal-action', { action: 'load-audio' });
+            return;
+          }
+          if (this.songTrailCache.length) {
+            this.forwardAction();
+            // TODO: should I send this to vdj? (back is midi-mapped)
+          }
+        }
+    );
   }
 
   songChanged(song) {
