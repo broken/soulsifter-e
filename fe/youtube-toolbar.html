@@ -46,6 +46,19 @@
       color: #fafafa;
       font-weight: 600;
     }
+    .midi-hint {
+      color: #71717a;
+      font-size: 11px;
+      font-weight: 500;
+      white-space: nowrap;
+      margin-right: 12px;
+      background: #27272a;
+      padding: 3px 8px;
+      border-radius: 4px;
+    }
+    .midi-hint strong {
+      color: #a1a1aa;
+    }
     .actions {
       display: flex;
       align-items: center;
@@ -89,6 +102,7 @@
     <span class="query-text">Select video for: <span id="queryText" class="query-highlight"></span></span>
   </div>
   <div class="actions">
+    <span class="midi-hint" id="midiHint"><strong>Browse:</strong> Move &bull; <strong>Load:</strong> Select &bull; <strong>Back:</strong> Cancel &bull; <strong>Forward:</strong> Audio</span>
     <button id="btnAudio" class="btn-audio" onclick="window.location.href='ss-action://load-audio'">Load Audio Only</button>
     <button class="btn-cancel" onclick="window.location.href='ss-action://cancel'">Cancel</button>
   </div>

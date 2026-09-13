@@ -86,6 +86,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Midi controller name" .value=${this.midiControllerName} id="midiControllerName"></md-filled-text-field>
                 <br>
                 <md-filled-text-field label="Browse" .value=${this.midiBrowse} id="midiBrowse" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field label="Back" .value=${this.midiBack} id="midiBack" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
+                <md-filled-text-field label="Forward" .value=${this.midiForward} id="midiForward" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
                 <md-filled-text-field label="Load left deck" .value=${this.midiLoadLeft} id="midiLoadLeft" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
                 <md-filled-text-field label="Load right deck" .value=${this.midiLoadRight} id="midiLoadRight" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
                 <md-filled-text-field label="Stop audio" .value=${this.midiPauseAudio} id="midiPauseAudio" allowedPattern="${rawMidiPattern}"></md-filled-text-field>
@@ -240,8 +242,10 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.midiAudioOutputSafetyCrossFader = this.settings.getString('midi.audioOutput.safety.crossFader');
     this.midiAudioOutputSafetyLeftFader = this.settings.getString('midi.audioOutput.safety.leftFader');
     this.midiAudioOutputSafetyRightFader = this.settings.getString('midi.audioOutput.safety.rightFader');
+    this.midiBack = this.settings.getString('midi.back');
     this.midiBrowse = this.settings.getString('midi.browse');
     this.midiControllerName = this.settings.getString('midi.controllerName');
+    this.midiForward = this.settings.getString('midi.forward');
     this.midiLoadLeft = this.settings.getString('midi.loadLeft');
     this.midiLoadRight = this.settings.getString('midi.loadRight');
     this.midiPauseAudio = this.settings.getString('midi.pauseAudio');
@@ -415,8 +419,10 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('midi.audioOutput.safety.crossFader', this.shadowRoot.getElementById('midiAudioOutputSafetyCrossFader').value);
     this.puts('midi.audioOutput.safety.leftFader', this.shadowRoot.getElementById('midiAudioOutputSafetyLeftFader').value);
     this.puts('midi.audioOutput.safety.rightFader', this.shadowRoot.getElementById('midiAudioOutputSafetyRightFader').value);
+    this.puts('midi.back', this.shadowRoot.getElementById('midiBack').value);
     this.puts('midi.browse', this.shadowRoot.getElementById('midiBrowse').value);
     this.puts('midi.controllerName', this.shadowRoot.getElementById('midiControllerName').value);
+    this.puts('midi.forward', this.shadowRoot.getElementById('midiForward').value);
     this.puts('midi.loadLeft', this.shadowRoot.getElementById('midiLoadLeft').value);
     this.puts('midi.loadRight', this.shadowRoot.getElementById('midiLoadRight').value);
     this.puts('midi.pauseAudio', this.shadowRoot.getElementById('midiPauseAudio').value);

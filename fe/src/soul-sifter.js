@@ -110,6 +110,9 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
     ipcRenderer.on('updatealert', (e, data) => {
       this.updateAlert(data.id, data.progress, data.a, data.timeoutInSeconds);
     });
+    ipcRenderer.on('yt-modal-state', (e, data) => {
+      window.isVideoModalOpen = !!(data && data.open);
+    });
     this.alertsChannel = new ss.AlertsChannel();
     this.alertsChannel.registerChannelEndpoint(a => {
       this.addAlert(a);
@@ -127,6 +130,7 @@ class SoulSifter extends AlertsMixin(AudioMixin(SettingsMixin(LitElement))) {
   disconnectedCallback() {
     ipcRenderer.removeAllListeners('addalert');
     ipcRenderer.removeAllListeners('updatealert');
+    ipcRenderer.removeAllListeners('yt-modal-state');
     window.removeEventListener('enable-stem-waveforms', this.enableStemWaveformsListener);
     super.disconnectedCallback();
   }

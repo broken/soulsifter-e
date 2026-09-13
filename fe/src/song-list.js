@@ -613,6 +613,10 @@ class SongList extends AlertsMixin(
     midiManager.registerInput(
         this.settings.getString('midi.loadLeft'),  // 70
         e => {
+          if (window.isVideoModalOpen) {
+            ipcRenderer.send('yt-modal-action', { action: 'select' });
+            return;
+          }
           if (this.settings.getBool('virtualdj.active')) {
             this.sendToVirtualDj('left');
           } else {
@@ -623,10 +627,32 @@ class SongList extends AlertsMixin(
     midiManager.registerInput(
         this.settings.getString('midi.loadRight'),  // 71
         e => {
+          if (window.isVideoModalOpen) {
+            ipcRenderer.send('yt-modal-action', { action: 'select' });
+            return;
+          }
           if (this.settings.getBool('virtualdj.active')) {
             this.sendToVirtualDj('right');
           } else {
             this.dragSongTo(this.settings.getString('dragAndDrop.deckRightX'), this.settings.getString('dragAndDrop.deckRightY'))
+          }
+        }
+    );
+    midiManager.registerInput(
+        this.settings.getString('midi.back'),
+        e => {
+          if (window.isVideoModalOpen) {
+            ipcRenderer.send('yt-modal-action', { action: 'cancel' });
+            return;
+          }
+        }
+    );
+    midiManager.registerInput(
+        this.settings.getString('midi.forward'),
+        e => {
+          if (window.isVideoModalOpen) {
+            ipcRenderer.send('yt-modal-action', { action: 'load-audio' });
+            return;
           }
         }
     );
@@ -636,11 +662,21 @@ class SongList extends AlertsMixin(
           console.log(e);
           const velRight = 1;
           const velLeft = 127;
+          let diff = 0;
           if (e.message.dataBytes[1] == velRight) {
-            this.moveSelection(1);
+            diff = 1;
           } else if (e.message.dataBytes[1] == velLeft) {
-            this.moveSelection(-1);
+            diff = -1;
           }
+
+          if (window.isVideoModalOpen) {
+            if (diff !== 0) {
+              ipcRenderer.send('yt-modal-action', { action: 'browse', diff });
+            }
+            return;
+          }
+
+          this.moveSelection(diff);
           if (( // does not have separate audio channels, so no safety checks required
                 !this.settings.getString('midi.audioOutput.leftName') &&
                 !this.settings.getString('midi.audioOutput.rightName')

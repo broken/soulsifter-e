@@ -226,6 +226,22 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
 
   youtubeView.webContents.loadURL(searchUrl);
 
+  // Alert main window that youtube modal is open so midi nav is routed here.
+  event.sender.send('yt-modal-state', { open: true });
+
+  // This injects the JS which allows us to navigate in the window.
+  const injectNavigationScript = () => {
+    try {
+      const script = fs.readFileSync(path.join(__dirname, 'youtube-nav.js'), 'utf8');
+      youtubeView.webContents.executeJavaScript(script).catch(() => {});
+    } catch (err) {
+      console.error('Failed to load youtube-nav.js:', err);
+    }
+  };
+
+  youtubeView.webContents.on('did-finish-load', injectNavigationScript);
+  youtubeView.webContents.on('dom-ready', injectNavigationScript);
+
   return new Promise((resolve) => {
     let resolved = false;
 
@@ -241,10 +257,61 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
     const finish = (result) => {
       if (!resolved) {
         resolved = true;
+        ipcMain.removeListener('yt-modal-action', modalActionHandler);
+        if (!event.sender.isDestroyed()) {
+          event.sender.send('yt-modal-state', { open: false });
+        }
         searchWindow.close();
         resolve(result);
       }
     };
+
+    const modalActionHandler = async (e, data) => {
+      if (!data || resolved) return;
+      if (data.action === 'browse') {
+        const diff = Number(data.diff) || 0;
+        youtubeView.webContents.executeJavaScript(`if (window.__ssNav) { window.__ssNav.highlight(${diff}); }`).catch(() => {});
+      } else if (data.action === 'select') {
+        try {
+          const url = await youtubeView.webContents.executeJavaScript(`window.__ssNav ? window.__ssNav.select() : null`);
+          if (url && isVideoUrl(url)) {
+            finish({ action: 'video', url: url });
+          }
+        } catch (err) {
+          console.error('Failed to select video via MIDI action:', err);
+        }
+      } else if (data.action === 'load-audio') {
+        finish({ action: 'load-audio' });
+      } else if (data.action === 'cancel') {
+        finish({ action: 'cancel' });
+      }
+    };
+    ipcMain.on('yt-modal-action', modalActionHandler);
+
+    // Keyboard navigation in searchWindow and youtubeView
+    const handleKeyDown = (e, input) => {
+      if (input.type !== 'keyDown') return;
+      if (input.key === 'ArrowDown') {
+        e.preventDefault();
+        youtubeView.webContents.executeJavaScript(`if (window.__ssNav) { window.__ssNav.highlight(1); }`).catch(() => {});
+      } else if (input.key === 'ArrowUp') {
+        e.preventDefault();
+        youtubeView.webContents.executeJavaScript(`if (window.__ssNav) { window.__ssNav.highlight(-1); }`).catch(() => {});
+      } else if (input.key === 'Enter') {
+        e.preventDefault();
+        youtubeView.webContents.executeJavaScript(`window.__ssNav ? window.__ssNav.select() : null`).then(url => {
+          if (url && isVideoUrl(url)) finish({ action: 'video', url });
+        }).catch(() => {});
+      } else if (input.key === 'Escape') {
+        e.preventDefault();
+        finish({ action: 'cancel' });
+      } else if (input.key === 'Backspace' && input.shift) {
+        e.preventDefault();
+        finish({ action: 'load-audio' });
+      }
+    };
+    searchWindow.webContents.on('before-input-event', (e, input) => handleKeyDown(e, input));
+    youtubeView.webContents.on('before-input-event', (e, input) => handleKeyDown(e, input));
 
     // Handle clicks in the toolbar
     const handleToolbarNavigation = (url) => {
@@ -274,6 +341,10 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
     searchWindow.on('closed', () => {
       if (!resolved) {
         resolved = true;
+        ipcMain.removeListener('yt-modal-action', modalActionHandler);
+        if (!event.sender.isDestroyed()) {
+          event.sender.send('yt-modal-state', { open: false });
+        }
         resolve({ action: 'cancel' });
       }
     });
