@@ -358,6 +358,7 @@ class SongList extends AlertsMixin(
     p.bpm = this.searchOptions.bpmRestrict && !!this.bpm ? Number(this.bpm) : 0;
     p.keys = this.searchOptions.keyRestrict && !!this.song ? this.song.tonicKey : '';
     p.energy = this.searchOptions.energyRestrict && !!this.song ? Number(this.song.energy) : 0;
+    p.mvRestrict = this.searchOptions.mvRestrict && !this.settings.getBool('mv.on_demand');
     p.q += !this.searchOptions.trashedRestrict ? '' : (p.q.length ? ' ' : '') + 'trashed:0';
     p.q += !this.searchOptions.mixedRestrict ? '' : (p.q.length ? ' ' : '') + 'mixed:0';
     omitSongs = !this.searchOptions.repeatRestrict ? [] : this.songTrail.map(e => e.song);
@@ -366,7 +367,7 @@ class SongList extends AlertsMixin(
     }
     let songs = [];
     try {
-      songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, genres, omitSongs, playlists, p.energy, this.searchOptions.mvRestrict, orderBy, this.offset);
+      songs = ss.SearchUtil.searchSongs(p.q, this.settings.getInt('songList.limit'), p.bpm, p.keys, genres, omitSongs, playlists, p.energy, p.mvRestrict, orderBy, this.offset);
     } catch (e) {
       this.addAlert(e.message, 5);
     }
@@ -545,6 +546,9 @@ class SongList extends AlertsMixin(
   async sendToVirtualDj(deck) {
     // if no selection, then there is nothing to send
     if (!this.midiSelectedListItem) return;
+
+    // ensure a music video exists if appropriate
+    await this.maybeEnsureMusicVideo(this.midiSelectedListItem.song, this.searchOptions.mvRestrict);
 
     // determine path of file to send
     const [filepath, iconpath] = await this.getFilepathAndIconpath(this.midiSelectedListItem.song, this.searchOptions.useStems, this.searchOptions.mvRestrict);

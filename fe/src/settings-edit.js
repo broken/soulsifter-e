@@ -59,6 +59,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Short Song Warning Limit (in secs)" .value=${this.songListWarningShortSong} id="songListWarningShortSong"></md-filled-text-field>
                 <label><md-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect"></md-checkbox>Automatically search after selecting a song</label>
                 <label><md-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys"></md-checkbox>Include unknown keys in key searches</label>
+                <label><md-checkbox ?checked="${this.mvOnDemand}" id="mvOnDemand"></md-checkbox>Fetch music videos on demand</label>
                 <br>
                 <label><md-checkbox ?checked="${this.editAutoAdd}" id="editAutoAdd"></md-checkbox>Auto add music (skip edit dialog)</label>
                 <label><md-checkbox ?checked="${this.editAutoPlay}" id="editAutoPlay"></md-checkbox>Auto play music when editting song</label>
@@ -201,6 +202,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.appTheme = this.settings.getString('app.theme');
     this.musicDir = this.settings.getString('dir.music');
     this.musicVideoDir = this.settings.getString('dir.mv');
+    this.mvOnDemand = this.settings.getBool('mv.on_demand');
     this.stemsDir = this.settings.getString('dir.stems');
     this.vdjStemsDir = this.settings.getString('dir.vdjStems');
     this.vdjStemWaveformsDir = this.settings.getString('dir.vdjStemWaveforms');
@@ -422,6 +424,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('midi.volume.exponentialFactor', this.shadowRoot.getElementById('midiVolumeExponentialFactor').value);
     this.puts('midi.volume.linearFactor', this.shadowRoot.getElementById('midiVolumeLinearFactor').value);
     this.puts('midi.volume.value', this.shadowRoot.getElementById('midiVolumeValue').value);
+    this.putb('mv.on_demand', this.shadowRoot.getElementById('mvOnDemand').checked);
     this.puts('path.deno', this.shadowRoot.getElementById('pathDeno').value);
     this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);
     this.putb('songList.column.bpmShift', this.shadowRoot.getElementById('songListColBpmShift').checked);

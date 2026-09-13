@@ -242,7 +242,11 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(SearchOptionsMixin(Sett
   }
 
   updateEditedSong(id) {
-    if (this.song.id == id) this.song = ss.Song.findById(id);
+    if (this.song.id == id) {
+      this.song = ss.Song.findById(id);
+      this.setCoverImage(this.settings.getString('dir.music') + this.song.album.coverFilepath);
+      this.setMusicVideo(this.song.musicVideo);
+    }
   }
 
   songEnded(e) {

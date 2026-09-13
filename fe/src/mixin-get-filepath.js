@@ -5,7 +5,7 @@ let getFilepathMixin = (superClass) => class extends superClass {
   async getFilepathAndIconpath(song, useStems, mvRestrict) {
     let filepath = '';
     let iconpath = '';
-    if (mvRestrict) {
+    if (mvRestrict && song.musicVideo && song.musicVideo.filePath) {
       filepath = this.settings.getString('dir.mv') + song.musicVideo.filePath;
       iconpath = this.settings.getString('dir.mv') + song.musicVideo.thumbnailFilePath;
     } else {
@@ -24,6 +24,30 @@ let getFilepathMixin = (superClass) => class extends superClass {
       }
     }
     return [filepath, iconpath]
+  }
+
+  async maybeEnsureMusicVideo(song, mvRestrict) {
+    if (!song || !mvRestrict || !this.settings.getBool('mv.on_demand')) {
+      return song;
+    }
+    if (song.musicVideo && song.musicVideo.filePath) {
+      return song;
+    }
+    const query = [song.artist, song.title].filter(Boolean).join(' ');
+    try {
+      const videoUrl = await ipcRenderer.invoke('select-youtube-video', query);
+      if (videoUrl) {
+        const mv = await ss.MusicVideoService.associateYouTubeVideoAsync(song, videoUrl);
+        if (mv) {
+          song.musicVideo = mv;
+          let event = new CustomEvent('song-edit-changed', { detail: song.id });
+          window.dispatchEvent(event);
+        }
+      }
+    } catch (err) {
+      console.error('Failed to select or associate YouTube video:', err);
+    }
+    return song;
   }
 }
 

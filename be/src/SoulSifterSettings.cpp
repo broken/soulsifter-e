@@ -70,6 +70,7 @@ namespace soulsifter {
     ptree.put("midi.volume.linearFactor", "1.125");
     ptree.put("midi.volume.constantFactor", "0");
     //ptree.put("midi.volume.value", "");
+    ptree.put("mv.on_demand", false);
     //ptree.put("path.deno", "");
     ptree.put("search.energyGap", 1);
     ptree.put("search.includeUnknownKeys", true);

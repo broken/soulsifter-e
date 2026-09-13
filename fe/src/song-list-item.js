@@ -197,6 +197,7 @@ class SongListItem extends GetFilepathMixin(SettingsMixin(WaveformUtilMixin(LitE
   }
 
   async sendSongToDeckA(e) {
+    await this.maybeEnsureMusicVideo(this.song, this.mvRestrict);
     const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.useStems, this.mvRestrict);
     if (this.settings.getBool('virtualdj.active')) {
       window.vdj.send(`deck left load "${filepath}"`);
@@ -208,6 +209,7 @@ class SongListItem extends GetFilepathMixin(SettingsMixin(WaveformUtilMixin(LitE
   }
 
   async sendSongToDeckB(e) {
+    await this.maybeEnsureMusicVideo(this.song, this.mvRestrict);
     const [filepath, iconpath] = await this.getFilepathAndIconpath(this.song, this.useStems, this.mvRestrict);
     if (this.settings.getBool('virtualdj.active')) {
       window.vdj.send(`deck right load "${filepath}"`);
