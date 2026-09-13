@@ -566,8 +566,8 @@ vector<Song*>* SearchUtil::searchSongs(const string& query,
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from PlaylistEntries pe left outer join Songs s on pe.songid=s.id inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
   else
     ss << "select s.*, s.id as songid, s.artist as songartist, group_concat(ss.styleid) as styleIds, a.*, a.id as albumid, a.artist as albumartist from Songs s inner join Albums a on s.albumid = a.id left outer join SongStyles ss on ss.songid=s.id where true";
-    ss << buildQueryPredicate(query, &limit, &energy, &orderBy);
-    ss << buildOptionPredicate(bpm, key, styles, songsToOmit, playlists, limit, energy, orderBy, offset);
+  ss << buildQueryPredicate(query, &limit, &energy, &orderBy);
+  ss << buildOptionPredicate(bpm, key, styles, songsToOmit, playlists, limit, energy, orderBy, offset);
 
   LOG(DEBUG) << "Query:";
   LOG(DEBUG) << ss.str();
