@@ -96,6 +96,8 @@
   --ss-song-list-item-fade-out: linear-gradient(to right, color-mix(in srgb, var(--bg), transparent 100%), color-mix(in srgb, var(--bg), transparent 0%));
   --ss-song-list-item-hover-background-color: var(--bg2);
   --ss-song-list-item-hover-fade-out: linear-gradient(to right, color-mix(in srgb, var(--ss-song-list-item-hover-background-color), transparent 100%), color-mix(in srgb, var(--ss-song-list-item-hover-background-color), transparent 0%));
+  --ss-song-list-item-mv-color: var(--accent2);
+  --ss-song-list-item-mv-off-color: var(--clr_disabled);
   --ss-song-list-item-title-color: var(--clr_bold);
   --ss-song-list-item-waveform-0: var(--ss-song-list-item-energy-0);
   --ss-song-list-item-waveform-1: var(--ss-song-list-item-energy-1);

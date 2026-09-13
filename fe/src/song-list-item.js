@@ -36,12 +36,19 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
       <icon-button icon="send" @click="${this.sendSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
       <icon-button icon="send" @click="${this.sendSongToDeckB}"></icon-button>
     `;
+    let mvIndicator = '';
+    if (this.mvRestrict && this.settings.getBool('mv.on_demand')) {
+      mvIndicator = (this.song && this.song.musicVideoId > 0)
+        ? html`<mwc-icon class="mv-indicator has-video" title="Music video available">videocam</mwc-icon>`
+        : html`<mwc-icon class="mv-indicator no-video" title="No music video (on-demand)">videocam_off</mwc-icon>`;
+    }
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
       <div class="song-item" draggable="true" @dragstart="${this.dragSong}" @click="${this.selectSong}" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
         ${waveforms}
         ${this.settings.getBool('songList.column.sendButtons') ? sendButtons : html``}
         ${this.settings.getBool('songList.column.cover') ? html`<div id="cover" style="${bgImg}"></div>` : html``}
+        ${mvIndicator}
         <div class="key fade-out">
           <span class="artist">${this.song.artist}</span>
           <span> - </span>
@@ -312,6 +319,22 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
           --mdc-icon-size: 16px;
           vertical-align: middle;
           margin-right: 4px;
+        }
+        .song-item .mv-indicator {
+          --mdc-icon-size: 18px;
+          margin: 0 4px;
+          flex-shrink: 0;
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          user-select: none;
+        }
+        .song-item .mv-indicator.has-video {
+          color: var(--ss-song-list-item-mv-color, var(--accent2, #1EC8FA));
+        }
+        .song-item .mv-indicator.no-video {
+          color: var(--ss-song-list-item-mv-off-color, var(--clr_disabled, #666));
+          opacity: 0.6;
         }
         .song-item .fade-out:after {
           background: var(--ss-song-list-item-fade-out);
