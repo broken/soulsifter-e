@@ -332,6 +332,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
           width: 100%;
           height: 144px;
           background-size: cover;
+          margin: 10px 0;
         }
         #musicVideoInput > md-filled-text-field {
           width: 100%;
