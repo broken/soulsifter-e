@@ -17,7 +17,7 @@ let musicVideoMixin = (superClass) => class extends AlertsMixin(superClass) {
   }
 
   async maybeEnsureMusicVideo(song, mvRestrict) {
-    if (!song || !mvRestrict || !this.settings.getBool('mv.on_demand')) {
+    if (!song || !mvRestrict || !this.settings.getBool('mv.on_demand') || !this.settings.getBool('app.debug')) {
       return song;
     }
     if (song.musicVideo && song.musicVideo.filePath) {
