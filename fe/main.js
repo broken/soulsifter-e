@@ -229,11 +229,28 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
   // Alert main window that youtube modal is open so midi nav is routed here.
   event.sender.send('yt-modal-state', { open: true });
 
+  const navigateAndHover = async (diff) => {
+    try {
+      const coords = await youtubeView.webContents.executeJavaScript(
+        `window.__ssNav ? window.__ssNav.highlight(${diff}) : null`
+      );
+      if (coords && typeof coords.x === 'number' && typeof coords.y === 'number') {
+        youtubeView.webContents.sendInputEvent({
+          type: 'mouseMove',
+          x: coords.x,
+          y: coords.y
+        });
+      }
+    } catch (err) {}
+  };
+
   // This injects the JS which allows us to navigate in the window.
   const injectNavigationScript = () => {
     try {
       const script = fs.readFileSync(path.join(__dirname, 'youtube-nav.js'), 'utf8');
-      youtubeView.webContents.executeJavaScript(script).catch(() => {});
+      youtubeView.webContents.executeJavaScript(script).then(() => {
+        setTimeout(() => navigateAndHover(0), 300);
+      }).catch(() => {});
     } catch (err) {
       console.error('Failed to load youtube-nav.js:', err);
     }
@@ -270,7 +287,7 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
       if (!data || resolved) return;
       if (data.action === 'browse') {
         const diff = Number(data.diff) || 0;
-        youtubeView.webContents.executeJavaScript(`if (window.__ssNav) { window.__ssNav.highlight(${diff}); }`).catch(() => {});
+        navigateAndHover(diff);
       } else if (data.action === 'select') {
         try {
           const url = await youtubeView.webContents.executeJavaScript(`window.__ssNav ? window.__ssNav.select() : null`);
@@ -293,10 +310,10 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
       if (input.type !== 'keyDown') return;
       if (input.key === 'ArrowDown') {
         e.preventDefault();
-        youtubeView.webContents.executeJavaScript(`if (window.__ssNav) { window.__ssNav.highlight(1); }`).catch(() => {});
+        navigateAndHover(1);
       } else if (input.key === 'ArrowUp') {
         e.preventDefault();
-        youtubeView.webContents.executeJavaScript(`if (window.__ssNav) { window.__ssNav.highlight(-1); }`).catch(() => {});
+        navigateAndHover(-1);
       } else if (input.key === 'Enter') {
         e.preventDefault();
         youtubeView.webContents.executeJavaScript(`window.__ssNav ? window.__ssNav.select() : null`).then(url => {

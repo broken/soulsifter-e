@@ -2,6 +2,38 @@
   if (window.__ssNavInitialized) return;
   window.__ssNavInitialized = true;
   window.__ssSelectedIndex = 0;
+  let lastHoveredElement = null;
+
+  function triggerHover(target) {
+    if (lastHoveredElement && lastHoveredElement !== target) {
+      const leaveEvents = ['mouseout', 'pointerout', 'mouseleave', 'pointerleave'];
+      leaveEvents.forEach(type => {
+        try {
+          lastHoveredElement.dispatchEvent(new MouseEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            view: window
+          }));
+        } catch (e) {}
+      });
+    }
+
+    if (target) {
+      const enterEvents = ['pointerover', 'mouseover', 'pointerenter', 'mouseenter', 'mousemove'];
+      enterEvents.forEach(type => {
+        try {
+          target.dispatchEvent(new MouseEvent(type, {
+            bubbles: true,
+            cancelable: true,
+            composed: true,
+            view: window
+          }));
+        } catch (e) {}
+      });
+      lastHoveredElement = target;
+    }
+  }
 
   function getVideoItems() {
     return Array.from(document.querySelectorAll('ytd-video-renderer, ytd-rich-item-renderer, ytd-compact-video-renderer, ytd-grid-video-renderer'))
@@ -44,7 +76,7 @@
 
   function applyHighlight(index) {
     const items = getVideoItems();
-    if (!items.length) return;
+    if (!items.length) return null;
 
     document.querySelectorAll('.ss-highlighted-video').forEach(el => {
       el.classList.remove('ss-highlighted-video');
@@ -66,16 +98,43 @@
       item.style.borderRadius = '12px';
       item.style.transition = 'all 0.1s ease';
       scrollToItem(item);
+
+      const thumb = item.querySelector('ytd-thumbnail, #thumbnail, a#thumbnail') || item;
+      triggerHover(thumb);
+
+      const rect = thumb.getBoundingClientRect();
+      return {
+        index: index,
+        x: Math.round(rect.left + rect.width / 2),
+        y: Math.round(rect.top + rect.height / 2)
+      };
     }
+    return null;
   }
 
   window.__ssNav = {
+    getHighlightCoords: function() {
+      const items = getVideoItems();
+      const idx = (window.__ssSelectedIndex >= 0 && window.__ssSelectedIndex < items.length) ? window.__ssSelectedIndex : 0;
+      const item = items[idx];
+      if (item) {
+        const thumb = item.querySelector('ytd-thumbnail, #thumbnail, a#thumbnail') || item;
+        const rect = thumb.getBoundingClientRect();
+        return {
+          index: idx,
+          x: Math.round(rect.left + rect.width / 2),
+          y: Math.round(rect.top + rect.height / 2)
+        };
+      }
+      return null;
+    },
     highlight: function(diff = 0) {
+      if (diff == 0) return getHighlightCoords();
       const items = getVideoItems();
       let nextIndex = window.__ssSelectedIndex + diff;
       if (nextIndex < 0) nextIndex = 0;
       if (nextIndex >= items.length) nextIndex = items.length - 1;
-      applyHighlight(nextIndex);
+      return applyHighlight(nextIndex);
     },
     select: function() {
       const items = getVideoItems();
