@@ -122,7 +122,10 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
 
   songChanged(song) {
     this.song = song;
-    // TODO this.$.audio.pause();
+    // Do I want to pause audio here? I think that I like that it continues, as long as I can pause manually.
+    // if (!this.autoplay) {
+    //   this.dispatchEvent(new CustomEvent('audio-pause', { bubbles: true, composed: true }));
+    // }
     if (!song) {
       this.song = new ss.Song();
       this.song.album = new ss.Album();
