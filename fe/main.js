@@ -204,6 +204,7 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
       contextIsolation: true,
     }
   });
+  searchWindow.webContents.setAudioMuted(true);
 
   searchWindow.loadFile(path.join(__dirname, 'youtube-toolbar.html'), {
     query: { q: query, audio: allowAudioFallback ? '1' : '0' }
@@ -215,6 +216,7 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
       contextIsolation: true,
     }
   });
+  youtubeView.webContents.setAudioMuted(true);
   searchWindow.contentView.addChildView(youtubeView);
 
   const updateBounds = () => {
@@ -481,6 +483,7 @@ class YoutubeClientMain {
         nodeIntegration: false,
       },
     });
+    authWindow.webContents.setAudioMuted(true);
     authWindow.loadURL(authUrl);
     authWindow.show();
     authWindow.on('closed', () => {
