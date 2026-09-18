@@ -526,6 +526,12 @@ class SongList extends AlertsMixin(
   dragSongTo(x, y) {
     if (!this.midiSelectedListItem) return;
 
+    if (this._previewTimeoutId) {
+      clearTimeout(this._previewTimeoutId);
+      this._previewTimeoutId = null;
+    }
+    this.dispatchEvent(new CustomEvent('audio-pause', { bubbles: true, composed: true }));
+
     let rect = this.midiSelectedListItem.getBoundingClientRect();
     const chromeOffset = 31;  // TODO setting or compute with mouse listen
     const ex = '=' + ((rect.left + window.screenX + rect.width / 2) | 0);
@@ -548,6 +554,12 @@ class SongList extends AlertsMixin(
   async sendToVirtualDj(deck) {
     // if no selection, then there is nothing to send
     if (!this.midiSelectedListItem) return;
+
+    if (this._previewTimeoutId) {
+      clearTimeout(this._previewTimeoutId);
+      this._previewTimeoutId = null;
+    }
+    this.dispatchEvent(new CustomEvent('audio-pause', { bubbles: true, composed: true }));
 
     // ensure a music video exists if appropriate
     const shouldLoad = await this.maybeEnsureMusicVideo(this.midiSelectedListItem.song, this.searchOptions.mvRestrict);
