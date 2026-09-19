@@ -273,14 +273,35 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
       );
     };
 
+    const cleanup = () => {
+      // remove ipc listener for receiving actions from youtube-nav.js.
+      ipcMain.removeListener('yt-modal-action', modalActionHandler);
+      // notify the main renderer the window is closed and midi controls return to normal app navigation.
+      if (!event.sender.isDestroyed()) {
+        event.sender.send('yt-modal-state', { open: false });
+      }
+      // prevent media elements from playing in the youtube window.
+      try {
+        if (!youtubeView.webContents.isDestroyed()) {
+          youtubeView.webContents.stop();
+          youtubeView.webContents.loadURL('about:blank');
+        }
+      } catch (err) {}
+      // accelerate memory cleanup
+      try {
+        if (!searchWindow.isDestroyed()) {
+          searchWindow.contentView.removeChildView(youtubeView);
+        }
+      } catch (err) {}
+    };
+
     const finish = (result) => {
       if (!resolved) {
         resolved = true;
-        ipcMain.removeListener('yt-modal-action', modalActionHandler);
-        if (!event.sender.isDestroyed()) {
-          event.sender.send('yt-modal-state', { open: false });
+        cleanup();
+        if (!searchWindow.isDestroyed()) {
+          searchWindow.close();
         }
-        searchWindow.close();
         resolve(result);
       }
     };
@@ -357,13 +378,15 @@ ipcMain.handle('select-youtube-video', async (event, query, allowAudioFallback =
     youtubeView.webContents.on('did-navigate-in-page', (e, url) => handleYoutubeNavigation(url));
     youtubeView.webContents.on('did-navigate', (e, url) => handleYoutubeNavigation(url));
 
+    // occurs before destruction of the window
+    searchWindow.on('close', () => {
+      cleanup();
+    });
+    // occurs after destruction of the window, but may not fire if manually X-d out (or cmd-w).
     searchWindow.on('closed', () => {
       if (!resolved) {
         resolved = true;
-        ipcMain.removeListener('yt-modal-action', modalActionHandler);
-        if (!event.sender.isDestroyed()) {
-          event.sender.send('yt-modal-state', { open: false });
-        }
+        cleanup();
         resolve({ action: 'cancel' });
       }
     });
