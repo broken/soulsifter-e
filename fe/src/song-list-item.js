@@ -321,7 +321,7 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
         }
         .song-item .explicit {
           --mdc-icon-size: 16px;
-          vertical-align: middle;
+          vertical-align: -3px;
           margin-right: 4px;
         }
         .song-item .mv-indicator {
