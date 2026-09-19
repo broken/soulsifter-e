@@ -430,7 +430,7 @@ namespace soulsifter {
         this->playlist = new Playlist(playlist);
     }
     void PlaylistEntry::setPlaylist(Playlist* playlist) {
-        this->playlistId = playlist->getId();
+        this->playlistId = playlist ? playlist->getId() : 0;
         delete this->playlist;
         this->playlist = playlist;
     }
@@ -459,7 +459,7 @@ namespace soulsifter {
         this->song = new Song(song);
     }
     void PlaylistEntry::setSong(Song* song) {
-        this->songId = song->getId();
+        this->songId = song ? song->getId() : 0;
         delete this->song;
         this->song = song;
     }

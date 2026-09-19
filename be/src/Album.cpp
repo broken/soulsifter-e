@@ -513,7 +513,7 @@ namespace soulsifter {
         this->basicGenre = new BasicGenre(basicGenre);
     }
     void Album::setBasicGenre(BasicGenre* basicGenre) {
-        this->basicGenreId = basicGenre->getId();
+        this->basicGenreId = basicGenre ? basicGenre->getId() : 0;
         delete this->basicGenre;
         this->basicGenre = basicGenre;
     }

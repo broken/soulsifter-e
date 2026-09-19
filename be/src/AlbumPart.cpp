@@ -374,7 +374,7 @@ namespace soulsifter {
         this->album = new Album(album);
     }
     void AlbumPart::setAlbum(Album* album) {
-        this->albumId = album->getId();
+        this->albumId = album ? album->getId() : 0;
         delete this->album;
         this->album = album;
     }

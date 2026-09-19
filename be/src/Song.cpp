@@ -1083,7 +1083,7 @@ namespace soulsifter {
         this->reSong = new RESong(reSong);
     }
     void Song::setRESong(RESong* reSong) {
-        this->reSongId = reSong->getId();
+        this->reSongId = reSong ? reSong->getId() : 0;
         delete this->reSong;
         this->reSong = reSong;
     }
@@ -1112,7 +1112,7 @@ namespace soulsifter {
         this->album = new Album(album);
     }
     void Song::setAlbum(Album* album) {
-        this->albumId = album->getId();
+        this->albumId = album ? album->getId() : 0;
         delete this->album;
         this->album = album;
     }
@@ -1141,7 +1141,7 @@ namespace soulsifter {
         this->albumPart = new AlbumPart(albumPart);
     }
     void Song::setAlbumPart(AlbumPart* albumPart) {
-        this->albumPartId = albumPart->getId();
+        this->albumPartId = albumPart ? albumPart->getId() : 0;
         delete this->albumPart;
         this->albumPart = albumPart;
     }
@@ -1170,7 +1170,7 @@ namespace soulsifter {
         this->musicVideo = new MusicVideo(musicVideo);
     }
     void Song::setMusicVideo(MusicVideo* musicVideo) {
-        this->musicVideoId = musicVideo->getId();
+        this->musicVideoId = musicVideo ? musicVideo->getId() : 0;
         delete this->musicVideo;
         this->musicVideo = musicVideo;
     }
@@ -1229,7 +1229,7 @@ namespace soulsifter {
         this->dupe = new Song(dupe);
     }
     void Song::setDupe(Song* dupe) {
-        this->dupeId = dupe->getId();
+        this->dupeId = dupe ? dupe->getId() : 0;
         delete this->dupe;
         this->dupe = dupe;
     }
