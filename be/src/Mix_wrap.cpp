@@ -384,6 +384,10 @@ void Mix::setOutSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Song& a0 = *a0tmp;
   try {
     obj->mix->setOutSong(a0);
@@ -458,6 +462,10 @@ void Mix::setInSong(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Song& a0 = *a0tmp;
   try {
     obj->mix->setInSong(a0);

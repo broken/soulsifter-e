@@ -422,6 +422,10 @@ void AlbumPart::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &valu
     return;
   }
   dogatech::soulsifter::Album* a0tmp(Napi::ObjectWrap<Album>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Album& a0 = *a0tmp;
   try {
     obj->albumpart->setAlbum(a0);

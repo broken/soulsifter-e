@@ -1244,6 +1244,10 @@ void Song::setAlbum(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   dogatech::soulsifter::Album* a0tmp(Napi::ObjectWrap<Album>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Album& a0 = *a0tmp;
   try {
     obj->song->setAlbum(a0);
@@ -1318,6 +1322,10 @@ void Song::setAlbumPart(const Napi::CallbackInfo& info, const Napi::Value &value
     return;
   }
   dogatech::soulsifter::AlbumPart* a0tmp(Napi::ObjectWrap<AlbumPart>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::AlbumPart& a0 = *a0tmp;
   try {
     obj->song->setAlbumPart(a0);
@@ -1392,6 +1400,10 @@ void Song::setMusicVideo(const Napi::CallbackInfo& info, const Napi::Value &valu
     return;
   }
   dogatech::soulsifter::MusicVideo* a0tmp(Napi::ObjectWrap<MusicVideo>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::MusicVideo& a0 = *a0tmp;
   try {
     obj->song->setMusicVideo(a0);
@@ -1627,6 +1639,10 @@ void Song::setDupe(const Napi::CallbackInfo& info, const Napi::Value &value) {
     return;
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Song& a0 = *a0tmp;
   try {
     obj->song->setDupe(a0);

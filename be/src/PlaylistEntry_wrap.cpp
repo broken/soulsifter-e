@@ -374,6 +374,10 @@ void PlaylistEntry::setPlaylist(const Napi::CallbackInfo& info, const Napi::Valu
     return;
   }
   dogatech::soulsifter::Playlist* a0tmp(Napi::ObjectWrap<Playlist>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Playlist& a0 = *a0tmp;
   try {
     obj->playlistentry->setPlaylist(a0);
@@ -448,6 +452,10 @@ void PlaylistEntry::setSong(const Napi::CallbackInfo& info, const Napi::Value &v
     return;
   }
   dogatech::soulsifter::Song* a0tmp(Napi::ObjectWrap<Song>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::Song& a0 = *a0tmp;
   try {
     obj->playlistentry->setSong(a0);

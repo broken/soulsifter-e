@@ -704,6 +704,10 @@ void Album::setBasicGenre(const Napi::CallbackInfo& info, const Napi::Value &val
     return;
   }
   dogatech::soulsifter::BasicGenre* a0tmp(Napi::ObjectWrap<BasicGenre>::Unwrap(value.As<Napi::Object>())->getWrappedValue());
+  if (a0tmp == nullptr) {
+    Napi::TypeError::New(env, "Object cannot be null or undefined (for a0)").ThrowAsJavaScriptException();
+    return;
+  }
   dogatech::soulsifter::BasicGenre& a0 = *a0tmp;
   try {
     obj->album->setBasicGenre(a0);
