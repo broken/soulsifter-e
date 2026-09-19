@@ -28,8 +28,13 @@
   --md-sys-color-on-secondary-container: color-mix(in srgb, var(--md-sys-color-on-primary), black 20%);  /* filled-tonal-button */
   --md-sys-color-surface-container-high: var(--bg);  /* dialog fab */
   --md-sys-color-surface-container-highest: var(--bg2);  /* linear-progress */
+  --md-sys-color-on-surface: var(--clr);  /* dialog filled-text-field radio */
   --md-sys-color-on-surface-variant: var(--clr);  /* dialog filled-text-field radio */
   --md-sys-color-outline: var(--clr_bold);  /* outlined-button switch */
+  --md-sys-color-error: var(--err);  /* main error color - underline bar, floating label, error icons */
+  --md-sys-color-on-error: var(--clr_bold);  /* foreground color on top of error - text inside error button or badge */
+  --md-sys-color-error-container: var(--err_disabled);  /* muted/background tint for error surfaces - error card/banner backgrounds */
+  --md-sys-color-on-error-container: var(--err);  /* foreground color on error container surface - text inside error card/banner, error hover indicators */
 
   /* component colors */
   --ss--primary-background-color: var(--bg);
