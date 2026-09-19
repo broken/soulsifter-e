@@ -96,6 +96,10 @@ class AssociateYouTubeVideoAsyncWorker : public Napi::AsyncWorker {
   void OnOK() {
     Napi::Env env = Env();
     Napi::HandleScope scope(env);
+    if (res == nullptr) {
+      deferred->Resolve(env.Null());
+      return;
+    }
     Napi::Object wrapped_result = MusicVideo::NewInstance(env);
     MusicVideo* r = Napi::ObjectWrap<MusicVideo>::Unwrap(wrapped_result);
     r->setWrappedValue(res, false);
