@@ -20,6 +20,7 @@ Napi::Object MusicVideoService::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "MusicVideoService", {
     StaticMethod<&MusicVideoService::associateYouTubeVideo>("associateYouTubeVideo"),
     StaticMethod<&MusicVideoService::associateYouTubeVideoAsync>("associateYouTubeVideoAsync"),
+    StaticMethod<&MusicVideoService::removeMusicVideo>("removeMusicVideo"),
     StaticMethod<&MusicVideoService::downloadAudio>("downloadAudio"),
     StaticMethod<&MusicVideoService::downloadAudioAsync>("downloadAudioAsync"),
   });
@@ -141,6 +142,28 @@ Napi::Value MusicVideoService::associateYouTubeVideoAsync(const Napi::CallbackIn
     AssociateYouTubeVideoAsyncWorker* w = new AssociateYouTubeVideoAsyncWorker(env, deferred, a0, a1);
     w->Queue();
     return deferred->Promise();
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+}
+
+Napi::Value MusicVideoService::removeMusicVideo(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  if (!info[0].IsObject()) {
+    Napi::TypeError::New(env, "TypeError: Object expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  dogatech::soulsifter::Song* a0(Napi::ObjectWrap<Song>::Unwrap(info[0].As<Napi::Object>())->getWrappedValue());
+  try {
+    bool result =
+        dogatech::soulsifter::MusicVideoService::removeMusicVideo(a0);
+
+    return Napi::Boolean::New(env, result);
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();

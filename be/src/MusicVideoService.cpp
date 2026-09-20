@@ -383,5 +383,77 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
   return musicVideo.release();
 }
 
+bool MusicVideoService::removeMusicVideo(Song* song) {
+  if (!song) return false;
+  LOG(INFO) << "Remove music video for song " << song->getId();
+
+  MusicVideo* mv = song->getMusicVideo();
+  if (mv) {
+    boost::filesystem::path mvBasePath(SoulSifterSettings::getInstance().get<string>("dir.mv"));
+    auto cleanupEmptyParentDirs = [&mvBasePath](const boost::filesystem::path& startPath) {
+      boost::filesystem::path p = startPath.parent_path();
+      while (!p.empty() && p != mvBasePath && boost::filesystem::exists(p)) {
+        try {
+          bool isEmpty = true;
+          boost::filesystem::path dsStore;
+          for (boost::filesystem::directory_iterator it(p), end; it != end; ++it) {
+            if (it->path().filename().string() == ".DS_Store") {
+              dsStore = it->path();
+            } else {
+              isEmpty = false;
+              break;
+            }
+          }
+          if (isEmpty) {
+            if (!dsStore.empty() && boost::filesystem::exists(dsStore)) {
+              boost::filesystem::remove(dsStore);
+            }
+            LOG(INFO) << "Removing empty directory: " << p.string();
+            boost::filesystem::remove(p);
+            p = p.parent_path();
+          } else {
+            break;
+          }
+        } catch (const boost::filesystem::filesystem_error& ex) {
+          LOG(WARNING) << "Error while cleaning up directory " << p.string() << ": " << ex.what();
+          break;
+        }
+      }
+    };
+
+    if (!mv->getFilePath().empty()) {
+      boost::filesystem::path videoPath = mvBasePath / mv->getFilePath();
+      if (boost::filesystem::exists(videoPath)) {
+        try {
+          LOG(INFO) << "Removing music video file: " << videoPath.string();
+          boost::filesystem::remove(videoPath);
+        } catch (const boost::filesystem::filesystem_error& ex) {
+          LOG(WARNING) << "Unable to remove music video file " << videoPath.string() << ": " << ex.what();
+        }
+      }
+      cleanupEmptyParentDirs(videoPath);
+    }
+
+    if (!mv->getThumbnailFilePath().empty()) {
+      boost::filesystem::path thumbPath = mvBasePath / mv->getThumbnailFilePath();
+      if (boost::filesystem::exists(thumbPath)) {
+        try {
+          LOG(INFO) << "Removing music video thumbnail file: " << thumbPath.string();
+          boost::filesystem::remove(thumbPath);
+        } catch (const boost::filesystem::filesystem_error& ex) {
+          LOG(WARNING) << "Unable to remove music video thumbnail file " << thumbPath.string() << ": " << ex.what();
+        }
+      }
+      cleanupEmptyParentDirs(thumbPath);
+    }
+  }
+
+  mv->erase();
+  song->setMusicVideoId(0);
+  song->update();
+
+  return true;
+}
+
 }  // namespace soulsifter
 }  // namespace dogatech
