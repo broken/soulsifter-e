@@ -23,7 +23,6 @@ let musicVideoMixin = (superClass) => class extends AlertsMixin(superClass) {
     this.addAlert(alertMsg, 2, -1);
     try {
       const res = ss.MusicVideoService.removeMusicVideo(song);
-      song.musicVideo = null;
       let event = new CustomEvent('song-edit-changed', { detail: song.id });
       window.dispatchEvent(event);
       return res;
