@@ -4,6 +4,7 @@ import "@material/web/textfield/filled-text-field.js";
 
 import "./audio-player.js";
 import "./icon-button.js";
+import "./options-menu-item.js";
 import "./pitch-slider.js";
 import "./star-rating.js";
 import { GetFilepathMixin } from "./mixin-get-filepath.js";
@@ -49,7 +50,13 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
         <audio-player id="audio" .song="${this.song}" @song-ended="${this.songEnded}"></audio-player>
         ${this.mix && this.mix.comments ? html`<div style="white-space: pre-wrap; word-wrap: break-word;">${this.mix.comments}<br><br></div>` : ''}
         <div>${this.song.styles.map(s => s.name).join(', ')}</div>
-        <div id="musicVideoThumbnail" draggable="true" @dragstart="${this.dragMusicVideo}" ?hide="${!this.musicVideo}"></div>
+        <div id="musicVideoThumbnail" draggable="true" @dragstart="${this.dragMusicVideo}" @contextmenu="${this.onThumbnailContextMenu}" ?hide="${!this.musicVideo}">
+          ${this.showContextMenu ? html`
+            <div id="thumbnailContextMenu" class="context-menu" draggable="false" style="left: ${this.menuX}px; top: ${this.menuY}px;" @click="${(e) => e.stopPropagation()}">
+              <options-menu-item @click="${this.removeMusicVideoAction}">Remove music video</options-menu-item>
+            </div>
+          ` : ''}
+        </div>
         ${debugMode ? html`<div id="musicVideoInput" ?hide="${!!this.musicVideo}">
             <md-filled-text-field label="video url" no-label-float id="videoUrlInput"></md-filled-text-field>
             <icon-button @click="${this.associateVideo}" icon="movie"></icon-button>
@@ -64,6 +71,9 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
       // do not clear the cache when the songtrail is changed using the fwd or back btns
       clearCache: { type: Boolean },
       musicVideo: { type: Object },
+      showContextMenu: { type: Boolean },
+      menuX: { type: Number },
+      menuY: { type: Number },
     }
   }
 
@@ -72,6 +82,12 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
     this.songTrail = [];
     this.songTrailCache = [];
     this.clearCache = true;
+    this.showContextMenu = false;
+    this.menuX = 0;
+    this.menuY = 0;
+    this.closeContextMenuListener = () => {
+      if (this.showContextMenu) this.showContextMenu = false;
+    };
     this.saveSongTrailListener = (e) => this.saveSongTrail(e);
     this.registerMidiCallbacksListener = () => this.registerMidiCallbacks();
     this.song = new ss.Song();
@@ -84,9 +100,13 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
     super.connectedCallback();
     window.addEventListener('save-song-trail', this.saveSongTrailListener);
     window.addEventListener('register-midi-callbacks', this.registerMidiCallbacksListener);
+    window.addEventListener('click', this.closeContextMenuListener);
+    window.addEventListener('contextmenu', this.closeContextMenuListener);
   }
 
   disconnectedCallback() {
+    window.removeEventListener('contextmenu', this.closeContextMenuListener);
+    window.removeEventListener('click', this.closeContextMenuListener);
     window.removeEventListener('register-midi-callbacks', this.registerMidiCallbacksListener);
     window.removeEventListener('save-song-trail', this.saveSongTrailListener);
     super.disconnectedCallback();
@@ -121,6 +141,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
   }
 
   songChanged(song) {
+    this.showContextMenu = false;
     this.song = song;
     // Do I want to pause audio here? I think that I like that it continues, as long as I can pause manually.
     // if (!this.autoplay) {
@@ -258,6 +279,25 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
     ipcRenderer.send('ondragstart', filepath, iconpath);
   }
 
+  onThumbnailContextMenu(e) {
+    e.preventDefault();
+    e.stopPropagation();
+    const thumb = this.shadowRoot.getElementById('musicVideoThumbnail');
+    if (!thumb) return;
+    const rect = thumb.getBoundingClientRect();
+    this.menuX = Math.max(0, Math.min(rect.width - 160, e.clientX - rect.left));
+    this.menuY = Math.max(0, Math.min(rect.height - 35, e.clientY - rect.top));
+    this.showContextMenu = true;
+  }
+
+  async removeMusicVideoAction(e) {
+    e.stopPropagation();
+    this.showContextMenu = false;
+    if (!this.song) return;
+    await this.removeMusicVideo(this.song);
+    this.setMusicVideo(null);
+  }
+
   openEditSongPage(e) {
     let event = new CustomEvent('song-edit', { detail: { song: this.song } });
     window.dispatchEvent(event);
@@ -365,10 +405,22 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
           display: none;
         }
         #musicVideoThumbnail {
+          position: relative;
           width: 100%;
           height: 144px;
           background-size: cover;
           margin: 10px 0;
+        }
+        .context-menu {
+          position: absolute;
+          background-color: var(--ss-options-menu-background-color);
+          color: var(--clr);
+          box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+          padding: 15px;
+          border-radius: 2px;
+          z-index: 10;
+          user-select: none;
+          cursor: default;
         }
         #musicVideoInput > md-filled-text-field {
           width: 100%;

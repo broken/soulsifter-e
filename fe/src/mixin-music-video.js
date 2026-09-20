@@ -16,6 +16,25 @@ let musicVideoMixin = (superClass) => class extends AlertsMixin(superClass) {
     }
   }
 
+  async removeMusicVideo(song) {
+    if (!song) return false;
+    const songName = [song.artist, song.title].filter(Boolean).join(' - ') || song.id;
+    const alertMsg = `Removing music video for ${songName}`;
+    const alertId = this.addAlert(alertMsg, 0, -1);
+    try {
+      const res = ss.MusicVideoService.removeMusicVideo(song);
+      song.musicVideo = null;
+      let event = new CustomEvent('song-edit-changed', { detail: song.id });
+      window.dispatchEvent(event);
+      return res;
+    } catch (err) {
+      console.error('Failed to remove music video:', err);
+      return false;
+    } finally {
+      this.rmAlert(alertId);
+    }
+  }
+
   // Returns true if we should proceed with selecting the song.
   async maybeEnsureMusicVideo(song, mvRestrict) {
     if (!song || !mvRestrict || !this.settings.getBool('mv.on_demand') || !this.settings.getBool('app.debug')) {
