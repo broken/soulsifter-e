@@ -21,6 +21,7 @@ class MusicVideo : public Napi::ObjectWrap<MusicVideo> {
   Napi::Value update(const Napi::CallbackInfo& info);
   Napi::Value save(const Napi::CallbackInfo& info);
   Napi::Value sync(const Napi::CallbackInfo& info);
+  Napi::Value erase(const Napi::CallbackInfo& info);
   Napi::Value getId(const Napi::CallbackInfo& info);
   void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getFilePath(const Napi::CallbackInfo& info);

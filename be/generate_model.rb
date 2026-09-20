@@ -851,7 +851,7 @@ musicVideoFields = [
   [:string, "filePath", 0],
   [:string, "thumbnailFilePath", 0],
 ]
-musicVideoAttribs = 0
+musicVideoAttribs = Attrib::DELETABLE
 musicVideoCustomMethods = ""
 playlistFields = [
   [:int, "id", Attrib::FIND],

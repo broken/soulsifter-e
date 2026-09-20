@@ -204,6 +204,30 @@ namespace soulsifter {
         return needsUpdate;
     }
 
+    int MusicVideo::erase() {
+        for (int i = 0; i < 2; ++i) {
+            try {
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("delete from MusicVideos where id=?");
+                ps->setInt(1, id);
+                int erased = ps->executeUpdate();
+                if (!erased) {
+                    LOG(WARNING) << "Not able to erase musicVideo";
+                }
+                return erased;
+            } catch (sql::SQLException &e) {
+                LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
+                LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
+                bool reconnected = MysqlAccess::getInstance().reconnect();
+                LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
+                if (i == 1) {
+                    AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
+                    throw e;
+                }
+            }
+        }
+        return 0;
+    }
+
 
 # pragma mark accessors
 

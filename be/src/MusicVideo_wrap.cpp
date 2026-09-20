@@ -23,6 +23,7 @@ Napi::Object MusicVideo::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod<&MusicVideo::update>("update"),
     InstanceMethod<&MusicVideo::save>("save"),
     InstanceMethod<&MusicVideo::sync>("sync"),
+    InstanceMethod<&MusicVideo::erase>("erase"),
     InstanceAccessor<&MusicVideo::getId, &MusicVideo::setId>("id"),
     InstanceAccessor<&MusicVideo::getFilePath, &MusicVideo::setFilePath>("filePath"),
     InstanceAccessor<&MusicVideo::getThumbnailFilePath, &MusicVideo::setThumbnailFilePath>("thumbnailFilePath"),
@@ -146,6 +147,19 @@ Napi::Value MusicVideo::sync(const Napi::CallbackInfo& info) {
     bool result =    obj->musicvideo->sync();
 
     return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+}
+
+Napi::Value MusicVideo::erase(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  MusicVideo* obj = this;
+  try {
+    int result =    obj->musicvideo->erase();
+
+    return Napi::Number::New(env, result);
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
