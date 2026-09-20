@@ -20,7 +20,7 @@ let musicVideoMixin = (superClass) => class extends AlertsMixin(superClass) {
     if (!song) return false;
     const songName = [song.artist, song.title].filter(Boolean).join(' - ') || song.id;
     const alertMsg = `Removing music video for ${songName}`;
-    this.addAlert(alertMsg, 2, -1);
+    this.addAlert(alertMsg, 1, -1);
     try {
       const res = ss.MusicVideoService.removeMusicVideo(song);
       let event = new CustomEvent('song-edit-changed', { detail: song.id });
