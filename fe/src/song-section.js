@@ -269,6 +269,8 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
     const mv = await this.associateMusicVideo(this.song, videoUrl);
     if (!!this.song && this.song.id == songId && mv) {
       this.setMusicVideo(mv);
+      let event = new CustomEvent('song-edit-changed', { detail: songId });
+      window.dispatchEvent(event);
     }
   }
 
