@@ -388,7 +388,9 @@ bool MusicVideoService::removeMusicVideo(Song* song) {
   LOG(INFO) << "Remove music video for song " << song->getId();
 
   MusicVideo* mv = song->getMusicVideo();
+  std::unique_ptr<MusicVideo> mvCopy;
   if (mv) {
+    mvCopy.reset(new MusicVideo(*mv));
     boost::filesystem::path mvBasePath(SoulSifterSettings::getInstance().get<string>("dir.mv"));
     auto cleanupEmptyParentDirs = [&mvBasePath](const boost::filesystem::path& startPath) {
       boost::filesystem::path p = startPath.parent_path();
@@ -448,9 +450,13 @@ bool MusicVideoService::removeMusicVideo(Song* song) {
     }
   }
 
-  mv->erase();
+  // We cannot delete the music video first, because a foreign key constraint exists on the song. We
+  // create a copy since clearing it from the song deletes the music video object.
   song->setMusicVideoId(0);
   song->update();
+  if (mvCopy) {
+    mvCopy->erase();
+  }
 
   return true;
 }
