@@ -20,7 +20,7 @@ let musicVideoMixin = (superClass) => class extends AlertsMixin(superClass) {
     if (!song) return false;
     const songName = [song.artist, song.title].filter(Boolean).join(' - ') || song.id;
     const alertMsg = `Removing music video for ${songName}`;
-    const alertId = this.addAlert(alertMsg, 0, -1);
+    this.addAlert(alertMsg, 2, -1);
     try {
       const res = ss.MusicVideoService.removeMusicVideo(song);
       song.musicVideo = null;
@@ -30,8 +30,6 @@ let musicVideoMixin = (superClass) => class extends AlertsMixin(superClass) {
     } catch (err) {
       console.error('Failed to remove music video:', err);
       return false;
-    } finally {
-      this.rmAlert(alertId);
     }
   }
 
