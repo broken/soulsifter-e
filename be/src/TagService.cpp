@@ -43,6 +43,7 @@ const char* const CURATOR = "CURATOR";
 const char* const LOW_QUALITY = "LQ";
 const char* const YOUTUBE = "YOUTUBE";
 const char* const YOUTUBE_MUSIC = "YOUTUBE_MUSIC";
+const char* const EXPLICIT_LYRICS = "ITUNESADVISORY";
 
 class ImageFile : public TagLib::File {
 public:
@@ -329,6 +330,8 @@ void TagService::readId3v2Tag(Song* song) {
   song->setCurator(getId3v2UserText(id3v2, CURATOR));
   song->setYoutubeId(getId3v2UserText(id3v2, YOUTUBE));
   song->setYoutubeMusicId(getId3v2UserText(id3v2, YOUTUBE_MUSIC));
+  string el(getId3v2UserText(id3v2, EXPLICIT_LYRICS));
+  song->setExplicitLyrics(el.length() > 0 && !el.compare("1"));
 
   // attributes (bpm, key, energy)
   readId3v2TagAttributes(song, id3v2);
@@ -427,6 +430,12 @@ void TagService::writeId3v2Tag(Song* song) {
       setId3v2UserText(id3v2, YOUTUBE_MUSIC, song->getYoutubeMusicId().c_str());
     } else {
       TagLib::ID3v2::UserTextIdentificationFrame* frame = TagLib::ID3v2::UserTextIdentificationFrame::find(id3v2, YOUTUBE_MUSIC);
+      if (frame) id3v2->removeFrames(frame->frameID());
+    }
+    if (song->getExplicitLyrics()) {
+      setId3v2UserText(id3v2, EXPLICIT_LYRICS, "1");
+    } else {
+      TagLib::ID3v2::UserTextIdentificationFrame* frame = TagLib::ID3v2::UserTextIdentificationFrame::find(id3v2, EXPLICIT_LYRICS);
       if (frame) id3v2->removeFrames(frame->frameID());
     }
     // picture
