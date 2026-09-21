@@ -95,6 +95,32 @@ static inline std::string trim_copy(std::string s) {
 template<char C>
 bool bothAre(char lhs, char rhs) { return (lhs == rhs) && (lhs == C); }
 
+bool isExplicitLyricsFromYouTube(const string& videoId) {
+  // Check YouTube Music Innertube API if videoId is present
+  if (!videoId.empty()) {
+    stringstream cmd;
+    cmd << "curl -s -X POST https://music.youtube.com/youtubei/v1/next "
+        << "-H \"Content-Type: application/json\" "
+        << "-H \"User-Agent: Mozilla/5.0\" "
+        << "-d '{\"context\": {\"client\": {\"clientName\": \"WEB_REMIX\", \"clientVersion\": \"1.20240101.01.00\"}}, \"videoId\": \"" << videoId << "\"}'";
+    FILE* fpipe = popen(cmd.str().c_str(), "r");
+    if (fpipe) {
+      char buffer[2048];
+      stringstream response;
+      while (fgets(buffer, sizeof buffer, fpipe)) {
+        response << buffer;
+      }
+      pclose(fpipe);
+      string respStr = response.str();
+      if (respStr.find("MUSIC_EXPLICIT_BADGE") != string::npos) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
 }  // namespace
 
 future<vector<string>> MusicVideoService::downloadAudioAsync(const string& url) {
@@ -230,6 +256,7 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
           int yr = ptree.get<int>("release_year", 0);
           if (yr > 0) date = std::to_string(yr) + "0000";
         }
+        song->setExplicitLyrics(isExplicitLyricsFromYouTube(song->getYoutubeMusicId()));
       } else {
         // youtube
         song->setYoutubeId(ptree.get<string>("id", ""));
@@ -243,6 +270,7 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
           song->setArtist(boost::regex_replace(song->getArtist(), artistTopicRegex, ""));
         }
         date = ptree.get<string>("upload_date", "00000000");
+        song->setExplicitLyrics(isExplicitLyricsFromYouTube(song->getYoutubeId()));
       }
       if (!date.empty() && !!date.compare("null")) {
         try {
