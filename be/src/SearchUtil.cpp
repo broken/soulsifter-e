@@ -116,6 +116,7 @@ struct Atom {
     S_BPM,
     S_TRASHED,
     S_LOW_QUALITY,
+    S_EXPLICIT_LYRICS,
     S_YOUTUBE_ID,
     A_ID,
     A_NAME,
@@ -158,7 +159,7 @@ void splitString(const string& query, vector<string>* atoms) {
 
 bool parse(const string& queryFragment, Atom* atom) {
   atom->clear();
-  boost::regex regex("^(-)?((id|a|artist|t|title|remixer|r|rating|comments|c|curator|e|energy|bpm|trashed|lowq|yt|youtube|aid|n|album|m|mixed|l|label|y|year|month|day|q|query|limit|o|order|orderby|orderBy):)?(<|>)?(=)?(.+)$");
+  boost::regex regex("^(-)?((id|a|artist|t|title|remixer|r|rating|comments|c|curator|e|energy|bpm|trashed|lowq|el|explicit|yt|youtube|aid|n|album|m|mixed|l|label|y|year|month|day|q|query|limit|o|order|orderby|orderBy):)?(<|>)?(=)?(.+)$");
   boost::smatch match;
   if (!boost::regex_match(queryFragment, match, regex)) {
     return false;
@@ -197,6 +198,8 @@ bool parse(const string& queryFragment, Atom* atom) {
       atom->type = Atom::S_TRASHED;
     } else if (!match[3].compare("lowq")) {
       atom->type = Atom::S_LOW_QUALITY;
+    } else if (!match[3].compare("el") || !match[3].compare("explicit")) {
+      atom->type = Atom::S_EXPLICIT_LYRICS;
     } else if (!match[3].compare("yt") || !match[3].compare("youtube")) {
       atom->type = Atom::S_YOUTUBE_ID;
     } else if (!match[3].compare("aid")) {
@@ -297,6 +300,8 @@ string buildQueryPredicate(const string& query, int* limit, int* energy, int* or
       ss << "s.trashed = " << atom.value;
     } else if (atom.type == Atom::S_LOW_QUALITY) {
       ss << "s.lowQuality = " << atom.value;
+    } else if (atom.type == Atom::S_EXPLICIT_LYRICS) {
+      ss << "s.explicitLyrics = " << atom.value;
     } else if (atom.type == Atom::S_YOUTUBE_ID) {
       ss << "ifnull(s.youtubeId,'') = '" << atom.value << "'";
     } else if (atom.type == Atom::A_ID) {
