@@ -428,6 +428,7 @@ void MusicManager::readTagsFromSong(Song* song) {
         if (!tag->album().isEmpty()) song->getAlbum()->setName(trim_copy(tag->album().to8Bit()));
         if (!tag->comment().isEmpty()) song->setComments(trim_copy(tag->comment().to8Bit()));
         if (tag->year() != 0) song->getAlbum()->setReleaseDateYear(tag->year());
+        if (tag->contains("rtng")) song->setExplicitLyrics(tag->item("rtng").toInt() == 1);
       }
       TagService::readId3v2Tag(song);
     }
