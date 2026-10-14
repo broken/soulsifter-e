@@ -13,6 +13,7 @@
 #include <boost/algorithm/string/classification.hpp>
 #include <boost/algorithm/string/replace.hpp>
 #include <boost/algorithm/string/split.hpp>
+#include <boost/algorithm/string/trim.hpp>
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ptree.hpp>
 #include <boost/property_tree/json_parser.hpp>
@@ -53,7 +54,7 @@ string removeSpecialCharsFromFilename(string filepath) {
   std::filesystem::path newPath = path.replace_filename(MusicManager::cleanDirName(path.filename().string()));
   if (!newPath.string().compare(filepath)) return filepath;
 
-  LOG(INFO) << "Renaming '" << filepath << "'' to '" << newPath.string() << "'";
+  LOG(INFO) << "Renaming '" << filepath << "' to '" << newPath.string() << "'";
   try {
       boost::filesystem::path src(filepath);
       boost::filesystem::path dest(newPath.string());
@@ -321,7 +322,7 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
 
   FILE *fpipe;
   stringstream command;
-  command << "cd \"" << mvArtistDir << "\"; yt-dlp " << getMvYtDlpOpts() << url;
+  command << "cd \"" << mvArtistDir << "\"; yt-dlp " << getMvYtDlpOpts() << url << " 2>&1";
   if (!(fpipe = (FILE*)popen(command.str().c_str(), "r"))) {
     LOG(WARNING) << "Problem with yt-dlp pipe.";
     pclose(fpipe);
@@ -335,63 +336,102 @@ MusicVideo* MusicVideoService::associateYouTubeVideo(Song* song, const string& u
     ss << buffer;
   }
 
-  pclose(fpipe);
+  int exitStatus = pclose(fpipe);
+  if (exitStatus != 0) {
+    LOG(WARNING) << "yt-dlp exited with status " << exitStatus;
+  }
 
   string output(ss.str());
   LOG(INFO) << output;
   boost::regex thumbnailRegex("Writing.*thumbnail.*to: (.*)$");
-  boost::regex mp4VideoRegex("Merging formats into \"(.*)mp4\"$");
-  boost::regex mkvVideoRegex("Merging formats into \"(.*)mkv\"$");
-  boost::regex webmVideoRegex("Merging formats into \"(.*)webm\"$");
+  boost::regex mergeVideoRegex("Merging formats into \"?([^\"\\r\\n]+\\.(?:mp4|mkv|webm))\"?");
+  boost::regex destVideoRegex("\\[download\\] Destination: ([^\\r\\n]+\\.(?:mp4|mkv|webm))");
+  boost::regex alreadyDownloadedRegex("\\[download\\] ([^\\r\\n]+\\.(?:mp4|mkv|webm)) has already been downloaded");
   boost::smatch match;
-  string tmpVideoName;
-  bool needsConversion;
+  string mergedVideoFile;
+  string destVideoFile;
+  string alreadyDownloadedFile;
+  string thumbnailFile;
   std::unique_ptr<MusicVideo> musicVideo(new MusicVideo());
   vector<string> lines;
-  boost::split(lines, output, boost::is_any_of("\n"));
+  boost::split(lines, output, boost::is_any_of("\r\n"), boost::token_compress_on);
   for (string line : lines) {
+    boost::trim(line);
     if (boost::regex_search(line, match, thumbnailRegex)) {
-      stringstream ssTn;
-      ssTn << mvArtistDir << "/" << match[1];
-      musicVideo->setThumbnailFilePath(ssTn.str());
-    } else if (boost::regex_search(line, match, mkvVideoRegex)) {
-      stringstream ss;
-      ss << mvArtistDir << "/" << match[1] << "mkv";
-      musicVideo->setFilePath(ss.str());
-      needsConversion = false;
-    } else if (boost::regex_search(line, match, mp4VideoRegex)) {
-      stringstream ss;
-      ss << mvArtistDir << "/" << match[1] << "mp4";
-      musicVideo->setFilePath(ss.str());
-      needsConversion = false;
-    } else if (boost::regex_search(line, match, webmVideoRegex)) {
-      stringstream ss;
-      ss << mvArtistDir << "/" << match[1] << "webm";
-      musicVideo->setFilePath(ss.str());
-      needsConversion = false;
+      thumbnailFile = match[1];
+    } else if (boost::regex_search(line, match, mergeVideoRegex)) {
+      mergedVideoFile = match[1];
+    } else if (boost::regex_search(line, match, alreadyDownloadedRegex)) {
+      alreadyDownloadedFile = match[1];
+    } else if (boost::regex_search(line, match, destVideoRegex)) {
+      destVideoFile = match[1];
     }
   }
-  if (tmpVideoName.empty() && musicVideo->getFilePath().empty()) {
+
+  string videoFile;
+  if (!mergedVideoFile.empty()) {
+    videoFile = mergedVideoFile;
+  } else if (!alreadyDownloadedFile.empty()) {
+    videoFile = alreadyDownloadedFile;
+  } else if (!destVideoFile.empty()) {
+    videoFile = destVideoFile;
+  }
+
+  if (!videoFile.empty()) {
+    boost::filesystem::path fullVideoPath = boost::filesystem::path(mvArtistDir) / videoFile;
+    if (boost::filesystem::exists(fullVideoPath)) {
+      musicVideo->setFilePath(fullVideoPath.string());
+    }
+  }
+
+  if (!thumbnailFile.empty()) {
+    boost::filesystem::path fullThumbPath = boost::filesystem::path(mvArtistDir) / thumbnailFile;
+    if (boost::filesystem::exists(fullThumbPath)) {
+      musicVideo->setThumbnailFilePath(fullThumbPath.string());
+    }
+  }
+
+  // Fallback: if video was not resolved via regex, check if a video file containing the YouTube ID exists in mvArtistDir
+  if (musicVideo->getFilePath().empty()) {
+    boost::regex ytIdRegex("(?:v=|/)([a-zA-Z0-9_-]{11})(?:[&?]|$|/)");
+    boost::smatch ytMatch;
+    if (boost::regex_search(url, ytMatch, ytIdRegex)) {
+      string ytId = ytMatch[1];
+      boost::filesystem::directory_iterator end_it;
+      for (boost::filesystem::directory_iterator it(mvArtistDir); it != end_it; ++it) {
+        string fname = it->path().filename().string();
+        if (fname.find(ytId) != string::npos) {
+          string ext = it->path().extension().string();
+          if (ext == ".mp4" || ext == ".mkv" || ext == ".webm") {
+            musicVideo->setFilePath(it->path().string());
+            break;
+          }
+        }
+      }
+    }
+  }
+
+  // Fallback: if thumbnail file was not found via regex, check for thumbnail matching the video basename
+  if (musicVideo->getThumbnailFilePath().empty() && !musicVideo->getFilePath().empty()) {
+    boost::filesystem::path vPath(musicVideo->getFilePath());
+    boost::filesystem::path jpgPath = vPath;
+    jpgPath.replace_extension(".jpg");
+    boost::filesystem::path webpPath = vPath;
+    webpPath.replace_extension(".webp");
+    boost::filesystem::path pngPath = vPath;
+    pngPath.replace_extension(".png");
+    if (boost::filesystem::exists(jpgPath)) {
+      musicVideo->setThumbnailFilePath(jpgPath.string());
+    } else if (boost::filesystem::exists(webpPath)) {
+      musicVideo->setThumbnailFilePath(webpPath.string());
+    } else if (boost::filesystem::exists(pngPath)) {
+      musicVideo->setThumbnailFilePath(pngPath.string());
+    }
+  }
+
+  if (musicVideo->getFilePath().empty()) {
     LOG(WARNING) << "Did not find music video file from yt-dlp output.";
     return NULL;
-  }
-
-  // We used to convert for Serato, but it is not needed for VirtualDJ
-  // Convert to mp4 from mkv (mostly need audio codec conversion)
-  if (needsConversion) {
-    stringstream ffmpegCmd;
-    ffmpegCmd << "cd \"" << mvArtistDir << "\"; ffmpeg -i '" << tmpVideoName << "mkv' -c:v copy -c:a aac '" << tmpVideoName << "mp4' && rm '" << tmpVideoName << "mkv'";
-    if (!(fpipe = (FILE*)popen(ffmpegCmd.str().c_str(), "r"))) {
-      LOG(WARNING) << "Problem with ffmpeg pipe.";
-      pclose(fpipe);
-      return NULL;
-    }
-    pclose(fpipe);
-
-    // update music video
-    stringstream ssMv;
-    ssMv << mvArtistDir << "/" << tmpVideoName << "mp4";
-    musicVideo->setFilePath(ssMv.str());
   }
 
   // remove special chars from files just in case
