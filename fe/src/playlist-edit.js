@@ -1,5 +1,7 @@
 import { css, html, LitElement } from "lit";
 
+import "@material/mwc-icon";
+import "@material/web/button/outlined-button.js";
 import "@material/web/checkbox/checkbox.js";
 import "@material/web/dialog/dialog.js";
 import "@material/web/textfield/filled-text-field.js";
@@ -7,10 +9,11 @@ import "@material/web/textfield/filled-text-field.js";
 import "./abstract-action-page.js";
 import "./genre-list.js";
 import "./icon-button.js";
+import { AlertsMixin } from "./mixin-alerts-pub.js";
 import "./search-info.js";
 
 
-class PlaylistEdit extends LitElement {
+class PlaylistEdit extends AlertsMixin(LitElement) {
   render() {
     this.spotifySync = !!this.playlist.spotifyId;
     this.youtubeSync = !!this.playlist.youtubeId;
@@ -28,6 +31,11 @@ class PlaylistEdit extends LitElement {
             <label><md-checkbox ?checked="${this.fromSongTrail}" id="trail"></md-checkbox>from Song Trail</label>
             <label><md-checkbox ?checked="${this.spotifySync}" id="spotifySync" disabled></md-checkbox>sync with Spotify</label>
             <label><md-checkbox ?checked="${this.youtubeSync}" id="youtubeSync"></md-checkbox>sync with YouTube</label>
+            <br>
+            <md-outlined-button id="copyGlobalGenresBtn" @click="${this.copyGlobalGenres}">
+              <mwc-icon slot="icon">content_copy</mwc-icon>
+              Copy global genres
+            </md-outlined-button>
           </div>
           <div class="genres">
             <genre-list id="genreList" .genres="${this.genres}"></genre-list>
@@ -80,6 +88,16 @@ class PlaylistEdit extends LitElement {
   disconnectedCallback() {
     window.removeEventListener('playlist-edit', this.openPageListener);
     super.disconnectedCallback();
+  }
+
+  copyGlobalGenres() {
+    const mainGenreList = document.querySelector('soul-sifter')?.shadowRoot?.querySelector('genre-list[main]');
+    if (!mainGenreList) {
+      this.addAlert('Unable to locate main genre list element.', 5);
+      return;
+    }
+    this.genres = [...mainGenreList.genres];
+    this.requestUpdate();
   }
 
   save(e) {
@@ -139,6 +157,14 @@ class PlaylistEdit extends LitElement {
         .genres {
           width: 240px;
           height: 360px;
+        }
+        #copyGlobalGenresBtn {
+          --md-outlined-button-label-text-color: var(--clr);  /* TODO put into theme */
+          --md-outlined-button-outline-color: var(--clr_disabled);  /* TODO put into theme */
+          margin-top: 12px;
+        }
+        #copyGlobalGenresBtn > mwc-icon {
+          color: var(--clr);  /* TODO put into theme */
         }
         .query-container {
           position: relative;
