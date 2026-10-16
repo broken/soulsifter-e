@@ -68,6 +68,13 @@ class GenreList extends GenresMixin(LitElement) {
     }
   }
 
+  _genresChanged(e) {
+    // guard against global genre changes affecting secondary genre lists
+    if (this.main) {
+      this.genresChanged(e.detail);
+    }
+  }
+
   toggleSelection(e) {
     try {
       for (var i = 0; i < this.genres.length; ++i) {
