@@ -87,6 +87,7 @@ namespace soulsifter {
     ptree.put("songList.column.rating", true);
     ptree.put("songList.column.releaseDate", true);
     ptree.put("songList.column.waveform", true);
+    ptree.put("songList.hotkey.triggerPreview", true);
     ptree.put("songList.limit", 128);
     ptree.put("songList.previewStartPercent", 33);
     ptree.put("songList.previewTimeInSec", 10);

@@ -63,6 +63,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <br>
                 <label><md-checkbox ?checked="${this.editAutoAdd}" id="editAutoAdd"></md-checkbox>Auto add music (skip edit dialog)</label>
                 <label><md-checkbox ?checked="${this.editAutoPlay}" id="editAutoPlay"></md-checkbox>Auto play music when editting song</label>
+                <label><md-checkbox ?checked="${this.songListHotkeyTriggerPreview}" id="songListHotkeyTriggerPreview"></md-checkbox>Preview song when scrolling using hotkeys</label>
               </div>
               <div class="fields">
                 <md-filled-text-field label="Database Name" .value=${this.dbName} id="dbName"></md-filled-text-field>
@@ -265,6 +266,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.songListColReleaseDate = this.settings.getBool('songList.column.releaseDate');
     this.songListColSendButtons = this.settings.getBool('songList.column.sendButtons');
     this.songListColWaveform = this.settings.getBool('songList.column.waveform');
+    this.songListHotkeyTriggerPreview = this.settings.getBool('songList.hotkey.triggerPreview');
     this.songListLimit = this.settings.getInt('songList.limit');
     this.songListPreviewStartPercent = this.settings.getInt('songList.previewStartPercent');
     this.songListPreviewTimeInSecs = this.settings.getInt('songList.previewTimeInSec');
@@ -443,6 +445,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.putb('songList.column.releaseDate', this.shadowRoot.getElementById('songListColReleaseDate').checked);
     this.putb('songList.column.sendButtons', this.shadowRoot.getElementById('songListColSendButtons').checked);
     this.putb('songList.column.waveform', this.shadowRoot.getElementById('songListColWaveform').checked);
+    this.putb('songList.hotkey.triggerPreview', this.shadowRoot.getElementById('songListHotkeyTriggerPreview').checked);
     this.puti('songList.limit', Number(this.shadowRoot.getElementById('songListLimit').value));
     this.puti('songList.previewStartPercent', Number(this.shadowRoot.getElementById('songListPreviewStartPercent').value));
     this.puti('songList.previewTimeInSec', Number(this.shadowRoot.getElementById('songListPreviewTimeInSecs').value));

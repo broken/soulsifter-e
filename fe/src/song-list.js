@@ -171,9 +171,11 @@ class SongList extends AlertsMixin(
     if (hotkeyUp === e.code) {
       e.preventDefault();
       this.moveSelection(-1);
+      if (this.settings.getBool('songList.hotkey.triggerPreview')) this.playSongPreview();
     } else if (hotkeyDown === e.code) {
       e.preventDefault();
       this.moveSelection(1);
+      if (this.settings.getBool('songList.hotkey.triggerPreview')) this.playSongPreview();
     } else if (hotkeySelect === e.code) {
       e.preventDefault();
       if (this.midiSelectedListItem) this.midiSelectedListItem.selectSong({});
@@ -573,7 +575,7 @@ class SongList extends AlertsMixin(
     this.midiSelectedListItem.selectSong({});
   }
 
-  playSongPreview(song) {
+  playSongPreview() {
     if (( // does not have separate audio channels, so no safety checks required
           !this.settings.getString('midi.audioOutput.leftName') &&
           !this.settings.getString('midi.audioOutput.rightName')
@@ -592,7 +594,7 @@ class SongList extends AlertsMixin(
       let event = new CustomEvent('audio-preview-song', {
           bubbles: true,
           composed: true,
-          detail: { song: song, pct: startPct, player: this.midiSelectedListItem }
+          detail: { song: this.midiSelectedListItem.song, pct: startPct, player: this.midiSelectedListItem }
       });
       setTimeout(() => this.dispatchEvent(event), 200);  // wait for audio output to switch
     }
@@ -697,7 +699,7 @@ class SongList extends AlertsMixin(
           }
 
           this.moveSelection(diff);
-          this.playSongPreview(this.midiSelectedListItem.song);
+          this.playSongPreview();
         }
     );
   }
