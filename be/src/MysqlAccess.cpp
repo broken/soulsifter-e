@@ -62,10 +62,13 @@ namespace soulsifter {
 
 # pragma mark initialization
 
+std::string MysqlAccess::dbName = "";
+
 MysqlAccess::MysqlAccess() :
 driver(0),
 connection(0),
-preparedStatements() {
+preparedStatements(),
+currentDbName("") {
     connect();
 }
 
@@ -83,7 +86,7 @@ bool MysqlAccess::connect() {
     const std::string url(SoulSifterSettings::getInstance().get<std::string>("db.url"));
     const std::string user(SoulSifterSettings::getInstance().get<std::string>("db.user"));
     const std::string password(SoulSifterSettings::getInstance().get<std::string>("db.password"));
-    const std::string database(SoulSifterSettings::getInstance().get<std::string>("db.name"));
+    const std::string database(dbName.empty() ? SoulSifterSettings::getInstance().get<std::string>("db.name") : dbName);
 
     try {
         driver = get_driver_instance();
@@ -93,6 +96,7 @@ bool MysqlAccess::connect() {
         connection = driver->connect(url, user, password);
         connection->setAutoCommit(1);
         connection->setSchema(database);
+        currentDbName = database;
     } catch (sql::SQLException &e) {
         LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
         LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
@@ -115,15 +119,19 @@ bool MysqlAccess::disconnect() {
     return true;
 }
 
+void MysqlAccess::clearPreparedStatements() {
+    for (const std::pair<const std::string, sql::PreparedStatement*>& entry : preparedStatements) {
+        delete entry.second;
+    }
+    preparedStatements.clear();
+}
+
 bool MysqlAccess::reconnect() {
     try {
-        LOG(INFO) << "Reconnecing a" << (connection->isValid() ? " valid" : "n invalid") << " connection.";
+        LOG(INFO) << "Reconnecting a" << (connection->isValid() ? " valid" : "n invalid") << " connection.";
         disconnect();
         std::this_thread::sleep_for(std::chrono::seconds(1));
-        for (const std::pair<const std::string, sql::PreparedStatement*>& entry : preparedStatements) {
-            delete entry.second;
-        }
-        preparedStatements.clear();
+        clearPreparedStatements();
         connect();
         std::this_thread::sleep_for(std::chrono::seconds(1));
     } catch (sql::SQLException &e) {
@@ -134,8 +142,39 @@ bool MysqlAccess::reconnect() {
     return true;
 }
 
+void MysqlAccess::syncDatabase() {
+    const std::string targetDb = dbName.empty() ? SoulSifterSettings::getInstance().get<std::string>("db.name") : dbName;
+    if (currentDbName != targetDb) {
+        switchDatabase(targetDb);
+    }
+}
+
+bool MysqlAccess::switchDatabase(const std::string& newDbName) {
+    try {
+        dbName = newDbName;
+        currentDbName = newDbName;
+        if (!connection || !connection->isValid()) {
+            if (!reconnect()) return false;
+        } else {
+            clearPreparedStatements();
+            connection->setSchema(newDbName);
+        }
+        LOG(INFO) << "Switched database schema to: " << newDbName;
+        return true;
+    } catch (sql::SQLException &e) {
+        LOG(WARNING) << "ERROR: SQLException switching schema to " << newDbName << ": " << e.what();
+        return false;
+    }
+}
+
+sql::Statement* MysqlAccess::createStatement() {
+    syncDatabase();
+    return connection->createStatement();
+}
+
 sql::PreparedStatement* MysqlAccess::getPreparedStatement(std::string query) {
     try {
+        syncDatabase();
         sql::PreparedStatement *ps;
         std::map<std::string, sql::PreparedStatement*>::iterator it = preparedStatements.find(query);
         if (it == preparedStatements.end()) {

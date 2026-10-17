@@ -42,8 +42,9 @@ public:
     }
 
     bool reconnect();
+    bool switchDatabase(const std::string& dbName);
     sql::PreparedStatement* getPreparedStatement(std::string query);
-    sql::Statement* createStatement() { return connection->createStatement(); }
+    sql::Statement* createStatement();
     int getLastInsertId();
 
 private:
@@ -51,11 +52,16 @@ private:
     MysqlAccess(MysqlAccess const&);
     void operator=(MysqlAccess const&);
 
+    void clearPreparedStatements();
+    void syncDatabase();
+
     bool connect();
     bool disconnect();
     sql::Driver *driver;
     sql::Connection *connection;
     std::map<std::string, sql::PreparedStatement*> preparedStatements;
+    std::string currentDbName;
+    static std::string dbName;
 };
 
 }
