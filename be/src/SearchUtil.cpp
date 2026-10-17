@@ -488,7 +488,7 @@ string buildOptionPredicate(const int bpm, const string& key, const vector<Style
     if (SoulSifterSettings::getInstance().get<bool>("search.includeUnknownKeys")) ss << " or tonicKey is null";
     ss << ")";
   }
-  int pitchPctMax = 8;  // TODO should be a setting
+  int pitchPctMax = SoulSifterSettings::getInstance().get<int>("search.pitchRange");
   int max_bpm = bpm * (100 + pitchPctMax) / 100;
   int min_bpm = bpm * (100 - pitchPctMax) / 100;
   if (max_bpm > 0 && min_bpm > 0) {

@@ -57,6 +57,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
                 <md-filled-text-field label="Energy search difference" .value=${this.energyGap} allowedPattern="[0-9]" preventInvalidInput id="energyGap"></md-filled-text-field></label>
                 <md-filled-text-field label="Preview Time (in secs)" .value=${this.songListPreviewTimeInSecs} id="songListPreviewTimeInSecs"></md-filled-text-field>
                 <md-filled-text-field label="Short Song Warning Limit (in secs)" .value=${this.songListWarningShortSong} id="songListWarningShortSong"></md-filled-text-field>
+                <md-filled-text-field label="Pitch Range for BPM Search (%)" .value=${this.searchPitchRange} allowedPattern="[0-9]*" preventInvalidInput id="searchPitchRange"></md-filled-text-field>
                 <label><md-checkbox ?checked="${this.songListSearchOnSelect}" id="songListSearchOnSelect"></md-checkbox>Automatically search after selecting a song</label>
                 <label><md-checkbox ?checked="${this.includeUnknownKeys}" id="includeUnknownKeys"></md-checkbox>Include unknown keys in key searches</label>
                 <label><md-checkbox ?checked="${this.mvOnDemand}" id="mvOnDemand"></md-checkbox>Fetch music videos on demand</label>
@@ -255,6 +256,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.midiVolumeLinearFactor = this.settings.getString('midi.volume.linearFactor');
     this.midiVolumeValue = this.settings.getString('midi.volume.value');
     this.pathDeno = this.settings.getString('path.deno');
+    this.searchPitchRange = this.settings.getInt('search.pitchRange');
     this.songListColBpm = this.settings.getBool('songList.column.bpm');
     this.songListColBpmShift = this.settings.getBool('songList.column.bpmShift');
     this.songListColComments = this.settings.getBool('songList.column.comments');
@@ -434,6 +436,7 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     this.puts('midi.volume.value', this.shadowRoot.getElementById('midiVolumeValue').value);
     this.putb('mv.on_demand', this.shadowRoot.getElementById('mvOnDemand').checked);
     this.puts('path.deno', this.shadowRoot.getElementById('pathDeno').value);
+    this.puti('search.pitchRange', Number(this.shadowRoot.getElementById('searchPitchRange').value));
     this.putb('songList.column.bpm', this.shadowRoot.getElementById('songListColBpm').checked);
     this.putb('songList.column.bpmShift', this.shadowRoot.getElementById('songListColBpmShift').checked);
     this.putb('songList.column.comments', this.shadowRoot.getElementById('songListColComments').checked);

@@ -74,6 +74,7 @@ namespace soulsifter {
     //ptree.put("midi.volume.value", "");
     ptree.put("mv.on_demand", false);
     //ptree.put("path.deno", "");
+    ptree.put("search.pitchRange", 8);
     ptree.put("search.energyGap", 1);
     ptree.put("search.includeUnknownKeys", true);
     ptree.put("songList.column.bpm", true);
