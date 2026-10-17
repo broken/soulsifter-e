@@ -44,7 +44,7 @@ public:
     bool reconnect();
     bool switchDatabase(const std::string& dbName);
     sql::PreparedStatement* getPreparedStatement(std::string query);
-    sql::Statement* createStatement();
+    sql::Statement* createStatement() { return connection->createStatement(); }
     int getLastInsertId();
 
 private:
@@ -53,7 +53,6 @@ private:
     void operator=(MysqlAccess const&);
 
     void clearPreparedStatements();
-    void syncDatabase();
 
     bool connect();
     bool disconnect();

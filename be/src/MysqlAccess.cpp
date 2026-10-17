@@ -86,7 +86,9 @@ bool MysqlAccess::connect() {
     const std::string url(SoulSifterSettings::getInstance().get<std::string>("db.url"));
     const std::string user(SoulSifterSettings::getInstance().get<std::string>("db.user"));
     const std::string password(SoulSifterSettings::getInstance().get<std::string>("db.password"));
-    const std::string database(dbName.empty() ? SoulSifterSettings::getInstance().get<std::string>("db.name") : dbName);
+    if (currentDbName.empty()) {
+        currentDbName = dbName.empty() ? SoulSifterSettings::getInstance().get<std::string>("db.name") : dbName;
+    }
 
     try {
         driver = get_driver_instance();
@@ -95,8 +97,7 @@ bool MysqlAccess::connect() {
         // create a database connection using the Driver
         connection = driver->connect(url, user, password);
         connection->setAutoCommit(1);
-        connection->setSchema(database);
-        currentDbName = database;
+        connection->setSchema(currentDbName);
     } catch (sql::SQLException &e) {
         LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
         LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
@@ -142,13 +143,6 @@ bool MysqlAccess::reconnect() {
     return true;
 }
 
-void MysqlAccess::syncDatabase() {
-    const std::string targetDb = dbName.empty() ? SoulSifterSettings::getInstance().get<std::string>("db.name") : dbName;
-    if (currentDbName != targetDb) {
-        switchDatabase(targetDb);
-    }
-}
-
 bool MysqlAccess::switchDatabase(const std::string& newDbName) {
     try {
         dbName = newDbName;
@@ -167,14 +161,8 @@ bool MysqlAccess::switchDatabase(const std::string& newDbName) {
     }
 }
 
-sql::Statement* MysqlAccess::createStatement() {
-    syncDatabase();
-    return connection->createStatement();
-}
-
 sql::PreparedStatement* MysqlAccess::getPreparedStatement(std::string query) {
     try {
-        syncDatabase();
         sql::PreparedStatement *ps;
         std::map<std::string, sql::PreparedStatement*>::iterator it = preparedStatements.find(query);
         if (it == preparedStatements.end()) {
