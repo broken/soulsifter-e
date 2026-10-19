@@ -61,8 +61,6 @@ def plural(x)
     return "mixes"
   elsif (x.downcase == "child")
     return "children"
-  elsif (x.downcase == "rexml")
-    return "reXml"
   elsif (x.downcase == "playlistentry")
     return "playlistEntries"
   else
@@ -975,14 +973,6 @@ reSettingFields = [
 reSettingAttribs = 0
 reSettingCustomMethods = "        static void findAll(vector<const RESetting*>* settings);\n\n        string& getValueRef();\n\n"
 reSettingCustomHeaders = ""
-reXmlFields = [
-  [:int, "id", Attrib::FIND],
-  [:string, "name", Attrib::KEY2],
-  [:string, "xml", 0],
-]
-reXmlAttribs = 0
-reXmlCustomMethods = "        string& getXmlRef();\n\n"
-reXmlCustomHeaders = ""
 reAlbumCoverFields = [
   [:int, "id", Attrib::FIND],
   [:string, "reId", Attrib::KEY2],
@@ -1059,12 +1049,6 @@ output << writeHeader("reSetting", reSettingFields, reSettingAttribs, reSettingC
 output.close
 output = File.open("src/RESetting.cpp", "w")
 output << writeCode("reSetting", reSettingFields, reSettingAttribs)
-output.close
-output = File.open("src/REXML.h", "w")
-output << writeHeader("reXml", reXmlFields, reXmlAttribs, reXmlCustomMethods, reXmlCustomHeaders)
-output.close
-output = File.open("src/REXML.cpp", "w")
-output << writeCode("reXml", reXmlFields, reXmlAttribs)
 output.close
 output = File.open("src/REAlbumCover.h", "w")
 output << writeHeader("reAlbumCover", reAlbumCoverFields, reAlbumCoverAttribs, reAlbumCoverCustomMethods, reAlbumCoverCustomHeaders)
