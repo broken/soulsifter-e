@@ -229,7 +229,7 @@ bool TempDbManager::importDirectory(const std::string& dirPath,
   if (dirName.empty()) dirName = "drive";
 
   TempDbSession session;
-  session.dbName = "ss_tmp_" + std::to_string(std::time(nullptr));
+  session.dbName = "ss_tmp_" + std::to_string(std::time(nullptr)) + "_" + std::to_string(nextIdOffsetMultiplier);
   session.dirPath = dirPath;
   session.styleName = "@temp-" + dirName;
   session.idOffset = 10000000 * (nextIdOffsetMultiplier++);
