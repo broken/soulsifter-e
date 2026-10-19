@@ -14,6 +14,7 @@
 
 #include "Album.h"
 #include "AlbumPart.h"
+#include "AudioAnalyzer.h"
 #include "MusicManager.h"
 #include "MysqlAccess.h"
 #include "Song.h"
@@ -151,6 +152,7 @@ int TempDbManager::scanAndIngestFiles(const TempDbSession& session,
       song.setFilepath(filePath.string());
 
       MusicManager::getInstance().readTagsFromSong(&song);
+      if (!song.getDurationInMs()) AudioAnalyzer::analyzeDuration(&song);
 
       // If albumPart has no info, clear it so it doesn't create empty records
       AlbumPart* albumPart = song.getAlbumPart();
