@@ -23,8 +23,6 @@
         "src/Playlist_wrap.cpp",
         "src/PlaylistEntry.cpp",
         "src/PlaylistEntry_wrap.cpp",
-        "src/RESetting.cpp",
-        "src/RESettingHelper.cpp",
         "src/RESong.cpp",
         "src/Song.cpp",
         "src/Song_wrap.cpp",

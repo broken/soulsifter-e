@@ -965,14 +965,6 @@ styleFields = [
 styleAttribs = 0
 styleCustomMethods = "        bool operator<(const Style& style) const;\n        bool operator>(const Style& style) const;\n\n        static ResultSetIterator<Style>* findAllParents();\n        static void findAllSortedByName(vector<Style*>** stylesPtr);\n        static void findAllSortedByREId(vector<Style*>** stylesPtr);\n\n"
 styleCustomHeaders = ""
-reSettingFields = [
-  [:int, "id", Attrib::FIND],
-  [:string, "name", Attrib::KEY2],
-  [:string, "value", 0],
-]
-reSettingAttribs = 0
-reSettingCustomMethods = "        static void findAll(vector<const RESetting*>* settings);\n\n        string& getValueRef();\n\n"
-reSettingCustomHeaders = ""
 
 ######################### write files
 
@@ -1035,10 +1027,4 @@ output << writeHeader("style", styleFields, styleAttribs, styleCustomMethods, st
 output.close
 output = File.open("src/Style.cpp", "w")
 output << writeCode("style", styleFields, styleAttribs)
-output.close
-output = File.open("src/RESetting.h", "w")
-output << writeHeader("reSetting", reSettingFields, reSettingAttribs, reSettingCustomMethods, reSettingCustomHeaders)
-output.close
-output = File.open("src/RESetting.cpp", "w")
-output << writeCode("reSetting", reSettingFields, reSettingAttribs)
 output.close
