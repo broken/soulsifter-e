@@ -236,9 +236,14 @@ bool TempDbManager::importDirectory(const std::string& dirPath,
 
   LOG(INFO) << "Starting temporary import for " << dirPath << " into " << session.dbName;
 
-  createPhysicalTempDb(&session);
-
-  scanAndIngestFiles(session, progressCb);
+  try {
+    createPhysicalTempDb(&session);
+    scanAndIngestFiles(session, progressCb);
+  } catch (...) {
+    dropDatabase(session.dbName);
+    updateDatabaseSchema();
+    throw;
+  }
 
   sessions.push_back(session);
 
