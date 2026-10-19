@@ -32,14 +32,11 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     StaticMethod<&Song::findByYoutubeId>("findByYoutubeId"),
     StaticMethod<&Song::findByYoutubeMusicId>("findByYoutubeMusicId"),
     StaticMethod<&Song::findBySpotifyId>("findBySpotifyId"),
-    StaticMethod<&Song::findByRESongId>("findByRESongId"),
     StaticMethod<&Song::findByDupeId>("findByDupeId"),
     StaticMethod<&Song::findAll>("findAll"),
     InstanceMethod<&Song::update>("update"),
     InstanceMethod<&Song::save>("save"),
     InstanceMethod<&Song::sync>("sync"),
-    // Unable to process createRESongFromSong
-    InstanceMethod<&Song::reAlbum>("reAlbum"),
     InstanceAccessor<&Song::getDateAddedString>("dateAddedString"),
     InstanceMethod<&Song::setDateAddedToNow>("setDateAddedToNow"),
     InstanceMethod<&Song::isTemporary>("isTemporary"),
@@ -65,10 +62,6 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     InstanceAccessor<&Song::getSpotifyId, &Song::setSpotifyId>("spotifyId"),
     InstanceAccessor<&Song::getDurationInMs, &Song::setDurationInMs>("durationInMs"),
     InstanceAccessor<&Song::getCurator, &Song::setCurator>("curator"),
-    InstanceAccessor<&Song::getRESongId, &Song::setRESongId>("rESongId"),
-    // Unable to process getRESong
-    // Unable to process getRESongConst
-    // Unable to process setRESong
     InstanceAccessor<&Song::getAlbumId, &Song::setAlbumId>("albumId"),
     InstanceAccessor<&Song::getAlbum, &Song::setAlbum>("album"),
     // Unable to process getAlbumConst
@@ -295,35 +288,6 @@ Napi::Value Song::findBySpotifyId(const Napi::CallbackInfo& info) {
   }
 }
 
-Napi::Value Song::findByRESongId(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
-    return env.Null();
-  }
-  if (!info[0].IsNumber()) {
-    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return env.Null();
-  }
-  int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  try {
-    dogatech::soulsifter::Song* result =
-        dogatech::soulsifter::Song::findByRESongId(a0);
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Song::NewInstance(env);
-      Song* r = Napi::ObjectWrap<Song>::Unwrap(instance);
-      r->setWrappedValue(result, true);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
 Napi::Value Song::findByDupeId(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   if (info.Length() < 1) {
@@ -412,19 +376,6 @@ Napi::Value Song::sync(const Napi::CallbackInfo& info) {
     bool result =    obj->song->sync();
 
     return Napi::Boolean::New(env, result);
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value Song::reAlbum(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Song* obj = this;
-  try {
-    const string result =    obj->song->reAlbum();
-
-    return Napi::String::New(env, result);
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();
@@ -1177,39 +1128,6 @@ void Song::setCurator(const Napi::CallbackInfo& info, const Napi::Value &value) 
   std::string a0(value.As<Napi::String>().Utf8Value());
   try {
     obj->song->setCurator(a0);
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return;
-  }
-}
-
-Napi::Value Song::getRESongId(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Song* obj = this;
-  try {
-    int result =    obj->song->getRESongId();
-
-    return Napi::Number::New(env, result);
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-void Song::setRESongId(const Napi::CallbackInfo& info, const Napi::Value &value) {
-  Napi::Env env = info.Env();
-  if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
-    return;
-  }
-  Song* obj = this;
-  if (!value.IsNumber()) {
-    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
-    return;
-  }
-  int32_t a0(value.As<Napi::Number>().Int32Value());
-  try {
-    obj->song->setRESongId(a0);
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return;

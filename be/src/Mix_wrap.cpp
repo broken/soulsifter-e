@@ -28,7 +28,6 @@ Napi::Object Mix::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod<&Mix::update>("update"),
     InstanceMethod<&Mix::save>("save"),
     InstanceMethod<&Mix::sync>("sync"),
-    StaticMethod<&Mix::mixoutCountForRESongId>("mixoutCountForRESongId"),
     InstanceAccessor<&Mix::getId, &Mix::setId>("id"),
     InstanceAccessor<&Mix::getOutSongId, &Mix::setOutSongId>("outSongId"),
     InstanceAccessor<&Mix::getOutSong, &Mix::setOutSong>("outSong"),
@@ -258,28 +257,6 @@ Napi::Value Mix::sync(const Napi::CallbackInfo& info) {
     bool result =    obj->mix->sync();
 
     return Napi::Boolean::New(env, result);
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value Mix::mixoutCountForRESongId(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
-    return env.Null();
-  }
-  if (!info[0].IsNumber()) {
-    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return env.Null();
-  }
-  int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  try {
-    int result =
-        dogatech::soulsifter::Mix::mixoutCountForRESongId(a0);
-
-    return Napi::Number::New(env, result);
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return env.Null();

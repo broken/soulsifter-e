@@ -843,7 +843,7 @@ mixFields = [
   [:bool, "addon", 0],
 ]
 mixAttribs = 0
-mixCustomMethods = "        friend class RapidEvolutionDatabaseMixoutsMixoutHandler;\n\n        static int mixoutCountForRESongId(int outSongId);\n\n"
+mixCustomMethods = ""
 musicVideoFields = [
   [:int, "id", Attrib::FIND],
   [:string, "filePath", 0],
@@ -872,44 +872,6 @@ playlistEntryFields = [
   [:int, "position", Attrib::NON_NULLABLE],
 ]
 playlistEntryAttribs = Attrib::DELETABLE
-reSongFields = [
-  [:int, "id", Attrib::FIND],
-  [:string, "songidWinfo", 0],
-  [:string, "songid", Attrib::FIND],
-  [:string, "shortid", 0],
-  [:string, "shortidWinfo", 0],
-  [:string, "artist", 0],
-  [:string, "album", 0],
-  [:string, "track", 0],
-  [:string, "title", 0],
-  [:string, "time", 0],
-  [:string, "timeSignature", 0],
-  [:string, "filename", 0],
-  [:string, "digitalOnly", 0],
-  [:string, "compilation", 0],
-  [:string, "keyStart", 0],
-  [:int, "keyAccuracy", 0],
-  [:string, "bpmStart", 0],
-  [:int, "bpmAccuracy", 0],
-  [:int, "rating", 0],
-  [:string, "dateAdded", 0],
-  [:string, "catalogId", 0],  # custom 4
-  [:string, "label", 0],  # custom 3
-  [:string, "remix", 0],
-  [:int, "numPlays", 0],
-  [:string, "comments", 0],
-  [:string, "releaseDate", 0],  # custom 2
-  [:string, "featuring", 0],  # custom 1
-  [:string, "keyEnd", 0],
-  [:string, "disabled", 0],
-  [:string, "bpmEnd", 0],
-  [:int, "beatIntensity", 0],
-  [:string, "replayGain", 0],
-  [:string, "stylesBitmask", Attrib::TRANSIENT],
-]
-reSongAttribs = Attrib::SAVEID
-reSongCustomMethods = "        friend class RapidEvolutionDatabaseSongsSongHandler;\n\n        static int maxREId();\n        void setStylesBitmaskFromDb();\n\n"
-reSongCustomHeaders = ""
 songFields = [
   [:int, "id", Attrib::FIND],
   [:string, "artist", 0],
@@ -932,8 +894,6 @@ songFields = [
   [:string, "spotifyId", Attrib::FIND],
   [:int, "durationInMs", 0],
   [:string, "curator", 0],
-  [:int, "reSongId", Attrib::KEY2 | Attrib::ID],
-  ["RESong", "reSong", Attrib::PTR],
   [:int, "albumId", Attrib::ID],
   ["Album", "album", Attrib::PTR],
   [:int, "albumPartId", Attrib::ID],
@@ -949,7 +909,7 @@ songFields = [
   [:bool, "explicitLyrics", 0]
 ]
 songAttribs = 0
-songCustomMethods = "        explicit Song(RESong* song);\n\n        static RESong* createRESongFromSong(Song& song);\n\n        const string reAlbum();\n        const string getDateAddedString() const;\n        void setDateAddedToNow();\n        bool isTemporary() const;\n        static bool isTemporaryFilepath(const string& filepath);\n\n"
+songCustomMethods = "        const string getDateAddedString() const;\n        void setDateAddedToNow();\n        bool isTemporary() const;\n        static bool isTemporaryFilepath(const string& filepath);\n\n"
 songCustomHeaders = ""
 styleFields = [
   [:int, "id", Attrib::FIND],
@@ -1009,12 +969,6 @@ output << writeHeader("playlistEntry", playlistEntryFields, playlistEntryAttribs
 output.close
 output = File.open("src/PlaylistEntry.cpp", "w")
 output << writeCode("playlistEntry", playlistEntryFields, playlistEntryAttribs)
-output.close
-output = File.open("src/RESong.h", "w")
-output << writeHeader("reSong", reSongFields, reSongAttribs, reSongCustomMethods, reSongCustomHeaders)
-output.close
-output = File.open("src/RESong.cpp", "w")
-output << writeCode("reSong", reSongFields, reSongAttribs)
 output.close
 output = File.open("src/Song.h", "w")
 output << writeHeader("song", songFields, songAttribs, songCustomMethods, songCustomHeaders)

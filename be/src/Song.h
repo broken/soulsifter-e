@@ -24,7 +24,6 @@ using namespace std;
 namespace dogatech {
 namespace soulsifter {
 
-    class RESong;
     class Album;
     class AlbumPart;
     class MusicVideo;
@@ -45,7 +44,6 @@ namespace soulsifter {
         static Song* findByYoutubeId(const string& youtubeId);
         static Song* findByYoutubeMusicId(const string& youtubeMusicId);
         static Song* findBySpotifyId(const string& spotifyId);
-        static Song* findByRESongId(int reSongId);
         static ResultSetIterator<Song>* findByDupeId(int dupeId);
         static ResultSetIterator<Song>* findAll();
 
@@ -54,11 +52,6 @@ namespace soulsifter {
         // sync with db & return true if object needs saving or updating
         bool sync();
 
-        explicit Song(RESong* song);
-
-        static RESong* createRESongFromSong(Song& song);
-
-        const string reAlbum();
         const string getDateAddedString() const;
         void setDateAddedToNow();
         bool isTemporary() const;
@@ -106,12 +99,6 @@ namespace soulsifter {
         void setDurationInMs(int durationInMs);
         const string& getCurator() const;
         void setCurator(const string& curator);
-        int getRESongId() const;
-        void setRESongId(int reSongId);
-        RESong* getRESong();
-        const RESong* getRESongConst() const;
-        void setRESong(const RESong& reSong);
-        void setRESong(RESong* reSong);  // takes ownership
         int getAlbumId() const;
         void setAlbumId(int albumId);
         Album* getAlbum();
@@ -172,8 +159,6 @@ namespace soulsifter {
         string spotifyId;
         int durationInMs;
         string curator;
-        int reSongId;
-        RESong* reSong;
         int albumId;
         Album* album;
         int albumPartId;

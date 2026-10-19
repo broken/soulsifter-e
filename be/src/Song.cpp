@@ -25,7 +25,6 @@
 #include "AlertsChannel.h"
 #include "MysqlAccess.h"
 #include "DTVectorUtil.h"
-#include "RESong.h"
 #include "Album.h"
 #include "AlbumPart.h"
 #include "MusicVideo.h"
@@ -61,8 +60,6 @@ namespace soulsifter {
     spotifyId(),
     durationInMs(0),
     curator(),
-    reSongId(0),
-    reSong(NULL),
     albumId(0),
     album(NULL),
     albumPartId(0),
@@ -100,8 +97,6 @@ namespace soulsifter {
     spotifyId(song.getSpotifyId()),
     durationInMs(song.getDurationInMs()),
     curator(song.getCurator()),
-    reSongId(song.getRESongId()),
-    reSong(NULL),
     albumId(song.getAlbumId()),
     album(NULL),
     albumPartId(song.getAlbumPartId()),
@@ -115,7 +110,6 @@ namespace soulsifter {
     dupeId(song.getDupeId()),
     dupe(NULL),
     explicitLyrics(song.getExplicitLyrics()) {
-        if (song.reSong) setRESong(*song.reSong);
         if (song.album) setAlbum(*song.album);
         if (song.albumPart) setAlbumPart(*song.albumPart);
         if (song.musicVideo) setMusicVideo(*song.musicVideo);
@@ -144,14 +138,6 @@ namespace soulsifter {
         spotifyId = song.getSpotifyId();
         durationInMs = song.getDurationInMs();
         curator = song.getCurator();
-        reSongId = song.getRESongId();
-        if (!song.getRESongId() && song.reSong) {
-            if (!reSong) reSong = new RESong(*song.reSong);
-            else *reSong = *song.reSong;
-        } else {
-            delete reSong;
-            reSong = NULL;
-        }
         albumId = song.getAlbumId();
         if (!song.getAlbumId() && song.album) {
             if (!album) album = new Album(*song.album);
@@ -192,8 +178,6 @@ namespace soulsifter {
     }
 
     Song::~Song() {
-        delete reSong;
-        reSong = NULL;
         delete album;
         album = NULL;
         delete albumPart;
@@ -227,9 +211,6 @@ namespace soulsifter {
         spotifyId.clear();
         durationInMs = 0;
         curator.clear();
-        reSongId = 0;
-        delete reSong;
-        reSong = NULL;
         albumId = 0;
         delete album;
         album = NULL;
@@ -273,7 +254,6 @@ namespace soulsifter {
         song->setSpotifyId(rs->getString("spotifyId"));
         song->setDurationInMs(rs->getInt("durationInMs"));
         song->setCurator(rs->getString("curator"));
-        song->setRESongId(rs->getInt("reSongId"));
         song->setAlbumId(rs->getInt("albumId"));
         song->setAlbumPartId(rs->getInt("albumPartId"));
         song->setMusicVideoId(rs->getInt("musicVideoId"));
@@ -465,36 +445,6 @@ namespace soulsifter {
         return NULL;
     }
 
-    Song* Song::findByRESongId(int reSongId) {
-        for (int i = 0; i < 2; ++i) {
-            try {
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("select Songs.*, group_concat(distinct(styles.styleId)) as styleIds from Songs left outer join SongStyles styles on Songs.id = styles.songId where ifnull(reSongId,0) = ifnull(?,0) group by Songs.id");
-                if (reSongId > 0) ps->setInt(1, reSongId);
-                else ps->setNull(1, sql::DataType::INTEGER);
-                sql::ResultSet *rs = ps->executeQuery();
-                Song *song = NULL;
-                if (rs->next()) {
-                    song = new Song();
-                    populateFields(rs, song);
-                }
-                rs->close();
-                delete rs;
-
-                return song;
-            } catch (sql::SQLException &e) {
-                LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
-                LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
-                bool reconnected = MysqlAccess::getInstance().reconnect();
-                LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
-                if (i == 1) {
-                    AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
-                    throw e;
-                }
-            }
-        }
-        return NULL;
-    }
-
     ResultSetIterator<Song>* Song::findByDupeId(int dupeId) {
         for (int i = 0; i < 2; ++i) {
             try {
@@ -544,16 +494,6 @@ namespace soulsifter {
     int Song::update() {
         for (int i = 0; i < 2; ++i) {
             try {
-                if (reSong && reSong->sync()) {
-                    if (reSong->getId()) {
-                        reSong->update();
-                    } else {
-                        reSong->save();
-                    }
-                    reSongId = reSong->getId();
-                } else if (!reSongId && reSong) {
-                    reSongId = reSong->getId();
-                }
                 if (album && album->sync()) {
                     if (album->getId()) {
                         album->update();
@@ -595,7 +535,7 @@ namespace soulsifter {
                     dupeId = dupe->getId();
                 }
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Songs set artist=?, track=?, title=?, remixer=?, featuring=?, filepath=?, rating=?, dateAdded=?, bpm=?, tonicKey=?, energy=?, comments=?, trashed=?, lowQuality=?, googleSongId=?, youtubeId=?, youtubeMusicId=?, spotifyId=?, durationInMs=?, curator=?, reSongId=?, albumId=?, albumPartId=?, musicVideoId=?, bpmLock=?, tonicKeyLock=?, dupeId=?, explicitLyrics=? where id=?");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Songs set artist=?, track=?, title=?, remixer=?, featuring=?, filepath=?, rating=?, dateAdded=?, bpm=?, tonicKey=?, energy=?, comments=?, trashed=?, lowQuality=?, googleSongId=?, youtubeId=?, youtubeMusicId=?, spotifyId=?, durationInMs=?, curator=?, albumId=?, albumPartId=?, musicVideoId=?, bpmLock=?, tonicKeyLock=?, dupeId=?, explicitLyrics=? where id=?");
                 if (!artist.empty()) ps->setString(1, artist);
                 else ps->setNull(1, sql::DataType::VARCHAR);
                 if (!track.empty()) ps->setString(2, track);
@@ -632,20 +572,18 @@ namespace soulsifter {
                 else ps->setNull(19, sql::DataType::INTEGER);
                 if (!curator.empty()) ps->setString(20, curator);
                 else ps->setNull(20, sql::DataType::VARCHAR);
-                if (reSongId > 0) ps->setInt(21, reSongId);
+                if (albumId > 0) ps->setInt(21, albumId);
                 else ps->setNull(21, sql::DataType::INTEGER);
-                if (albumId > 0) ps->setInt(22, albumId);
+                if (albumPartId > 0) ps->setInt(22, albumPartId);
                 else ps->setNull(22, sql::DataType::INTEGER);
-                if (albumPartId > 0) ps->setInt(23, albumPartId);
+                if (musicVideoId > 0) ps->setInt(23, musicVideoId);
                 else ps->setNull(23, sql::DataType::INTEGER);
-                if (musicVideoId > 0) ps->setInt(24, musicVideoId);
-                else ps->setNull(24, sql::DataType::INTEGER);
-                ps->setBoolean(25, bpmLock);
-                ps->setBoolean(26, tonicKeyLock);
-                if (dupeId > 0) ps->setInt(27, dupeId);
-                else ps->setNull(27, sql::DataType::INTEGER);
-                ps->setBoolean(28, explicitLyrics);
-                ps->setInt(29, id);
+                ps->setBoolean(24, bpmLock);
+                ps->setBoolean(25, tonicKeyLock);
+                if (dupeId > 0) ps->setInt(26, dupeId);
+                else ps->setNull(26, sql::DataType::INTEGER);
+                ps->setBoolean(27, explicitLyrics);
+                ps->setInt(28, id);
                 int result = ps->executeUpdate();
                 if (!styleIds.empty()) {
                     stringstream ss("insert ignore into SongStyles (songId, styleId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
@@ -693,16 +631,6 @@ namespace soulsifter {
     int Song::save() {
         for (int i = 0; i < 2; ++i) {
             try {
-                if (reSong && reSong->sync()) {
-                    if (reSong->getId()) {
-                        reSong->update();
-                    } else {
-                        reSong->save();
-                    }
-                    reSongId = reSong->getId();
-                } else if (!reSongId && reSong) {
-                    reSongId = reSong->getId();
-                }
                 if (album && album->sync()) {
                     if (album->getId()) {
                         album->update();
@@ -744,7 +672,7 @@ namespace soulsifter {
                     dupeId = dupe->getId();
                 }
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Songs (artist, track, title, remixer, featuring, filepath, rating, dateAdded, bpm, tonicKey, energy, comments, trashed, lowQuality, googleSongId, youtubeId, youtubeMusicId, spotifyId, durationInMs, curator, reSongId, albumId, albumPartId, musicVideoId, bpmLock, tonicKeyLock, dupeId, explicitLyrics) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Songs (artist, track, title, remixer, featuring, filepath, rating, dateAdded, bpm, tonicKey, energy, comments, trashed, lowQuality, googleSongId, youtubeId, youtubeMusicId, spotifyId, durationInMs, curator, albumId, albumPartId, musicVideoId, bpmLock, tonicKeyLock, dupeId, explicitLyrics) values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
                 if (!artist.empty()) ps->setString(1, artist);
                 else ps->setNull(1, sql::DataType::VARCHAR);
                 if (!track.empty()) ps->setString(2, track);
@@ -781,19 +709,17 @@ namespace soulsifter {
                 else ps->setNull(19, sql::DataType::INTEGER);
                 if (!curator.empty()) ps->setString(20, curator);
                 else ps->setNull(20, sql::DataType::VARCHAR);
-                if (reSongId > 0) ps->setInt(21, reSongId);
+                if (albumId > 0) ps->setInt(21, albumId);
                 else ps->setNull(21, sql::DataType::INTEGER);
-                if (albumId > 0) ps->setInt(22, albumId);
+                if (albumPartId > 0) ps->setInt(22, albumPartId);
                 else ps->setNull(22, sql::DataType::INTEGER);
-                if (albumPartId > 0) ps->setInt(23, albumPartId);
+                if (musicVideoId > 0) ps->setInt(23, musicVideoId);
                 else ps->setNull(23, sql::DataType::INTEGER);
-                if (musicVideoId > 0) ps->setInt(24, musicVideoId);
-                else ps->setNull(24, sql::DataType::INTEGER);
-                ps->setBoolean(25, bpmLock);
-                ps->setBoolean(26, tonicKeyLock);
-                if (dupeId > 0) ps->setInt(27, dupeId);
-                else ps->setNull(27, sql::DataType::INTEGER);
-                ps->setBoolean(28, explicitLyrics);
+                ps->setBoolean(24, bpmLock);
+                ps->setBoolean(25, tonicKeyLock);
+                if (dupeId > 0) ps->setInt(26, dupeId);
+                else ps->setNull(26, sql::DataType::INTEGER);
+                ps->setBoolean(27, explicitLyrics);
                 int saved = ps->executeUpdate();
                 if (!saved) {
                     LOG(WARNING) << "Not able to save song";
@@ -837,10 +763,6 @@ namespace soulsifter {
     bool Song::sync() {
         Song* song = findById(id);
         if (!song) {
-            if (!reSongId && reSong) {
-                reSong->sync();
-                reSongId = reSong->getId();
-            }
             if (!albumId && album) {
                 album->sync();
                 albumId = album->getId();
@@ -858,7 +780,6 @@ namespace soulsifter {
                 dupeId = dupe->getId();
             }
         }
-        if (!song) song = findByRESongId(getRESongId());
         if (!song) return true;
 
         // check fields
@@ -949,11 +870,6 @@ namespace soulsifter {
             LOG(INFO) << "updating song " << id << " curator from " << song->getCurator() << " to " << curator;
             needsUpdate = true;
         }
-        if (reSongId != song->getRESongId()) {
-            LOG(INFO) << "updating song " << id << " reSongId from " << song->getRESongId() << " to " << reSongId;
-            needsUpdate = true;
-        }
-        if (reSong) needsUpdate |= reSong->sync();
         if (albumId != song->getAlbumId()) {
             LOG(INFO) << "updating song " << id << " albumId from " << song->getAlbumId() << " to " << albumId;
             needsUpdate = true;
@@ -1058,35 +974,6 @@ namespace soulsifter {
 
     const string& Song::getCurator() const { return curator; }
     void Song::setCurator(const string& curator) { this->curator = curator; }
-
-    int Song::getRESongId() const {
-        return (!reSongId && reSong) ? reSong->getId() : reSongId;
-    }
-    void Song::setRESongId(const int reSongId) {
-        this->reSongId = reSongId;
-        delete reSong;
-        reSong = NULL;
-    }
-
-    RESong* Song::getRESong() {
-        if (!reSong && reSongId) {
-            reSong = RESong::findById(reSongId);
-        }
-        return reSong;
-    }
-    const RESong* Song::getRESongConst() const {
-        return (!reSong && reSongId) ? RESong::findById(reSongId) : reSong;
-    }
-    void Song::setRESong(const RESong& reSong) {
-        this->reSongId = reSong.getId();
-        delete this->reSong;
-        this->reSong = new RESong(reSong);
-    }
-    void Song::setRESong(RESong* reSong) {
-        this->reSongId = reSong ? reSong->getId() : 0;
-        delete this->reSong;
-        this->reSong = reSong;
-    }
 
     int Song::getAlbumId() const {
         return (!albumId && album) ? album->getId() : albumId;

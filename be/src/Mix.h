@@ -45,10 +45,6 @@ namespace soulsifter {
         // sync with db & return true if object needs saving or updating
         bool sync();
 
-        friend class RapidEvolutionDatabaseMixoutsMixoutHandler;
-
-        static int mixoutCountForRESongId(int outSongId);
-
         int getId() const;
         void setId(int id);
         int getOutSongId() const;

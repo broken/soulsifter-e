@@ -24,7 +24,6 @@ class Mix : public Napi::ObjectWrap<Mix> {
   Napi::Value update(const Napi::CallbackInfo& info);
   Napi::Value save(const Napi::CallbackInfo& info);
   Napi::Value sync(const Napi::CallbackInfo& info);
-  static Napi::Value mixoutCountForRESongId(const Napi::CallbackInfo& info);
   Napi::Value getId(const Napi::CallbackInfo& info);
   void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getOutSongId(const Napi::CallbackInfo& info);

@@ -22,14 +22,11 @@ class Song : public Napi::ObjectWrap<Song> {
   static Napi::Value findByYoutubeId(const Napi::CallbackInfo& info);
   static Napi::Value findByYoutubeMusicId(const Napi::CallbackInfo& info);
   static Napi::Value findBySpotifyId(const Napi::CallbackInfo& info);
-  static Napi::Value findByRESongId(const Napi::CallbackInfo& info);
   static Napi::Value findByDupeId(const Napi::CallbackInfo& info);
   static Napi::Value findAll(const Napi::CallbackInfo& info);
   Napi::Value update(const Napi::CallbackInfo& info);
   Napi::Value save(const Napi::CallbackInfo& info);
   Napi::Value sync(const Napi::CallbackInfo& info);
-  // Unable to process createRESongFromSong
-  Napi::Value reAlbum(const Napi::CallbackInfo& info);
   Napi::Value getDateAddedString(const Napi::CallbackInfo& info);
   void setDateAddedToNow(const Napi::CallbackInfo& info);
   Napi::Value isTemporary(const Napi::CallbackInfo& info);
@@ -76,11 +73,6 @@ class Song : public Napi::ObjectWrap<Song> {
   void setDurationInMs(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getCurator(const Napi::CallbackInfo& info);
   void setCurator(const Napi::CallbackInfo& info, const Napi::Value &value);
-  Napi::Value getRESongId(const Napi::CallbackInfo& info);
-  void setRESongId(const Napi::CallbackInfo& info, const Napi::Value &value);
-  // Unable to process getRESong
-  // Unable to process getRESongConst
-  // Unable to process setRESong
   Napi::Value getAlbumId(const Napi::CallbackInfo& info);
   void setAlbumId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getAlbum(const Napi::CallbackInfo& info);
