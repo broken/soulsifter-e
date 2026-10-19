@@ -362,7 +362,11 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     data['songList.column.waveform'] = this.shadowRoot.getElementById('songListColWaveform').checked;
 
     let el = this.shadowRoot.getElementById('songListItem');
-    el.settings = new MockSettings(data);
+    Object.defineProperty(el, 'settings', {
+      value: new MockSettings(data),
+      configurable: true,
+      writable: true
+    });
     el.requestUpdate();
   }
 

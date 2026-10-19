@@ -1,9 +1,6 @@
-class VirtualDjClient extends Object {
-
-  constructor() {
-    super();
-    this.settings = new ss.SoulSifterSettings();
-  }
+import { SettingsMixin } from "./mixin-settings.js";
+ 
+class VirtualDjClient extends SettingsMixin(Object) {
 
   send(command, callback=undefined) {
     console.log(`Sending VDJ command: ${command}`)
