@@ -379,7 +379,10 @@ MusicManager::~MusicManager() {
 
 void MusicManager::readTagsFromSong(Song* song) {
     if (!boost::algorithm::iends_with(song->getFilepath(), ".mp3") &&
-        !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
+        !boost::algorithm::iends_with(song->getFilepath(), ".mp4") &&
+        !boost::algorithm::iends_with(song->getFilepath(), ".m4a") &&
+        !boost::algorithm::iends_with(song->getFilepath(), ".aac") &&
+        !boost::algorithm::iends_with(song->getFilepath(), ".alac")) {
       LOG(WARNING) << "can only read id3v2 tags from mpeg files: " << song->getFilepath();
       return;
     }
