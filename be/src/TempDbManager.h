@@ -60,15 +60,14 @@ public:
 
   const std::vector<TempDbSession>& getActiveSessions() const { return sessions; }
   bool hasActiveTempDbs() const { return !sessions.empty(); }
-
-  const std::string& getUnifiedDbName() const { return unifiedDbName; }
+  void updateDatabaseSchema();
 
 private:
   TempDbManager();
   TempDbManager(const TempDbManager&) = delete;
   TempDbManager& operator=(const TempDbManager&) = delete;
 
-  bool createPhysicalTempDb(TempDbSession* session);
+  void createPhysicalTempDb(TempDbSession* session);
   bool dropDatabase(const std::string& dbName);
   bool rebuildUnifiedViews();
   int scanAndIngestFiles(const TempDbSession& session, std::function<void(float)> progressCb);

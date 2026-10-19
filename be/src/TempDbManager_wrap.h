@@ -22,7 +22,7 @@ class TempDbManager : public Napi::ObjectWrap<TempDbManager> {
   void cleanOrphanedTempDatabases(const Napi::CallbackInfo& info);
   Napi::Value getActiveSessions(const Napi::CallbackInfo& info);
   Napi::Value hasActiveTempDbs(const Napi::CallbackInfo& info);
-  Napi::Value getUnifiedDbName(const Napi::CallbackInfo& info);
+  void updateDatabaseSchema(const Napi::CallbackInfo& info);
 
   static Napi::FunctionReference* constructor;
   dogatech::soulsifter::TempDbManager* tempdbmanager;

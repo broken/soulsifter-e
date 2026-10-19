@@ -21,7 +21,7 @@ Napi::Object TempDbManager::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod<&TempDbManager::cleanOrphanedTempDatabases>("cleanOrphanedTempDatabases"),
     InstanceAccessor<&TempDbManager::getActiveSessions>("activeSessions"),
     InstanceMethod<&TempDbManager::hasActiveTempDbs>("hasActiveTempDbs"),
-    InstanceAccessor<&TempDbManager::getUnifiedDbName>("unifiedDbName"),
+    InstanceMethod<&TempDbManager::updateDatabaseSchema>("updateDatabaseSchema"),
   });
 
   constructor = new Napi::FunctionReference();
@@ -189,16 +189,14 @@ Napi::Value TempDbManager::hasActiveTempDbs(const Napi::CallbackInfo& info) {
   }
 }
 
-Napi::Value TempDbManager::getUnifiedDbName(const Napi::CallbackInfo& info) {
+void TempDbManager::updateDatabaseSchema(const Napi::CallbackInfo& info) {
   Napi::Env env = info.Env();
   TempDbManager* obj = this;
   try {
-    const std::string& result =    obj->tempdbmanager->getUnifiedDbName();
-
-    return Napi::String::New(env, result);
+    obj->tempdbmanager->updateDatabaseSchema();
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
+    return;
   }
 }
 

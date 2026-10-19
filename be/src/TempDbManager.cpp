@@ -46,7 +46,19 @@ TempDbManager::TempDbManager() : nextIdOffsetMultiplier(1) {
 }
 
 TempDbManager::~TempDbManager() {
-  ejectAll();
+  // for (const auto& s : sessions) {
+  //   dropDatabase(s.dbName);
+  // }
+  // sessions.clear();
+  // dropDatabase(unifiedDbName);
+}
+
+void TempDbManager::updateDatabaseSchema() {
+  if (sessions.empty()) {
+    MysqlAccess::getInstance().switchDatabase(SoulSifterSettings::getInstance().get<std::string>("db.name"));
+  } else {
+    MysqlAccess::getInstance().switchDatabase(unifiedDbName);
+  }
 }
 
 bool TempDbManager::dropDatabase(const std::string& dbName) {
@@ -74,7 +86,7 @@ void TempDbManager::cleanOrphanedTempDatabases() {
   }
 }
 
-bool TempDbManager::createPhysicalTempDb(TempDbSession* session) {
+void TempDbManager::createPhysicalTempDb(TempDbSession* session) {
   try {
     std::unique_ptr<sql::Statement> stmt(MysqlAccess::getInstance().createStatement());
     stmt->execute("CREATE DATABASE `" + session->dbName + "`");
@@ -94,13 +106,12 @@ bool TempDbManager::createPhysicalTempDb(TempDbSession* session) {
     Style tempStyle;
     tempStyle.setName(session->styleName);
     tempStyle.setDescription("Temporary import for " + session->dirPath);
-    int styleId = tempStyle.save();
-    session->styleId = styleId;
-
-    return true;
+    if (!tempStyle.save() || tempStyle.getId() <= 0) {
+      throw std::runtime_error("Failed to save temporary style: " + session->styleName);
+    }
+    session->styleId = tempStyle.getId();
   } catch (sql::SQLException& e) {
-    LOG(WARNING) << "Failed to create physical temp db " << session->dbName << ": " << e.what();
-    return false;
+    throw std::runtime_error("Failed to create physical temp db " + session->dbName + ": " + e.what());
   }
 }
 
@@ -225,10 +236,7 @@ bool TempDbManager::importDirectory(const std::string& dirPath,
 
   LOG(INFO) << "Starting temporary import for " << dirPath << " into " << session.dbName;
 
-  if (!createPhysicalTempDb(&session)) {
-    LOG(WARNING) << "Failed to create temp database for session";
-    return false;
-  }
+  createPhysicalTempDb(&session);
 
   scanAndIngestFiles(session, progressCb);
 

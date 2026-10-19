@@ -56,6 +56,13 @@ const createWindow = () => {
   // and load the index.html of the app.
   mainWindow.loadFile('build/index.html')
 
+  // Clean any leftover temp databases from past sessions or crashes
+  try {
+    new ss.TempDbManager().cleanOrphanedTempDatabases();
+  } catch (err) {
+    console.warn('Failed to clean orphaned temp databases on startup:', err);
+  }
+
   // Open the DevTools.
   if (!app.isPackaged) {
     mainWindow.webContents.openDevTools();
@@ -817,6 +824,14 @@ const updateAlert = (event, id, progress = undefined, a = undefined, timeoutInSe
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
+
+app.on('will-quit', () => {
+  try {
+    new ss.TempDbManager().ejectAll();
+  } catch (err) {
+    console.warn('Error during TempDbManager.ejectAll on quit:', err);
+  }
+});
 
 // In this file you can include the rest of your app's specific main process
 // code. You can also put them in separate files and require them here.

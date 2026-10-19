@@ -60,6 +60,8 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
         <options-menu-item @click="${this.openCommonMultiplesAlert}">Show Common Multiples</options-menu-item>
         <options-menu-item @click="${this.connectToMidiController}">Connect to Midi controller</options-menu-item>
         <options-menu-item @click="${this.disconnectMidiController}">Disconnect from Midi controller</options-menu-item>
+        <options-menu-item @click="${this.importTempDirectory}">Import Temporary Directory</options-menu-item>
+        ${this.hasActiveTempDbs ? html`<options-menu-item @click="${this.ejectTempLibraries}">Eject Temporary Libraries (${this.activeTempLibs.length})</options-menu-item>` : ''}
         <options-menu-item @click="${this.openHotkeysInfoDialog}">Show Keyboard Shortcuts (?)</options-menu-item>
         <options-menu-item @click="${this.openAboutPageDialog}">About</options-menu-item>
         ${debugMode ? html`<options-menu-item @click="${this.showDevTools}">View Developer Tools</options-menu-item>` : ''}
@@ -81,6 +83,8 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
 
   static get properties() {
     return {
+      hasActiveTempDbs: { type: Boolean },
+      activeTempLibs: { type: Array },
     }
   }
 
@@ -91,6 +95,9 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
     this.lastTap = Date.now();
     this.volume = 100;
     this.mouseCoordAlertId = undefined;
+    this.tempDbManager = new ss.TempDbManager();
+    this.hasActiveTempDbs = this.tempDbManager.hasActiveTempDbs();
+    this.activeTempLibs = this.tempDbManager.activeSessions;
   }
 
   connectedCallback() {
@@ -162,6 +169,45 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
        this.updateAlert(alertId, p);
       }
     });
+  }
+
+  async importTempDirectory(e) {
+    const { ipcRenderer } = window.require('electron');
+    const result = await ipcRenderer.invoke('opendialog', 'Select Directory for Temporary Import', '', ['openDirectory']);
+    if (result.canceled || !result.filePaths || result.filePaths.length === 0) return;
+
+    const dirPath = result.filePaths[0];
+    const pathParts = dirPath.split(/[/\\]/);
+    const dirName = pathParts[pathParts.length - 1] || 'drive';
+
+    const msg = `Temporarily importing directory "${dirName}"...`;
+    const alertId = this.addAlert(msg, 0, -1);
+
+    this.tempDbManager.importDirectory(dirPath, (err, ok, p) => {
+      if (!!err) {
+        this.updateAlert(alertId, -1, '[failed] ' + msg + ' :: ' + err);
+      } else if (ok !== null && ok !== undefined) {
+        this.updateAlert(alertId, 1, `[done] Temporary import complete: "${dirName}"`, 5);
+        this.hasActiveTempDbs = this.tempDbManager.hasActiveTempDbs();
+        this.activeTempLibs = this.tempDbManager.activeSessions;
+        this.tempDbManager.updateDatabaseSchema();
+        let event = new CustomEvent('update-genres', { });
+        window.dispatchEvent(event);
+        this.requestUpdate();
+      } else {
+        this.updateAlert(alertId, p);
+      }
+    });
+  }
+
+  ejectTempLibraries(e) {
+    this.tempDbManager.ejectAll();
+    this.hasActiveTempDbs = this.tempDbManager.hasActiveTempDbs();
+    this.activeTempLibs = this.tempDbManager.activeSessions;
+    this.tempDbManager.updateDatabaseSchema();
+    let event = new CustomEvent('update-genres', { });
+    window.dispatchEvent(event);
+    this.requestUpdate();
   }
 
   showDevTools(e) {
