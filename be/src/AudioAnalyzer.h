@@ -31,8 +31,6 @@ namespace dogatech {
 
     class AudioAnalyzer {
     public:
-      static const Keys* analyzeKey(Song* song);
-
       static std::vector<double> analyzeBpm(Song* song);
       static std::future<std::vector<double>> analyzeBpmAsync(Song* song);
       static void analyzeBpms();
@@ -42,6 +40,9 @@ namespace dogatech {
 
     private:
       static JobQueue<std::vector<double>> job_queue;
+
+      // This has been unused, so making private since my confidence in it is low.
+      static const Keys* analyzeKey(Song* song);
     };
 
   }

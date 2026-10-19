@@ -16,7 +16,6 @@ void AudioAnalyzer::setWrappedValue(dogatech::soulsifter::AudioAnalyzer* v, bool
 
 Napi::Object AudioAnalyzer::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "AudioAnalyzer", {
-    // Unable to process analyzeKey
     StaticMethod<&AudioAnalyzer::analyzeBpm>("analyzeBpm"),
     StaticMethod<&AudioAnalyzer::analyzeBpmAsync>("analyzeBpmAsync"),
     StaticMethod<&AudioAnalyzer::analyzeBpms>("analyzeBpms"),
