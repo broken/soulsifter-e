@@ -951,7 +951,7 @@ songFields = [
   [:bool, "explicitLyrics", 0]
 ]
 songAttribs = 0
-songCustomMethods = "        explicit Song(RESong* song);\n\n        static RESong* createRESongFromSong(Song& song);\n\n        const string reAlbum();\n        const string getDateAddedString() const;\n        void setDateAddedToNow();\n\n"
+songCustomMethods = "        explicit Song(RESong* song);\n\n        static RESong* createRESongFromSong(Song& song);\n\n        const string reAlbum();\n        const string getDateAddedString() const;\n        void setDateAddedToNow();\n        bool isTemporary() const;\n        static bool isTemporaryFilepath(const string& filepath);\n\n"
 songCustomHeaders = ""
 styleFields = [
   [:int, "id", Attrib::FIND],

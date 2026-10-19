@@ -42,6 +42,8 @@ Napi::Object Song::Init(Napi::Env env, Napi::Object exports) {
     InstanceMethod<&Song::reAlbum>("reAlbum"),
     InstanceAccessor<&Song::getDateAddedString>("dateAddedString"),
     InstanceMethod<&Song::setDateAddedToNow>("setDateAddedToNow"),
+    InstanceMethod<&Song::isTemporary>("isTemporary"),
+    StaticMethod<&Song::isTemporaryFilepath>("isTemporaryFilepath"),
     InstanceAccessor<&Song::getId, &Song::setId>("id"),
     InstanceAccessor<&Song::getArtist, &Song::setArtist>("artist"),
     InstanceAccessor<&Song::getTrack, &Song::setTrack>("track"),
@@ -450,6 +452,41 @@ void Song::setDateAddedToNow(const Napi::CallbackInfo& info) {
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return;
+  }
+}
+
+Napi::Value Song::isTemporary(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  Song* obj = this;
+  try {
+    bool result =    obj->song->isTemporary();
+
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
+  }
+}
+
+Napi::Value Song::isTemporaryFilepath(const Napi::CallbackInfo& info) {
+  Napi::Env env = info.Env();
+  if (info.Length() < 1) {
+    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  if (!info[0].IsString()) {
+    Napi::TypeError::New(env, "TypeError: String expected (for info[0])").ThrowAsJavaScriptException();
+    return env.Null();
+  }
+  std::string a0(info[0].As<Napi::String>().Utf8Value());
+  try {
+    bool result =
+        dogatech::soulsifter::Song::isTemporaryFilepath(a0);
+
+    return Napi::Boolean::New(env, result);
+  } catch (const std::exception& e) {
+    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
+    return env.Null();
   }
 }
 

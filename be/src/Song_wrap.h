@@ -32,6 +32,8 @@ class Song : public Napi::ObjectWrap<Song> {
   Napi::Value reAlbum(const Napi::CallbackInfo& info);
   Napi::Value getDateAddedString(const Napi::CallbackInfo& info);
   void setDateAddedToNow(const Napi::CallbackInfo& info);
+  Napi::Value isTemporary(const Napi::CallbackInfo& info);
+  static Napi::Value isTemporaryFilepath(const Napi::CallbackInfo& info);
   Napi::Value getId(const Napi::CallbackInfo& info);
   void setId(const Napi::CallbackInfo& info, const Napi::Value &value);
   Napi::Value getArtist(const Napi::CallbackInfo& info);

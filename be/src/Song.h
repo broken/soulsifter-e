@@ -61,6 +61,8 @@ namespace soulsifter {
         const string reAlbum();
         const string getDateAddedString() const;
         void setDateAddedToNow();
+        bool isTemporary() const;
+        static bool isTemporaryFilepath(const string& filepath);
 
         int getId() const;
         void setId(int id);

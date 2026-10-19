@@ -111,6 +111,20 @@ namespace soulsifter {
     const string Song::getDateAddedString() const { return stringFromTime(dateAdded); }
     void Song::setDateAddedToNow() { dateAdded = time(0); }
 
+    bool Song::isTemporary() const {
+        return isTemporaryFilepath(filepath);
+    }
+
+    bool Song::isTemporaryFilepath(const string& filepath) {
+        if (filepath.empty()) return false;
+        // In SoulSifter, permanent collection songs are stored as paths relative
+        // to dir.music. Any absolute path (starting with / or a Windows drive letter)
+        // indicates a temporary or externally imported song.
+        if (filepath[0] == '/') return true;
+        if (filepath.length() >= 2 && filepath[1] == ':') return true;
+        return false;
+    }
+
     RESong* Song::createRESongFromSong(Song& song) {
         RESong* re = new RESong();
         re->setId(0);
