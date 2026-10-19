@@ -193,6 +193,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
         this.tempDbManager.updateDatabaseSchema();
         let event = new CustomEvent('update-genres', { });
         window.dispatchEvent(event);
+        this.requestSearch();
         this.requestUpdate();
       } else {
         this.updateAlert(alertId, p);
@@ -207,6 +208,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
     this.tempDbManager.updateDatabaseSchema();
     let event = new CustomEvent('update-genres', { });
     window.dispatchEvent(event);
+    this.requestSearch();
     this.requestUpdate();
   }
 
