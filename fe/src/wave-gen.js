@@ -51,7 +51,9 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
   async startProcessing(filepath) {
     while (!!filepath) {
       try {
-        let fullFilepath = this.settings.getString('dir.music') + filepath;
+        let fullFilepath = this.path.isAbsolute(filepath)
+          ? filepath
+          : this.path.join(this.settings.getString('dir.music'), filepath);
         let waveformFilepath = this.getFullWaveformFilepath(filepath);
 
         let exists = false;
