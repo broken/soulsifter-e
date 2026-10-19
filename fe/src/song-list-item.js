@@ -8,7 +8,7 @@ import { SettingsMixin } from "./mixin-settings.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 import { } from "./star-rating.js";
 
-const { exec } = window.nodeAPI;
+const { exec, path } = window.nodeAPI;
 
 
 class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(WaveformUtilMixin(LitElement)))) {
@@ -20,7 +20,8 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
     }
     let comments = !this.settings.getBool('songList.column.comments') ? '' :
                    isShort ? html`${baseComment} <span class="warn">(Short)</span>` : baseComment;
-    let bgImg = 'background-image: url("file://' + this.settings.getString('dir.music') + this.song.album.coverFilepath + '")';
+    const coverPath = this.song.album.coverFilepath ? path.join(this.settings.getString('dir.music'), this.song.album.coverFilepath) : '';
+    let bgImg = coverPath ? 'background-image: url("file://' + coverPath + '")' : '';
     let waveforms = '';
     if (this.settings.getBool('songList.column.waveform')) {
       let wfImg = 'mask-image:url("';

@@ -289,7 +289,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
 
       // waveform not cached - so generate it
       // first, wait for the stems file to exist
-      const fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(path.dirname(this.currentFilepath)) + path.basename(this.currentFilepath) + '.vdjstems';
+      const fullFilepath = path.join(this.settings.getString('dir.vdjStems'), this.getDirChecksumAndSuffix(path.dirname(this.currentFilepath)), path.basename(this.currentFilepath) + '.vdjstems');
       let stemsFileExists = false;
       const startTime = Date.now();
       console.log(`Waiting for stems file to exist: ${fullFilepath}`);

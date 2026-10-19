@@ -9,7 +9,11 @@
 
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
 
-let audioMixin = (superClass) => class extends superClass {
+import { SettingsMixin } from './mixin-settings.js';
+
+const { path } = window.nodeAPI;
+
+let audioMixin = (superClass) => class extends SettingsMixin(superClass) {
 
   constructor() {
     super();
@@ -95,7 +99,7 @@ let audioMixin = (superClass) => class extends superClass {
     this._audioPrevSongFilepath = filepath;
     if (!!this._audioPlayer && 'audioUnload' in this._audioPlayer) this._audioPlayer.audioUnload();
     // TODO audio source; use local, otherwise contact google api
-    filepath = filepath.charAt(0) === '/' ? filepath : this.settings.getString('dir.music') + filepath;
+    filepath = path.isAbsolute(filepath) ? filepath : path.join(this.settings.getString('dir.music'), filepath);
     this.src = 'file://' + filepath;
     this.audio.src = this.src;
     await new Promise((resolve) => {

@@ -17,6 +17,8 @@ import { SongMixin } from "./mixin-song.js";
 import { SongTrailMixin } from "./mixin-song-trail.js";
 import { midiManager } from "./midi-manager.js";
 
+const { ipcRenderer, path } = window.nodeAPI;
+
 
 class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchOptionsMixin(SettingsMixin(SongEditMixin(SongMixin(SongTrailMixin(LitElement)))))))) {
   render() {
@@ -162,7 +164,8 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
     if (this.clearCache) this.songTrailCache = [];
     this.clearCache = true;
     if (this.settings.getBool('app.debug')) this.shadowRoot.getElementById('videoUrlInput').value = '';
-    this.setCoverImage(this.settings.getString('dir.music') + this.song.album.coverFilepath);
+    const coverPath = this.song.album.coverFilepath ? path.join(this.settings.getString('dir.music'), this.song.album.coverFilepath) : '';
+    this.setCoverImage(coverPath);
     this.setMusicVideo(this.song.musicVideo);
     if (this.autoplay) {
       this.autoplay = false;
@@ -243,7 +246,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
     this.musicVideo = mv;
     var url = '';
     if (!!mv && !!mv.thumbnailFilePath) {
-      url = 'url("file://' + this.settings.getString('dir.mv') + mv.thumbnailFilePath + '")';
+      url = 'url("file://' + path.join(this.settings.getString('dir.mv'), mv.thumbnailFilePath) + '")';
     }
     this.shadowRoot.getElementById('musicVideoThumbnail').style.backgroundImage = url;
   }
@@ -276,8 +279,8 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
 
   dragMusicVideo(e) {
     e.preventDefault();
-    let filepath = this.settings.getString('dir.mv') + this.song.musicVideo.filePath;
-    let iconpath = this.settings.getString('dir.mv') + this.song.musicVideo.thumbnailFilePath;
+    let filepath = path.join(this.settings.getString('dir.mv'), this.song.musicVideo.filePath);
+    let iconpath = this.song.musicVideo.thumbnailFilePath ? path.join(this.settings.getString('dir.mv'), this.song.musicVideo.thumbnailFilePath) : '';
     ipcRenderer.send('ondragstart', filepath, iconpath);
   }
 
@@ -323,7 +326,8 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
   updateEditedSong(id) {
     if (this.song.id == id) {
       this.song = ss.Song.findById(id);
-      this.setCoverImage(this.settings.getString('dir.music') + this.song.album.coverFilepath);
+      const coverPath = this.song.album.coverFilepath ? path.join(this.settings.getString('dir.music'), this.song.album.coverFilepath) : '';
+      this.setCoverImage(coverPath);
       this.setMusicVideo(this.song.musicVideo);
     }
   }

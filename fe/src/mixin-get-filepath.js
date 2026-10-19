@@ -1,20 +1,25 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
 
-let getFilepathMixin = (superClass) => class extends superClass {
+import { SettingsMixin } from './mixin-settings.js';
+
+const { ipcRenderer, path } = window.nodeAPI;
+
+let getFilepathMixin = (superClass) => class extends SettingsMixin(superClass) {
 
   async getFilepathAndIconpath(song, useStems, mvRestrict) {
     let filepath = '';
     let iconpath = '';
     if (mvRestrict && song.musicVideo && song.musicVideo.filePath) {
-      filepath = this.settings.getString('dir.mv') + song.musicVideo.filePath;
-      iconpath = this.settings.getString('dir.mv') + song.musicVideo.thumbnailFilePath;
+      filepath = path.join(this.settings.getString('dir.mv'), song.musicVideo.filePath);
+      iconpath = path.join(this.settings.getString('dir.mv'), song.musicVideo.thumbnailFilePath);
     } else {
-      filepath = this.settings.getString('dir.music') + song.filepath;
-      iconpath = this.settings.getString('dir.music') + song.album.coverFilepath;
-      if (useStems && !this.settings.getBool('virtualdj.active')) {
-        let stemFilepath = this.settings.getString('dir.stems') + song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
+      filepath = path.isAbsolute(song.filepath) ? song.filepath : path.join(this.settings.getString('dir.music'), song.filepath);
+      iconpath = song.album.coverFilepath ? (path.isAbsolute(song.album.coverFilepath) ? song.album.coverFilepath : path.join(this.settings.getString('dir.music'), song.album.coverFilepath)) : '';
+      if (useStems && !this.settings.getBool('virtualdj.active') && !song.isTemporary()) {
+        const stemRelPath = song.filepath.replace(/\.[^.]+$/, '.stem.m4a');
+        const stemFilepath = path.join(this.settings.getString('dir.stems'), stemRelPath);
         try {
-          let exists = await ipcRenderer.invoke('existsfilepath', stemFilepath);
+          const exists = await ipcRenderer.invoke('existsfilepath', stemFilepath);
           if (exists) {
             filepath = stemFilepath;
           }

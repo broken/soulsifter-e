@@ -268,9 +268,9 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     // TODO this whole section should move to MusicService
     if (this.changedSongFile && !!this.editedSong.id) {
       // remove current song (copied to /var/tmp)
-      let currentSongFilepath = this.settings.getString('dir.music') + this.song.filepath;
+      let currentSongFilepath = path.join(this.settings.getString('dir.music'), this.song.filepath);
       let albumFilepath = path.dirname(this.song.filepath);
-      let rmToTmpFilename = '/var/tmp/' + path.basename(this.song.filepath);
+      let rmToTmpFilename = path.join('/var/tmp', path.basename(this.song.filepath));
       try {
         fs.renameSync(currentSongFilepath, rmToTmpFilename);
         console.log('Renamed ' + currentSongFilepath + ' to ' + rmToTmpFilename);
@@ -280,12 +280,12 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
       }
       // copy new file to current albumFilepaths location
       let basename = ss.MusicService.cleanDirName(path.basename(this.editedSong.filepath));
-      let newpath = this.settings.getString('dir.music') + albumFilepath + '/' + basename;
+      let newpath = path.join(this.settings.getString('dir.music'), albumFilepath, basename);
       if (newpath != this.editedSong.filepath) {
         fs.renameSync(this.editedSong.filepath, newpath);
         console.log('Renamed ' + this.editedSong.filepath + ' to ' + newpath);
       }
-      this.editedSong.filepath = albumFilepath + '/' + basename;
+      this.editedSong.filepath = path.join(albumFilepath, basename);
     }
 
     if (this.editedSong.id) {
@@ -339,7 +339,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.sterilizeSong(this.editedSong);
     if (!!this.editedSong.album.basicGenre) this.basicGenreName = this.editedSong.album.basicGenre.name;
     else this.basicGenreName = '';
-    this.shadowRoot.getElementById('cover').style.backgroundImage = 'url("file://' + this.settings.getString('dir.music') + this.editedSong.album.coverFilepath + '")';
+    const coverPath = this.editedSong.album.coverFilepath ? path.join(this.settings.getString('dir.music'), this.editedSong.album.coverFilepath) : '';
+    this.shadowRoot.getElementById('cover').style.backgroundImage = coverPath ? 'url("file://' + coverPath + '")' : '';
     this.changedAlbumCover = false;
     this.changedSongFile = false;
     // this does not seem to play well when working straight on the array object
@@ -490,7 +491,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   }
 
   changeCoverFile() {
-    let editedSongFilepath = this.settings.getString('dir.music') + path.dirname(this.editedSong.filepath);
+    let editedSongFilepath = path.join(this.settings.getString('dir.music'), path.dirname(this.editedSong.filepath));
     ipcRenderer.invoke('opendialog', 'Album Cover', editedSongFilepath, ['openFile'])
     .then((file) => {
       if (!file.canceled) {
@@ -503,7 +504,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   }
 
   changeSongFile() {
-    let editedSongFilepath = this.settings.getString('dir.music') + path.dirname(this.editedSong.filepath);
+    let editedSongFilepath = path.join(this.settings.getString('dir.music'), path.dirname(this.editedSong.filepath));
     ipcRenderer.invoke('opendialog', 'Song Path', editedSongFilepath, ['openFile'])
     .then((file) => {
       if (!file.canceled) {

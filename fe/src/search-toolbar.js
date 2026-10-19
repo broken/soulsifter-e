@@ -20,7 +20,7 @@ import "./options-menu-item.js";
 import "./search-info.js";
 import "./search-options.js";
 
-const { ipcRenderer, webUtils } = window.nodeAPI;
+const { ipcRenderer, path, webUtils } = window.nodeAPI;
 
 
 class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement))))))) {
@@ -182,8 +182,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
     if (result.canceled || !result.filePaths || result.filePaths.length === 0) return;
 
     const dirPath = result.filePaths[0];
-    const pathParts = dirPath.split(/[/\\]/);
-    const dirName = pathParts[pathParts.length - 1] || 'drive';
+    const dirName = path.basename(dirPath) || 'drive';
 
     const msg = `Temporarily importing directory "${dirName}"...`;
     const alertId = this.addAlert(msg, 0, -1);
