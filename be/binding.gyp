@@ -58,6 +58,8 @@
         "src/MysqlAccess.h",
         "src/MysqlAccess.cpp",
         "src/ResultSetIterator.h",
+        "src/TempDbManager.cpp",
+        "src/TempDbManager_wrap.cpp",
         # util
         "src/AlertsChannel.cpp",
         "src/AlertsChannel_wrap.cpp",

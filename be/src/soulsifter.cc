@@ -24,6 +24,7 @@
 #include "StdoutFileSink.h"
 #include "Style_wrap.h"
 #include "TagService_wrap.h"
+#include "TempDbManager_wrap.h"
 
 Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   // first init the logging
@@ -65,6 +66,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   NewSongManager::Init(env, exports);
   SearchUtil::Init(env, exports);
   TagService::Init(env, exports);
+  TempDbManager::Init(env, exports);
 
   // not auto-generated
   SoulSifterSettings::Init(env, exports);
