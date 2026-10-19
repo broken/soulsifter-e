@@ -973,14 +973,6 @@ reSettingFields = [
 reSettingAttribs = 0
 reSettingCustomMethods = "        static void findAll(vector<const RESetting*>* settings);\n\n        string& getValueRef();\n\n"
 reSettingCustomHeaders = ""
-reAlbumCoverFields = [
-  [:int, "id", Attrib::FIND],
-  [:string, "reId", Attrib::KEY2],
-  [:string, "thumbnail", 0],
-]
-reAlbumCoverAttribs = 0
-reAlbumCoverCustomMethods = ""
-reAlbumCoverCustomHeaders = ""
 
 ######################### write files
 
@@ -1049,10 +1041,4 @@ output << writeHeader("reSetting", reSettingFields, reSettingAttribs, reSettingC
 output.close
 output = File.open("src/RESetting.cpp", "w")
 output << writeCode("reSetting", reSettingFields, reSettingAttribs)
-output.close
-output = File.open("src/REAlbumCover.h", "w")
-output << writeHeader("reAlbumCover", reAlbumCoverFields, reAlbumCoverAttribs, reAlbumCoverCustomMethods, reAlbumCoverCustomHeaders)
-output.close
-output = File.open("src/REAlbumCover.cpp", "w")
-output << writeCode("reAlbumCover", reAlbumCoverFields, reAlbumCoverAttribs)
 output.close

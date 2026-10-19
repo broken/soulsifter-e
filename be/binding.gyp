@@ -23,7 +23,6 @@
         "src/Playlist_wrap.cpp",
         "src/PlaylistEntry.cpp",
         "src/PlaylistEntry_wrap.cpp",
-        "src/REAlbumCover.cpp",
         "src/RESetting.cpp",
         "src/RESettingHelper.cpp",
         "src/RESong.cpp",
