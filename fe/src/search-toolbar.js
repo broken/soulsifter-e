@@ -103,6 +103,11 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
   connectedCallback() {
     super.connectedCallback();
     window.addEventListener('register-midi-callbacks', this.registerMidiCallbacks.bind(this));
+    window.addEventListener('beforeunload', () => {
+      if (this.tempDbManager.hasActiveTempDbs()) {
+        this.tempDbManager.ejectAll();
+      }
+    });
   }
 
   requestSearch(e) {

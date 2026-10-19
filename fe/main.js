@@ -827,9 +827,11 @@ app.on('window-all-closed', () => {
 
 app.on('will-quit', () => {
   try {
-    new ss.TempDbManager().ejectAll();
+    const mgr = new ss.TempDbManager();
+    mgr.ejectAll();
+    mgr.cleanOrphanedTempDatabases();
   } catch (err) {
-    console.warn('Error during TempDbManager.ejectAll on quit:', err);
+    console.warn('Error during TempDbManager cleanup on quit:', err);
   }
 });
 
