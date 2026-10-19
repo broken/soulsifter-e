@@ -1,5 +1,4 @@
-// Modules to control application life and create native browser window
-const { app, clipboard, dialog, BrowserWindow, WebContentsView, ipcMain, nativeImage } = require('electron');
+const { app, clipboard, dialog, BrowserWindow, WebContentsView, ipcMain, nativeImage, screen } = require('electron');
 const fs = require('fs');
 const path = require('path');
 
@@ -33,19 +32,126 @@ const isDev = process.env.IS_DEV === 'true';
 let alertsChannel = new ss.AlertsChannel();
 let mainWindow = undefined;
 
+const DEFAULT_WIDTH = 1680;
+const DEFAULT_HEIGHT = 530;
+
+function fitBoundsToDisplays(bounds) {
+  let { x, y, width, height } = bounds;
+  const displays = screen.getAllDisplays();
+  const primaryDisplay = screen.getPrimaryDisplay();
+
+  // Find the display that contains or intersects the bounds
+  let targetDisplay = displays.find(d => {
+    const wa = d.workArea;
+    return (
+      x < wa.x + wa.width &&
+      x + width > wa.x &&
+      y < wa.y + wa.height &&
+      y + height > wa.y
+    );
+  });
+
+  // If not visible on any connected display (e.g. monitor unplugged), fallback to primary display
+  if (!targetDisplay) {
+    targetDisplay = primaryDisplay;
+    x = targetDisplay.workArea.x;
+    y = targetDisplay.workArea.y;
+  }
+
+  const { workArea } = targetDisplay;
+  const newWidth = Math.min(width, workArea.width);
+  const newHeight = Math.min(height, workArea.height);
+  const newX = Math.max(workArea.x, Math.min(x, workArea.x + workArea.width - newWidth));
+  const newY = Math.max(workArea.y, Math.min(y, workArea.y + workArea.height - newHeight));
+
+  return { x: newX, y: newY, width: newWidth, height: newHeight };
+}
+
+function getInitialWindowBounds() {
+  const settings = new ss.SoulSifterSettings();
+  const hasSavedBounds = Boolean(settings.getString('window.width'));
+
+  let width = hasSavedBounds ? settings.getInt('window.width') : DEFAULT_WIDTH;
+  let height = hasSavedBounds ? settings.getInt('window.height') : DEFAULT_HEIGHT;
+  let x = hasSavedBounds ? settings.getInt('window.x') : 0;
+  let y = hasSavedBounds ? settings.getInt('window.y') : 0;
+
+  if (width <= 0) width = DEFAULT_WIDTH;
+  if (height <= 0) height = DEFAULT_HEIGHT;
+
+  return fitBoundsToDisplays({ x, y, width, height });
+}
+
+let saveStateTimeout = null;
+
+const getWindowBoundsToSave = () => {
+  if (!mainWindow || mainWindow.isDestroyed() || mainWindow.isMinimized()) {
+    return null;
+  }
+  if (mainWindow.isMaximized() || mainWindow.isFullScreen()) {
+    if (typeof mainWindow.getNormalBounds === 'function') {
+      return mainWindow.getNormalBounds();
+    }
+  }
+  return mainWindow.getBounds();
+};
+
+const saveWindowState = () => {
+  const bounds = getWindowBoundsToSave();
+  if (!bounds) return;
+  try {
+    const settings = new ss.SoulSifterSettings();
+    settings.putInt('window.width', bounds.width);
+    settings.putInt('window.height', bounds.height);
+    settings.putInt('window.x', bounds.x);
+    settings.putInt('window.y', bounds.y);
+    settings.save();
+  } catch (err) {
+    console.error('Failed to save window state:', err);
+  }
+};
+
+const queueSaveWindowState = () => {
+  if (saveStateTimeout) clearTimeout(saveStateTimeout);
+  saveStateTimeout = setTimeout(saveWindowState, 1500);
+};
+
+const ensureWindowVisibleAndFitted = () => {
+  if (!mainWindow || mainWindow.isDestroyed()) return;
+  const currentBounds = mainWindow.getBounds();
+  const fitted = fitBoundsToDisplays(currentBounds);
+
+  if (
+    fitted.width !== currentBounds.width ||
+    fitted.height !== currentBounds.height ||
+    fitted.x !== currentBounds.x ||
+    fitted.y !== currentBounds.y
+  ) {
+    mainWindow.setBounds(fitted);
+  }
+};
+
 const createWindow = () => {
-  // Create the browser window.
+  // Create the browser window with restored bounds or defaults adjusted to the active monitor.
+  const initialBounds = getInitialWindowBounds();
   mainWindow = new BrowserWindow({
-    width: 1680,
-    height: 530,
-    x: 0,
-    y: 0,
+    width: initialBounds.width,
+    height: initialBounds.height,
+    x: initialBounds.x,
+    y: initialBounds.y,
     icon: path.join(__dirname, 'soulsifter.icns'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       nodeIntegration: true,
       contextIsolation: false
     }
+  });
+
+  mainWindow.on('resize', queueSaveWindowState);
+  mainWindow.on('move', queueSaveWindowState);
+  mainWindow.on('close', () => {
+    if (saveStateTimeout) clearTimeout(saveStateTimeout);
+    saveWindowState();
   });
 
   // add alert callback for main context
@@ -139,16 +245,18 @@ const createWindow = () => {
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.whenReady().then(() => {
-  createWindow()
+  createWindow();
+
+  screen.on('display-removed', ensureWindowVisibleAndFitted);
+  screen.on('display-metrics-changed', ensureWindowVisibleAndFitted);
 
   app.on('activate', () => {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (BrowserWindow.getAllWindows().length === 0) createWindow()
-  })
-})
+    if (BrowserWindow.getAllWindows().length === 0) createWindow();
+  });
+});
 
 var ss_img = nativeImage.createFromPath(path.join(__dirname, 'resources/soulsifter.png')).resize({width: 50, quality: 'best'});
 ipcMain.on('ondragstart', (event, filepath, icon) => {
@@ -824,6 +932,11 @@ const updateAlert = (event, id, progress = undefined, a = undefined, timeoutInSe
 app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') app.quit()
 })
+
+app.on('before-quit', () => {
+  if (saveStateTimeout) clearTimeout(saveStateTimeout);
+  saveWindowState();
+});
 
 app.on('will-quit', () => {
   try {

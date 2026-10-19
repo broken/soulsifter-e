@@ -103,6 +103,10 @@ namespace soulsifter {
     ptree.put("virtualdj.port", 80);
     ptree.put("virtualdj.waveform.audioScale", 2048);
     ptree.put("virtualdj.waveform.pixelBeatDistance", 115);
+    ptree.put("window.height", 530);
+    ptree.put("window.width", 1680);
+    ptree.put("window.x", 0);
+    ptree.put("window.y", 0);
 
     // TODO settings file stored in other OS place
     boost::filesystem::path settingsDir = boost::filesystem::path(getenv("HOME")) / "Library" / "Application Support" / "SoulSifter";
