@@ -1,8 +1,7 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
 import { SettingsMixin } from './mixin-settings.js';
 
-const os = window.require('os');
-const path = window.require('path');
+const { os, path } = window.nodeAPI;
 
 let waveformUtilMixin = (superClass) => class extends SettingsMixin(superClass) {
 

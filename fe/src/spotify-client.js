@@ -1,5 +1,7 @@
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 
+const { express, SpotifyWebApi } = window.nodeAPI;
+
 class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
 
   constructor() {
@@ -10,9 +12,6 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
     this.logged_in = false;
     this.access_token = null;
 
-    this.express = window.require('express'); // Express web server framework
-
-    var SpotifyWebApi = window.require('spotify-web-api-node');
     // credentials are optional
     this.spotifyApi = new SpotifyWebApi({
       clientId: settings.getString('spotify.clientId'),
@@ -69,7 +68,7 @@ class SpotifyClient extends AlertsMixin(Object) {  // TODO show errors
 
   _authorize() {
     // set up auth listener
-    let app = this.express();
+    let app = express();
     app.get('/', (req, res) => { res.send('o hai') });
     console.log('Listening on 8888');
     this.server = app.listen(8888);

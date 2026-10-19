@@ -34,6 +34,8 @@ import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 import { } from "./song-list-item.js";
 
+const { exec, ipcRenderer } = window.nodeAPI;
+
 class SongList extends AlertsMixin(
                        BpmMixin(
                        GenresMixin(
@@ -541,8 +543,6 @@ class SongList extends AlertsMixin(
 
     ipcRenderer.send('ss-focus');
 
-    const util = window.require('util');
-    const exec = util.promisify(window.require('child_process').exec);
     const easing = this.settings.getInt('dragAndDrop.easing');
     const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
 
@@ -602,8 +602,6 @@ class SongList extends AlertsMixin(
     
 
   registerMidiCallbacks() {
-    const util = window.require('util');
-    const exec = util.promisify(window.require('child_process').exec);
     midiManager.registerInput(
         this.settings.getString('midi.audioOutput.left'),
         async e => {

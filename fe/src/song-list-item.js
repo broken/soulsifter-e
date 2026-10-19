@@ -8,6 +8,8 @@ import { SettingsMixin } from "./mixin-settings.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 import { } from "./star-rating.js";
 
+const { exec } = window.nodeAPI;
+
 
 class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(WaveformUtilMixin(LitElement)))) {
   render() {
@@ -233,8 +235,6 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
   }
 
   dragSongTo(x, y) {
-    const util = window.require('util');
-    const exec = util.promisify(window.require('child_process').exec);
     const easing = this.settings.getInt('dragAndDrop.easing');
     const wait = this.settings.getInt('dragAndDrop.waitTimeInMs');
 

@@ -20,6 +20,8 @@ import "./options-menu-item.js";
 import "./search-info.js";
 import "./search-options.js";
 
+const { ipcRenderer, webUtils } = window.nodeAPI;
+
 
 class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement))))))) {
   render() {
@@ -142,7 +144,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
 
   dropCreateSongButton(e) {
     e.preventDefault();
-    const { webUtils } = window.require('electron');
     this.shadowRoot.getElementById('createSongButton').icon = 'add_circle';
     var files = e.dataTransfer.files;
     var filepaths = new Array();
@@ -177,7 +178,6 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
   }
 
   async importTempDirectory(e) {
-    const { ipcRenderer } = window.require('electron');
     const result = await ipcRenderer.invoke('opendialog', 'Select Directory for Temporary Import', '', ['openDirectory']);
     if (result.canceled || !result.filePaths || result.filePaths.length === 0) return;
 
@@ -283,7 +283,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
 
   addSongsFromFeedly(e) {
     let job = async () => {
-      const axios = window.require("axios");
+      const { axios } = window.nodeAPI;
       let urlBase = 'https://cloud.feedly.com';
       let userId = this.settings.getString('feedly.userId');
       let devToken = this.settings.getString('feedly.devToken');

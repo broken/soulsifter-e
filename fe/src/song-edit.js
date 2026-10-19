@@ -14,6 +14,8 @@ import "./icon-button.js";
 import "./options-menu-item.js";
 import "./options-menu-input.js";
 
+const { fs, path, ipcRenderer } = window.nodeAPI;
+
 
 class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   render() {
@@ -194,9 +196,6 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.changedSongFile = false;
     this.genres = [];
     this.basicGenreList = ss.BasicGenre.findAll();
-    // used for moving cover files
-    this.fs = window.require('fs');
-    this.path = window.require('path');
     // Dummy values for rendering
     this.taggedSong = new ss.Song();
     this.sterilizeSong(this.taggedSong);
@@ -270,20 +269,20 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     if (this.changedSongFile && !!this.editedSong.id) {
       // remove current song (copied to /var/tmp)
       let currentSongFilepath = this.settings.getString('dir.music') + this.song.filepath;
-      let albumFilepath = this.path.dirname(this.song.filepath);
-      let rmToTmpFilename = '/var/tmp/' + this.path.basename(this.song.filepath);
+      let albumFilepath = path.dirname(this.song.filepath);
+      let rmToTmpFilename = '/var/tmp/' + path.basename(this.song.filepath);
       try {
-        this.fs.renameSync(currentSongFilepath, rmToTmpFilename);
+        fs.renameSync(currentSongFilepath, rmToTmpFilename);
         console.log('Renamed ' + currentSongFilepath + ' to ' + rmToTmpFilename);
       } catch(err) {
         console.warn('Unable to remove file because I probably cannot find it.');
         console.warn(err);
       }
       // copy new file to current albumFilepaths location
-      let basename = ss.MusicService.cleanDirName(this.path.basename(this.editedSong.filepath));
+      let basename = ss.MusicService.cleanDirName(path.basename(this.editedSong.filepath));
       let newpath = this.settings.getString('dir.music') + albumFilepath + '/' + basename;
       if (newpath != this.editedSong.filepath) {
-        this.fs.renameSync(this.editedSong.filepath, newpath);
+        fs.renameSync(this.editedSong.filepath, newpath);
         console.log('Renamed ' + this.editedSong.filepath + ' to ' + newpath);
       }
       this.editedSong.filepath = albumFilepath + '/' + basename;
@@ -491,7 +490,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   }
 
   changeCoverFile() {
-    let editedSongFilepath = this.settings.getString('dir.music') + this.path.dirname(this.editedSong.filepath);
+    let editedSongFilepath = this.settings.getString('dir.music') + path.dirname(this.editedSong.filepath);
     ipcRenderer.invoke('opendialog', 'Album Cover', editedSongFilepath, ['openFile'])
     .then((file) => {
       if (!file.canceled) {
@@ -504,7 +503,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   }
 
   changeSongFile() {
-    let editedSongFilepath = this.settings.getString('dir.music') + this.path.dirname(this.editedSong.filepath);
+    let editedSongFilepath = this.settings.getString('dir.music') + path.dirname(this.editedSong.filepath);
     ipcRenderer.invoke('opendialog', 'Song Path', editedSongFilepath, ['openFile'])
     .then((file) => {
       if (!file.canceled) {

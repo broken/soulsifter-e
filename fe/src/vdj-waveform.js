@@ -10,6 +10,9 @@ import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { KeyboardMixin } from "./mixin-keyboard.js";
 import { SettingsMixin } from "./mixin-settings.js";
 
+const { fs, os, path, exec } = window.nodeAPI;
+const fsp = fs.promises;
+
 
 class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) {
   render() {
@@ -69,11 +72,6 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       }
     };
     this.registerMidiCallbacksListener = e => this.registerMidiCallbacks();
-    this.fs = window.require('fs').promises;
-    this.os = window.require('os');
-    this.path = window.require('path');
-    const util = window.require('util');
-    this.exec = util.promisify(window.require('child_process').exec);
     this.displayTime = 0;
     this.duration = 0;
     this.isPlaying = false;
@@ -291,13 +289,13 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
 
       // waveform not cached - so generate it
       // first, wait for the stems file to exist
-      const fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(this.path.dirname(this.currentFilepath)) + this.path.basename(this.currentFilepath) + '.vdjstems';
+      const fullFilepath = this.settings.getString('dir.vdjStems') + this.getDirChecksumAndSuffix(path.dirname(this.currentFilepath)) + path.basename(this.currentFilepath) + '.vdjstems';
       let stemsFileExists = false;
       const startTime = Date.now();
       console.log(`Waiting for stems file to exist: ${fullFilepath}`);
       while (Date.now() - startTime < 60000) {
         try {
-          await this.fs.access(fullFilepath);
+          await fsp.access(fullFilepath);
           stemsFileExists = true;
           break;
         } catch (err) {
@@ -309,8 +307,8 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       }
 
       // unpack stem file
-      const tmpPath = await this.fs.mkdtemp(this.path.join(this.os.tmpdir(), 'ss-stems-'));
-      await this.exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/0.m4a -map 0:a:1 -c copy ${tmpPath}/1.m4a -map 0:a:2 -c copy ${tmpPath}/2.m4a -map 0:a:3 -c copy ${tmpPath}/3.m4a -map 0:a:4 -c copy ${tmpPath}/4.m4a`);
+      const tmpPath = await fsp.mkdtemp(path.join(os.tmpdir(), 'ss-stems-'));
+      await exec(`yes y | ffmpeg -i "${fullFilepath}" -map 0:a:0 -c copy ${tmpPath}/0.m4a -map 0:a:1 -c copy ${tmpPath}/1.m4a -map 0:a:2 -c copy ${tmpPath}/2.m4a -map 0:a:3 -c copy ${tmpPath}/3.m4a -map 0:a:4 -c copy ${tmpPath}/4.m4a`);
 
       // write out each stem separately
       for (let i = 0; i < 5; i++) {
@@ -347,7 +345,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
       this.updateWrapperAnimation();
 
       // Clean up temp directory
-      await this.exec(`rm -rf "${tmpPath}"`);
+      await exec(`rm -rf "${tmpPath}"`);
 
     } catch (error) {
       this.addAlert('WaveformData failed creating waveform: ' + error, 8);
@@ -432,7 +430,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
     try {
       for (let i = 0; i < 5; i++) {
         const cacheFile = this.getWaveformCacheFilepath(originalSubpath, i);
-        const waveformData = await this.fs.readFile(cacheFile);
+        const waveformData = await fsp.readFile(cacheFile);
         this.waveforms[i] = WaveformData.create(waveformData.buffer);
         this.renderWaveform(i);
       }
@@ -447,8 +445,8 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
     try {
       // Save waveform data as arraybuffer
       const cacheFile = this.getWaveformCacheFilepath(originalSubpath, stemIndex);
-      await this.fs.mkdir(this.path.dirname(cacheFile), { recursive: true });
-      await this.fs.writeFile(cacheFile, Buffer.from(waveformData));
+      await fsp.mkdir(path.dirname(cacheFile), { recursive: true });
+      await fsp.writeFile(cacheFile, Buffer.from(waveformData));
       console.log(`Saved waveform cache: ${cacheFile}`);
     } catch (error) {
       console.warn('Error saving waveform cache: ', error);
@@ -546,7 +544,7 @@ class VDJWaveform extends AlertsMixin(KeyboardMixin(SettingsMixin(LitElement))) 
 
   getWaveformCacheFilepath(songFilepath, stemIndex) {
     const cacheDir = this.settings.getString('dir.vdjStemWaveforms');
-    return this.path.join(cacheDir, songFilepath.replace(/\.[^.]+$/, `_stem${stemIndex}_scale${this.audioScale}_amp${this.audioAmplitudeScale}_wf.data`));
+    return path.join(cacheDir, songFilepath.replace(/\.[^.]+$/, `_stem${stemIndex}_scale${this.audioScale}_amp${this.audioAmplitudeScale}_wf.data`));
   }
 
   static get styles() {

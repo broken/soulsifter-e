@@ -4,6 +4,8 @@ import "./icon-button.js";
 import WaveSurfer from 'wavesurfer.js';
 import { SettingsMixin } from "./mixin-settings.js";
 
+const { fs } = window.nodeAPI;
+
 
 class WavePlayer extends SettingsMixin(LitElement) {
   render() {
@@ -36,7 +38,6 @@ class WavePlayer extends SettingsMixin(LitElement) {
 
   constructor() {
     super();
-    this.fs = window.require('fs');
     this.duration = 1;
     this.currentTime = 0;
     this.prevSongId = 0;
@@ -76,7 +77,7 @@ class WavePlayer extends SettingsMixin(LitElement) {
       this.prevSongFilepath = this.song.filepath;
       // audio source; use local, otherwise contact google api
       let filepath = this.song.filepath.charAt(0) === '/' ? this.song.filepath : this.settings.getString('dir.music') + this.song.filepath;
-      let promiseAccess = (filepath) => new Promise((resolve) => this.fs.access(filepath, this.fs.F_OK | this.fs.R_OK, resolve));
+      let promiseAccess = (filepath) => new Promise((resolve) => fs.access(filepath, fs.constants.F_OK | fs.constants.R_OK, resolve));
       let err = await promiseAccess(filepath);
       if (!err) {
         this.src = 'file://' + filepath;

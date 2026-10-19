@@ -7,6 +7,8 @@ import { SettingsMixin } from "./mixin-settings.js";
 import { WaveGenQueueMixin } from "./mixin-wave-gen-queue.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
 
+const { fs, path } = window.nodeAPI;
+
 
 class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMixin(LitElement)))) {
   render() {
@@ -23,8 +25,6 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
 
   constructor() {
     super();
-    this.fs = window.require('fs');
-    this.path = window.require('path');
     this.isWavesurferProcessing = false;
   }
 
@@ -51,16 +51,16 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
   async startProcessing(filepath) {
     while (!!filepath) {
       try {
-        let fullFilepath = this.path.isAbsolute(filepath)
+        let fullFilepath = path.isAbsolute(filepath)
           ? filepath
-          : this.path.join(this.settings.getString('dir.music'), filepath);
+          : path.join(this.settings.getString('dir.music'), filepath);
         let waveformFilepath = this.getFullWaveformFilepath(filepath);
 
         let exists = false;
         const startTime = Date.now();
         while (Date.now() - startTime < 60000) {
           try {
-            await this.fs.promises.access(fullFilepath, this.fs.constants.F_OK | this.fs.constants.R_OK);
+            await fs.promises.access(fullFilepath, fs.constants.F_OK | fs.constants.R_OK);
             exists = true;
             break;
           } catch (err) {
@@ -68,18 +68,18 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
           }
         }
         if (!exists) {
-          await this.fs.promises.access(fullFilepath, this.fs.constants.F_OK | this.fs.constants.R_OK);
+          await fs.promises.access(fullFilepath, fs.constants.F_OK | fs.constants.R_OK);
         }
 
         await this.wavesurfer.load(fullFilepath);
         let img = await this.wavesurfer.exportImage('image/webp', 1, 'blob');
-        let wfDirPath = this.path.dirname(waveformFilepath);
+        let wfDirPath = path.dirname(waveformFilepath);
         try  {
-          await this.fs.promises.access(wfDirPath, this.fs.constants.F_OK);
+          await fs.promises.access(wfDirPath, fs.constants.F_OK);
         } catch(err) {
-          await this.fs.promises.mkdir(wfDirPath, { recursive: true });
+          await fs.promises.mkdir(wfDirPath, { recursive: true });
         }
-        await this.fs.promises.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
+        await fs.promises.writeFile(waveformFilepath, Buffer.from(await img[0].arrayBuffer()));
         console.log('File written successfully to ' + waveformFilepath);
         this.notifyWaveGenCompleted(filepath);
       } catch(err) {
