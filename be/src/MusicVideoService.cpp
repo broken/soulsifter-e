@@ -199,10 +199,11 @@ vector<string> MusicVideoService::downloadAudio(const string& url) {
       song->setAlbum(album);
 
       string baseFileName = filename.substr(0, filename.size() - ext.size());
-      song->setFilepath(SoulSifterSettings::getInstance().get<string>("dir.tmp") + '/' + baseFileName + "mp3");
-      album->setCoverFilepath(SoulSifterSettings::getInstance().get<string>("dir.tmp") + '/' + baseFileName + "jpg");
+      boost::filesystem::path tmpDir(SoulSifterSettings::getInstance().get<string>("dir.tmp"));
+      song->setFilepath((tmpDir / (baseFileName + "mp3")).string());
+      album->setCoverFilepath((tmpDir / (baseFileName + "jpg")).string());
       if (!boost::filesystem::exists(album->getCoverFilepath())) {
-        album->setCoverFilepath(SoulSifterSettings::getInstance().get<string>("dir.tmp") + '/' + baseFileName + "webp");
+        album->setCoverFilepath((tmpDir / (baseFileName + "webp")).string());
       }
       song->setLowQuality(true);
       string date;

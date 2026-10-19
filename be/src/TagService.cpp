@@ -211,7 +211,7 @@ bool readId3v2TagAttributes(Song* song) {
       !boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
     return false;
   }
-  TagLib::MPEG::File f((SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath()).c_str());
+  TagLib::MPEG::File f((boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string().c_str());
   TagLib::ID3v2::Tag* id3v2 = f.ID3v2Tag();  // still owned by file
   return readId3v2TagAttributes(song, id3v2);
 }
@@ -270,7 +270,7 @@ void TagService::readId3v2Tag(Song* song) {
   }
   string songFilepath = song->getFilepath();
   if (!boost::filesystem::exists(songFilepath)) {
-    songFilepath = SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath();
+    songFilepath = (boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string();
     if (!boost::filesystem::exists(songFilepath)) {
       LOG(WARNING) << "unable to find song: " << song->getFilepath();
       return;
@@ -345,7 +345,7 @@ void TagService::writeId3v2Tag(Song* song) {
   }
   if (boost::algorithm::iends_with(song->getFilepath(), ".mp3") ||
       boost::algorithm::iends_with(song->getFilepath(), ".mp4")) {
-    string songFilepath = SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath();
+    string songFilepath = (boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string();
     if (!boost::filesystem::exists(songFilepath)) {
       songFilepath = song->getFilepath();
       if (!boost::filesystem::exists(songFilepath)) {
@@ -439,7 +439,7 @@ void TagService::writeId3v2Tag(Song* song) {
       if (frame) id3v2->removeFrames(frame->frameID());
     }
     // picture
-    setId3v2Picture(id3v2, SoulSifterSettings::getInstance().get<string>("dir.music") + song->getAlbum()->getCoverFilepath(), false);
+    setId3v2Picture(id3v2, (boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getAlbum()->getCoverFilepath()).string(), false);
     // save
     bool result = f.save();
     if (!result) {

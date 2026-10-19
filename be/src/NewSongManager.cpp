@@ -164,7 +164,7 @@ bool NewSongManager::processSong(Song* song) {
 void NewSongManager::trashMusicFile(Song* song) {
   // create new file
   ofstream outputFile;
-  string oldPath = SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath();
+  string oldPath = (boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string();
   string newPath = oldPath + ".txt";
   outputFile.open(newPath);
   outputFile.close();

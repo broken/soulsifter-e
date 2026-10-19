@@ -31,8 +31,7 @@ Napi::Object InitAll(Napi::Env env, Napi::Object exports) {
   static std::unique_ptr<g3::LogWorker> logworker;
   if (logworker == NULL) {
     logworker = g3::LogWorker::createLogWorker();
-    const std::string home = getenv("HOME");
-    const std::string logDir = home + "/Library/Logs/SoulSifter";
+    const std::string logDir = (std::filesystem::path(getenv("HOME")) / "Library" / "Logs" / "SoulSifter").string();
     if (!std::filesystem::exists(logDir)) {
       if (!std::filesystem::create_directories(logDir)) {
         std::cerr << "Failed to create log directory: " << logDir << std::endl;

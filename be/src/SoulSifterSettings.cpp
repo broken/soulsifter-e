@@ -1,7 +1,6 @@
   #include "SoulSifterSettings.h"
 
 #include <cstdlib>
-#include <iostream>
 
 #include <boost/filesystem.hpp>
 #include <boost/property_tree/ptree.hpp>
@@ -106,14 +105,14 @@ namespace soulsifter {
     ptree.put("virtualdj.waveform.pixelBeatDistance", 115);
 
     // TODO settings file stored in other OS place
-    filename.append(getenv("HOME"));
-    filename.append("/Library/Application Support/SoulSifter");
-    if (!boost::filesystem::exists(filename)) {
-      if (!boost::filesystem::create_directory(filename)) {
-        LOG(WARNING) << "Unable to create settings directory " << filename;
+    boost::filesystem::path settingsDir = boost::filesystem::path(getenv("HOME")) / "Library" / "Application Support" / "SoulSifter";
+    if (!boost::filesystem::exists(settingsDir)) {
+      if (!boost::filesystem::create_directory(settingsDir)) {
+        LOG(WARNING) << "Unable to create settings directory " << settingsDir;
       }
     }
-    filename.append("/settings.json");
+    boost::filesystem::path settingsPath = settingsDir / "settings.json";
+    filename = settingsPath.string();
     if (boost::filesystem::exists(filename)) {
       // Load the JSON file into the property tree. If reading fails
       // (cannot open file, parse error), an exception is thrown.

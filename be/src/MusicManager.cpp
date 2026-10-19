@@ -349,17 +349,14 @@ std::string MusicManager::getAlbumSubPath(const Album& album) {
     }
   }
 
-  std::ostringstream ssdirpath;
-  ssdirpath << genre << "/" << artistDir << "/" << albumDir;
-  std::string albumSubPath = ssdirpath.str();
+  boost::filesystem::path subPath = boost::filesystem::path(genre) / artistDir / albumDir;
+  std::string albumSubPath = subPath.string();
   transform(albumSubPath.begin(), albumSubPath.end(), albumSubPath.begin(), ::tolower);
   return albumSubPath;
 }
 
 std::string MusicManager::getAlbumFullPath(const Album& album) {
-  std::stringstream path;
-  path << SoulSifterSettings::getInstance().get<string>("dir.music") << getAlbumSubPath(album);
-  return path.str();
+  return (boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / getAlbumSubPath(album)).string();
 }
 
 # pragma mark initialization
@@ -393,7 +390,7 @@ void MusicManager::readTagsFromSong(Song* song) {
 
     string songFilepath = song->getFilepath();
     if (!boost::filesystem::exists(songFilepath)) {
-      songFilepath = SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath();
+      songFilepath = (boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string();
       if (!boost::filesystem::exists(songFilepath)) {
         LOG(WARNING) << "unable to find song: " << song->getFilepath();
       }
@@ -561,12 +558,11 @@ void MusicManager::writeTagsToSong(Song* song) {
         if (!lastSongFixed) return;
 
         // code taken from moveImage(img)
-        stringstream destpath;
         boost::filesystem::path src(img);
-        destpath << albumSubPathForImage << "/" << cleanDirName(src.filename().string());
+        boost::filesystem::path destpath = boost::filesystem::path(albumSubPathForImage) / cleanDirName(src.filename().string());
 
         Album* album = lastSongFixed->getAlbum();
-        album->setCoverFilepath(destpath.str());
+        album->setCoverFilepath(destpath.string());
         album->update();
     }
 
@@ -608,11 +604,8 @@ bool MusicManager::updateAlbumCover(const string& img, Album* album) {
   boost::filesystem::path src(img);
 
   // determine destination path
-  std::string albumSubPathForImage = getAlbumSubPath(*album);
-  albumSubPathForImage = albumSubPathForImage + "/" + cleanDirName(src.filename().string());
-  std::stringstream destpath;
-  destpath << SoulSifterSettings::getInstance().get<string>("dir.music") << albumSubPathForImage;
-  boost::filesystem::path dest(destpath.str());
+  std::string albumSubPathForImage = (boost::filesystem::path(getAlbumSubPath(*album)) / cleanDirName(src.filename().string())).string();
+  boost::filesystem::path dest = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / albumSubPathForImage;
 
   if (boost::filesystem::exists(src) && boost::filesystem::exists(dest) && boost::filesystem::equivalent(src, dest)) {
     LOG(INFO) << "Not moving cover because source path is equivalent to destination path.";
@@ -662,7 +655,7 @@ bool MusicManager::moveAlbum(Album* album) {
     return false;
   }
   boost::filesystem::path aSongPath(song.getFilepath());
-  boost::filesystem::path aSongFullPath(SoulSifterSettings::getInstance().get<string>("dir.music") + aSongPath.string());
+  boost::filesystem::path aSongFullPath = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / aSongPath;
   boost::filesystem::path src = aSongFullPath.parent_path();
   if (!boost::filesystem::exists(src) || !boost::filesystem::is_directory(src)) {
     std::string errMsg("Unable to move album " + std::to_string(album->getId()) + ", because source path does not exist.");
@@ -671,7 +664,7 @@ bool MusicManager::moveAlbum(Album* album) {
     return false;
   }
   // check if stems directory exists
-  boost::filesystem::path aSongStemsFullPath(SoulSifterSettings::getInstance().get<string>("dir.stems") + aSongPath.string());
+  boost::filesystem::path aSongStemsFullPath = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.stems")) / aSongPath;
   boost::filesystem::path stemsSrc = aSongStemsFullPath.parent_path();
   bool stemsExists = boost::filesystem::exists(stemsSrc) && boost::filesystem::is_directory(stemsSrc);
 
@@ -691,7 +684,7 @@ bool MusicManager::moveAlbum(Album* album) {
     return false;
   }
   // now stems
-  boost::filesystem::path stemsDest(SoulSifterSettings::getInstance().get<string>("dir.stems") + getAlbumSubPath(*album));
+  boost::filesystem::path stemsDest = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.stems")) / getAlbumSubPath(*album);
 
   // create dest parent directory
   boost::filesystem::path destParent = dest.parent_path();
@@ -750,9 +743,9 @@ bool MusicManager::moveAlbum(Album* album) {
   for (Song* s : *songs) {
     boost::filesystem::path songPath(s->getFilepath());
     boost::filesystem::path filename = songPath.filename();
-    s->setFilepath(getAlbumSubPath(*album) + "/" + filename.string());
+    s->setFilepath((boost::filesystem::path(getAlbumSubPath(*album)) / filename).string());
     s->update();
-    if (!boost::filesystem::exists(SoulSifterSettings::getInstance().get<string>("dir.music") + s->getFilepath())) {
+    if (!boost::filesystem::exists(boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / s->getFilepath())) {
       std::string errMsg("Moved song " + std::to_string(s->getId()) + " does not exist at new path.");
       LOG(WARNING) << errMsg;
       AlertsChannel::getInstance().send(errMsg);
@@ -764,9 +757,9 @@ bool MusicManager::moveAlbum(Album* album) {
   if (album->getCoverFilepath().length()) {
     boost::filesystem::path cvrPath(album->getCoverFilepath());
     boost::filesystem::path filename = cvrPath.filename();
-    album->setCoverFilepath(getAlbumSubPath(*album) + "/" + filename.string());
+    album->setCoverFilepath((boost::filesystem::path(getAlbumSubPath(*album)) / filename).string());
     album->update();
-    if (!boost::filesystem::exists(SoulSifterSettings::getInstance().get<string>("dir.music") + album->getCoverFilepath())) {
+    if (!boost::filesystem::exists(boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / album->getCoverFilepath())) {
       std::string errMsg("Moved cover for album " + std::to_string(album->getId()) + " does not exist at new path.");
       LOG(WARNING) << errMsg;
       AlertsChannel::getInstance().send(errMsg);
@@ -815,29 +808,26 @@ bool MusicManager::moveSong(Song* song) {
             albumPath = albumSubPathForImage;
             if (song->getAlbumPart() && song->getAlbumPart()->getName().length()) {
                 string part = song->getAlbumPart()->getName();
-                albumPath += "/" + cleanDirName(part);
+                albumPath = (boost::filesystem::path(albumPath) / cleanDirName(part)).string();
             }
         }
         // create directory
         transform(albumPath.begin(), albumPath.end(), albumPath.begin(), ::tolower);
-        string fullAlbumPath = SoulSifterSettings::getInstance().get<string>("dir.music") + albumPath;
-        boost::filesystem::path dir(fullAlbumPath);
+        boost::filesystem::path dir = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / albumPath;
         if (!boost::filesystem::exists(dir)) {
             if (!boost::filesystem::create_directories(dir)) {
-                LOG(WARNING) << "Error occurred while trying to create directory " << fullAlbumPath;
+                LOG(WARNING) << "Error occurred while trying to create directory " << dir.string();
                 return false;
             }
         } else if (!boost::filesystem::is_directory(dir)) {
-            LOG(WARNING) << "Cannot move file b/c destination is not a directory " << fullAlbumPath;
+            LOG(WARNING) << "Cannot move file b/c destination is not a directory " << dir.string();
             return false;
         }
 
         // move file to dest
         boost::filesystem::path src(song->getFilepath());
-        string songPath = albumPath + "/" + cleanDirName(src.filename().string());
-        stringstream destPath;
-        destPath << SoulSifterSettings::getInstance().get<string>("dir.music") << songPath;
-        boost::filesystem::path dest(destPath.str());
+        string songPath = (boost::filesystem::path(albumPath) / cleanDirName(src.filename().string())).string();
+        boost::filesystem::path dest = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / songPath;
         moveFile(src, dest);
 
         // update song path
@@ -854,10 +844,8 @@ bool MusicManager::moveSong(Song* song) {
     bool MusicManager::moveImage(const string& img) {
         try {
             // move file to dest
-            stringstream destpath;
             boost::filesystem::path src(img);
-            destpath << SoulSifterSettings::getInstance().get<string>("dir.music") << albumSubPathForImage << "/" << cleanDirName(src.filename().string());
-            boost::filesystem::path dest(destpath.str());
+            boost::filesystem::path dest = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / albumSubPathForImage / cleanDirName(src.filename().string());
             moveFile(src, dest);
 
             return true;

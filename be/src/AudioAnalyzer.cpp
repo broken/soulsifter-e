@@ -21,6 +21,7 @@
 #include <boost/algorithm/string/predicate.hpp>
 #include <boost/algorithm/string/split.hpp>
 #include <boost/bind.hpp>
+#include <boost/filesystem.hpp>
 #include <boost/ref.hpp>
 #include <g3log/g3log.hpp>
 #include <taglib/mpegfile.h>
@@ -55,8 +56,8 @@ namespace dogatech {
       string songFilepath;
       if (stat(song->getFilepath().c_str(), &statBuffer) == 0) {
         songFilepath = song->getFilepath();
-      } else if (stat((SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath()).c_str(), &statBuffer) == 0) {
-        songFilepath = SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath();
+      } else if (stat((boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string().c_str(), &statBuffer) == 0) {
+        songFilepath = (boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string();
       } else {
         LOG(WARNING) << "File does not exist for song " << song->getId();
         vector<double> bpms;
@@ -122,8 +123,8 @@ namespace dogatech {
       string songFilepath;
       if (stat(song->getFilepath().c_str(), &statBuffer) == 0) {
         songFilepath = song->getFilepath();
-      } else if (stat((SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath()).c_str(), &statBuffer) == 0) {
-        songFilepath = SoulSifterSettings::getInstance().get<string>("dir.music") + song->getFilepath();
+      } else if (stat((boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string().c_str(), &statBuffer) == 0) {
+        songFilepath = (boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath()).string();
       } else {
         LOG(WARNING) << "File does not exist for song " << song->getId();
         return 0;
@@ -169,7 +170,8 @@ namespace dogatech {
       FILE *fpipe;
       stringstream command;
       command << "/Users/rneale/sonic-annotator -d vamp:qm-vamp-plugins:qm-keydetector:key -w csv --csv-stdout ";
-      command << "\"" << SoulSifterSettings::getInstance().get<string>("dir.music") << song->getFilepath() << "\"";
+      boost::filesystem::path musicFilePath = boost::filesystem::path(SoulSifterSettings::getInstance().get<string>("dir.music")) / song->getFilepath();
+      command << "\"" << musicFilePath.string() << "\"";
       char buffer[1024];
 
       if (!(fpipe = (FILE*)popen(command.str().c_str(), "r")) ) {
