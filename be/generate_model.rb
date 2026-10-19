@@ -914,8 +914,6 @@ songCustomHeaders = ""
 styleFields = [
   [:int, "id", Attrib::FIND],
   [:string, "name", 0],
-  [:int, "reId", Attrib::KEY2],
-  [:string, "reLabel", 0],
   [:string, "description", 0],
   ["vector<int>", "childIds", Attrib::ID],
   ["vector<Style*>", "children", 0],
@@ -923,7 +921,7 @@ styleFields = [
   ["vector<Style*>", "parents", 0],
 ]
 styleAttribs = 0
-styleCustomMethods = "        bool operator<(const Style& style) const;\n        bool operator>(const Style& style) const;\n\n        static ResultSetIterator<Style>* findAllParents();\n        static void findAllSortedByName(vector<Style*>** stylesPtr);\n        static void findAllSortedByREId(vector<Style*>** stylesPtr);\n\n"
+styleCustomMethods = "        bool operator<(const Style& style) const;\n        bool operator>(const Style& style) const;\n\n        static ResultSetIterator<Style>* findAllParents();\n        static void findAllSortedByName(vector<Style*>** stylesPtr);\n\n"
 styleCustomHeaders = ""
 
 ######################### write files

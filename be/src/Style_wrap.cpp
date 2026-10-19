@@ -19,18 +19,14 @@ Napi::Object Style::Init(Napi::Env env, Napi::Object exports) {
   Napi::Function func = DefineClass(env, "Style", {
     InstanceMethod<&Style::clear>("clear"),
     StaticMethod<&Style::findById>("findById"),
-    StaticMethod<&Style::findByREId>("findByREId"),
     StaticMethod<&Style::findAll>("findAll"),
     InstanceMethod<&Style::update>("update"),
     InstanceMethod<&Style::save>("save"),
     InstanceMethod<&Style::sync>("sync"),
     StaticMethod<&Style::findAllParents>("findAllParents"),
     // Unable to process findAllSortedByName
-    // Unable to process findAllSortedByREId
     InstanceAccessor<&Style::getId, &Style::setId>("id"),
     InstanceAccessor<&Style::getName, &Style::setName>("name"),
-    InstanceAccessor<&Style::getREId, &Style::setREId>("rEId"),
-    InstanceAccessor<&Style::getRELabel, &Style::setRELabel>("rELabel"),
     InstanceAccessor<&Style::getDescription, &Style::setDescription>("description"),
     InstanceAccessor<&Style::getChildIds, &Style::setChildIds>("childIds"),
     InstanceAccessor<&Style::getChildren, &Style::setChildren>("children"),
@@ -85,35 +81,6 @@ Napi::Value Style::findById(const Napi::CallbackInfo& info) {
   try {
     dogatech::soulsifter::Style* result =
         dogatech::soulsifter::Style::findById(a0);
-
-    if (result == NULL) {
-      return env.Null();
-    } else {
-      Napi::Object instance = Style::NewInstance(env);
-      Style* r = Napi::ObjectWrap<Style>::Unwrap(instance);
-      r->setWrappedValue(result, true);
-      return instance;
-    }
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-Napi::Value Style::findByREId(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
-    return env.Null();
-  }
-  if (!info[0].IsNumber()) {
-    Napi::TypeError::New(env, "TypeError: Number expected (for info[0])").ThrowAsJavaScriptException();
-    return env.Null();
-  }
-  int32_t a0(info[0].As<Napi::Number>().Int32Value());
-  try {
-    dogatech::soulsifter::Style* result =
-        dogatech::soulsifter::Style::findByREId(a0);
 
     if (result == NULL) {
       return env.Null();
@@ -274,72 +241,6 @@ void Style::setName(const Napi::CallbackInfo& info, const Napi::Value &value) {
   std::string a0(value.As<Napi::String>().Utf8Value());
   try {
     obj->style->setName(a0);
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return;
-  }
-}
-
-Napi::Value Style::getREId(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Style* obj = this;
-  try {
-    int result =    obj->style->getREId();
-
-    return Napi::Number::New(env, result);
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-void Style::setREId(const Napi::CallbackInfo& info, const Napi::Value &value) {
-  Napi::Env env = info.Env();
-  if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
-    return;
-  }
-  Style* obj = this;
-  if (!value.IsNumber()) {
-    Napi::TypeError::New(env, "TypeError: Number expected (for value)").ThrowAsJavaScriptException();
-    return;
-  }
-  int32_t a0(value.As<Napi::Number>().Int32Value());
-  try {
-    obj->style->setREId(a0);
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return;
-  }
-}
-
-Napi::Value Style::getRELabel(const Napi::CallbackInfo& info) {
-  Napi::Env env = info.Env();
-  Style* obj = this;
-  try {
-    const string& result =    obj->style->getRELabel();
-
-    return Napi::String::New(env, result);
-  } catch (const std::exception& e) {
-    Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
-    return env.Null();
-  }
-}
-
-void Style::setRELabel(const Napi::CallbackInfo& info, const Napi::Value &value) {
-  Napi::Env env = info.Env();
-  if (info.Length() < 1) {
-    Napi::TypeError::New(env, "Expected at least 1 argument.").ThrowAsJavaScriptException();
-    return;
-  }
-  Style* obj = this;
-  if (!value.IsString()) {
-    Napi::TypeError::New(env, "TypeError: String expected (for value)").ThrowAsJavaScriptException();
-    return;
-  }
-  std::string a0(value.As<Napi::String>().Utf8Value());
-  try {
-    obj->style->setRELabel(a0);
   } catch (const std::exception& e) {
     Napi::Error::New(env, e.what()).ThrowAsJavaScriptException();
     return;

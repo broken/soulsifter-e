@@ -37,8 +37,6 @@ namespace soulsifter {
     Style::Style() :
     id(0),
     name(),
-    reId(0),
-    reLabel(),
     description(),
     childIds(),
     children(),
@@ -49,8 +47,6 @@ namespace soulsifter {
     Style::Style(const Style& style) :
     id(style.getId()),
     name(style.getName()),
-    reId(style.getREId()),
-    reLabel(style.getRELabel()),
     description(style.getDescription()),
     childIds(style.getChildIds()),
     children(),
@@ -61,8 +57,6 @@ namespace soulsifter {
     void Style::operator=(const Style& style) {
         id = style.getId();
         name = style.getName();
-        reId = style.getREId();
-        reLabel = style.getRELabel();
         description = style.getDescription();
         childIds = style.getChildIds();
         deleteVectorPointers(&children);
@@ -78,8 +72,6 @@ namespace soulsifter {
     void Style::clear() {
         id = 0;
         name.clear();
-        reId = 0;
-        reLabel.clear();
         description.clear();
         childIds.clear();
         deleteVectorPointers(&children);
@@ -92,8 +84,6 @@ namespace soulsifter {
     void Style::populateFields(const sql::ResultSet* rs, Style* style) {
         style->setId(rs->getInt("id"));
         style->setName(rs->getString("name"));
-        style->setREId(rs->getInt("reId"));
-        style->setRELabel(rs->getString("reLabel"));
         style->setDescription(rs->getString("description"));
         if (!rs->isNull("childIds")) {
             string csv = rs->getString("childIds");
@@ -118,36 +108,6 @@ namespace soulsifter {
             try {
                 sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("select Styles.*, group_concat(distinct(children.childId)) as childIds, group_concat(distinct(parents.parentId)) as parentIds from Styles left outer join StyleChildren children on Styles.id = children.parentId left outer join StyleChildren parents on Styles.id = parents.childId where Styles.id = ? group by Styles.id");
                 ps->setInt(1, id);
-                sql::ResultSet *rs = ps->executeQuery();
-                Style *style = NULL;
-                if (rs->next()) {
-                    style = new Style();
-                    populateFields(rs, style);
-                }
-                rs->close();
-                delete rs;
-
-                return style;
-            } catch (sql::SQLException &e) {
-                LOG(WARNING) << "ERROR: SQLException in " << __FILE__ << " (" << __func__<< ") on line " << __LINE__;
-                LOG(WARNING) << "ERROR: " << e.what() << " (MySQL error code: " << e.getErrorCode() << ", SQLState: " << e.getSQLState() << ")";
-                bool reconnected = MysqlAccess::getInstance().reconnect();
-                LOG(INFO) << (reconnected ? "Successful" : "Failed") << " mysql reconnection";
-                if (i == 1) {
-                    AlertsChannel::getInstance().send(std::string("DB Error (") + __FILE__ + "::" + __func__ + ") : " + e.what());
-                    throw e;
-                }
-            }
-        }
-        return NULL;
-    }
-
-    Style* Style::findByREId(int reId) {
-        for (int i = 0; i < 2; ++i) {
-            try {
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("select Styles.*, group_concat(distinct(children.childId)) as childIds, group_concat(distinct(parents.parentId)) as parentIds from Styles left outer join StyleChildren children on Styles.id = children.parentId left outer join StyleChildren parents on Styles.id = parents.childId where ifnull(reId,0) = ifnull(?,0) group by Styles.id");
-                if (reId > 0) ps->setInt(1, reId);
-                else ps->setNull(1, sql::DataType::INTEGER);
                 sql::ResultSet *rs = ps->executeQuery();
                 Style *style = NULL;
                 if (rs->next()) {
@@ -199,16 +159,12 @@ namespace soulsifter {
         for (int i = 0; i < 2; ++i) {
             try {
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Styles set name=?, reId=?, reLabel=?, description=? where id=?");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("update Styles set name=?, description=? where id=?");
                 if (!name.empty()) ps->setString(1, name);
                 else ps->setNull(1, sql::DataType::VARCHAR);
-                if (reId > 0) ps->setInt(2, reId);
-                else ps->setNull(2, sql::DataType::INTEGER);
-                if (!reLabel.empty()) ps->setString(3, reLabel);
-                else ps->setNull(3, sql::DataType::VARCHAR);
-                if (!description.empty()) ps->setString(4, description);
-                else ps->setNull(4, sql::DataType::VARCHAR);
-                ps->setInt(5, id);
+                if (!description.empty()) ps->setString(2, description);
+                else ps->setNull(2, sql::DataType::VARCHAR);
+                ps->setInt(3, id);
                 int result = ps->executeUpdate();
                 if (!childIds.empty()) {
                     stringstream ss("insert ignore into StyleChildren (parentId, childId) values (?, ?)", ios_base::app | ios_base::out | ios_base::ate);
@@ -285,15 +241,11 @@ namespace soulsifter {
         for (int i = 0; i < 2; ++i) {
             try {
 
-                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Styles (name, reId, reLabel, description) values (?, ?, ?, ?)");
+                sql::PreparedStatement *ps = MysqlAccess::getInstance().getPreparedStatement("insert into Styles (name, description) values (?, ?)");
                 if (!name.empty()) ps->setString(1, name);
                 else ps->setNull(1, sql::DataType::VARCHAR);
-                if (reId > 0) ps->setInt(2, reId);
-                else ps->setNull(2, sql::DataType::INTEGER);
-                if (!reLabel.empty()) ps->setString(3, reLabel);
-                else ps->setNull(3, sql::DataType::VARCHAR);
-                if (!description.empty()) ps->setString(4, description);
-                else ps->setNull(4, sql::DataType::VARCHAR);
+                if (!description.empty()) ps->setString(2, description);
+                else ps->setNull(2, sql::DataType::VARCHAR);
                 int saved = ps->executeUpdate();
                 if (!saved) {
                     LOG(WARNING) << "Not able to save style";
@@ -350,7 +302,6 @@ namespace soulsifter {
 
     bool Style::sync() {
         Style* style = findById(id);
-        if (!style) style = findByREId(getREId());
         if (!style) return true;
 
         // check fields
@@ -363,14 +314,6 @@ namespace soulsifter {
         }
         if (name.compare(style->getName())  && (!boost::regex_match(name, match1, decimal) || !boost::regex_match(style->getName(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
             LOG(INFO) << "updating style " << id << " name from " << style->getName() << " to " << name;
-            needsUpdate = true;
-        }
-        if (reId != style->getREId()) {
-            LOG(INFO) << "updating style " << id << " reId from " << style->getREId() << " to " << reId;
-            needsUpdate = true;
-        }
-        if (reLabel.compare(style->getRELabel())  && (!boost::regex_match(reLabel, match1, decimal) || !boost::regex_match(style->getRELabel(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
-            LOG(INFO) << "updating style " << id << " reLabel from " << style->getRELabel() << " to " << reLabel;
             needsUpdate = true;
         }
         if (description.compare(style->getDescription())  && (!boost::regex_match(description, match1, decimal) || !boost::regex_match(style->getDescription(), match2, decimal) || match1[1].str().compare(match2[1].str()))) {
@@ -396,12 +339,6 @@ namespace soulsifter {
 
     const string& Style::getName() const { return name; }
     void Style::setName(const string& name) { this->name = name; }
-
-    int Style::getREId() const { return reId; }
-    void Style::setREId(const int reId) { this->reId = reId; }
-
-    const string& Style::getRELabel() const { return reLabel; }
-    void Style::setRELabel(const string& reLabel) { this->reLabel = reLabel; }
 
     const string& Style::getDescription() const { return description; }
     void Style::setDescription(const string& description) { this->description = description; }

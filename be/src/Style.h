@@ -35,7 +35,6 @@ namespace soulsifter {
         void clear();
 
         static Style* findById(int id);
-        static Style* findByREId(int reId);
         static ResultSetIterator<Style>* findAll();
 
         int update();
@@ -48,16 +47,11 @@ namespace soulsifter {
 
         static ResultSetIterator<Style>* findAllParents();
         static void findAllSortedByName(vector<Style*>** stylesPtr);
-        static void findAllSortedByREId(vector<Style*>** stylesPtr);
 
         int getId() const;
         void setId(int id);
         const string& getName() const;
         void setName(const string& name);
-        int getREId() const;
-        void setREId(int reId);
-        const string& getRELabel() const;
-        void setRELabel(const string& reLabel);
         const string& getDescription() const;
         void setDescription(const string& description);
         const vector<int>& getChildIds() const;
@@ -75,8 +69,6 @@ namespace soulsifter {
     private:
         int id;
         string name;
-        int reId;
-        string reLabel;
         string description;
         vector<int> childIds;
         vector<Style*> children;

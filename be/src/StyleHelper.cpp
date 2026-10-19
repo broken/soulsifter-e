@@ -28,12 +28,6 @@ namespace soulsifter {
             }
         };
 
-        struct reIdLessThanKey {
-            inline bool operator()(const Style* v1, const Style* v2) {
-                return v1->getREId() < v2->getREId();
-            }
-        };
-
     }
 
 # pragma mark operator overrides
@@ -51,12 +45,6 @@ namespace soulsifter {
     void Style::findAllSortedByName(vector<Style*>** stylesPtr) {
         vector<Style*>* styles = Style::findAll()->toVector();
         sort(styles->begin(), styles->end(), lessThanKey());
-        (*stylesPtr) = styles;
-    }
-
-    void Style::findAllSortedByREId(vector<Style*>** stylesPtr) {
-        vector<Style*>* styles = Style::findAll()->toVector();
-        sort(styles->begin(), styles->end(), reIdLessThanKey());
         (*stylesPtr) = styles;
     }
 
