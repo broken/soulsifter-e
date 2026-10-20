@@ -5,7 +5,7 @@ import "@material/web/fab/fab.js";
 
 import "./genre-list-item.js";
 import { GenresMixin } from "./mixin-genres.js";
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 
 
 class GenreList extends GenresMixin(LitElement) {
@@ -16,7 +16,7 @@ class GenreList extends GenresMixin(LitElement) {
     return html`
       <div class="gnames">
         ${genreNames}
-        <icon-button @click=${this.clearGenres} icon="clear" id="clear"></icon-button>
+        ${iconButton({ id: "clear", icon: "clear", onClick: this.clearGenres })}
       </div>
       <div class="glist">
         ${genreListItems}
@@ -106,6 +106,7 @@ class GenreList extends GenresMixin(LitElement) {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           padding: 0 0 20px 0;

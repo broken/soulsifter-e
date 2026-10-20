@@ -13,7 +13,7 @@ import { SearchMixin } from "./mixin-search.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import "./about-page.js";
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import "./hotkeys-info.js";
 import "./options-menu.js";
 import "./options-menu-item.js";
@@ -25,28 +25,25 @@ const { ipcRenderer, path, webUtils } = window.nodeAPI;
 
 class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement))))))) {
   render() {
-    let bpmRestrictBtn = this.searchOptions.bpmRestrict ? html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note" class="active"></icon-button>`
-                                                        : html`<icon-button @click=${this.toggleBpmRestrict} icon="music_note"></icon-button>`;
-    let keyRestrictBtn = this.searchOptions.keyRestrict ? html`<icon-button @click=${this.toggleKeyRestrict} icon="vpn_key" class="active"></icon-button>`
-                                                        : html`<icon-button @click=${this.toggleKeyRestrict} icon="vpn_key"></icon-button>`;
+    let bpmRestrictBtn = iconButton({ onClick: this.toggleBpmRestrict, icon: "music_note", className: this.searchOptions.bpmRestrict ? "active" : "" });
+    let keyRestrictBtn = iconButton({ onClick: this.toggleKeyRestrict, icon: "vpn_key", className: this.searchOptions.keyRestrict ? "active" : "" });
     let stemsBtn = !this.settings.getString('dir.stems') ? html`` :
-                   (this.searchOptions.useStems ? html`<icon-button @click=${this.toggleUseStems} icon="dehaze" class="active"></icon-button>`
-                                               : html`<icon-button @click=${this.toggleUseStems} icon="dehaze"></icon-button>`);
+                   iconButton({ onClick: this.toggleUseStems, icon: "dehaze", className: this.searchOptions.useStems ? "active" : "" });
     let debugMode = this.settings.getBool('app.debug');
     return html`
-      <icon-button @click=${this.requestSearch} icon="search"></icon-button>
+      ${iconButton({ onClick: this.requestSearch, icon: "search" })}
       <md-filled-text-field placeholder="search" .value="${this.query}" class="flex" no-label-float @input=${this.queryInputChanged} id="queryInput"></md-filled-text-field>
-      <icon-button @click=${this.clearSearchAction} icon="clear" id="clear"></icon-button>
-      <icon-button @click=${this.openSearchInfoDialog} icon="info_outline"></icon-button>
+      ${iconButton({ onClick: this.clearSearchAction, icon: "clear", id: "clear" })}
+      ${iconButton({ onClick: this.openSearchInfoDialog, icon: "info_outline" })}
       ${bpmRestrictBtn}
       ${keyRestrictBtn}
       ${stemsBtn}
-      <icon-button @click=${this.openSearchOptionsDialog} icon="build"></icon-button>
+      ${iconButton({ onClick: this.openSearchOptionsDialog, icon: "build" })}
       <md-filled-text-field placeholder="bpm" .value="${this.bpm}" no-label-float @input=${this.bpmInputChanged} id="bpmInput"></md-filled-text-field>
-      <icon-button @click=${this.tapBpm} icon="hearing"></icon-button>
-      <icon-button @click=${this.openCreateSongPage} icon="add_circle" id="createSongButton" @drop="${this.dropCreateSongButton}" @dragover="${this.dragOverCreateSongButton}" @dragleave="${this.dragLeaveCreateSongButton}"></icon-button>
-      ${debugMode ? html`<icon-button @click=${this.addSongFromUrl} icon="link"></icon-button>` : ''}
-      <icon-button @click=${this.openSettingsPage} icon="settings"></icon-button>
+      ${iconButton({ onClick: this.tapBpm, icon: "hearing" })}
+      ${iconButton({ onClick: this.openCreateSongPage, icon: "add_circle", id: "createSongButton", onDrop: this.dropCreateSongButton, onDragOver: this.dragOverCreateSongButton, onDragLeave: this.dragLeaveCreateSongButton })}
+      ${debugMode ? iconButton({ onClick: this.addSongFromUrl, icon: "link" }) : ''}
+      ${iconButton({ onClick: this.openSettingsPage, icon: "settings" })}
       <round-slider value="${this.volume}" valueLabel="Volume" @value-changing="${this.volumeChanged}" @value-changed="${this.volumeChanged}" min="0" max="100" handleSize="3"></round-slider>
       <options-menu>
         ${debugMode ? html`<options-menu-item @click="${this.addSongFromUrl}">Add Song From URL</options-menu-item>` : ''}
@@ -377,16 +374,16 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
     return html`Common multiples:
 \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2:
 <a href="#" @click=${() => this.changeBpm(x * 2)}>${x * 2}</a>
-<icon-button @click=${() => this.changeBpm((x / 2).toFixed(2))} icon="undo"></icon-button> ,
+${iconButton({ onClick: () => this.changeBpm((x / 2).toFixed(2)), icon: "undo" })} ,
 \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x1/2:
 <a href="#" @click=${() => this.changeBpm((x / 2).toFixed(2))}>${(x / 2).toFixed(2)}</a>
-<icon-button @click=${() => this.changeBpm(x * 2)} icon="undo"></icon-button> ,
+${iconButton({ onClick: () => this.changeBpm(x * 2), icon: "undo" })} ,
 \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x4/3 (3/4 loop up):
 <a href="#" @click=${() => this.changeBpm((x * 4 / 3).toFixed(2))}>${(x * 4 / 3).toFixed(2)}</a>
-<icon-button @click=${() => this.changeBpm((x * 3 / 4).toFixed(2))} icon="undo"></icon-button> ,
+${iconButton({ onClick: () => this.changeBpm((x * 3 / 4).toFixed(2)), icon: "undo" })} ,
 \u00A0\u00A0\u00A0\u00A0\u00A0\u00A0x2/3 (3 beat loop down):
 <a href="#" @click=${() => this.changeBpm((x * 2 / 3).toFixed(2))}>${(x * 2 / 3).toFixed(2)}</a>
-<icon-button @click=${() => this.changeBpm((x * 3 / 2).toFixed(2))} icon="undo"></icon-button>`;
+${iconButton({ onClick: () => this.changeBpm((x * 3 / 2).toFixed(2)), icon: "undo" })}`;
   }
 
   bpmChanged(x) {
@@ -529,6 +526,7 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           background-color: var(--ss-search-toolbar-background-color);
@@ -539,10 +537,10 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
           padding-left: 17px;
           box-shadow: 0 2px 4px -1px rgba(0,0,0,.2), 0 4px 5px 0 rgba(0,0,0,.14), 0 1px 10px 0 rgba(0,0,0,.12);
         }
-        icon-button {
+        icon-button, .icon-button {
           --mdc-icon-size: 24px;
         }
-        icon-button, options-menu {
+        icon-button, .icon-button, options-menu {
           padding: 8px;
         }
         md-filled-text-field {

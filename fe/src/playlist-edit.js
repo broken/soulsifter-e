@@ -8,7 +8,7 @@ import "@material/web/textfield/filled-text-field.js";
 
 import "./abstract-action-page.js";
 import "./genre-list.js";
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import "./search-info.js";
 
@@ -25,7 +25,7 @@ class PlaylistEdit extends AlertsMixin(LitElement) {
             <md-filled-text-field label="Name" .value="${this.playlist.name}" id="name"></md-filled-text-field>
             <div class="query-container">
               <md-filled-text-field label="Query" .value="${this.playlist.query}" id="query"></md-filled-text-field>
-              <icon-button @click=${this.openSearchInfoDialog} icon="info_outline" id="info-btn"></icon-button>
+              ${iconButton({ id: "info-btn", icon: "info_outline", onClick: this.openSearchInfoDialog })}
             </div>
             <br>
             <label><md-checkbox ?checked="${this.fromSongTrail}" id="trail"></md-checkbox>from Song Trail</label>
@@ -140,6 +140,7 @@ class PlaylistEdit extends AlertsMixin(LitElement) {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           font-size: 16px;

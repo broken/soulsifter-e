@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import "./song-list-item.js";
 import "./star-rating.js";
 
@@ -15,7 +15,7 @@ class MixListItem extends LitElement {
       <div class="info">
         <star-rating value="${rating}" readonly max="10" ?once="${once}"></star-rating>
         <div class="comments">${this.mix.comments}</div>
-        <icon-button icon="edit" class="edit" @click="${this.openEditMixPage}"></icon-button>
+        ${iconButton({ icon: "edit", className: "edit", onClick: this.openEditMixPage })}
       </div>
     `;
   }
@@ -40,6 +40,7 @@ class MixListItem extends LitElement {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           display: flex;

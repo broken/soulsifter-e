@@ -10,7 +10,7 @@ import { SongEditMixin } from "./mixin-song-edit.js";
 import "./abstract-action-page.js";
 import "./audio-player.js";
 import "./genre-list.js";
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import "./options-menu-item.js";
 import "./options-menu-input.js";
 
@@ -73,13 +73,13 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
               <div class="prev">&nbsp;<span>${this.taggedSong.bpm}</span></div>
               <div class="input-row">
                 <md-filled-text-field label="Key" .value="${this.editedSong.tonicKey}" @change="${this.tonicKeyInputChanged}" id="tonicKey" pattern="[A-G]b?m?"></md-filled-text-field>
-                <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockTonicKey}" id="tonic_key_lock"></icon-button>
+                ${iconButton({ id: "tonic_key_lock", icon: this.editedSong.bpmLock ? "lock" : "lock_open", onClick: this.lockTonicKey })}
               </div>
             </div>
             <div>
               <div class="input-row">
                 <md-filled-text-field label="BPM" .value="${this.editedSong.bpm}" @change="${this.bpmInputChanged}" id="bpm" pattern="[0-9]*(\\.[0-9]*)?"></md-filled-text-field>
-                <icon-button icon="${this.editedSong.bpmLock ? "lock" : "lock_open"}" @click="${this.lockBpm}" id="bpm_lock"></icon-button>
+                ${iconButton({ id: "bpm_lock", icon: this.editedSong.bpmLock ? "lock" : "lock_open", onClick: this.lockBpm })}
               </div>
               <md-text-button @click="${this.rescanBpmAction}" id="bpmBtn">Rescan BPM</md-text-button>
             </div>
@@ -139,8 +139,8 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         </abstract-action-page>
         <div class="metadata">
           <audio-player id="audio" .song="${this.song}"></audio-player>
-          <icon-button @click=${this.prevSong} icon="chevron_left"></icon-button>
-          <icon-button @click=${this.nextSong} icon="chevron_right"></icon-button>
+          ${iconButton({ icon: "chevron_left", onClick: this.prevSong })}
+          ${iconButton({ icon: "chevron_right", onClick: this.nextSong })}
           <div style="user-select:text">${this.editedSong.id}</div>
           <div style="user-select:text">(${this.editedSong.albumId})</div>
           <div @click="${this.changeSongFile}" style="user-select:text">${this.editedSong.filepath}</div>
@@ -644,6 +644,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           font-size: 16px;
@@ -770,7 +771,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
           align-items: flex-end;
           width: 240px;
         }
-        icon-button {
+        icon-button, .icon-button {
           margin-bottom: 6px;
         }
       `,

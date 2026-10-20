@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import "./options-menu.js";
 import "./options-menu-item.js";
 
@@ -10,7 +10,7 @@ class GenreListItem extends LitElement {
     let icon = this.opened ? 'expand_less' : 'expand_more';
     let subgenres = this.getSubGenres().map(g =>
         html`<genre-list-item .genre="${g}" @expand-parents="${this.expand}" ?hidden="${!this.opened}" ?singleselect="${this.singleSelect}" ?optionsmenu="${this.optionsMenu}"></genre-list-item>`);
-    let button = subgenres.length ? html`<icon-button icon=${icon} @click="${this.toggleExpansion}"></icon-button>` : html`<icon-button></icon-button>`;
+    let button = subgenres.length ? iconButton({ icon, onClick: this.toggleExpansion }) : iconButton({});
     let menu = !this.optionsMenu ? html`` : html`<options-menu><options-menu-item @click="${this.editAction}">Edit genre</options-menu-item></options-menu>`;
     let description = this.genre.description || 'n/a';
     return html`
@@ -108,6 +108,7 @@ class GenreListItem extends LitElement {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         .itemContainer {
           margin: 7px 0 0 18px;
@@ -127,7 +128,7 @@ class GenreListItem extends LitElement {
         .item span {
           flex: 1 1 auto;
         }
-        icon-button {
+        icon-button, .icon-button {
           width: 24px;
         }
         options-menu {

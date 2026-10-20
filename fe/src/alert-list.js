@@ -4,7 +4,6 @@ import "@polymer/paper-toast";
 
 import { AlertsSubMixin } from "./mixin-alerts-sub.js";
 import "./alert-list-item.js";
-import "./icon-button.js";
 
 
 class AlertList extends AlertsSubMixin(LitElement) {

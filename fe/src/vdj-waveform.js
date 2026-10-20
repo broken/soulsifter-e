@@ -4,7 +4,6 @@ import crc32 from 'crc-32';
 import WaveformData from 'waveform-data';
 import * as d3 from 'd3';
 
-import "./icon-button.js";
 import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { KeyboardMixin } from "./mixin-keyboard.js";

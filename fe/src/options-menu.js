@@ -1,12 +1,12 @@
 import { css, html, LitElement } from "lit";
 
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 
 
 class OptionsMenu extends LitElement {
   render() {
     return html`
-      <icon-button icon="${this.icon}"></icon-button>
+      ${iconButton({ icon: this.icon })}
       <div id="menu" elevation="3" @click=${this.close}>
         <slot></slot>
       </div>
@@ -32,6 +32,7 @@ class OptionsMenu extends LitElement {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           position: relative;

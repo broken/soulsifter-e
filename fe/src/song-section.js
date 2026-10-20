@@ -3,7 +3,7 @@ import { css, html, LitElement } from "lit";
 import "@material/web/textfield/filled-text-field.js";
 
 import "./audio-player.js";
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import "./options-menu-item.js";
 import "./pitch-slider.js";
 import "./star-rating.js";
@@ -26,17 +26,17 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
     let debugMode = this.settings.getBool('app.debug');
     return html`
       <div id="nav" draggable="true" @dragstart="${this.dragSong}">
-        <icon-button @click="${this.backAction}" ?disabled="${!this.songTrail.length}" icon="arrow_back"></icon-button>
-        <icon-button @click="${this.forwardAction}" ?disabled="${!this.songTrailCache.length}" icon="arrow_forward"></icon-button>
+        ${iconButton({ icon: "arrow_back", onClick: this.backAction, disabled: !this.songTrail.length })}
+        ${iconButton({ icon: "arrow_forward", onClick: this.forwardAction, disabled: !this.songTrailCache.length })}
       </div>
       <div class="content">
         <div class="row">
           <div class="title">${this.song.title}</div>
-          <icon-button icon="edit" class="edit-icon self-end" @click="${this.openEditSongPage}"></icon-button>
+          ${iconButton({ icon: "edit", className: "edit-icon self-end", onClick: this.openEditSongPage })}
         </div>
         <div class="row">
           <div class="artist">${this.song.artist}</div>
-          <icon-button icon="album" class="edit-icon self-end" @click="${this.openEditMixPage}" ?disabled="${this.songTrail.length < 2}"></icon-button>
+          ${iconButton({ icon: "album", className: "edit-icon self-end", onClick: this.openEditMixPage, disabled: this.songTrail.length < 2 })}
         </div>
         <star-rating value="${this.song.rating}" readonly></star-rating>
         <div class="track self-end">${this.song.album.track}</div>
@@ -61,7 +61,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
         </div>
         ${debugMode ? html`<div id="musicVideoInput" ?hide="${!!this.musicVideo}">
             <md-filled-text-field label="video url" no-label-float id="videoUrlInput"></md-filled-text-field>
-            <icon-button @click="${this.associateVideo}" icon="movie"></icon-button>
+            ${iconButton({ icon: "movie", onClick: this.associateVideo })}
           </div>` : ''}
       </div>
     `;
@@ -340,6 +340,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           padding: 0 0 20px 0;
@@ -356,10 +357,10 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
           background-size: cover;
           background-position: center;
         }
-        icon-button[disabled] {
+        icon-button[disabled], .icon-button[disabled] {
           visibility: hidden;
         }
-        icon-button {
+        icon-button, .icon-button {
           --mdc-icon-size: 24px;
         }
         .hide {
@@ -432,7 +433,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
           width: 100%;
           margin-right: 18px;
         }
-        #musicVideoInput > icon-button {
+        #musicVideoInput > icon-button, #musicVideoInput > .icon-button {
           margin-top: auto;
         }
         #musicVideoThumbnail[hide] {

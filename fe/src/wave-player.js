@@ -1,6 +1,6 @@
 import { css, html, LitElement } from "lit";
 
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import WaveSurfer from 'wavesurfer.js';
 import { SettingsMixin } from "./mixin-settings.js";
 
@@ -11,7 +11,7 @@ class WavePlayer extends SettingsMixin(LitElement) {
   render() {
     let progress = this.currentTime / this.duration;
     return html`
-      <icon-button id="playPause" icon="pause" @click="${this.playAction}" class="meta"></icon-button>
+      ${iconButton({ id: "playPause", icon: "pause", onClick: this.playAction, className: "meta" })}
       <div id="wavesurfer"></div>
       <div id="time" class="meta">${this.currentTimeStr()}</div>
     `;
@@ -114,13 +114,14 @@ class WavePlayer extends SettingsMixin(LitElement) {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           margin: 4px 0;
           display: flex;
           flex-direction: row;
         }
-        icon-button {
+        icon-button, .icon-button {
           --mdc-icon-size: 24px;
         }
         .meta {

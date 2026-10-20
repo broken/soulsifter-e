@@ -9,14 +9,14 @@ import { css, html, LitElement } from "lit";
 
 import "@material/web/progress/linear-progress.js";
 
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import { SettingsMixin } from "./mixin-settings.js";
 
 
 class AudioPlayer extends SettingsMixin(LitElement) {
   render() {
     return html`
-      <icon-button id="playPause" icon="play_arrow" @click="${this.playAction}"></icon-button>
+      ${iconButton({ id: "playPause", icon: "play_arrow", onClick: this.playAction })}
       <div class="timebar">
         <div id="time" self-end>${this.currentTimeStr()}</div>
         <md-linear-progress value="${this.progress}" @click="${this.changeCurrentTime}" id="progress"></md-linear-progress>
@@ -117,6 +117,7 @@ class AudioPlayer extends SettingsMixin(LitElement) {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           margin: 4px 0;
@@ -129,7 +130,7 @@ class AudioPlayer extends SettingsMixin(LitElement) {
           flex-direction: column;
           margin-left: 6px;
         }
-        icon-button {
+        icon-button, .icon-button {
           color: var(--ss-audio-player-button-color);
         }
       `,

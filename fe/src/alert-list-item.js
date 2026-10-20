@@ -5,7 +5,7 @@ import "@material/mwc-circular-progress";
 import "@polymer/paper-toast";
 
 import { AlertsMixin } from "./mixin-alerts-pub.js";
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 
 
 class AlertListItem extends AlertsMixin(LitElement) {
@@ -16,7 +16,7 @@ class AlertListItem extends AlertsMixin(LitElement) {
         <span>${this.alert.msg}</span>
       </div>
       ${!!this.alert.callback ? html`<md-outlined-button @click="${this.resolve}">Resolve</md-outlined-button>` : ''}
-      <icon-button @click=${this.delAlert} icon="clear" id="clear"></icon-button>
+      ${iconButton({ id: "clear", icon: "clear", onClick: this.delAlert })}
     `;
   }
 
@@ -40,6 +40,7 @@ class AlertListItem extends AlertsMixin(LitElement) {
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host {
           display: flex;

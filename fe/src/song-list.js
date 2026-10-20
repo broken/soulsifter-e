@@ -14,7 +14,6 @@ import "@material/web/textfield/filled-text-field.js";
 // Features of paper-dialog over md-dialog: noCancelOnOutsideClick noAutoFocus verticalAlign="bottom" verticalOffset="8"
 import "@polymer/paper-dialog/paper-dialog.js";
 
-import "./icon-button.js";
 import { midiManager } from './midi-manager.js';
 import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
@@ -724,9 +723,6 @@ class SongList extends AlertsMixin(
         :host {
           overflow-x: hidden;
           overflow-y: scroll;
-        }
-        icon-button {
-          --mdc-icon-size: 24px;
         }
         #multiOptionsDialog {
           color: var(--ss-song-list-multi-options-dialog-text-color);

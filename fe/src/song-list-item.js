@@ -1,7 +1,7 @@
 import { css, html, LitElement, unsafeCSS } from "lit";
 
 import "@material/mwc-icon";
-import "./icon-button.js";
+import { iconButton, iconButtonStyles } from "./icon-button.js";
 import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { MusicVideoMixin } from "./mixin-music-video.js";
 import { SettingsMixin } from "./mixin-settings.js";
@@ -36,8 +36,8 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
       `;
     }
     let sendButtons = html`
-      <icon-button icon="send" @click="${this.sendSongToDeckA}" style="transform: scaleX(-1)"></icon-button>
-      <icon-button icon="send" @click="${this.sendSongToDeckB}"></icon-button>
+      ${iconButton({ icon: "send", onClick: this.sendSongToDeckA, style: "transform: scaleX(-1)" })}
+      ${iconButton({ icon: "send", onClick: this.sendSongToDeckB })}
     `;
     let mvIndicator = '';
     if (this.mvRestrict && this.settings.getBool('mv.on_demand')) {
@@ -58,9 +58,9 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
           <span class="title">${this.song.title}</span>
           <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${comments}</span>
         </div>
-        ${inPlaylist ? html`<icon-button icon="backspace" @click="${this.removeSongFromPlaylist}"></icon-button>` : html``}
-        ${!!this.song.dupeId ? html`<icon-button icon="flip_to_back" @click="${this.showDupeId}"></icon-button>` : html``}
-        <icon-button class="edit" icon="edit" @click="${this.openEditSongPage}"></icon-button>
+        ${inPlaylist ? iconButton({ icon: "backspace", onClick: this.removeSongFromPlaylist }) : html``}
+        ${!!this.song.dupeId ? iconButton({ icon: "flip_to_back", onClick: this.showDupeId }) : html``}
+        ${iconButton({ className: "edit", icon: "edit", onClick: this.openEditSongPage })}
         ${this.settings.getBool('songList.column.bpmShift') ? html`<div>${this.computeBpmShift(this.song, this.bpm)}</div>` : html``}
         ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm || ''}</div>` : html``}
         ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${this.song.energy}">${this.song.energy || ''}</div>` : html``}
@@ -267,6 +267,7 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
 
   static get styles() {
     return [
+      iconButtonStyles,
       css`
         :host([selected]) .song-item {
           background-color: var(--ss-song-list-item-hover-background-color);
@@ -291,13 +292,14 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
         .song-item:hover {
           background-color: var(--ss-song-list-item-hover-background-color);
         }
-        icon-button {
+        icon-button, .icon-button {
           display: block;
           --mdc-icon-size: 16px;
           padding: 0 3px;
           visibility: hidden;
         }
-        .song-item:hover > icon-button {
+        .song-item:hover > icon-button,
+        .song-item:hover > .icon-button {
           visibility: visible;
         }
         .song-item > .edit {
