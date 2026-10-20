@@ -377,8 +377,24 @@ class SongList extends AlertsMixin(
     } catch (e) {
       this.addAlert(e.message, 5);
     }
+    {
+      // temp performance monitoring
+      console.time('⏱️ SongList Render & Layout');
+      performance.mark('render-start');
+    }
     if (pageMore) this.songs.push(...songs);
     else this.songs = songs;
+    {
+      // temp performance monitoring
+      // Wait for Lit's microtask update queue to finish stamping all child DOM:
+      this.updateComplete.then(() => {
+        // Wait for the browser to actually paint the pixels:
+        requestAnimationFrame(() => {
+          console.timeEnd('⏱️ SongList Render & Layout');
+          performance.measure('SongList Render', 'render-start');
+        });
+      });
+    }
     this.generateMissingWaveforms();
   }
 
