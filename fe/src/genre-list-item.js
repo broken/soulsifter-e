@@ -17,7 +17,7 @@ class GenreListItem extends LitElement {
       <div class="itemContainer">
         <div class="item" ?selected="${this.selected}" title="${description}">
           ${button}
-          <span @click="${this.toggleSelect}">${this.genre.name}</span>
+          <span class="name" @click="${this.toggleSelect}">${this.genre.name}</span>
           ${menu}
         </div>
         ${subgenres}
@@ -125,11 +125,13 @@ class GenreListItem extends LitElement {
         .item[selected] {
           background-color: var(--ss-genre-list-item-selected-background-color);
         }
-        .item span {
+        .item .name {
           flex: 1 1 auto;
         }
         icon-button, .icon-button {
           width: 24px;
+          min-width: 24px;
+          flex-shrink: 0;
         }
         options-menu {
           display: none;
