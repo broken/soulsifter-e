@@ -56,7 +56,7 @@ class AudioPlayer extends SettingsMixin(LitElement) {
   }
 
   playAction(e) {
-    if (this.shadowRoot.getElementById('playPause').icon === 'play_arrow') {
+    if (this.shadowRoot.getElementById('playPause').textContent === 'play_arrow') {
       this.play();
     } else {
       this.pause();
@@ -72,22 +72,22 @@ class AudioPlayer extends SettingsMixin(LitElement) {
         }
     );
     this.dispatchEvent(event);
-    this.shadowRoot.getElementById('playPause').icon = 'pause';
+    this.shadowRoot.getElementById('playPause').textContent = 'pause';
   }
 
   pause() {
     this.dispatchEvent(new CustomEvent('audio-pause', {bubbles: true, composed: true}));
-    this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
+    this.shadowRoot.getElementById('playPause').textContent = 'play_arrow';
   }
 
   audioEnded() {
-    this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
+    this.shadowRoot.getElementById('playPause').textContent = 'play_arrow';
     let event = new CustomEvent('song-ended', { bubbles: true, composed: true });
     this.dispatchEvent(event);
   }
 
   audioUnload() {
-    this.shadowRoot.getElementById('playPause').icon = 'play_arrow';
+    this.shadowRoot.getElementById('playPause').textContent = 'play_arrow';
     this.progress = 0;
   }
 

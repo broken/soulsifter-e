@@ -516,7 +516,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
 
   lockBpm() {
     this.editedSong.bpmLock = !this.editedSong.bpmLock;
-    this.shadowRoot.getElementById('bpm_lock').icon = this.editedSong.bpmLock ? "lock" : "lock_open";
+    this.shadowRoot.getElementById('bpm_lock').textContent = this.editedSong.bpmLock ? "lock" : "lock_open";
   }
 
   bpmInputChanged() {
@@ -528,7 +528,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
 
   lockTonicKey() {
     this.editedSong.tonicKeyLock = !this.editedSong.tonicKeyLock;
-    this.shadowRoot.getElementById('tonic_key_lock').icon = this.editedSong.tonicKeyLock ? "lock" : "lock_open";
+    this.shadowRoot.getElementById('tonic_key_lock').textContent = this.editedSong.tonicKeyLock ? "lock" : "lock_open";
   }
 
   tonicKeyInputChanged() {
@@ -575,9 +575,9 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.shadowRoot.getElementById('youtube_music_id').value = this.song.youtubeMusicId.trim();
     this.shadowRoot.getElementById('rating').value = this.song.rating;
     this.shadowRoot.getElementById('bpm').value = this.song.bpm.trim();
-    this.shadowRoot.getElementById('bpm_lock').icon = this.song.bpmLock ? "lock" : "lock_open";
+    this.shadowRoot.getElementById('bpm_lock').textContent = this.song.bpmLock ? "lock" : "lock_open";
     this.shadowRoot.getElementById('tonicKey').value = this.song.tonicKey.trim();
-    this.shadowRoot.getElementById('tonic_key_lock').icon = this.song.tonicKeyLock ? "lock" : "lock_open";
+    this.shadowRoot.getElementById('tonic_key_lock').textContent = this.song.tonicKeyLock ? "lock" : "lock_open";
     this.shadowRoot.getElementById('lowQuality').checked = this.song.lowQuality;
     this.shadowRoot.getElementById('album_mixed').checked = this.song.album.mixed;
     this.shadowRoot.getElementById('explicitLyrics').checked = this.song.explicitLyrics;

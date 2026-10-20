@@ -129,19 +129,19 @@ class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(Search
 
   dragOverCreateSongButton(e) {
     e.preventDefault();
-    this.shadowRoot.getElementById('createSongButton').icon = 'add_circle_outline';
+    this.shadowRoot.getElementById('createSongButton').textContent = 'add_circle_outline';
     return false;
   }
 
   dragLeaveCreateSongButton(e) {
     e.preventDefault();
-    this.shadowRoot.getElementById('createSongButton').icon = 'add_circle';
+    this.shadowRoot.getElementById('createSongButton').textContent = 'add_circle';
     return false;
   }
 
   dropCreateSongButton(e) {
     e.preventDefault();
-    this.shadowRoot.getElementById('createSongButton').icon = 'add_circle';
+    this.shadowRoot.getElementById('createSongButton').textContent = 'add_circle';
     var files = e.dataTransfer.files;
     var filepaths = new Array();
     for (var i = 0; i < files.length; ++i) {

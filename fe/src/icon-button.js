@@ -1,6 +1,5 @@
 import { css, html } from "lit";
 import { ifDefined } from "lit/directives/if-defined.js";
-import { ref } from "lit/directives/ref.js";
 
 export const iconButtonStyles = css`
   .icon-button {
@@ -57,24 +56,8 @@ export function iconButton(iconOrOptions, onClick, options = {}) {
 
   const classAttr = ['material-icons', 'icon-button', className, opts.class].filter(Boolean).join(' ');
 
-  const bindIconProp = (el) => {
-    if (el && !el.__hasIconProp) {
-      el.__hasIconProp = true;
-      Object.defineProperty(el, 'icon', {
-        get() {
-          return this.textContent;
-        },
-        set(val) {
-          this.textContent = val;
-        },
-        configurable: true,
-      });
-    }
-  };
-
   return html`
     <span
-      ${ref(bindIconProp)}
       id="${ifDefined(id)}"
       class="${classAttr}"
       style="${ifDefined(style)}"
