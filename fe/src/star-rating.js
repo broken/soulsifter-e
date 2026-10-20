@@ -3,10 +3,18 @@ import { css, html, LitElement } from "lit";
 
 class StarRating extends LitElement {
   render() {
-    let stars = this.stars.map(
-      s => !this.isSelected(s) ? html`<span class="material-icons" @click=${this.select(s)}>star_border</span>`
-                               : this.isSelected(s) == 1 ? html`<span class="material-icons" @click=${this.select(s)} selected>star_half</span>`
-                                                         : html`<span class="material-icons" @click=${this.select(s)} selected>star</span>`);
+    let stars = this.stars.map( 
+      s => {
+        const selected = this.isSelected(s);
+        return html`
+          <span
+            class="material-icons"
+            ?selected=${selected > 0}
+            @click=${this.select(s)}
+          >${!selected ? 'star_border' : selected === 1 ? 'star_half' : 'star'}</span>
+        `;
+      }
+    );
     return html`
       ${stars}
     `;
