@@ -11,8 +11,8 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
   render() {
     let icon = !!this.playlist.query ? html`<mwc-icon class="mdc-ripple-surface mdc-ripple-surface--primary">find_replace</mwc-icon>` : html``;
     return html`
-      <div class="itemContainer" @drop="${this.handleDrop}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
-        <div class="item" ?selected="${this.selected}" ?excluded="${this.excluded}" @click="${this.toggleSelect}">
+      <div class="itemContainer" @drop="${this.handleDrop}" @dragenter="${this.handleDragEnter}" @dragover="${this.handleDragOver}" @dragleave="${this.handleDragLeave}">
+        <div class="item" ?selected="${this.selected}" ?excluded="${this.excluded}" ?smart="${!!this.playlist.query}" ?dragover="${this.dragOver}" @click="${this.toggleSelect}">
           <div class="group">
             <span>${this.playlist.name}</span>
             ${icon}
@@ -34,6 +34,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
       playlist: { type: Object },
       selected: { type: Boolean },
       excluded: { type: Boolean },
+      dragOver: { type: Boolean },
     }
   }
 
@@ -41,6 +42,8 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
     super();
     this.selected = false;
     this.excluded = false;
+    this.dragOver = false;
+    this._dragCounter = 0;
   }
 
   toggleSelect(e) {
@@ -103,16 +106,33 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
     window.yt.updatePlaylistEntries(this.playlist.id, aid);
   }
 
-  handleDragLeave(e) {
+  handleDragEnter(e) {
+    if (this.playlist?.query) return;
     e.preventDefault();
+    this._dragCounter++;
+    this.dragOver = true;
+  }
+
+  handleDragLeave(e) {
+    if (this.playlist?.query) return;
+    e.preventDefault();
+    this._dragCounter--;
+    if (this._dragCounter <= 0) {
+      this._dragCounter = 0;
+      this.dragOver = false;
+    }
   }
 
   handleDragOver(e) {
+    // Exiting early without preventDefault rejects the drop, preventing the plus badge.
+    if (this.playlist?.query) return;
     e.preventDefault();
   }
 
   handleDrop(e) {
     e.preventDefault();
+    this._dragCounter = 0;
+    this.dragOver = false;
     // only makes sense to drag & drop songs for non-smart playlists
     if (!!this.playlist.query) {
       this.addAlert('Cannot manually add songs to smart playlists.', 4);
@@ -140,6 +160,7 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
           flex-direction: column;
         }
         .item {
+          border-radius: 2px;
           height: 30px;
           padding-left: 16px;
           flex: 1 1 auto;
@@ -152,6 +173,11 @@ class PlaylistListItem extends AlertsMixin(LitElement) {
         }
         .item[excluded] {
           background-color: var(--ss-playlist-list-item-excluded-background-color, rgba(220, 53, 69, 0.35));
+        }
+        .item[dragover]:not([smart]) {
+          background-color: var(--ss-playlist-list-item-dragover-background-color, color-mix(in srgb, var(--accent2), transparent 75%));
+          box-shadow: inset 0 0 0 1px var(--ss-playlist-list-item-dragover-border-color, var(--accent2));
+          color: var(--clr_bold);
         }
         .group {
           display: flex;
