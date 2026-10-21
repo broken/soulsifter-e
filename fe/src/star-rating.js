@@ -86,21 +86,15 @@ export function starRating(valueOrOptions, options = {}) {
   const numValue = Number(value) || 0;
   const classAttr = ['star-rating', !readOnly ? 'interactive' : '', className, opts.class].filter(Boolean).join(' ');
 
-  // Fast-path to render a single template to increase performance.
-  if (readOnly && count === 5) {
-    const s0 = isStarSelected(0, numValue, max, 5);
-    const s1 = isStarSelected(1, numValue, max, 5);
-    const s2 = isStarSelected(2, numValue, max, 5);
-    const s3 = isStarSelected(3, numValue, max, 5);
-    const s4 = isStarSelected(4, numValue, max, 5);
-
+  // Fast-path to render a single template to increase performance for standard 5-star ratings.
+  if (readOnly && count === 5 && max === 5) {
     return html`<span
       id="${ifDefined(id)}"
       class="${classAttr}"
       style="${ifDefined(style)}"
       title="${ifDefined(title)}"
       ?once="${once}"
-    ><span class="material-icons" ?selected=${s0 > 0}>${starGlyph(s0)}</span><span class="material-icons" ?selected=${s1 > 0}>${starGlyph(s1)}</span><span class="material-icons" ?selected=${s2 > 0}>${starGlyph(s2)}</span><span class="material-icons" ?selected=${s3 > 0}>${starGlyph(s3)}</span><span class="material-icons" ?selected=${s4 > 0}>${starGlyph(s4)}</span></span>`;
+    ><span class="material-icons" ?selected=${numValue > 0}>${numValue > 0 ? 'star' : 'star_border'}</span><span class="material-icons" ?selected=${numValue > 1}>${numValue > 1 ? 'star' : 'star_border'}</span><span class="material-icons" ?selected=${numValue > 2}>${numValue > 2 ? 'star' : 'star_border'}</span><span class="material-icons" ?selected=${numValue > 3}>${numValue > 3 ? 'star' : 'star_border'}</span><span class="material-icons" ?selected=${numValue > 4}>${numValue > 4 ? 'star' : 'star_border'}</span></span>`;
   }
 
   const clickOrSelectHandler = opts.onSelect || opts.onClick || opts.click || opts['@click'];
