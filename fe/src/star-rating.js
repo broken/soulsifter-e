@@ -33,6 +33,19 @@ export const starRatingStyles = css`
   .star-rating .material-icons[selected] {
     color: var(--ss-star-rating-selected-icon-color);
   }
+  .star-rating.interactive .material-icons {
+    cursor: pointer;
+    transition: transform 0.1s ease, color 0.1s ease;
+  }
+  .star-rating.interactive:hover .material-icons {
+    color: var(--ss-star-rating-unselected-icon-color);
+  }
+  .star-rating.interactive:hover .material-icons:not(:hover ~ .material-icons) {
+    color: var(--ss-star-rating-selected-icon-color);
+  }
+  .star-rating.interactive .material-icons:hover {
+    transform: scale(1.25);
+  }
 `;
 
 function isStarSelected(star, value, max, count) {
@@ -71,7 +84,7 @@ export function starRating(valueOrOptions, options = {}) {
   } = opts;
 
   const numValue = Number(value) || 0;
-  const classAttr = ['star-rating', className, opts.class].filter(Boolean).join(' ');
+  const classAttr = ['star-rating', !readOnly ? 'interactive' : '', className, opts.class].filter(Boolean).join(' ');
 
   // Fast-path to render a single template to increase performance.
   if (readOnly && count === 5) {
