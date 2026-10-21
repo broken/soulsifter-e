@@ -65,7 +65,7 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
         ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${this.song.energy}">${this.song.energy || ''}</div>` : html``}
         ${this.settings.getBool('songList.column.duration') ? html`<div>${this.computeDuration(this.song) || ''}</div>` : html``}
         ${this.settings.getBool('songList.column.rating') ? starRating({ value: this.song.rating, className: this.trashedClass(this.song.trashed), readOnly: true }) : html``}
-        ${this.settings.getBool('songList.column.releaseDate') ? html`<time class="released">${new Date(this.song.album.releaseDateYear, this.song.album.releaseDateMonth - 1, this.song.album.releaseDateDay).toLocaleDateString()}</time>` : html``}
+        ${this.settings.getBool('songList.column.releaseDate') ? html`<time class="released">${this.computeReleaseDateString(this.song.album)}</time>` : html``}
         ${this.settings.getBool('songList.column.dateAdded') ? html`<time class="added">${this.computeLocaleDateString(this.song)}</time>` : html``}
       </div>
     `;
@@ -126,8 +126,24 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
     return trashed ? 'trashed' : '';
   }
 
+  computeReleaseDateString(album) {
+    if (!album.releaseDateYear) return '';
+    const y = album.releaseDateYear;
+    const m = album.releaseDateMonth;
+    const d = album.releaseDateDay;
+    if (!m) return `${y}`;
+    const mm = m < 10 ? `0${m}` : m;
+    if (!d) return `${y}-${mm}`;
+    const dd = d < 10 ? `0${d}` : d;
+    return `${y}-${mm}-${dd}`;
+  }
+
   computeLocaleDateString(song) {
-    return new Date(song.dateAdded).toLocaleDateString();
+    if (!song.dateAdded) return '';
+    const d = new Date(song.dateAdded);
+    const m = d.getMonth() + 1;
+    const day = d.getDate();
+    return `${d.getFullYear()}-${m < 10 ? '0' + m : m}-${day < 10 ? '0' + day : day}`;
   }
 
   async dragSong(e) {
