@@ -43,6 +43,10 @@ function isStarSelected(star, value, max, count) {
   return full ? 2 : half ? 1 : 0;
 }
 
+function starGlyph(selected) {
+  return !selected ? 'star_border' : selected === 1 ? 'star_half' : 'star';
+}
+
 export function starRating(valueOrOptions, options = {}) {
   // Support both positional and object-based arguments
   let opts = {};
@@ -66,13 +70,31 @@ export function starRating(valueOrOptions, options = {}) {
     once = false,
   } = opts;
 
-  const clickOrSelectHandler = opts.onSelect || opts.onClick || opts.click || opts['@click'];
   const numValue = Number(value) || 0;
+  const classAttr = ['star-rating', className, opts.class].filter(Boolean).join(' ');
 
+  // Fast-path to render a single template to increase performance.
+  if (readOnly && count === 5) {
+    const s0 = isStarSelected(0, numValue, max, 5);
+    const s1 = isStarSelected(1, numValue, max, 5);
+    const s2 = isStarSelected(2, numValue, max, 5);
+    const s3 = isStarSelected(3, numValue, max, 5);
+    const s4 = isStarSelected(4, numValue, max, 5);
+
+    return html`<span
+      id="${ifDefined(id)}"
+      class="${classAttr}"
+      style="${ifDefined(style)}"
+      title="${ifDefined(title)}"
+      ?once="${once}"
+    ><span class="material-icons" ?selected=${s0 > 0}>${starGlyph(s0)}</span><span class="material-icons" ?selected=${s1 > 0}>${starGlyph(s1)}</span><span class="material-icons" ?selected=${s2 > 0}>${starGlyph(s2)}</span><span class="material-icons" ?selected=${s3 > 0}>${starGlyph(s3)}</span><span class="material-icons" ?selected=${s4 > 0}>${starGlyph(s4)}</span></span>`;
+  }
+
+  const clickOrSelectHandler = opts.onSelect || opts.onClick || opts.click || opts['@click'];
   const starItems = [];
   for (let s = 0; s < count; ++s) {
     const selected = isStarSelected(s, numValue, max, count);
-    const icon = !selected ? 'star_border' : selected === 1 ? 'star_half' : 'star';
+    const icon = starGlyph(selected);
     const clickHandler = !readOnly
       ? (e) => {
           const nextValue = numValue === s + 1 ? 0 : s + 1;
@@ -97,8 +119,6 @@ export function starRating(valueOrOptions, options = {}) {
       @click=${clickHandler}
     >${icon}</span>`);
   }
-
-  const classAttr = ['star-rating', className, opts.class].filter(Boolean).join(' ');
 
   return html`
     <span
