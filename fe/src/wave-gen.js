@@ -36,7 +36,7 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
       waveColor: '#FFFFFF',
     });
     this.wavesurfer.on('error', (msg) => {
-      this.addAlert('Wavesurfer audio error: ' + msg);
+      this.addAlert('Wavesurfer audio error: ' + msg, 5);
     });
   }
 
@@ -83,7 +83,7 @@ class WaveGen extends AlertsMixin(SettingsMixin(WaveGenQueueMixin(WaveformUtilMi
         console.log('File written successfully to ' + waveformFilepath);
         this.notifyWaveGenCompleted(filepath);
       } catch(err) {
-        this.addAlert('Wavesurfer failed creating waveform for ' + filepath + ' : ' + err, 1);
+        this.addAlert('Wavesurfer failed creating waveform for ' + filepath + ' : ' + err, 5);
       }
       filepath = this.removeSongFromWaveGenQueue();
     }
