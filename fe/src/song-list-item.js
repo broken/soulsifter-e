@@ -12,19 +12,23 @@ const { exec, path } = window.nodeAPI;
 
 class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(WaveformUtilMixin(LitElement)))) {
   render() {
-    let isShort = (this.song.durationInMs / 1000) <= this.settings.getInt('songList.warning.shortSong');
-    let baseComment = this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
+    // performance improvement 
+    const { album, comments, durationInMs, energy, trashed } = this.song;
+    const { coverFilepath } = album;
+
+    let isShort = (durationInMs / 1000) <= this.settings.getInt('songList.warning.shortSong');
+    let baseComment = comments.search(/warn/i) == -1 ? comments : html`<span class="warn">${comments}</span>`;
     if (this.song.explicitLyrics) {
       baseComment = html`<span class="material-icons explicit">explicit</span>${baseComment}`;
     }
-    let comments = !this.settings.getBool('songList.column.comments') ? '' :
-                   isShort ? html`${baseComment} <span class="warn">(Short)</span>` : baseComment;
-    const coverPath = this.song.album.coverFilepath ? path.join(this.settings.getString('dir.music'), this.song.album.coverFilepath) : '';
+    const displayComments = !this.settings.getBool('songList.column.comments') ? '' :
+               isShort ? html`${baseComment} <span class="warn">(Short)</span>` : baseComment;
+    const coverPath = coverFilepath ? path.join(this.settings.getString('dir.music'), coverFilepath) : '';
     let bgImg = coverPath ? 'background-image: url("file://' + coverPath + '")' : '';
     let waveforms = '';
     if (this.settings.getBool('songList.column.waveform')) {
       let wfImg = 'mask-image:url("';
-      if (this.song.trashed) {
+      if (trashed) {
         wfImg += '../resources/no-waveform.webp';
       } else {
         wfImg += 'file://' + this.getFullWaveformFilepath(this.song.filepath);
@@ -55,17 +59,17 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
           <span class="artist">${this.song.artist}</span>
           <span> - </span>
           <span class="title">${this.song.title}</span>
-          <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${comments}</span>
+          <span class="comments">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;${displayComments}</span>
         </div>
         ${inPlaylist ? iconButton({ icon: "backspace", onClick: this.removeSongFromPlaylist }) : html``}
         ${!!this.song.dupeId ? iconButton({ icon: "flip_to_back", onClick: this.showDupeId }) : html``}
         ${iconButton({ className: "edit", icon: "edit", onClick: this.openEditSongPage })}
         ${this.settings.getBool('songList.column.bpmShift') ? html`<div>${this.computeBpmShift(this.song, this.bpm)}</div>` : html``}
         ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm || ''}</div>` : html``}
-        ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${this.song.energy}">${this.song.energy || ''}</div>` : html``}
+        ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${energy}">${energy || ''}</div>` : html``}
         ${this.settings.getBool('songList.column.duration') ? html`<div>${this.computeDuration(this.song) || ''}</div>` : html``}
-        ${this.settings.getBool('songList.column.rating') ? starRating({ value: this.song.rating, className: this.trashedClass(this.song.trashed), readOnly: true }) : html``}
-        ${this.settings.getBool('songList.column.releaseDate') ? html`<time class="released">${this.computeReleaseDateString(this.song.album)}</time>` : html``}
+        ${this.settings.getBool('songList.column.rating') ? starRating({ value: this.song.rating, className: this.trashedClass(trashed), readOnly: true }) : html``}
+        ${this.settings.getBool('songList.column.releaseDate') ? html`<time class="released">${this.computeReleaseDateString(album)}</time>` : html``}
         ${this.settings.getBool('songList.column.dateAdded') ? html`<time class="added">${this.computeLocaleDateString(this.song)}</time>` : html``}
       </div>
     `;
