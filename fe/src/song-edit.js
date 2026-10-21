@@ -11,6 +11,7 @@ import "./abstract-action-page.js";
 import "./audio-player.js";
 import "./genre-list.js";
 import { iconButton, iconButtonStyles } from "./icon-button.js";
+import { starRating, starRatingStyles } from "./star-rating.js";
 import "./options-menu-item.js";
 import "./options-menu-input.js";
 
@@ -66,7 +67,14 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
             <div>
               <div id="ratingContainer">
                 <div class="label">Rating</div>
-                <star-rating value="${this.editedSong.rating}" id="rating"></star-rating>
+                ${starRating({
+                  id: "rating",
+                  value: this.editedSong.rating,
+                  onSelect: (val) => {
+                    this.editedSong.rating = val;
+                    this.requestUpdate();
+                  }
+                })}
               </div>
             </div>
             <div>
@@ -573,7 +581,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     this.shadowRoot.getElementById('curator').value = this.song.curator.trim();
     this.shadowRoot.getElementById('youtube_id').value = this.song.youtubeId.trim();
     this.shadowRoot.getElementById('youtube_music_id').value = this.song.youtubeMusicId.trim();
-    this.shadowRoot.getElementById('rating').value = this.song.rating;
+    // rating should already be set on the editedSong in its creation which is what is used for the rating
     this.shadowRoot.getElementById('bpm').value = this.song.bpm.trim();
     this.shadowRoot.getElementById('bpm_lock').textContent = this.song.bpmLock ? "lock" : "lock_open";
     this.shadowRoot.getElementById('tonicKey').value = this.song.tonicKey.trim();
@@ -616,7 +624,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
     song.curator = this.shadowRoot.getElementById('curator').value;
     song.youtubeId = this.shadowRoot.getElementById('youtube_id').value;
     song.youtubeMusicId = this.shadowRoot.getElementById('youtube_music_id').value;
-    song.rating = Number(this.shadowRoot.getElementById('rating').value);
+    // rating already set to editedSong in the onSelect handler
     song.bpm = this.shadowRoot.getElementById('bpm').value;
     song.tonicKey = this.shadowRoot.getElementById('tonicKey').value;
     song.lowQuality = this.shadowRoot.getElementById('lowQuality').checked;
@@ -645,6 +653,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
   static get styles() {
     return [
       iconButtonStyles,
+      starRatingStyles,
       css`
         :host {
           font-size: 16px;
@@ -713,6 +722,7 @@ class SongEdit extends AlertsMixin(SettingsMixin(SongEditMixin(LitElement))) {
         #ratingContainer #rating {
           position: absolute;
           top: 30px;
+          cursor: pointer;
         }
         .label {
           font-size: 0.75em;

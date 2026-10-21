@@ -6,7 +6,7 @@ import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { MusicVideoMixin } from "./mixin-music-video.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import { WaveformUtilMixin } from "./mixin-waveform-util.js";
-import { } from "./star-rating.js";
+import { starRating, starRatingStyles } from "./star-rating.js";
 
 const { exec, path } = window.nodeAPI;
 
@@ -65,7 +65,7 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
         ${this.settings.getBool('songList.column.bpm') ? html`<div>${this.song.bpm || ''}</div>` : html``}
         ${this.settings.getBool('songList.column.energy') ? html`<div class="energy-${this.song.energy}">${this.song.energy || ''}</div>` : html``}
         ${this.settings.getBool('songList.column.duration') ? html`<div>${this.computeDuration(this.song) || ''}</div>` : html``}
-        ${this.settings.getBool('songList.column.rating') ? html`<star-rating value="${this.song.rating}" class="${this.trashedClass(this.song.trashed)}" readonly></star-rating>` : html``}
+        ${this.settings.getBool('songList.column.rating') ? starRating({ value: this.song.rating, className: this.trashedClass(this.song.trashed), readOnly: true }) : html``}
         ${this.settings.getBool('songList.column.releaseDate') ? html`<time class="released">${new Date(this.song.album.releaseDateYear, this.song.album.releaseDateMonth - 1, this.song.album.releaseDateDay).toLocaleDateString()}</time>` : html``}
         ${this.settings.getBool('songList.column.dateAdded') ? html`<time class="added">${this.computeLocaleDateString(this.song)}</time>` : html``}
       </div>
@@ -268,11 +268,12 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
   static get styles() {
     return [
       iconButtonStyles,
+      starRatingStyles,
       css`
         :host([selected]) .song-item {
           background-color: var(--ss-song-list-item-hover-background-color);
         }
-        star-rating {
+        .star-rating {
           margin: 0 6px;
         }
 

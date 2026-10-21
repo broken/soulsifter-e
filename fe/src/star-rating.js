@@ -1,98 +1,112 @@
-import { css, html, LitElement } from "lit";
+import { css, html } from "lit";
+import { ifDefined } from "lit/directives/if-defined.js";
 
-
-class StarRating extends LitElement {
-  render() {
-    let stars = this.stars.map( 
-      s => {
-        const selected = this.isSelected(s);
-        return html`
-          <span
-            class="material-icons"
-            ?selected=${selected > 0}
-            @click=${this.select(s)}
-          >${!selected ? 'star_border' : selected === 1 ? 'star_half' : 'star'}</span>
-        `;
-      }
-    );
-    return html`
-      ${stars}
-    `;
+export const starRatingStyles = css`
+  .star-rating {
+    white-space: nowrap;
+    display: inline-block;
+    vertical-align: middle;
+    color: var(--ss-star-rating-unselected-icon-color);
   }
-
-  static get properties() {
-    return {
-      count: { type: Number },
-      value: { type: Number },
-      max: { type: Number },
-      readOnly: { type: Boolean },
-      base10: { type: Boolean },
-      stars: { type: Array },
-    }
+  .star-rating.trashed {
+    color: var(--ss-star-rating-trashed-icon-color);
   }
-
-  constructor() {
-    super();
-    this.count = 5;
-    this.value = 0;
-    this.max = 5;
-    this.readOnly = false;
-    this.stars = [];
-    for (var i = 0; i < this.count; ++i) {
-      this.stars.push(i);
-    }
+  .star-rating .material-icons {
+    font-family: 'Material Icons';
+    font-size: var(--mdc-icon-size, 13px);
+    line-height: 1;
+    letter-spacing: normal;
+    text-transform: none;
+    display: inline-block;
+    white-space: nowrap;
+    word-wrap: normal;
+    direction: ltr;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: 'liga';
+    user-select: none;
+    color: inherit;
+    vertical-align: middle;
+    padding: 0 1px;
   }
-
-  isSelected(star) {
-    let ratio = this.max / this.count;
-    let weightedStar = star * ratio;
-    let full = weightedStar < this.value;
-    let half = !full && weightedStar - Math.floor(ratio / 2) < this.value;
-    return full ? 2 : half ? 1 : 0;
+  .star-rating .material-icons[selected] {
+    color: var(--ss-star-rating-selected-icon-color);
   }
+`;
 
-  select(star) {
-    if (!this.readOnly)
-      return (e) => this.value = this.value == star + 1 ? 0 : star + 1;
-    else
-      return () => {};
-  }
-
-  static get styles() {
-    return [
-      css`
-        :host {
-          white-space: nowrap;
-          color: var(--ss-star-rating-unselected-icon-color);
-        }
-        :host(.trashed) {
-          color: var(--ss-star-rating-trashed-icon-color);
-        }
-        .material-icons {
-          font-family: 'Material Icons';
-          font-size: var(--mdc-icon-size, 13px);
-          line-height: 1;
-          letter-spacing: normal;
-          text-transform: none;
-          display: inline-block;
-          white-space: nowrap;
-          word-wrap: normal;
-          direction: ltr;
-          -webkit-font-smoothing: antialiased;
-          text-rendering: optimizeLegibility;
-          -moz-osx-font-smoothing: grayscale;
-          font-feature-settings: 'liga';
-          user-select: none;
-          color: inherit;
-          vertical-align: middle;
-          padding: 0 1px;
-        }
-        .material-icons[selected] {
-          color: var(--ss-star-rating-selected-icon-color);
-        }
-      `
-    ];
-  }
+function isStarSelected(star, value, max, count) {
+  let ratio = max / count;
+  let weightedStar = star * ratio;
+  let full = weightedStar < value;
+  let half = !full && weightedStar - Math.floor(ratio / 2) < value;
+  return full ? 2 : half ? 1 : 0;
 }
 
-window.customElements.define('star-rating', StarRating);
+export function starRating(valueOrOptions, options = {}) {
+  // Support both positional and object-based arguments
+  let opts = {};
+  if (typeof valueOrOptions === 'object' && valueOrOptions !== null) {
+    opts = { ...valueOrOptions };
+  } else if (typeof valueOrOptions === 'number' || typeof valueOrOptions === 'string') {
+    opts = { value: valueOrOptions, ...options };
+  } else {
+    opts = { ...options };
+  }
+
+  const {
+    value = 0,
+    count = 5,
+    max = 5,
+    readOnly = false,
+    className = '',
+    id,
+    style,
+    title,
+    once = false,
+  } = opts;
+
+  const clickOrSelectHandler = opts.onSelect || opts.onClick || opts.click || opts['@click'];
+  const numValue = Number(value) || 0;
+
+  const starItems = [];
+  for (let s = 0; s < count; ++s) {
+    const selected = isStarSelected(s, numValue, max, count);
+    const icon = !selected ? 'star_border' : selected === 1 ? 'star_half' : 'star';
+    const clickHandler = !readOnly
+      ? (e) => {
+          const nextValue = numValue === s + 1 ? 0 : s + 1;
+          if (clickOrSelectHandler) {
+            clickOrSelectHandler(nextValue, e, s);
+          } else {
+            const host = e.currentTarget.parentElement;
+            if (host) {
+              host.dispatchEvent(new CustomEvent('change', {
+                detail: { value: nextValue },
+                bubbles: true,
+                composed: true,
+              }));
+            }
+          }
+        }
+      : undefined;
+
+    starItems.push(html`<span
+      class="material-icons"
+      ?selected=${selected > 0}
+      @click=${clickHandler}
+    >${icon}</span>`);
+  }
+
+  const classAttr = ['star-rating', className, opts.class].filter(Boolean).join(' ');
+
+  return html`
+    <span
+      id="${ifDefined(id)}"
+      class="${classAttr}"
+      style="${ifDefined(style)}"
+      title="${ifDefined(title)}"
+      ?once="${once}"
+    >${starItems}</span>
+  `;
+}

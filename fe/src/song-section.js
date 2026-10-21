@@ -6,7 +6,7 @@ import "./audio-player.js";
 import { iconButton, iconButtonStyles } from "./icon-button.js";
 import "./options-menu-item.js";
 import "./pitch-slider.js";
-import "./star-rating.js";
+import { starRating, starRatingStyles } from "./star-rating.js";
 import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { KeyboardMixin } from "./mixin-keyboard.js";
 import { MusicVideoMixin } from "./mixin-music-video.js";
@@ -38,7 +38,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
           <div class="artist">${this.song.artist}</div>
           ${iconButton({ icon: "album", className: "edit-icon self-end", onClick: this.openEditMixPage, disabled: this.songTrail.length < 2 })}
         </div>
-        <star-rating value="${this.song.rating}" readonly></star-rating>
+        ${starRating({ value: this.song.rating, readOnly: true })}
         <div class="track self-end">${this.song.album.track}</div>
         <div class="track self-end">${this.song.album.name}</div>
         <div class="released self-end"><span>${this.song.album.releaseDateYear}</span>-<span>${this.song.album.releaseDateMonth}</span>-<span>${this.song.album.releaseDateDay}</span></div>
@@ -341,6 +341,7 @@ class SongSection extends GetFilepathMixin(KeyboardMixin(MusicVideoMixin(SearchO
   static get styles() {
     return [
       iconButtonStyles,
+      starRatingStyles,
       css`
         :host {
           padding: 0 0 20px 0;

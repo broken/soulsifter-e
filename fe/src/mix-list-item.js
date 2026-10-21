@@ -2,7 +2,7 @@ import { css, html, LitElement } from "lit";
 
 import { iconButton, iconButtonStyles } from "./icon-button.js";
 import "./song-list-item.js";
-import "./star-rating.js";
+import { starRating, starRatingStyles } from "./star-rating.js";
 
 
 class MixListItem extends LitElement {
@@ -13,7 +13,7 @@ class MixListItem extends LitElement {
     return html`
       <song-list-item .song="${this.mix.inSong}" ?mvRestrict="${this.mvRestrict}" ?useStems="${this.useStems}"></song-list-item>
       <div class="info">
-        <star-rating value="${rating}" readonly max="10" ?once="${once}"></star-rating>
+        ${starRating({ value: rating, readOnly: true, max: 10, once })}
         <div class="comments">${this.mix.comments}</div>
         ${iconButton({ icon: "edit", className: "edit", onClick: this.openEditMixPage })}
       </div>
@@ -41,15 +41,16 @@ class MixListItem extends LitElement {
   static get styles() {
     return [
       iconButtonStyles,
+      starRatingStyles,
       css`
         :host {
           display: flex;
           flex-direction: column;
         }
-        star-rating {
+        .star-rating {
           margin: 0 6px;
         }
-        star-rating[once] {
+        .star-rating[once] {
           filter: brightness(0.6) sepia(1) brightness(1.1) hue-rotate(-25deg);
         }
         .info {
