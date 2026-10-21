@@ -1,6 +1,5 @@
-import { css, html, LitElement, unsafeCSS } from "lit";
+import { css, html, LitElement } from "lit";
 
-import "@material/mwc-icon";
 import { iconButton, iconButtonStyles } from "./icon-button.js";
 import { GetFilepathMixin } from "./mixin-get-filepath.js";
 import { MusicVideoMixin } from "./mixin-music-video.js";
@@ -16,7 +15,7 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
     let isShort = (this.song.durationInMs / 1000) <= this.settings.getInt('songList.warning.shortSong');
     let baseComment = this.song.comments.search(/warn/i) == -1 ? this.song.comments : html`<span class="warn">${this.song.comments}</span>`;
     if (this.song.explicitLyrics) {
-      baseComment = html`<mwc-icon class="explicit">explicit</mwc-icon>${baseComment}`;
+      baseComment = html`<span class="material-icons explicit">explicit</span>${baseComment}`;
     }
     let comments = !this.settings.getBool('songList.column.comments') ? '' :
                    isShort ? html`${baseComment} <span class="warn">(Short)</span>` : baseComment;
@@ -42,8 +41,8 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
     let mvIndicator = '';
     if (this.mvRestrict && this.settings.getBool('mv.on_demand')) {
       mvIndicator = (this.song && this.song.musicVideoId > 0)
-        ? html`<mwc-icon class="mv-indicator has-video" title="Music video available">videocam</mwc-icon>`
-        : html`<mwc-icon class="mv-indicator no-video" title="No music video (on-demand)">videocam_off</mwc-icon>`;
+        ? html`<span class="material-icons mv-indicator has-video" title="Music video available">videocam</span>`
+        : html`<span class="material-icons mv-indicator no-video" title="No music video (on-demand)">videocam_off</span>`;
     }
     let inPlaylist = this.playlists.some(p => p.query === "");
     return html`
@@ -323,13 +322,32 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
         .song-item .warn {
           color: var(--ss-song-list-item-comments-warn);
         }
+        .material-icons {
+          font-family: 'Material Icons';
+          font-weight: normal;
+          font-style: normal;
+          font-size: var(--mdc-icon-size, 24px);
+          line-height: 1;
+          letter-spacing: normal;
+          text-transform: none;
+          display: inline-block;
+          white-space: nowrap;
+          word-wrap: normal;
+          direction: ltr;
+          -webkit-font-smoothing: antialiased;
+          text-rendering: optimizeLegibility;
+          -moz-osx-font-smoothing: grayscale;
+          font-feature-settings: 'liga';
+        }
         .song-item .explicit {
           --mdc-icon-size: 16px;
+          font-size: var(--mdc-icon-size, 16px);
           vertical-align: -3px;
           margin-right: 4px;
         }
         .song-item .mv-indicator {
           --mdc-icon-size: 18px;
+          font-size: var(--mdc-icon-size, 18px);
           margin: 0 4px;
           flex-shrink: 0;
           display: inline-flex;
