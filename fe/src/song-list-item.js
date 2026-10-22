@@ -305,7 +305,7 @@ class SongListItem extends GetFilepathMixin(MusicVideoMixin(SettingsMixin(Wavefo
           margin: 0 10px;
           border-bottom: var(--ss-song-list-item-border-bottom);
         }
-        .song-item div {
+        .song-item div, .song-item time {
           margin: 3px;
           flex-shrink: 0;
         }
