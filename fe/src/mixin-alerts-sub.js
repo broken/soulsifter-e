@@ -1,4 +1,5 @@
 import { dedupingMixin } from '@polymer/polymer/lib/utils/mixin.js';
+import { Alert } from "./alert.js";
 
 let alertsSubMixin = (superClass) => class extends superClass {
 
@@ -41,18 +42,23 @@ let alertsSubMixin = (superClass) => class extends superClass {
 
   _rmAlert(e) {
     let idx = this.alerts.findIndex(a => a.id == e.detail);
-    this.alerts.splice(idx, 1);
-    this.alertsChanged();
+    // this could happen if it was manually removed already
+    if (idx != -1) {
+      this.alerts.splice(idx, 1);
+      this.alertsChanged();
+    }
   }
 
   _updateAlert(e) {
     let idx = this.alerts.findIndex(a => a.id == e.detail.id);
     if (idx != -1) {
-      if (!!e.detail.a) this.alerts[idx].msg = e.detail.a;
-      if (!!e.detail.progress) this.alerts[idx].progress = e.detail.progress;
-      if (!!e.detail.callback) this.alerts[idx].callback = e.detail.callback;
+      // check against undefined, otherwise valid falsy values like 0 would evaluate to false
+      if (e.detail.a !== undefined) this.alerts[idx].msg = e.detail.a;
+      if (e.detail.progress !== undefined) this.alerts[idx].progress = e.detail.progress;
+      if (e.detail.callback !== undefined) this.alerts[idx].callback = e.detail.callback;
     } else {
-      this._addAlert(e);
+      let alert = new Alert(e.detail.id, e.detail.a, e.detail.progress, e.detail.callback);
+      this.alerts.push(alert);
     }
     this.alertsChanged();
   }
