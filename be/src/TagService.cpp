@@ -159,7 +159,7 @@ bool readId3v2TagAttributes(Song* song, TagLib::ID3v2::Tag* id3v2) {
   }
   // energy
   const string grpTag = getId3v2Text(id3v2, "TIT1");
-  boost::regex grpRegex("^(?:Energy )?(\\d+(?![\\w\\d]))?(?: - )?(?:1?\\d[AB] (.{1,3}))?$");
+  static const boost::regex grpRegex("^(?:Energy )?(\\d+(?![\\w\\d]))?(?: - )?(?:1?\\d[AB] (.{1,3}))?$");
   boost::smatch grpMatch;
   string oldKey;
   if (boost::regex_search(grpTag, grpMatch, grpRegex, boost::match_default)) {
@@ -186,18 +186,38 @@ bool readId3v2TagAttributes(Song* song, TagLib::ID3v2::Tag* id3v2) {
     if ((pos = initialKey.find("\\")) != string::npos) {
       initialKey = initialKey.substr(0, pos);
     }
+    trim(initialKey);
+
+    // convert Camelot wheel notation to flat key
+    static const char* const camelotA[] = {
+      "Abm", "Ebm", "Bbm", "Fm", "Cm", "Gm", "Dm", "Am", "Em", "Bm", "Gbm", "Dbm"
+    };
+    static const char* const camelotB[] = {
+      "B", "Gb", "Db", "Ab", "Eb", "Bb", "F", "C", "G", "D", "A", "E"
+    };
+    static const boost::regex camelotRegex("^0?([1-9]|1[0-2])([abAB])(?:[^a-zA-Z0-9].*)?$");
+    boost::smatch camelotMatch;
+    if (boost::regex_match(initialKey, camelotMatch, camelotRegex)) {
+      int num = std::atoi(camelotMatch[1].str().c_str());
+      char letter = std::toupper(camelotMatch[2].str()[0]);
+      if (letter == 'A') {
+        initialKey = camelotA[num - 1];
+      } else if (letter == 'B') {
+        initialKey = camelotB[num - 1];
+      }
+    } else if (initialKey.length() >= 2 && initialKey[1] == '#') {
+      // convert key from sharp to flat
+      if (initialKey[0] == 'G') initialKey[0] = 'A';
+      else initialKey[0] = initialKey[0] + 1;
+      initialKey[1] = 'b';
+    }
+
     if (initialKey != song->getTonicKey() &&
         (overwrite || song->getTonicKey().empty()) &&
         initialKey != "All") {
       LOG(INFO) << "updating song " << song->getId()
            << " key from " << song->getTonicKey()
            << " to " << initialKey;
-      // convert key from sharp to flat
-      if (initialKey.length() >= 2 && initialKey[1] == '#') {
-        if (initialKey[0] == 'G') initialKey[0] = 'A';
-        else initialKey[0] = initialKey[0] + 1;
-        initialKey[1] = 'b';
-      }
       song->setTonicKey(initialKey);
       updated = true;
     }
