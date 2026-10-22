@@ -4,7 +4,7 @@ let searchMixin = (superClass) => class extends superClass {
 
   constructor() {
     super();
-    this._searchListener = (e) => this.search(e);
+    this._searchListener = () => this.search();
   }
 
   connectedCallback() {
@@ -22,7 +22,7 @@ let searchMixin = (superClass) => class extends superClass {
     window.dispatchEvent(event);
   }
 
-  search(e) {
+  search() {
     /* do nothing */
   }
 }

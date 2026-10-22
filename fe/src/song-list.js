@@ -55,7 +55,7 @@ class SongList extends AlertsMixin(
 )))))))))))))))) {
   render() {
     let songListItems = html``;
-    songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" @search="${this.search}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
+    songListItems = this.songs.map(s => html`<song-list-item .song="${s}" .playlists="${this.playlists}" bpm="${this.bpm}" @select-song="${this.selectSong}" ?mvRestrict="${this.searchOptions.mvRestrict}" ?useStems="${this.searchOptions.useStems}"></song-list-item>`);
     const fields = ['artist', 'comments', 'curator']
     let dialogs = fields.map(f => html`
         <md-dialog id="${f}">
