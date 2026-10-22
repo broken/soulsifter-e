@@ -6,10 +6,11 @@ import { Debouncer } from '@polymer/polymer/lib/utils/debounce.js';
 import { timeOut } from '@polymer/polymer/lib/utils/async.js';
 
 import { BpmMixin } from "./mixin-bpm.js";
+import { SettingsMixin } from "./mixin-settings.js";
 import { SongMixin } from "./mixin-song.js";
 
 
-class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
+class PitchSlider extends SettingsMixin(SongMixin(BpmMixin(LitElement))) {
   render() {
     let lowVal = this.pitch > 0 ? 1 : 1 - this.pitch / this.pitchMin;
     let highVal = this.pitch < 0 ? 0 : this.pitch / this.pitchMax;
@@ -32,9 +33,24 @@ class PitchSlider extends SongMixin(BpmMixin(LitElement)) {
     this.pitch = 0;
     this.bpm = 0;
     this.song = new ss.Song();
-    this.pitchMin = -8;
-    this.pitchMax = 8;
     this.userPitchChange = true;
+    this._updatePitchRange = () => {
+      const pitchRange = this.settings.getInt('search.pitchRange') || 8;
+      this.pitchMin = -pitchRange;
+      this.pitchMax = pitchRange;
+    }
+    this._updatePitchRange();
+  }
+
+  connectedCallback() {
+    super.connectedCallback();
+    window.addEventListener('pitch-range-changed', this._updatePitchRange);
+    this._updatePitchRange();
+  }
+
+  disconnectedCallback() {
+    window.removeEventListener('pitch-range-changed', this._updatePitchRange);
+    super.disconnectedCallback();
   }
 
   positiveClickAction(e) {

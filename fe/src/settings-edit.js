@@ -385,7 +385,8 @@ class SettingsEdit extends SettingsMixin(LitElement) {
 
   save(e, detail, sender) {
     this.validate();
-    let oldvirtualdjWaveformPixelBeatDistance = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
+    const oldvirtualdjWaveformPixelBeatDistance = this.settings.getInt('virtualdj.waveform.pixelBeatDistance');
+    const oldSearchPitchRange = this.settings.getInt('search.pitchRange');
     this.putb('app.debug', this.shadowRoot.getElementById('appDebugMode').checked);
     this.puts('app.theme', this.shadowRoot.getElementById('appTheme').value);
     this.puts('dir.music', this.shadowRoot.getElementById('musicDir').value);
@@ -479,6 +480,9 @@ class SettingsEdit extends SettingsMixin(LitElement) {
     }
     if (oldvirtualdjWaveformPixelBeatDistance != this.settings.getInt('virtualdj.waveform.pixelBeatDistance'))
       window.dispatchEvent(new CustomEvent('vdj-waveform-zoom'));
+    if (oldSearchPitchRange != this.settings.getInt('search.pitchRange')) {
+      window.dispatchEvent(new CustomEvent('pitch-range-changed'));
+    }
     this.exit();
   }
 
