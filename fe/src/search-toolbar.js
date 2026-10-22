@@ -9,7 +9,6 @@ import { AlertsMixin } from "./mixin-alerts-pub.js";
 import { BpmMixin } from "./mixin-bpm.js";
 import { KeyboardMixin } from "./mixin-keyboard.js";
 import { QueryMixin } from "./mixin-query.js";
-import { SearchMixin } from "./mixin-search.js";
 import { SearchOptionsMixin } from "./mixin-search-options.js";
 import { SettingsMixin } from "./mixin-settings.js";
 import "./about-page.js";
@@ -23,7 +22,7 @@ import "./search-options.js";
 const { ipcRenderer, path, webUtils } = window.nodeAPI;
 
 
-class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(SearchMixin(SearchOptionsMixin(SettingsMixin(LitElement))))))) {
+class SearchToolbar extends AlertsMixin(BpmMixin(KeyboardMixin(QueryMixin(SearchOptionsMixin(SettingsMixin(LitElement)))))) {
   render() {
     let bpmRestrictBtn = iconButton({ onClick: this.toggleBpmRestrict, icon: "music_note", className: this.searchOptions.bpmRestrict ? "active" : "" });
     let keyRestrictBtn = iconButton({ onClick: this.toggleKeyRestrict, icon: "vpn_key", className: this.searchOptions.keyRestrict ? "active" : "" });
